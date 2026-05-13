@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.1.0...arize-go-sdk-v2/v0.1.1) (2026-05-13)
+
+
+### 📚 Documentation
+
+* update pre-release status placeholder and legacy client link in README ([#71586](https://github.com/Arize-ai/arize/issues/71586)) ([bc332d7](https://github.com/Arize-ai/arize/commit/bc332d78f89e71893f37643525e0d6bbc9a66dc4))
+
 ## [0.1.0](https://github.com/Arize-ai/arize/compare/client-go-v2/v0.1.0...client-go-v2/v0.0.0) (2026-05-12)
 
 
