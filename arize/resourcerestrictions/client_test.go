@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/Arize-ai/client-go-v2/arize"
-	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/resourcerestrictions"
 )
 
@@ -44,10 +43,10 @@ func TestResourceRestrictions(t *testing.T) {
 				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(200)
-				json.NewEncoder(w).Encode(generated.ResourceRestrictionResponse{
-					ResourceRestriction: generated.ResourceRestriction{
+				json.NewEncoder(w).Encode(resourcerestrictions.ResourceRestrictionResponse{
+					ResourceRestriction: resourcerestrictions.ResourceRestriction{
 						ResourceId:   "proj-1",
-						ResourceType: "PROJECT",
+						ResourceType: resourcerestrictions.ResourceRestrictionResourceTypePROJECT,
 						CreatedAt:    time.Now(),
 					},
 				})
@@ -61,8 +60,8 @@ func TestResourceRestrictions(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				if got.(*generated.ResourceRestrictionResponse).ResourceRestriction.ResourceId != "proj-1" {
-					t.Errorf("unexpected resource_id: %s", got.(*generated.ResourceRestrictionResponse).ResourceRestriction.ResourceId)
+				if got.(*resourcerestrictions.ResourceRestrictionResponse).ResourceRestriction.ResourceId != "proj-1" {
+					t.Errorf("unexpected resource_id: %s", got.(*resourcerestrictions.ResourceRestrictionResponse).ResourceRestriction.ResourceId)
 				}
 			},
 		},

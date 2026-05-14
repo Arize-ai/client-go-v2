@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.2.0...arize-go-sdk-v2/v0.3.0) (2026-05-14)
+
+
+### 🎁 New Features
+
+* add spans subclient to Go SDK ([#71410](https://github.com/Arize-ai/arize/issues/71410)) ([c5dedb5](https://github.com/Arize-ai/arize/commit/c5dedb5c9aa3f6d05833585510ed0b51c3ee57ea))
+* add API keys subclient ([#71411](https://github.com/Arize-ai/arize/issues/71411)) ([1d029f4](https://github.com/Arize-ai/arize/commit/1d029f48e3dd414f20e39ce0a0aa2e2c3da44d3f))
+* create root package types ([#71411](https://github.com/Arize-ai/arize/issues/71411)) ([1d029f4](https://github.com/Arize-ai/arize/commit/1d029f48e3dd414f20e39ce0a0aa2e2c3da44d3f))
+
+
+### 🐛 Bug Fixes
+
+* add missing exported types in subclients ([#71411](https://github.com/Arize-ai/arize/issues/71411)) ([1d029f4](https://github.com/Arize-ai/arize/commit/1d029f48e3dd414f20e39ce0a0aa2e2c3da44d3f))
+
 ## [0.2.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.1.1...arize-go-sdk-v2/v0.2.0) (2026-05-14)
 
 

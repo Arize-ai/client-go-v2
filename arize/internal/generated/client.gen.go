@@ -2286,21 +2286,18 @@ type CategoricalAnnotationConfig struct {
 	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
 
 	// SpaceId The space id the annotation config belongs to
-	SpaceId string `json:"space_id"`
-
-	// Type The type of the annotation config
-	Type CategoricalAnnotationConfigType `json:"type"`
+	SpaceId string                          `json:"space_id"`
+	Type    CategoricalAnnotationConfigType `json:"type"`
 
 	// Values An array of categorical annotation values
 	Values []CategoricalAnnotationValue `json:"values"`
 }
 
-// CategoricalAnnotationConfigType The type of the annotation config
+// CategoricalAnnotationConfigType defines model for CategoricalAnnotationConfig.Type.
 type CategoricalAnnotationConfigType string
 
 // CategoricalAnnotationConfigCreate defines model for CategoricalAnnotationConfigCreate.
 type CategoricalAnnotationConfigCreate struct {
-	// AnnotationConfigType The type of the annotation config
 	AnnotationConfigType CategoricalAnnotationConfigCreateAnnotationConfigType `json:"annotation_config_type"`
 
 	// Name Name of the new annotation config
@@ -2319,7 +2316,7 @@ type CategoricalAnnotationConfigCreate struct {
 	Values []CategoricalAnnotationValue `json:"values"`
 }
 
-// CategoricalAnnotationConfigCreateAnnotationConfigType The type of the annotation config
+// CategoricalAnnotationConfigCreateAnnotationConfigType defines model for CategoricalAnnotationConfigCreate.AnnotationConfigType.
 type CategoricalAnnotationConfigCreateAnnotationConfigType string
 
 // CategoricalAnnotationValue defines model for CategoricalAnnotationValue.
@@ -2378,18 +2375,15 @@ type ContinuousAnnotationConfig struct {
 	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
 
 	// SpaceId The space id the annotation config belongs to
-	SpaceId string `json:"space_id"`
-
-	// Type The type of the annotation config
-	Type ContinuousAnnotationConfigType `json:"type"`
+	SpaceId string                         `json:"space_id"`
+	Type    ContinuousAnnotationConfigType `json:"type"`
 }
 
-// ContinuousAnnotationConfigType The type of the annotation config
+// ContinuousAnnotationConfigType defines model for ContinuousAnnotationConfig.Type.
 type ContinuousAnnotationConfigType string
 
 // ContinuousAnnotationConfigCreate defines model for ContinuousAnnotationConfigCreate.
 type ContinuousAnnotationConfigCreate struct {
-	// AnnotationConfigType The type of the annotation config
 	AnnotationConfigType ContinuousAnnotationConfigCreateAnnotationConfigType `json:"annotation_config_type"`
 
 	// MaximumScore The maximum score value
@@ -2411,7 +2405,7 @@ type ContinuousAnnotationConfigCreate struct {
 	SpaceId string `json:"space_id"`
 }
 
-// ContinuousAnnotationConfigCreateAnnotationConfigType The type of the annotation config
+// ContinuousAnnotationConfigCreateAnnotationConfigType defines model for ContinuousAnnotationConfigCreate.AnnotationConfigType.
 type ContinuousAnnotationConfigCreateAnnotationConfigType string
 
 // CreateAnnotationConfigRequestBody defines model for CreateAnnotationConfigRequestBody.
@@ -3052,18 +3046,15 @@ type FreeformAnnotationConfig struct {
 	Name string `json:"name"`
 
 	// SpaceId The space id the annotation config belongs to
-	SpaceId string `json:"space_id"`
-
-	// Type The type of the annotation config
-	Type FreeformAnnotationConfigType `json:"type"`
+	SpaceId string                       `json:"space_id"`
+	Type    FreeformAnnotationConfigType `json:"type"`
 }
 
-// FreeformAnnotationConfigType The type of the annotation config
+// FreeformAnnotationConfigType defines model for FreeformAnnotationConfig.Type.
 type FreeformAnnotationConfigType string
 
 // FreeformAnnotationConfigCreate defines model for FreeformAnnotationConfigCreate.
 type FreeformAnnotationConfigCreate struct {
-	// AnnotationConfigType The type of the annotation config
 	AnnotationConfigType FreeformAnnotationConfigCreateAnnotationConfigType `json:"annotation_config_type"`
 
 	// Name Name of the new annotation config
@@ -3073,7 +3064,7 @@ type FreeformAnnotationConfigCreate struct {
 	SpaceId string `json:"space_id"`
 }
 
-// FreeformAnnotationConfigCreateAnnotationConfigType The type of the annotation config
+// FreeformAnnotationConfigCreateAnnotationConfigType defines model for FreeformAnnotationConfigCreate.AnnotationConfigType.
 type FreeformAnnotationConfigCreateAnnotationConfigType string
 
 // GcpProviderMetadata Vertex AI (GCP) provider metadata

@@ -5,9 +5,11 @@ import (
 	"crypto/tls"
 	"net/http"
 
+	"github.com/Arize-ai/client-go-v2/arize/apikeys"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/resourcerestrictions"
 	"github.com/Arize-ai/client-go-v2/arize/rolebindings"
+	"github.com/Arize-ai/client-go-v2/arize/spans"
 )
 
 // Client is the top-level client for the Arize REST API.
@@ -16,7 +18,9 @@ type Client struct {
 	cfg Config
 	gen *generated.ClientWithResponses
 
+	APIKeys              *apikeys.Client
 	ResourceRestrictions *resourcerestrictions.Client
+	Spans                *spans.Client
 	RoleBindings         *rolebindings.Client
 }
 
@@ -61,7 +65,9 @@ func NewClient(cfg Config) (*Client, error) {
 		cfg: resolved,
 		gen: gen,
 
+		APIKeys:              apikeys.New(gen, resolved),
 		ResourceRestrictions: resourcerestrictions.New(gen, resolved),
+		Spans:                spans.New(gen, resolved),
 		RoleBindings:         rolebindings.New(gen, resolved),
 	}, nil
 }

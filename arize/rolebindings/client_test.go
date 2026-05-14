@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/Arize-ai/client-go-v2/arize"
-	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/rolebindings"
 )
 
@@ -44,10 +43,10 @@ func TestRoleBindings(t *testing.T) {
 				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(201)
-				json.NewEncoder(w).Encode(generated.RoleBinding{
+				json.NewEncoder(w).Encode(rolebindings.RoleBinding{
 					Id:           "binding-1",
 					ResourceId:   "space-1",
-					ResourceType: generated.RoleBindingResourceTypeSPACE,
+					ResourceType: rolebindings.RoleBindingResourceTypeSPACE,
 					RoleId:       "role-1",
 					UserId:       "user-1",
 					CreatedAt:    time.Now(),
@@ -57,7 +56,7 @@ func TestRoleBindings(t *testing.T) {
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.RoleBindings.Create(ctx, rolebindings.CreateRoleBindingRequest{
 					ResourceId:   "space-1",
-					ResourceType: generated.RoleBindingResourceTypeSPACE,
+					ResourceType: rolebindings.RoleBindingResourceTypeSPACE,
 					RoleId:       "role-1",
 					UserId:       "user-1",
 				})
@@ -66,8 +65,8 @@ func TestRoleBindings(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				if got.(*generated.RoleBinding).Id != "binding-1" {
-					t.Errorf("unexpected id: %s", got.(*generated.RoleBinding).Id)
+				if got.(*rolebindings.RoleBinding).Id != "binding-1" {
+					t.Errorf("unexpected id: %s", got.(*rolebindings.RoleBinding).Id)
 				}
 			},
 		},
