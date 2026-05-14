@@ -1803,15 +1803,6 @@ type AnnotateRecordInput struct {
 	Values []AnnotationInput `json:"values"`
 }
 
-// AnnotateRecordResult The annotation result for a single annotated record.
-type AnnotateRecordResult struct {
-	// Annotations The annotations that were written to this record.
-	Annotations []Annotation `json:"annotations"`
-
-	// RecordId The record identifier (span ID, dataset example ID, or experiment run ID, depending on the endpoint).
-	RecordId string `json:"record_id"`
-}
-
 // AnnotateSpansRequestBody Batch annotation request for project spans.
 type AnnotateSpansRequestBody struct {
 	// Annotations Batch of span annotations to write. Up to 1000 spans per request.
@@ -1823,7 +1814,7 @@ type AnnotateSpansRequestBody struct {
 	// ProjectId The project (model) ID whose spans are being annotated.
 	ProjectId string `json:"project_id"`
 
-	// StartTime Start of the time range for span lookup. Optional; defaults to 7 days ago.
+	// StartTime Start of the time range for span lookup. Optional; defaults to 31 days ago.
 	StartTime *time.Time `json:"start_time,omitempty"`
 }
 
@@ -1846,12 +1837,6 @@ type Annotation struct {
 
 	// UpdatedAt Timestamp when the annotation was last updated
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
-}
-
-// AnnotationBatchResult Result of a batch annotation operation. Contains one result entry per annotated record.
-type AnnotationBatchResult struct {
-	// Results Per-record annotation results, in the same order as the request.
-	Results []AnnotateRecordResult `json:"results"`
 }
 
 // AnnotationConfig defines model for AnnotationConfig.
@@ -2690,6 +2675,9 @@ type Dataset struct {
 // DatasetExample A dataset example with arbitrary user-defined fields. System-managed
 // fields are included as read-only for responses.
 type DatasetExample struct {
+	// Annotations List of human annotations on this dataset example
+	Annotations *[]Annotation `json:"annotations,omitempty"`
+
 	// CreatedAt Timestamp for when the example was created
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 
@@ -3025,6 +3013,9 @@ type Experiment struct {
 
 // ExperimentRun An experiment run with experiment data including outputs, evaluations, and trace metadata
 type ExperimentRun struct {
+	// Annotations List of human annotations on this experiment run
+	Annotations *[]Annotation `json:"annotations,omitempty"`
+
 	// Error Error message when the task failed. Null on success.
 	Error *string `json:"error,omitempty"`
 
@@ -4522,9 +4513,6 @@ type DatasetExampleList struct {
 	Pagination PaginationMetadata `json:"pagination"`
 }
 
-// DatasetExamplesAnnotated Result of a batch annotation operation. Contains one result entry per annotated record.
-type DatasetExamplesAnnotated = AnnotationBatchResult
-
 // DatasetExamplesInserted A dataset with the IDs of examples that were inserted or updated.
 // Includes the version the examples were written to and the list of
 // affected example IDs.
@@ -4587,9 +4575,6 @@ type ExperimentList struct {
 	// request's `cursor` query parameter.
 	Pagination PaginationMetadata `json:"pagination"`
 }
-
-// ExperimentRunsAnnotated Result of a batch annotation operation. Contains one result entry per annotated record.
-type ExperimentRunsAnnotated = AnnotationBatchResult
 
 // ExperimentRunsList defines model for ExperimentRunsList.
 type ExperimentRunsList struct {
@@ -6037,6 +6022,14 @@ func (a *DatasetExample) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
+	if raw, found := object["annotations"]; found {
+		err = json.Unmarshal(raw, &a.Annotations)
+		if err != nil {
+			return fmt.Errorf("error reading 'annotations': %w", err)
+		}
+		delete(object, "annotations")
+	}
+
 	if raw, found := object["created_at"]; found {
 		err = json.Unmarshal(raw, &a.CreatedAt)
 		if err != nil {
@@ -6079,6 +6072,13 @@ func (a *DatasetExample) UnmarshalJSON(b []byte) error {
 func (a DatasetExample) MarshalJSON() ([]byte, error) {
 	var err error
 	object := make(map[string]json.RawMessage)
+
+	if a.Annotations != nil {
+		object["annotations"], err = json.Marshal(a.Annotations)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'annotations': %w", err)
+		}
+	}
 
 	object["created_at"], err = json.Marshal(a.CreatedAt)
 	if err != nil {
@@ -6195,6 +6195,14 @@ func (a *ExperimentRun) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
+	if raw, found := object["annotations"]; found {
+		err = json.Unmarshal(raw, &a.Annotations)
+		if err != nil {
+			return fmt.Errorf("error reading 'annotations': %w", err)
+		}
+		delete(object, "annotations")
+	}
+
 	if raw, found := object["error"]; found {
 		err = json.Unmarshal(raw, &a.Error)
 		if err != nil {
@@ -6245,6 +6253,13 @@ func (a *ExperimentRun) UnmarshalJSON(b []byte) error {
 func (a ExperimentRun) MarshalJSON() ([]byte, error) {
 	var err error
 	object := make(map[string]json.RawMessage)
+
+	if a.Annotations != nil {
+		object["annotations"], err = json.Marshal(a.Annotations)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'annotations': %w", err)
+		}
+	}
 
 	if a.Error != nil {
 		object["error"], err = json.Marshal(a.Error)
@@ -16549,7 +16564,6 @@ type ApiKeysListResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16577,7 +16591,6 @@ type ApiKeysCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16657,7 +16670,6 @@ type DatasetsListResponse struct {
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16711,7 +16723,6 @@ type DatasetsDeleteResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16739,7 +16750,6 @@ type DatasetsGetResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16767,7 +16777,6 @@ type DatasetsExamplesListResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16796,7 +16805,6 @@ type DatasetsExamplesUpdateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16824,7 +16832,6 @@ type DatasetsExamplesInsertResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16847,7 +16854,6 @@ func (r DatasetsExamplesInsertResponse) StatusCode() int {
 type DatasetsExamplesAnnotateResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *DatasetExamplesAnnotated
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
@@ -17094,7 +17100,6 @@ type ExperimentsListResponse struct {
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17123,7 +17128,6 @@ type ExperimentsCreateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17150,7 +17154,6 @@ type ExperimentsDeleteResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17176,9 +17179,7 @@ type ExperimentsGetResponse struct {
 	JSON200                   *Experiment
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17206,7 +17207,6 @@ type ExperimentsRunsListResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17229,9 +17229,9 @@ func (r ExperimentsRunsListResponse) StatusCode() int {
 type ExperimentsRunsAnnotateResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *ExperimentRunsAnnotated
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -17499,7 +17499,6 @@ type ProjectsDeleteResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17684,7 +17683,6 @@ type PromptsDeleteResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -17711,7 +17709,6 @@ type PromptsGetResponse struct {
 	JSON200                   *PromptWithVersion
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -17738,7 +17735,6 @@ type PromptsUpdateResponse struct {
 	JSON200                   *Prompt
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -18490,7 +18486,6 @@ type TasksCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON422 *BadRequest
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18542,7 +18537,6 @@ type TasksGetResponse struct {
 	JSON200                   *Task
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -18625,6 +18619,7 @@ type TasksTriggerRunResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -21306,13 +21301,6 @@ func ParseApiKeysListResponse(rsp *http.Response) (*ApiKeysListResponse, error) 
 		}
 		response.ApplicationproblemJSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21373,13 +21361,6 @@ func ParseApiKeysCreateResponse(rsp *http.Response) (*ApiKeysCreateResponse, err
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -21550,13 +21531,6 @@ func ParseDatasetsListResponse(rsp *http.Response) (*DatasetsListResponse, error
 		}
 		response.ApplicationproblemJSON403 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21672,13 +21646,6 @@ func ParseDatasetsDeleteResponse(rsp *http.Response) (*DatasetsDeleteResponse, e
 		}
 		response.ApplicationproblemJSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21740,13 +21707,6 @@ func ParseDatasetsGetResponse(rsp *http.Response) (*DatasetsGetResponse, error) 
 		}
 		response.ApplicationproblemJSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21807,13 +21767,6 @@ func ParseDatasetsExamplesListResponse(rsp *http.Response) (*DatasetsExamplesLis
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -21883,13 +21836,6 @@ func ParseDatasetsExamplesUpdateResponse(rsp *http.Response) (*DatasetsExamplesU
 		}
 		response.ApplicationproblemJSON409 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21951,13 +21897,6 @@ func ParseDatasetsExamplesInsertResponse(rsp *http.Response) (*DatasetsExamplesI
 		}
 		response.ApplicationproblemJSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21984,13 +21923,6 @@ func ParseDatasetsExamplesAnnotateResponse(rsp *http.Response) (*DatasetsExample
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest DatasetExamplesAnnotated
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest BadRequest
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22561,13 +22493,6 @@ func ParseExperimentsListResponse(rsp *http.Response) (*ExperimentsListResponse,
 		}
 		response.ApplicationproblemJSON403 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22636,13 +22561,6 @@ func ParseExperimentsCreateResponse(rsp *http.Response) (*ExperimentsCreateRespo
 		}
 		response.ApplicationproblemJSON409 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22697,13 +22615,6 @@ func ParseExperimentsDeleteResponse(rsp *http.Response) (*ExperimentsDeleteRespo
 		}
 		response.ApplicationproblemJSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22751,26 +22662,12 @@ func ParseExperimentsGetResponse(rsp *http.Response) (*ExperimentsGetResponse, e
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -22833,13 +22730,6 @@ func ParseExperimentsRunsListResponse(rsp *http.Response) (*ExperimentsRunsListR
 		}
 		response.ApplicationproblemJSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22866,13 +22756,6 @@ func ParseExperimentsRunsAnnotateResponse(rsp *http.Response) (*ExperimentsRunsA
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ExperimentRunsAnnotated
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest BadRequest
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22886,6 +22769,13 @@ func ParseExperimentsRunsAnnotateResponse(rsp *http.Response) (*ExperimentsRunsA
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
@@ -23476,13 +23366,6 @@ func ParseProjectsDeleteResponse(rsp *http.Response) (*ProjectsDeleteResponse, e
 		}
 		response.ApplicationproblemJSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -23875,13 +23758,6 @@ func ParsePromptsDeleteResponse(rsp *http.Response) (*PromptsDeleteResponse, err
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -23936,13 +23812,6 @@ func ParsePromptsGetResponse(rsp *http.Response) (*PromptsGetResponse, error) {
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -23996,13 +23865,6 @@ func ParsePromptsUpdateResponse(rsp *http.Response) (*PromptsUpdateResponse, err
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
@@ -25677,13 +25539,6 @@ func ParseTasksCreateResponse(rsp *http.Response) (*TasksCreateResponse, error) 
 		}
 		response.ApplicationproblemJSON404 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON422 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -25784,13 +25639,6 @@ func ParseTasksGetResponse(rsp *http.Response) (*TasksGetResponse, error) {
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
@@ -25981,6 +25829,13 @@ func ParseTasksTriggerRunResponse(rsp *http.Response) (*TasksTriggerRunResponse,
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded

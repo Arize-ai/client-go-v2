@@ -7,6 +7,7 @@ import (
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/resourcerestrictions"
+	"github.com/Arize-ai/client-go-v2/arize/rolebindings"
 )
 
 // Client is the top-level client for the Arize REST API.
@@ -16,6 +17,7 @@ type Client struct {
 	gen *generated.ClientWithResponses
 
 	ResourceRestrictions *resourcerestrictions.Client
+	RoleBindings         *rolebindings.Client
 }
 
 // NewClient constructs a Client from the provided Config.
@@ -60,6 +62,7 @@ func NewClient(cfg Config) (*Client, error) {
 		gen: gen,
 
 		ResourceRestrictions: resourcerestrictions.New(gen, resolved),
+		RoleBindings:         rolebindings.New(gen, resolved),
 	}, nil
 }
 

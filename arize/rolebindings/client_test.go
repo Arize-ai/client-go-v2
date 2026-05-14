@@ -1,4 +1,4 @@
-package resourcerestrictions_test
+package rolebindings_test
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 
 	"github.com/Arize-ai/client-go-v2/arize"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
-	"github.com/Arize-ai/client-go-v2/arize/resourcerestrictions"
+	"github.com/Arize-ai/client-go-v2/arize/rolebindings"
 )
 
 func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *arize.Client) {
@@ -29,7 +29,7 @@ func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *a
 	return srv, client
 }
 
-func TestResourceRestrictions(t *testing.T) {
+func TestRoleBindings(t *testing.T) {
 	tests := []struct {
 		name    string
 		handler http.HandlerFunc
@@ -43,38 +43,43 @@ func TestResourceRestrictions(t *testing.T) {
 					t.Errorf("expected POST, got %s", r.Method)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				w.WriteHeader(200)
-				json.NewEncoder(w).Encode(generated.ResourceRestrictionResponse{
-					ResourceRestriction: generated.ResourceRestriction{
-						ResourceId:   "proj-1",
-						ResourceType: "PROJECT",
-						CreatedAt:    time.Now(),
-					},
+				w.WriteHeader(201)
+				json.NewEncoder(w).Encode(generated.RoleBinding{
+					Id:           "binding-1",
+					ResourceId:   "space-1",
+					ResourceType: generated.RoleBindingResourceTypeSPACE,
+					RoleId:       "role-1",
+					UserId:       "user-1",
+					CreatedAt:    time.Now(),
+					UpdatedAt:    time.Now(),
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.ResourceRestrictions.Create(ctx, resourcerestrictions.CreateResourceRestrictionRequest{
-					ResourceId: "proj-1",
+				return c.RoleBindings.Create(ctx, rolebindings.CreateRoleBindingRequest{
+					ResourceId:   "space-1",
+					ResourceType: generated.RoleBindingResourceTypeSPACE,
+					RoleId:       "role-1",
+					UserId:       "user-1",
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				if got.(*generated.ResourceRestrictionResponse).ResourceRestriction.ResourceId != "proj-1" {
-					t.Errorf("unexpected resource_id: %s", got.(*generated.ResourceRestrictionResponse).ResourceRestriction.ResourceId)
+				if got.(*generated.RoleBinding).Id != "binding-1" {
+					t.Errorf("unexpected id: %s", got.(*generated.RoleBinding).Id)
 				}
 			},
 		},
 		{
-			name: "Delete not found",
+			name: "Get not found",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(404)
 				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return nil, c.ResourceRestrictions.Delete(ctx, "nonexistent")
+				return c.RoleBindings.Get(ctx, "nonexistent")
 			},
 			check: func(t *testing.T, got any, err error) {
 				var nfe *arize.NotFoundError

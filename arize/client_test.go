@@ -7,31 +7,49 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize"
 )
 
-func TestNewClient_ValidConfig(t *testing.T) {
-	client, err := arize.NewClient(arize.Config{APIKey: "test-key"})
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+func TestNewClient(t *testing.T) {
+	tests := []struct {
+		name    string
+		cfg     arize.Config
+		wantErr error
+	}{
+		{
+			name:    "valid config",
+			cfg:     arize.Config{APIKey: "test-key"},
+			wantErr: nil,
+		},
+		{
+			name:    "missing API key",
+			cfg:     arize.Config{},
+			wantErr: arize.ErrMissingAPIKey,
+		},
+		{
+			name: "multiple endpoint overrides",
+			cfg: arize.Config{
+				APIKey:     "key",
+				Region:     arize.RegionEUWest,
+				SingleHost: "host.example.com",
+			},
+			wantErr: arize.ErrMultipleEndpointOverrides,
+		},
 	}
-	if client == nil {
-		t.Fatal("expected non-nil client")
-	}
-}
 
-func TestNewClient_MissingAPIKey_ReturnsError(t *testing.T) {
-	_, err := arize.NewClient(arize.Config{})
-	if !errors.Is(err, arize.ErrMissingAPIKey) {
-		t.Errorf("expected ErrMissingAPIKey, got %v", err)
-	}
-}
-
-func TestNewClient_MultipleOverrides_ReturnsError(t *testing.T) {
-	_, err := arize.NewClient(arize.Config{
-		APIKey:     "key",
-		Region:     arize.RegionEUWest,
-		SingleHost: "host.example.com",
-	})
-	if !errors.Is(err, arize.ErrMultipleEndpointOverrides) {
-		t.Errorf("expected ErrMultipleEndpointOverrides, got %v", err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			client, err := arize.NewClient(tt.cfg)
+			if tt.wantErr != nil {
+				if !errors.Is(err, tt.wantErr) {
+					t.Errorf("want error %v, got %v", tt.wantErr, err)
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if client == nil {
+				t.Fatal("expected non-nil client")
+			}
+		})
 	}
 }
 

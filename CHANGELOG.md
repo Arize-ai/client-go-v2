@@ -1,11 +1,26 @@
 # Changelog
 
-## [0.1.1](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.1.0...arize-go-sdk-v2/v0.1.1) (2026-05-13)
+## [0.2.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.1.1...arize-go-sdk-v2/v0.2.0) (2026-05-14)
+
+
+### 🎁 New Features
+
+* add rolebindings subclient  ([#71409](https://github.com/Arize-ai/arize/issues/71409)) ([72e0dde](https://github.com/Arize-ai/arize/commit/72e0dde21a727ab3e32d8dc315674c7e7650c1b1))
+
+
+### 🐛 Bug Fixes
+
+* rename request types to remove `Body` prefix for naming consistency ([72e0dde](https://github.com/Arize-ai/arize/commit/72e0dde21a727ab3e32d8dc315674c7e7650c1b1))
 
 
 ### 📚 Documentation
 
-* update pre-release status placeholder and legacy client link in README ([#71586](https://github.com/Arize-ai/arize/issues/71586)) ([bc332d7](https://github.com/Arize-ai/arize/commit/bc332d78f89e71893f37643525e0d6bbc9a66dc4))
+* fix `InsecureSkipVerify` default in README ([f1e76e6](https://github.com/Arize-ai/arize/commit/f1e76e6a51274824bf409112a5eaf3acfd757c14))
+
+
+### 💫 Code Refactoring
+
+* convert tests to table-driven style ([#71774](https://github.com/Arize-ai/arize/issues/71774)) ([f1e76e6](https://github.com/Arize-ai/arize/commit/f1e76e6a51274824bf409112a5eaf3acfd757c14))
 
 ## [0.1.0](https://github.com/Arize-ai/arize/compare/client-go-v2/v0.1.0...client-go-v2/v0.0.0) (2026-05-12)
 

@@ -25,51 +25,90 @@ func captureLogs(t *testing.T) *bytes.Buffer {
 	return &buf
 }
 
-func TestWarn_OnceFirstCall(t *testing.T) {
-	resetForTest()
-	buf := captureLogs(t)
-	Warn("datasets.list", Beta)
-	if !strings.Contains(buf.String(), "datasets.list") {
-		t.Errorf("expected key in log, got: %s", buf.String())
+func TestWarn(t *testing.T) {
+	tests := []struct {
+		name          string
+		calls         []struct{ key string; stage Stage }
+		wantContains  []string
+		wantNotChange bool
+	}{
+		{
+			name: "once on first call",
+			calls: []struct{ key string; stage Stage }{
+				{key: "datasets.list", stage: Beta},
+			},
+			wantContains: []string{
+				"datasets.list",
+				"[BETA]",
+				"v" + sdkconfig.SDKVersion,
+			},
+			wantNotChange: false,
+		},
+		{
+			name: "suppresses repeated calls",
+			calls: []struct{ key string; stage Stage }{
+				{key: "datasets.list", stage: Beta},
+				{key: "datasets.list", stage: Beta},
+			},
+			wantNotChange: true,
+			wantContains:  nil,
+		},
+		{
+			name: "distinct keys warn independently",
+			calls: []struct{ key string; stage Stage }{
+				{key: "datasets.list", stage: Beta},
+				{key: "datasets.create", stage: Alpha},
+			},
+			wantContains: []string{
+				"datasets.list",
+				"datasets.create",
+				"[ALPHA]",
+				"[BETA]",
+			},
+			wantNotChange: false,
+		},
 	}
-	if !strings.Contains(buf.String(), "[BETA]") {
-		t.Errorf("expected [BETA] tag, got: %s", buf.String())
-	}
-	if !strings.Contains(buf.String(), "v"+sdkconfig.SDKVersion) {
-		t.Errorf("expected SDK version, got: %s", buf.String())
-	}
-}
 
-func TestWarn_SuppressesRepeatedCalls(t *testing.T) {
-	resetForTest()
-	buf := captureLogs(t)
-	Warn("datasets.list", Beta)
-	first := buf.String()
-	Warn("datasets.list", Beta)
-	if buf.String() != first {
-		t.Errorf("expected no additional log on repeat, got: %s", buf.String())
-	}
-}
-
-func TestWarn_DistinctKeysWarnIndependently(t *testing.T) {
-	resetForTest()
-	buf := captureLogs(t)
-	Warn("datasets.list", Beta)
-	Warn("datasets.create", Alpha)
-	out := buf.String()
-	if !strings.Contains(out, "datasets.list") || !strings.Contains(out, "datasets.create") {
-		t.Errorf("expected both keys logged, got: %s", out)
-	}
-	if !strings.Contains(out, "[ALPHA]") || !strings.Contains(out, "[BETA]") {
-		t.Errorf("expected both stages logged, got: %s", out)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			resetForTest()
+			buf := captureLogs(t)
+			if tt.wantNotChange {
+				Warn(tt.calls[0].key, tt.calls[0].stage)
+				first := buf.String()
+				Warn(tt.calls[1].key, tt.calls[1].stage)
+				if buf.String() != first {
+					t.Errorf("expected no additional log on repeat, got: %s", buf.String())
+				}
+				return
+			}
+			for _, c := range tt.calls {
+				Warn(c.key, c.stage)
+			}
+			out := buf.String()
+			for _, want := range tt.wantContains {
+				if !strings.Contains(out, want) {
+					t.Errorf("log missing %q, got: %s", want, out)
+				}
+			}
+		})
 	}
 }
 
 func TestFormatMessage_Articles(t *testing.T) {
-	if msg := formatMessage("k", Alpha); !strings.Contains(msg, "an alpha") {
-		t.Errorf("expected 'an alpha', got: %s", msg)
+	tests := []struct {
+		name         string
+		stage        Stage
+		wantContains string
+	}{
+		{"Alpha uses 'an'", Alpha, "an alpha"},
+		{"Beta uses 'a'", Beta, "a beta"},
 	}
-	if msg := formatMessage("k", Beta); !strings.Contains(msg, "a beta") {
-		t.Errorf("expected 'a beta', got: %s", msg)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if msg := formatMessage("k", tt.stage); !strings.Contains(msg, tt.wantContains) {
+				t.Errorf("want %q in message, got: %s", tt.wantContains, msg)
+			}
+		})
 	}
 }

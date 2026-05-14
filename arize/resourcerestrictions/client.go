@@ -19,9 +19,9 @@ type Client struct {
 func New(gen *generated.ClientWithResponses, cfg sdkconfig.Config) *Client { return &Client{gen: gen, cfg: cfg} }
 
 // Create creates a new resource restriction and returns it.
-func (c *Client) Create(ctx context.Context, body CreateResourceRestrictionRequestBody) (*ResourceRestrictionResponse, error) {
+func (c *Client) Create(ctx context.Context, req CreateResourceRestrictionRequest) (*ResourceRestrictionResponse, error) {
 	prerelease.Warn("resourcerestrictions.create", prerelease.Alpha)
-	resp, err := c.gen.ResourceRestrictionsCreateWithResponse(ctx, generated.ResourceRestrictionsCreateJSONRequestBody(body))
+	resp, err := c.gen.ResourceRestrictionsCreateWithResponse(ctx, generated.ResourceRestrictionsCreateJSONRequestBody(req))
 	if err != nil {
 		return nil, err
 	}
