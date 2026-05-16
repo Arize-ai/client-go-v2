@@ -79,7 +79,7 @@ func TestApiKeys(t *testing.T) {
 				json.NewEncoder(w).Encode(apikeys.ApiKeyList{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				kt := apikeys.ApiKeysListParamsKeyTypeService
+				kt := apikeys.ListParamsKeyTypeService
 				st := apikeys.ApiKeyStatusDeleted
 				return c.APIKeys.List(ctx, apikeys.ListParams{
 					KeyType: &kt,
@@ -152,7 +152,7 @@ func TestApiKeys(t *testing.T) {
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.APIKeys.Create(ctx, apikeys.CreateApiKeyRequest{Name: "new-key"})
+				return c.APIKeys.Create(ctx, apikeys.CreateRequest{Name: "new-key"})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
@@ -175,7 +175,7 @@ func TestApiKeys(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "bad request", "status": 400})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.APIKeys.Create(ctx, apikeys.CreateApiKeyRequest{Name: ""})
+				return c.APIKeys.Create(ctx, apikeys.CreateRequest{Name: ""})
 			},
 			check: func(t *testing.T, got any, err error) {
 				var be *arize.BadRequestError
@@ -203,7 +203,7 @@ func TestApiKeys(t *testing.T) {
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.APIKeys.Refresh(ctx, "key-1", apikeys.RefreshApiKeyRequest{})
+				return c.APIKeys.Refresh(ctx, "key-1", apikeys.RefreshRequest{})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
@@ -223,7 +223,7 @@ func TestApiKeys(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.APIKeys.Refresh(ctx, "nonexistent", apikeys.RefreshApiKeyRequest{})
+				return c.APIKeys.Refresh(ctx, "nonexistent", apikeys.RefreshRequest{})
 			},
 			check: func(t *testing.T, got any, err error) {
 				var nfe *arize.NotFoundError

@@ -41,6 +41,13 @@ func TestResourceRestrictions(t *testing.T) {
 				if r.Method != http.MethodPost {
 					t.Errorf("expected POST, got %s", r.Method)
 				}
+				var body resourcerestrictions.CreateRequest
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if body.ResourceId != "proj-1" {
+					t.Errorf("body resource_id: want proj-1, got %q", body.ResourceId)
+				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(200)
 				json.NewEncoder(w).Encode(resourcerestrictions.ResourceRestrictionResponse{
@@ -52,7 +59,7 @@ func TestResourceRestrictions(t *testing.T) {
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.ResourceRestrictions.Create(ctx, resourcerestrictions.CreateResourceRestrictionRequest{
+				return c.ResourceRestrictions.Create(ctx, resourcerestrictions.CreateRequest{
 					ResourceId: "proj-1",
 				})
 			},
@@ -62,6 +69,42 @@ func TestResourceRestrictions(t *testing.T) {
 				}
 				if got.(*resourcerestrictions.ResourceRestrictionResponse).ResourceRestriction.ResourceId != "proj-1" {
 					t.Errorf("unexpected resource_id: %s", got.(*resourcerestrictions.ResourceRestrictionResponse).ResourceRestriction.ResourceId)
+				}
+			},
+		},
+		{
+			name: "Create bad request",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(400)
+				json.NewEncoder(w).Encode(map[string]any{"title": "bad request", "status": 400})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.ResourceRestrictions.Create(ctx, resourcerestrictions.CreateRequest{
+					ResourceId: "not-a-project",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var be *arize.BadRequestError
+				if !errors.As(err, &be) {
+					t.Errorf("expected *BadRequestError, got %T: %v", err, err)
+				}
+			},
+		},
+		{
+			name: "Delete success",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodDelete {
+					t.Errorf("expected DELETE, got %s", r.Method)
+				}
+				w.WriteHeader(204)
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return nil, c.ResourceRestrictions.Delete(ctx, "proj-1")
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
 				}
 			},
 		},

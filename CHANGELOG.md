@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.4.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.3.0...arize-go-sdk-v2/v0.4.0) (2026-05-16)
+
+
+### 🎁 New Features
+
+* add organizations subclient with full CRUD support ([#71412](https://github.com/Arize-ai/arize/issues/71412)) ([22821e1](https://github.com/Arize-ai/arize/commit/22821e1aca1c137d51bc64d0e867cd2892b44666))
+* add projects subclient with CRUD operations and tests ([#71413](https://github.com/Arize-ai/arize/issues/71413)) ([cd9b5f3](https://github.com/Arize-ai/arize/commit/cd9b5f3869225ba1be7db7e49795741a4a87e3cd))
+
+
+### 💫 Code Refactoring
+
+* remove sdkconfig dependency from apikeys, rolebindings, ([22821e1](https://github.com/Arize-ai/arize/commit/22821e1aca1c137d51bc64d0e867cd2892b44666))
+* remove redundant package nouns from operation-scoped type names ([#71924](https://github.com/Arize-ai/arize/issues/71924)) ([fb02be3](https://github.com/Arize-ai/arize/commit/fb02be3217bc00462bdbdb4581617569111bc4f5))
+
+
+### 🧪 Tests
+
+* expand clients test coverage ([22821e1](https://github.com/Arize-ai/arize/commit/22821e1aca1c137d51bc64d0e867cd2892b44666))
+
+
+### 🔀 Continuous Integration
+
+* warm Go SDK pkg.go.dev proxy and canonicalize LICENSE ([#71950](https://github.com/Arize-ai/arize/issues/71950)) ([17798fe](https://github.com/Arize-ai/arize/commit/17798fe8fb906ceb4f8421db56851c2939cc532d))
+
 ## [0.3.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.2.0...arize-go-sdk-v2/v0.3.0) (2026-05-14)
 
 

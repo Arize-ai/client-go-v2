@@ -6,17 +6,17 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
-	"github.com/Arize-ai/client-go-v2/arize/internal/sdkconfig"
 )
 
 // Client provides access to the Arize Role Bindings API.
 type Client struct {
 	gen *generated.ClientWithResponses
-	cfg sdkconfig.Config
 }
 
 // New constructs a Client from a generated ClientWithResponses.
-func New(gen *generated.ClientWithResponses, cfg sdkconfig.Config) *Client { return &Client{gen: gen, cfg: cfg} }
+func New(gen *generated.ClientWithResponses) *Client {
+	return &Client{gen: gen}
+}
 
 // Get returns a single role binding by ID.
 func (c *Client) Get(ctx context.Context, bindingID string) (*RoleBindingResponse, error) {
@@ -32,9 +32,9 @@ func (c *Client) Get(ctx context.Context, bindingID string) (*RoleBindingRespons
 }
 
 // Create creates a new role binding and returns it.
-func (c *Client) Create(ctx context.Context, req CreateRoleBindingRequest) (*RoleBindingResponse, error) {
+func (c *Client) Create(ctx context.Context, req CreateRequest) (*RoleBindingResponse, error) {
 	prerelease.Warn("rolebindings.create", prerelease.Alpha)
-	resp, err := c.gen.RoleBindingsCreateWithResponse(ctx, generated.RoleBindingsCreateJSONRequestBody(req))
+	resp, err := c.gen.RoleBindingsCreateWithResponse(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -45,9 +45,9 @@ func (c *Client) Create(ctx context.Context, req CreateRoleBindingRequest) (*Rol
 }
 
 // Update updates an existing role binding and returns the updated binding.
-func (c *Client) Update(ctx context.Context, bindingID string, req UpdateRoleBindingRequest) (*RoleBindingResponse, error) {
+func (c *Client) Update(ctx context.Context, bindingID string, req UpdateRequest) (*RoleBindingResponse, error) {
 	prerelease.Warn("rolebindings.update", prerelease.Alpha)
-	resp, err := c.gen.RoleBindingsUpdateWithResponse(ctx, bindingID, generated.RoleBindingsUpdateJSONRequestBody(req))
+	resp, err := c.gen.RoleBindingsUpdateWithResponse(ctx, bindingID, req)
 	if err != nil {
 		return nil, err
 	}

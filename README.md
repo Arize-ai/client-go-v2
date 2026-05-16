@@ -7,7 +7,7 @@
     <img src="https://pkg.go.dev/badge/github.com/Arize-ai/client-go-v2.svg" alt="Go Reference">
   </a>
   <a target="_blank" href="https://pkg.go.dev/github.com/Arize-ai/client-go-v2">
-    <img src="https://img.shields.io/github/go-mod/go-version/Arize-ai/arize?filename=sdk%2Fgo%2Fv2%2Fgo.mod&label=go">
+    <img src="https://img.shields.io/github/go-mod/go-version/Arize-ai/client-go-v2?label=go">
   </a>
   <a target="_blank" href="https://arize-ai.slack.com/join/shared_invite/zt-2w57bhem8-hq24MB6u7yE_ZF_ilOYSBw#/shared-invite/email">
     <img src="https://img.shields.io/badge/slack-@arize-blue.svg?logo=slack">

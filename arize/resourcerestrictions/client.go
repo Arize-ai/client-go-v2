@@ -6,22 +6,22 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
-	"github.com/Arize-ai/client-go-v2/arize/internal/sdkconfig"
 )
 
 // Client provides access to the Arize Resource Restrictions API.
 type Client struct {
 	gen *generated.ClientWithResponses
-	cfg sdkconfig.Config
 }
 
 // New constructs a Client from a generated ClientWithResponses.
-func New(gen *generated.ClientWithResponses, cfg sdkconfig.Config) *Client { return &Client{gen: gen, cfg: cfg} }
+func New(gen *generated.ClientWithResponses) *Client {
+	return &Client{gen: gen}
+}
 
 // Create creates a new resource restriction and returns it.
-func (c *Client) Create(ctx context.Context, req CreateResourceRestrictionRequest) (*ResourceRestrictionResponse, error) {
+func (c *Client) Create(ctx context.Context, req CreateRequest) (*ResourceRestrictionResponse, error) {
 	prerelease.Warn("resourcerestrictions.create", prerelease.Alpha)
-	resp, err := c.gen.ResourceRestrictionsCreateWithResponse(ctx, generated.ResourceRestrictionsCreateJSONRequestBody(req))
+	resp, err := c.gen.ResourceRestrictionsCreateWithResponse(ctx, req)
 	if err != nil {
 		return nil, err
 	}

@@ -3,12 +3,12 @@ package apikeys
 import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 
 type (
-	ApiKey               = generated.ApiKey
-	ApiKeyList           = generated.ApiKeyList
-	ApiKeyCreated        = generated.ApiKeyCreated
-	CreateApiKeyRequest  = generated.CreateApiKeyRequestBody
-	RefreshApiKeyRequest = generated.RefreshApiKeyRequestBody
-	ListParams           = generated.ApiKeysListParams
+	ApiKey         = generated.ApiKey
+	ApiKeyList     = generated.ApiKeyList
+	ApiKeyCreated  = generated.ApiKeyCreated
+	CreateRequest  = generated.CreateApiKeyRequestBody
+	RefreshRequest = generated.RefreshApiKeyRequestBody
+	ListParams     = generated.ApiKeysListParams
 
 	// ApiKeyKeyType is the key type field on an ApiKey response.
 	ApiKeyKeyType = generated.ApiKeyKeyType
@@ -18,8 +18,8 @@ type (
 	ApiKeyCreatedKeyType = generated.ApiKeyCreatedKeyType
 	// ApiKeyCreateKeyType is the key_type field on CreateApiKeyRequest.
 	ApiKeyCreateKeyType = generated.ApiKeyCreateKeyType
-	// ApiKeysListParamsKeyType is the key_type filter field on ListParams.
-	ApiKeysListParamsKeyType = generated.ApiKeysListParamsKeyType
+	// ListParamsKeyType is the key_type filter field on ListParams.
+	ListParamsKeyType = generated.ApiKeysListParamsKeyType
 
 	// ApiKeyRoles holds role assignments for the bot user created with a service key.
 	ApiKeyRoles = generated.ApiKeyRoles
@@ -44,8 +44,8 @@ const (
 	ApiKeyCreateKeyTypeService ApiKeyCreateKeyType = generated.ApiKeyCreateKeyTypeService
 	ApiKeyCreateKeyTypeUser    ApiKeyCreateKeyType = generated.ApiKeyCreateKeyTypeUser
 
-	ApiKeysListParamsKeyTypeService ApiKeysListParamsKeyType = generated.ApiKeysListParamsKeyTypeService
-	ApiKeysListParamsKeyTypeUser    ApiKeysListParamsKeyType = generated.ApiKeysListParamsKeyTypeUser
+	ListParamsKeyTypeService ListParamsKeyType = generated.ApiKeysListParamsKeyTypeService
+	ListParamsKeyTypeUser    ListParamsKeyType = generated.ApiKeysListParamsKeyTypeUser
 
 	ApiKeyRolesAccountRoleAdmin  ApiKeyRolesAccountRole = generated.ApiKeyRolesAccountRoleAdmin
 	ApiKeyRolesAccountRoleMember ApiKeyRolesAccountRole = generated.ApiKeyRolesAccountRoleMember

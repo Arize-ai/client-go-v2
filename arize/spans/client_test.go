@@ -47,7 +47,7 @@ func TestSpans(t *testing.T) {
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.Spans.List(ctx, spans.ListSpansRequest{
+				return c.Spans.List(ctx, spans.ListRequest{
 					ProjectId: "proj-1",
 				}, spans.ListParams{})
 			},
@@ -68,7 +68,7 @@ func TestSpans(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.Spans.List(ctx, spans.ListSpansRequest{ProjectId: "nonexistent"}, spans.ListParams{})
+				return c.Spans.List(ctx, spans.ListRequest{ProjectId: "nonexistent"}, spans.ListParams{})
 			},
 			check: func(t *testing.T, got any, err error) {
 				var nfe *arize.NotFoundError
@@ -86,7 +86,7 @@ func TestSpans(t *testing.T) {
 				w.WriteHeader(204)
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.Spans.Delete(ctx, spans.DeleteSpansRequest{
+				return c.Spans.Delete(ctx, spans.DeleteRequest{
 					ProjectId: "proj-1",
 					SpanIds:   []string{"span-1"},
 				})
@@ -110,7 +110,7 @@ func TestSpans(t *testing.T) {
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.Spans.Delete(ctx, spans.DeleteSpansRequest{
+				return c.Spans.Delete(ctx, spans.DeleteRequest{
 					ProjectId: "proj-1",
 					SpanIds:   []string{"span-1", "span-2"},
 				})
@@ -136,7 +136,7 @@ func TestSpans(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.Spans.Delete(ctx, spans.DeleteSpansRequest{
+				return c.Spans.Delete(ctx, spans.DeleteRequest{
 					ProjectId: "nonexistent",
 					SpanIds:   []string{"span-1"},
 				})

@@ -3,12 +3,12 @@ package spans
 import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 
 type (
-	Span               = generated.Span
-	SpanList           = generated.SpanList
-	SpanDeletePartial  = generated.SpanDeletePartial
-	ListSpansRequest   = generated.ListSpansRequestBody
-	DeleteSpansRequest = generated.DeleteSpansRequestBody
-	ListParams         = generated.SpansListParams
+	Span              = generated.Span
+	SpanList          = generated.SpanList
+	SpanDeletePartial = generated.SpanDeletePartial
+	ListRequest       = generated.ListSpansRequest
+	DeleteRequest     = generated.DeleteSpansRequest
+	ListParams        = generated.SpansListParams
 
 	// SpanStatusCode is the status code of a span.
 	SpanStatusCode = generated.SpanStatusCode

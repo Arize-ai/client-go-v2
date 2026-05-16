@@ -2279,31 +2279,34 @@ type CategoricalAnnotationConfig struct {
 	// Name The name of the annotation config
 	Name string `json:"name"`
 
-	// OptimizationDirection The direction for optimization:
+	// OptimizationDirection The direction for optimization. Defaults to `none` when omitted.
 	// - maximize: higher scores are better
 	// - minimize: lower scores are better
 	// - none: higher or lower scores are neither better nor worse
 	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
 
 	// SpaceId The space id the annotation config belongs to
-	SpaceId string                          `json:"space_id"`
-	Type    CategoricalAnnotationConfigType `json:"type"`
+	SpaceId string `json:"space_id"`
+
+	// Type Discriminator value identifying a categorical annotation config.
+	Type CategoricalAnnotationConfigType `json:"type"`
 
 	// Values An array of categorical annotation values
 	Values []CategoricalAnnotationValue `json:"values"`
 }
 
-// CategoricalAnnotationConfigType defines model for CategoricalAnnotationConfig.Type.
+// CategoricalAnnotationConfigType Discriminator value identifying a categorical annotation config.
 type CategoricalAnnotationConfigType string
 
 // CategoricalAnnotationConfigCreate defines model for CategoricalAnnotationConfigCreate.
 type CategoricalAnnotationConfigCreate struct {
+	// AnnotationConfigType Discriminator value identifying a categorical annotation config.
 	AnnotationConfigType CategoricalAnnotationConfigCreateAnnotationConfigType `json:"annotation_config_type"`
 
 	// Name Name of the new annotation config
 	Name string `json:"name"`
 
-	// OptimizationDirection The direction for optimization:
+	// OptimizationDirection The direction for optimization. Defaults to `none` when omitted.
 	// - maximize: higher scores are better
 	// - minimize: lower scores are better
 	// - none: higher or lower scores are neither better nor worse
@@ -2316,7 +2319,7 @@ type CategoricalAnnotationConfigCreate struct {
 	Values []CategoricalAnnotationValue `json:"values"`
 }
 
-// CategoricalAnnotationConfigCreateAnnotationConfigType defines model for CategoricalAnnotationConfigCreate.AnnotationConfigType.
+// CategoricalAnnotationConfigCreateAnnotationConfigType Discriminator value identifying a categorical annotation config.
 type CategoricalAnnotationConfigCreateAnnotationConfigType string
 
 // CategoricalAnnotationValue defines model for CategoricalAnnotationValue.
@@ -2368,22 +2371,25 @@ type ContinuousAnnotationConfig struct {
 	// Name The name of the annotation config
 	Name string `json:"name"`
 
-	// OptimizationDirection The direction for optimization:
+	// OptimizationDirection The direction for optimization. Defaults to `none` when omitted.
 	// - maximize: higher scores are better
 	// - minimize: lower scores are better
 	// - none: higher or lower scores are neither better nor worse
 	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
 
 	// SpaceId The space id the annotation config belongs to
-	SpaceId string                         `json:"space_id"`
-	Type    ContinuousAnnotationConfigType `json:"type"`
+	SpaceId string `json:"space_id"`
+
+	// Type Discriminator value identifying a continuous annotation config.
+	Type ContinuousAnnotationConfigType `json:"type"`
 }
 
-// ContinuousAnnotationConfigType defines model for ContinuousAnnotationConfig.Type.
+// ContinuousAnnotationConfigType Discriminator value identifying a continuous annotation config.
 type ContinuousAnnotationConfigType string
 
 // ContinuousAnnotationConfigCreate defines model for ContinuousAnnotationConfigCreate.
 type ContinuousAnnotationConfigCreate struct {
+	// AnnotationConfigType Discriminator value identifying a continuous annotation config.
 	AnnotationConfigType ContinuousAnnotationConfigCreateAnnotationConfigType `json:"annotation_config_type"`
 
 	// MaximumScore The maximum score value
@@ -2395,7 +2401,7 @@ type ContinuousAnnotationConfigCreate struct {
 	// Name Name of the new annotation config
 	Name string `json:"name"`
 
-	// OptimizationDirection The direction for optimization:
+	// OptimizationDirection The direction for optimization. Defaults to `none` when omitted.
 	// - maximize: higher scores are better
 	// - minimize: lower scores are better
 	// - none: higher or lower scores are neither better nor worse
@@ -2405,7 +2411,7 @@ type ContinuousAnnotationConfigCreate struct {
 	SpaceId string `json:"space_id"`
 }
 
-// ContinuousAnnotationConfigCreateAnnotationConfigType defines model for ContinuousAnnotationConfigCreate.AnnotationConfigType.
+// ContinuousAnnotationConfigCreateAnnotationConfigType Discriminator value identifying a continuous annotation config.
 type ContinuousAnnotationConfigCreateAnnotationConfigType string
 
 // CreateAnnotationConfigRequestBody defines model for CreateAnnotationConfigRequestBody.
@@ -2566,7 +2572,7 @@ type CreateUserRequest struct {
 	// InviteMode Controls whether and how an invitation is sent
 	InviteMode InviteMode `json:"invite_mode"`
 
-	// IsDeveloper Whether the user should have developer permissions (can create GraphQL API keys).
+	// IsDeveloper Whether the user should have developer permissions (can use the Arize API).
 	// Defaults to `true` for `admin` and `member` roles, and `false` for `annotator`.
 	IsDeveloper *bool `json:"is_developer,omitempty"`
 
@@ -2748,6 +2754,15 @@ type DeleteAnnotationQueueRecordsRequestBody struct {
 	RecordIds []Id `json:"record_ids"`
 }
 
+// DeleteSpansRequest defines model for DeleteSpansRequest.
+type DeleteSpansRequest struct {
+	// ProjectId The project ID containing the spans to delete
+	ProjectId string `json:"project_id"`
+
+	// SpanIds List of span IDs to delete (maximum 5000)
+	SpanIds []string `json:"span_ids"`
+}
+
 // Email An email address
 type Email = openapi_types.Email
 
@@ -2852,11 +2867,13 @@ type EvaluatorVersionCode struct {
 	EvaluatorId string `json:"evaluator_id"`
 
 	// Id The unique identifier for this version
-	Id   string                   `json:"id"`
+	Id string `json:"id"`
+
+	// Type Evaluator version type. Must be `code` for code evaluator versions; must match the parent evaluator's `type`.
 	Type EvaluatorVersionCodeType `json:"type"`
 }
 
-// EvaluatorVersionCodeType defines model for EvaluatorVersionCode.Type.
+// EvaluatorVersionCodeType Evaluator version type. Must be `code` for code evaluator versions; must match the parent evaluator's `type`.
 type EvaluatorVersionCodeType string
 
 // EvaluatorVersionCodeCreate defines model for EvaluatorVersionCodeCreate.
@@ -2923,12 +2940,14 @@ type EvaluatorVersionTemplate struct {
 	EvaluatorId string `json:"evaluator_id"`
 
 	// Id The unique identifier for this version
-	Id             string                       `json:"id"`
-	TemplateConfig TemplateConfig               `json:"template_config"`
-	Type           EvaluatorVersionTemplateType `json:"type"`
+	Id             string         `json:"id"`
+	TemplateConfig TemplateConfig `json:"template_config"`
+
+	// Type Evaluator version type. Must be `template` for template evaluator versions; must match the parent evaluator's `type`.
+	Type EvaluatorVersionTemplateType `json:"type"`
 }
 
-// EvaluatorVersionTemplateType defines model for EvaluatorVersionTemplate.Type.
+// EvaluatorVersionTemplateType Evaluator version type. Must be `template` for template evaluator versions; must match the parent evaluator's `type`.
 type EvaluatorVersionTemplateType string
 
 // EvaluatorVersionTemplateCreate defines model for EvaluatorVersionTemplateCreate.
@@ -3046,15 +3065,18 @@ type FreeformAnnotationConfig struct {
 	Name string `json:"name"`
 
 	// SpaceId The space id the annotation config belongs to
-	SpaceId string                       `json:"space_id"`
-	Type    FreeformAnnotationConfigType `json:"type"`
+	SpaceId string `json:"space_id"`
+
+	// Type Discriminator value identifying a freeform annotation config.
+	Type FreeformAnnotationConfigType `json:"type"`
 }
 
-// FreeformAnnotationConfigType defines model for FreeformAnnotationConfig.Type.
+// FreeformAnnotationConfigType Discriminator value identifying a freeform annotation config.
 type FreeformAnnotationConfigType string
 
 // FreeformAnnotationConfigCreate defines model for FreeformAnnotationConfigCreate.
 type FreeformAnnotationConfigCreate struct {
+	// AnnotationConfigType Discriminator value identifying a freeform annotation config.
 	AnnotationConfigType FreeformAnnotationConfigCreateAnnotationConfigType `json:"annotation_config_type"`
 
 	// Name Name of the new annotation config
@@ -3064,7 +3086,7 @@ type FreeformAnnotationConfigCreate struct {
 	SpaceId string `json:"space_id"`
 }
 
-// FreeformAnnotationConfigCreateAnnotationConfigType defines model for FreeformAnnotationConfigCreate.AnnotationConfigType.
+// FreeformAnnotationConfigCreateAnnotationConfigType Discriminator value identifying a freeform annotation config.
 type FreeformAnnotationConfigCreateAnnotationConfigType string
 
 // GcpProviderMetadata Vertex AI (GCP) provider metadata
@@ -3114,7 +3136,7 @@ type InvocationParams struct {
 	// PresencePenalty Presence penalty (-2.0 to 2.0)
 	PresencePenalty *float32 `json:"presence_penalty,omitempty"`
 
-	// ResponseFormat Response format configuration
+	// ResponseFormat Response format configuration. Optional. When omitted, no structured output constraint is applied (the provider's default plain-text behavior is used).
 	ResponseFormat *ResponseFormat `json:"response_format,omitempty"`
 
 	// Stop Stop sequences
@@ -3123,7 +3145,7 @@ type InvocationParams struct {
 	// Temperature Sampling temperature (higher = more random)
 	Temperature *float32 `json:"temperature,omitempty"`
 
-	// ToolConfig Tool configuration for the LLM invocation
+	// ToolConfig Tool configuration for the LLM invocation. Optional. When omitted, no tools are made available to the model.
 	ToolConfig *ToolConfig `json:"tool_config,omitempty"`
 
 	// TopP Nucleus sampling parameter
@@ -3143,6 +3165,24 @@ type LLMMessage struct {
 
 	// ToolCalls Tool calls generated by the model
 	ToolCalls *[]ToolCall `json:"tool_calls,omitempty"`
+}
+
+// ListSpansRequest defines model for ListSpansRequest.
+type ListSpansRequest struct {
+	// EndTime Filter to spans starting before this timestamp (exclusive).
+	// ISO 8601 format (e.g., `2024-01-02T00:00:00Z`). Defaults to the current time.
+	EndTime *time.Time `json:"end_time,omitempty"`
+
+	// Filter Filter expression to apply to the query. Supports SQL-like syntax
+	// for filtering spans by attributes (e.g., `status_code = 'ERROR'`).
+	Filter *string `json:"filter,omitempty"`
+
+	// ProjectId The project ID to list spans for
+	ProjectId string `json:"project_id"`
+
+	// StartTime Filter to spans starting at or after this timestamp (inclusive).
+	// ISO 8601 format (e.g., `2024-01-01T00:00:00Z`). Defaults to 1 week ago.
+	StartTime *time.Time `json:"start_time,omitempty"`
 }
 
 // LlmGenerationRunConfig Configuration for running an LLM prompt against each dataset example.
@@ -3227,7 +3267,7 @@ type ManagedCodeEvaluator string
 // MessageRole The role of the message author
 type MessageRole string
 
-// OptimizationDirection The direction for optimization:
+// OptimizationDirection The direction for optimization. Defaults to `none` when omitted.
 // - maximize: higher scores are better
 // - minimize: lower scores are better
 // - none: higher or lower scores are neither better nor worse
@@ -3247,6 +3287,15 @@ type Organization struct {
 	Id Id `json:"id"`
 
 	// Name Name of the organization
+	Name string `json:"name"`
+}
+
+// OrganizationCreate defines model for OrganizationCreate.
+type OrganizationCreate struct {
+	// Description A brief description of the organization's purpose. Defaults to an empty string if omitted.
+	Description *string `json:"description,omitempty"`
+
+	// Name Name of the organization (must be unique within the account)
 	Name string `json:"name"`
 }
 
@@ -3317,6 +3366,15 @@ type OrganizationRoleAssignment struct {
 // OrganizationRoleAssignmentType defines model for OrganizationRoleAssignmentType.
 type OrganizationRoleAssignmentType string
 
+// OrganizationUpdate defines model for OrganizationUpdate.
+type OrganizationUpdate struct {
+	// Description Updated description for the organization. Set to an empty string to clear it.
+	Description *string `json:"description,omitempty"`
+
+	// Name Updated name for the organization (must be unique within the account)
+	Name *string `json:"name,omitempty"`
+}
+
 // PaginationMetadata Cursor-based pagination metadata. Use `next_cursor` in the subsequent
 // request's `cursor` query parameter.
 type PaginationMetadata struct {
@@ -3383,6 +3441,15 @@ type Project struct {
 	Name string `json:"name"`
 
 	// SpaceId The space ID the project belongs to
+	SpaceId string `json:"space_id"`
+}
+
+// ProjectCreate defines model for ProjectCreate.
+type ProjectCreate struct {
+	// Name Name of the project (must be unique within the space)
+	Name string `json:"name"`
+
+	// SpaceId ID of the space to create the project in
 	SpaceId string `json:"space_id"`
 }
 
@@ -3464,10 +3531,7 @@ type PromptVersionCreateRequest struct {
 	// CommitMessage Commit message describing this version
 	CommitMessage string `json:"commit_message"`
 
-	// InputVariableFormat The format for input variables in the prompt messages. Defaults to `f_string` if not provided.
-	// - `f_string`: Single curly braces ({variable_name})
-	// - `mustache`: Double curly braces ({{variable_name}})
-	// - `none`: **Deprecated.** Treated as `f_string`. Will be removed in a future version.
+	// InputVariableFormat Format for input variables in the prompt messages. Defaults to `f_string` if not provided.
 	InputVariableFormat *InputVariableFormat `json:"input_variable_format,omitempty"`
 
 	// InvocationParams Parameters for the LLM invocation
@@ -3540,7 +3604,7 @@ type ProviderParams struct {
 
 	// BedrockOptions AWS Bedrock options
 	BedrockOptions *struct {
-		// UseConverseEndpoint Whether to use the AWS Bedrock Converse endpoint
+		// UseConverseEndpoint Whether to use the AWS Bedrock Converse endpoint. Defaults to `false`.
 		UseConverseEndpoint *bool `json:"use_converse_endpoint,omitempty"`
 	} `json:"bedrock_options,omitempty"`
 
@@ -3563,6 +3627,12 @@ type ResourceRestriction struct {
 // ResourceRestrictionResourceType The type of the restricted resource (e.g. "PROJECT")
 type ResourceRestrictionResourceType string
 
+// ResourceRestrictionCreate defines model for ResourceRestrictionCreate.
+type ResourceRestrictionCreate struct {
+	// ResourceId The ID of the resource to restrict
+	ResourceId Id `json:"resource_id"`
+}
+
 // ResponseFormat Response format configuration
 type ResponseFormat struct {
 	// JsonSchema JSON schema configuration (when type is json_schema)
@@ -3576,11 +3646,11 @@ type ResponseFormat struct {
 		// Schema The JSON schema object
 		Schema *map[string]interface{} `json:"schema,omitempty"`
 
-		// Strict Whether to enforce strict schema validation
+		// Strict Whether to enforce strict schema validation. Defaults to `false`.
 		Strict *bool `json:"strict,omitempty"`
 	} `json:"json_schema,omitempty"`
 
-	// Type The response format type
+	// Type The response format type. Defaults to `text` if not specified.
 	Type *ResponseFormatType `json:"type,omitempty"`
 }
 
@@ -3784,14 +3854,14 @@ type Span struct {
 	// StartTime Timestamp when the span started
 	StartTime time.Time `json:"start_time"`
 
-	// StatusCode Status code of the span
+	// StatusCode Status code of the span. Defaults to `UNSET` if not provided.
 	StatusCode *SpanStatusCode `json:"status_code,omitempty"`
 
 	// StatusMessage Status message associated with the span
 	StatusMessage *string `json:"status_message,omitempty"`
 }
 
-// SpanStatusCode Status code of the span
+// SpanStatusCode Status code of the span. Defaults to `UNSET` if not provided.
 type SpanStatusCode string
 
 // SpanContext defines model for SpanContext.
@@ -3971,7 +4041,7 @@ type TemplateConfig struct {
 	// DataGranularity Data granularity level. Defaults to null when omitted.
 	DataGranularity *TemplateConfigDataGranularity `json:"data_granularity,omitempty"`
 
-	// Direction The direction for optimization:
+	// Direction The direction for optimization. Defaults to `none` when omitted.
 	// - maximize: higher scores are better
 	// - minimize: lower scores are better
 	// - none: higher or lower scores are neither better nor worse
@@ -4192,7 +4262,7 @@ type User struct {
 	// Id A universally unique identifier
 	Id Id `json:"id"`
 
-	// IsDeveloper Whether the user has developer permissions (can create GraphQL API keys)
+	// IsDeveloper Whether the user has developer permissions (can use the Arize API)
 	IsDeveloper bool `json:"is_developer"`
 
 	// Name Display name of the user
@@ -4226,7 +4296,7 @@ type UserCreatedResponse struct {
 	// InviteMode The invite mode used when the user was created.
 	InviteMode InviteMode `json:"invite_mode"`
 
-	// IsDeveloper Whether the user has developer permissions (can create GraphQL API keys)
+	// IsDeveloper Whether the user has developer permissions (can use the Arize API)
 	IsDeveloper bool `json:"is_developer"`
 
 	// Name Full name of the user
@@ -4285,7 +4355,7 @@ type UserStatus string
 
 // UserUpdate defines model for UserUpdate.
 type UserUpdate struct {
-	// IsDeveloper Set to true to grant developer permissions, or false to revoke them.
+	// IsDeveloper Set to `true` to grant developer permissions, or `false` to revoke them. When omitted, the current value is preserved.
 	IsDeveloper *bool `json:"is_developer,omitempty"`
 
 	// Name Updated display name for the user
@@ -4874,22 +4944,10 @@ type CreateExperimentRequestBody struct {
 }
 
 // CreateOrganizationRequestBody defines model for CreateOrganizationRequestBody.
-type CreateOrganizationRequestBody struct {
-	// Description A brief description of the organization's purpose. Defaults to an empty string if omitted.
-	Description *string `json:"description,omitempty"`
-
-	// Name Name of the organization (must be unique within the account)
-	Name string `json:"name"`
-}
+type CreateOrganizationRequestBody = OrganizationCreate
 
 // CreateProjectRequestBody defines model for CreateProjectRequestBody.
-type CreateProjectRequestBody struct {
-	// Name Name of the project (must be unique within the space)
-	Name string `json:"name"`
-
-	// SpaceId ID of the space to create the project in
-	SpaceId string `json:"space_id"`
-}
+type CreateProjectRequestBody = ProjectCreate
 
 // CreatePromptRequestBody defines model for CreatePromptRequestBody.
 type CreatePromptRequestBody struct {
@@ -4933,6 +4991,9 @@ type CreatePromptVersionRequestBody struct {
 	ProviderParams *ProviderParams `json:"provider_params,omitempty"`
 }
 
+// CreateResourceRestrictionRequestBody defines model for CreateResourceRestrictionRequestBody.
+type CreateResourceRestrictionRequestBody = ResourceRestrictionCreate
+
 // CreateRoleBindingRequestBody defines model for CreateRoleBindingRequestBody.
 type CreateRoleBindingRequestBody = RoleBindingCreate
 
@@ -4960,13 +5021,7 @@ type CreateTaskRequestBody struct {
 type CreateUserRequestBody = CreateUserRequest
 
 // DeleteSpansRequestBody defines model for DeleteSpansRequestBody.
-type DeleteSpansRequestBody struct {
-	// ProjectId The project ID containing the spans to delete
-	ProjectId string `json:"project_id"`
-
-	// SpanIds List of span IDs to delete (maximum 5000)
-	SpanIds []string `json:"span_ids"`
-}
+type DeleteSpansRequestBody = DeleteSpansRequest
 
 // InsertDatasetExamplesRequestBody defines model for InsertDatasetExamplesRequestBody.
 type InsertDatasetExamplesRequestBody struct {
@@ -4975,22 +5030,7 @@ type InsertDatasetExamplesRequestBody struct {
 }
 
 // ListSpansRequestBody defines model for ListSpansRequestBody.
-type ListSpansRequestBody struct {
-	// EndTime Filter to spans starting before this timestamp (exclusive).
-	// ISO 8601 format (e.g., `2024-01-02T00:00:00Z`). Defaults to the current time.
-	EndTime *time.Time `json:"end_time,omitempty"`
-
-	// Filter Filter expression to apply to the query. Supports SQL-like syntax
-	// for filtering spans by attributes (e.g., `status_code = 'ERROR'`).
-	Filter *string `json:"filter,omitempty"`
-
-	// ProjectId The project ID to list spans for
-	ProjectId string `json:"project_id"`
-
-	// StartTime Filter to spans starting at or after this timestamp (inclusive).
-	// ISO 8601 format (e.g., `2024-01-01T00:00:00Z`). Defaults to 1 week ago.
-	StartTime *time.Time `json:"start_time,omitempty"`
-}
+type ListSpansRequestBody = ListSpansRequest
 
 // RefreshApiKeyRequestBody defines model for RefreshApiKeyRequestBody.
 type RefreshApiKeyRequestBody = ApiKeyRefresh
@@ -5069,13 +5109,7 @@ type UpdateEvaluatorRequestBody struct {
 }
 
 // UpdateOrganizationRequestBody defines model for UpdateOrganizationRequestBody.
-type UpdateOrganizationRequestBody struct {
-	// Description Updated description for the organization. Set to an empty string to clear it.
-	Description *string `json:"description,omitempty"`
-
-	// Name Updated name for the organization (must be unique within the account)
-	Name *string `json:"name,omitempty"`
-}
+type UpdateOrganizationRequestBody = OrganizationUpdate
 
 // UpdatePromptRequestBody defines model for UpdatePromptRequestBody.
 type UpdatePromptRequestBody struct {
@@ -5514,24 +5548,6 @@ type OrganizationsListParams struct {
 	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
 }
 
-// OrganizationsCreateJSONBody defines parameters for OrganizationsCreate.
-type OrganizationsCreateJSONBody struct {
-	// Description A brief description of the organization's purpose. Defaults to an empty string if omitted.
-	Description *string `json:"description,omitempty"`
-
-	// Name Name of the organization (must be unique within the account)
-	Name string `json:"name"`
-}
-
-// OrganizationsUpdateJSONBody defines parameters for OrganizationsUpdate.
-type OrganizationsUpdateJSONBody struct {
-	// Description Updated description for the organization. Set to an empty string to clear it.
-	Description *string `json:"description,omitempty"`
-
-	// Name Updated name for the organization (must be unique within the account)
-	Name *string `json:"name,omitempty"`
-}
-
 // ProjectsListParams defines parameters for ProjectsList.
 type ProjectsListParams struct {
 	// SpaceId Filter search results to a particular space ID
@@ -5555,15 +5571,6 @@ type ProjectsListParams struct {
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
 	// attempt to parse or construct it.
 	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
-}
-
-// ProjectsCreateJSONBody defines parameters for ProjectsCreate.
-type ProjectsCreateJSONBody struct {
-	// Name Name of the project (must be unique within the space)
-	Name string `json:"name"`
-
-	// SpaceId ID of the space to create the project in
-	SpaceId string `json:"space_id"`
 }
 
 // PromptVersionLabelsSetJSONBody defines parameters for PromptVersionLabelsSet.
@@ -5665,12 +5672,6 @@ type PromptVersionsCreateJSONBody struct {
 	ProviderParams *ProviderParams `json:"provider_params,omitempty"`
 }
 
-// ResourceRestrictionsCreateJSONBody defines parameters for ResourceRestrictionsCreate.
-type ResourceRestrictionsCreateJSONBody struct {
-	// ResourceId The ID of the resource to restrict
-	ResourceId Id `json:"resource_id"`
-}
-
 // RolesListParams defines parameters for RolesList.
 type RolesListParams struct {
 	// Limit Maximum items to return
@@ -5728,33 +5729,6 @@ type SpacesUpdateJSONBody struct {
 
 	// Name Updated name for the space (must be unique within the organization)
 	Name *string `json:"name,omitempty"`
-}
-
-// SpansDeleteJSONBody defines parameters for SpansDelete.
-type SpansDeleteJSONBody struct {
-	// ProjectId The project ID containing the spans to delete
-	ProjectId string `json:"project_id"`
-
-	// SpanIds List of span IDs to delete (maximum 5000)
-	SpanIds []string `json:"span_ids"`
-}
-
-// SpansListJSONBody defines parameters for SpansList.
-type SpansListJSONBody struct {
-	// EndTime Filter to spans starting before this timestamp (exclusive).
-	// ISO 8601 format (e.g., `2024-01-02T00:00:00Z`). Defaults to the current time.
-	EndTime *time.Time `json:"end_time,omitempty"`
-
-	// Filter Filter expression to apply to the query. Supports SQL-like syntax
-	// for filtering spans by attributes (e.g., `status_code = 'ERROR'`).
-	Filter *string `json:"filter,omitempty"`
-
-	// ProjectId The project ID to list spans for
-	ProjectId string `json:"project_id"`
-
-	// StartTime Filter to spans starting at or after this timestamp (inclusive).
-	// ISO 8601 format (e.g., `2024-01-01T00:00:00Z`). Defaults to 1 week ago.
-	StartTime *time.Time `json:"start_time,omitempty"`
 }
 
 // SpansListParams defines parameters for SpansList.
@@ -5917,16 +5891,16 @@ type ExperimentsCreateJSONRequestBody ExperimentsCreateJSONBody
 type ExperimentsRunsAnnotateJSONRequestBody = AnnotateExperimentRunsRequestBody
 
 // OrganizationsCreateJSONRequestBody defines body for OrganizationsCreate for application/json ContentType.
-type OrganizationsCreateJSONRequestBody OrganizationsCreateJSONBody
+type OrganizationsCreateJSONRequestBody = OrganizationCreate
 
 // OrganizationsUpdateJSONRequestBody defines body for OrganizationsUpdate for application/json ContentType.
-type OrganizationsUpdateJSONRequestBody OrganizationsUpdateJSONBody
+type OrganizationsUpdateJSONRequestBody = OrganizationUpdate
 
 // OrganizationsAddUserJSONRequestBody defines body for OrganizationsAddUser for application/json ContentType.
 type OrganizationsAddUserJSONRequestBody = OrganizationMembershipInput
 
 // ProjectsCreateJSONRequestBody defines body for ProjectsCreate for application/json ContentType.
-type ProjectsCreateJSONRequestBody ProjectsCreateJSONBody
+type ProjectsCreateJSONRequestBody = ProjectCreate
 
 // PromptVersionLabelsSetJSONRequestBody defines body for PromptVersionLabelsSet for application/json ContentType.
 type PromptVersionLabelsSetJSONRequestBody PromptVersionLabelsSetJSONBody
@@ -5941,7 +5915,7 @@ type PromptsUpdateJSONRequestBody PromptsUpdateJSONBody
 type PromptVersionsCreateJSONRequestBody PromptVersionsCreateJSONBody
 
 // ResourceRestrictionsCreateJSONRequestBody defines body for ResourceRestrictionsCreate for application/json ContentType.
-type ResourceRestrictionsCreateJSONRequestBody ResourceRestrictionsCreateJSONBody
+type ResourceRestrictionsCreateJSONRequestBody = ResourceRestrictionCreate
 
 // RoleBindingsCreateJSONRequestBody defines body for RoleBindingsCreate for application/json ContentType.
 type RoleBindingsCreateJSONRequestBody = RoleBindingCreate
@@ -5965,10 +5939,10 @@ type SpacesUpdateJSONRequestBody SpacesUpdateJSONBody
 type SpacesAddUserJSONRequestBody = SpaceMembershipInput
 
 // SpansDeleteJSONRequestBody defines body for SpansDelete for application/json ContentType.
-type SpansDeleteJSONRequestBody SpansDeleteJSONBody
+type SpansDeleteJSONRequestBody = DeleteSpansRequest
 
 // SpansListJSONRequestBody defines body for SpansList for application/json ContentType.
-type SpansListJSONRequestBody SpansListJSONBody
+type SpansListJSONRequestBody = ListSpansRequest
 
 // SpansAnnotateJSONRequestBody defines body for SpansAnnotate for application/json ContentType.
 type SpansAnnotateJSONRequestBody = AnnotateSpansRequestBody
@@ -16123,7 +16097,6 @@ type AiIntegrationsGetResponse struct {
 	JSON200                   *AiIntegration
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -16231,6 +16204,7 @@ type AnnotationConfigsDeleteResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -16363,7 +16337,6 @@ type AnnotationQueuesGetResponse struct {
 	JSON200                   *AnnotationQueue
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -16739,7 +16712,6 @@ type DatasetsGetResponse struct {
 	JSON200                   *Dataset
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -16874,7 +16846,6 @@ type EvaluatorVersionsGetResponse struct {
 	JSON200                   *EvaluatorVersion
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -16981,7 +16952,6 @@ type EvaluatorsGetResponse struct {
 	JSON200                   *EvaluatorWithVersion
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -17328,7 +17298,6 @@ type OrganizationsGetResponse struct {
 	JSON200                   *Organization
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -17542,7 +17511,6 @@ type PromptVersionsGetResponse struct {
 	JSON200                   *PromptVersion
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -17674,6 +17642,7 @@ type PromptsDeleteResponse struct {
 	HTTPResponse              *http.Response
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -17726,6 +17695,7 @@ type PromptsUpdateResponse struct {
 	JSON200                   *Prompt
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -17752,7 +17722,6 @@ type PromptLabelsGetResponse struct {
 	JSON200                   *PromptVersion
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -18394,7 +18363,6 @@ type TaskRunsGetResponse struct {
 	JSON200                   *TaskRun
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -18717,7 +18685,6 @@ type UsersGetResponse struct {
 	JSON200                   *UserResponse
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -20316,13 +20283,6 @@ func ParseAiIntegrationsGetResponse(rsp *http.Response) (*AiIntegrationsGetRespo
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -20559,6 +20519,13 @@ func ParseAnnotationConfigsDeleteResponse(rsp *http.Response) (*AnnotationConfig
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
@@ -20843,13 +20810,6 @@ func ParseAnnotationQueuesGetResponse(rsp *http.Response) (*AnnotationQueuesGetR
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
@@ -21684,13 +21644,6 @@ func ParseDatasetsGetResponse(rsp *http.Response) (*DatasetsGetResponse, error) 
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21989,13 +21942,6 @@ func ParseEvaluatorVersionsGetResponse(rsp *http.Response) (*EvaluatorVersionsGe
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22225,13 +22171,6 @@ func ParseEvaluatorsGetResponse(rsp *http.Response) (*EvaluatorsGetResponse, err
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
@@ -22991,13 +22930,6 @@ func ParseOrganizationsGetResponse(rsp *http.Response) (*OrganizationsGetRespons
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -23465,13 +23397,6 @@ func ParsePromptVersionsGetResponse(rsp *http.Response) (*PromptVersionsGetRespo
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -23749,6 +23674,13 @@ func ParsePromptsDeleteResponse(rsp *http.Response) (*PromptsDeleteResponse, err
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -23857,6 +23789,13 @@ func ParsePromptsUpdateResponse(rsp *http.Response) (*PromptsUpdateResponse, err
 		}
 		response.ApplicationproblemJSON401 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -23910,13 +23849,6 @@ func ParsePromptLabelsGetResponse(rsp *http.Response) (*PromptLabelsGetResponse,
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
@@ -25333,13 +25265,6 @@ func ParseTaskRunsGetResponse(rsp *http.Response) (*TaskRunsGetResponse, error) 
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -26057,13 +25982,6 @@ func ParseUsersGetResponse(rsp *http.Response) (*UsersGetResponse, error) {
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound

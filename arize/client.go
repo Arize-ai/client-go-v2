@@ -7,6 +7,8 @@ import (
 
 	"github.com/Arize-ai/client-go-v2/arize/apikeys"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
+	"github.com/Arize-ai/client-go-v2/arize/organizations"
+	"github.com/Arize-ai/client-go-v2/arize/projects"
 	"github.com/Arize-ai/client-go-v2/arize/resourcerestrictions"
 	"github.com/Arize-ai/client-go-v2/arize/rolebindings"
 	"github.com/Arize-ai/client-go-v2/arize/spans"
@@ -16,9 +18,10 @@ import (
 // Access each resource domain through the typed subclient fields.
 type Client struct {
 	cfg Config
-	gen *generated.ClientWithResponses
 
+	Projects             *projects.Client
 	APIKeys              *apikeys.Client
+	Organizations        *organizations.Client
 	ResourceRestrictions *resourcerestrictions.Client
 	Spans                *spans.Client
 	RoleBindings         *rolebindings.Client
@@ -63,12 +66,13 @@ func NewClient(cfg Config) (*Client, error) {
 
 	return &Client{
 		cfg: resolved,
-		gen: gen,
 
-		APIKeys:              apikeys.New(gen, resolved),
-		ResourceRestrictions: resourcerestrictions.New(gen, resolved),
-		Spans:                spans.New(gen, resolved),
-		RoleBindings:         rolebindings.New(gen, resolved),
+		APIKeys:              apikeys.New(gen),
+		Organizations:        organizations.New(gen),
+		Projects:             projects.New(gen),
+		ResourceRestrictions: resourcerestrictions.New(gen),
+		RoleBindings:         rolebindings.New(gen),
+		Spans:                spans.New(gen),
 	}, nil
 }
 

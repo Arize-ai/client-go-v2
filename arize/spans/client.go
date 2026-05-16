@@ -6,30 +6,26 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
-	"github.com/Arize-ai/client-go-v2/arize/internal/sdkconfig"
 )
 
 // Client provides access to the Arize Spans API.
 type Client struct {
 	gen *generated.ClientWithResponses
-	cfg sdkconfig.Config
 }
 
 // New constructs a Client from a generated ClientWithResponses.
-func New(gen *generated.ClientWithResponses, cfg sdkconfig.Config) *Client {
-	return &Client{gen: gen, cfg: cfg}
+func New(gen *generated.ClientWithResponses) *Client {
+	return &Client{gen: gen}
 }
 
 // List returns a paginated list of spans matching the given filter.
-func (c *Client) List(ctx context.Context, req ListSpansRequest, params ListParams) (*SpanList, error) {
+//
+// Unlike other List methods in this SDK, spans.List takes a body: the spans
+// API uses POST because the filter DSL and projection list can be too large
+// for a query string. Pagination stays in params.
+func (c *Client) List(ctx context.Context, req ListRequest, params ListParams) (*SpanList, error) {
 	prerelease.Warn("spans.list", prerelease.Alpha)
-	reqBody := generated.SpansListJSONRequestBody{
-		ProjectId: req.ProjectId,
-		EndTime:   req.EndTime,
-		Filter:    req.Filter,
-		StartTime: req.StartTime,
-	}
-	resp, err := c.gen.SpansListWithResponse(ctx, &params, reqBody)
+	resp, err := c.gen.SpansListWithResponse(ctx, &params, req)
 	if err != nil {
 		return nil, err
 	}
@@ -44,13 +40,9 @@ func (c *Client) List(ctx context.Context, req ListSpansRequest, params ListPara
 // server returned HTTP 200: the request was partially processed and only the
 // IDs listed in SpanDeletePartial.DeletedSpanIds were confirmed deleted —
 // the caller should retry for the remainder.
-func (c *Client) Delete(ctx context.Context, req DeleteSpansRequest) (*SpanDeletePartial, error) {
+func (c *Client) Delete(ctx context.Context, req DeleteRequest) (*SpanDeletePartial, error) {
 	prerelease.Warn("spans.delete", prerelease.Alpha)
-	reqBody := generated.SpansDeleteJSONRequestBody{
-		ProjectId: req.ProjectId,
-		SpanIds:   req.SpanIds,
-	}
-	resp, err := c.gen.SpansDeleteWithResponse(ctx, reqBody)
+	resp, err := c.gen.SpansDeleteWithResponse(ctx, req)
 	if err != nil {
 		return nil, err
 	}

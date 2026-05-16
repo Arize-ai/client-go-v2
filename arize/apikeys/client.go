@@ -6,18 +6,16 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
-	"github.com/Arize-ai/client-go-v2/arize/internal/sdkconfig"
 )
 
 // Client provides access to the Arize API Keys API.
 type Client struct {
 	gen *generated.ClientWithResponses
-	cfg sdkconfig.Config
 }
 
 // New constructs a Client from a generated ClientWithResponses.
-func New(gen *generated.ClientWithResponses, cfg sdkconfig.Config) *Client {
-	return &Client{gen: gen, cfg: cfg}
+func New(gen *generated.ClientWithResponses) *Client {
+	return &Client{gen: gen}
 }
 
 // List returns a paginated list of API keys.
@@ -34,9 +32,9 @@ func (c *Client) List(ctx context.Context, params ListParams) (*ApiKeyList, erro
 }
 
 // Create creates a new API key and returns it.
-func (c *Client) Create(ctx context.Context, req CreateApiKeyRequest) (*ApiKeyCreated, error) {
+func (c *Client) Create(ctx context.Context, req CreateRequest) (*ApiKeyCreated, error) {
 	prerelease.Warn("apikeys.create", prerelease.Alpha)
-	resp, err := c.gen.ApiKeysCreateWithResponse(ctx, generated.ApiKeysCreateJSONRequestBody(req))
+	resp, err := c.gen.ApiKeysCreateWithResponse(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -57,9 +55,9 @@ func (c *Client) Delete(ctx context.Context, apiKeyID string) error {
 }
 
 // Refresh rotates an API key and returns the new key.
-func (c *Client) Refresh(ctx context.Context, apiKeyID string, req RefreshApiKeyRequest) (*ApiKeyCreated, error) {
+func (c *Client) Refresh(ctx context.Context, apiKeyID string, req RefreshRequest) (*ApiKeyCreated, error) {
 	prerelease.Warn("apikeys.refresh", prerelease.Alpha)
-	resp, err := c.gen.ApiKeysRefreshWithResponse(ctx, apiKeyID, generated.ApiKeysRefreshJSONRequestBody(req))
+	resp, err := c.gen.ApiKeysRefreshWithResponse(ctx, apiKeyID, req)
 	if err != nil {
 		return nil, err
 	}
