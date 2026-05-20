@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.5.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.4.0...arize-go-sdk-v2/v0.5.0) (2026-05-20)
+
+
+### 🎁 New Features
+
+* accept resource names (not just IDs) across subclient request ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+* **apikeys:** add CreateServiceKey method for creating service-scoped ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+* **apikeys:** default List page size to 50 when limit is unspecified ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+* **openapi:** extract inline enums for api_keys ([#71644](https://github.com/Arize-ai/arize/issues/71644)) ([4f91923](https://github.com/Arize-ai/arize/commit/4f9192351487624fb0eca3bbf90d4463bccb3e5b))
+* **organizations:** add Delete, AddUser, and RemoveUser methods ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+* **organizations:** return ErrNoUpdateFields when Update is called with ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+* **spans:** add Annotate method for upserting human annotations on ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+
+
+### 📚 Documentation
+
+* document optional pointer fields and codify nil-behavior ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+* add runnable examples programs for apikeys, organizations, ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+* drop internal resolver references from public godocs ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+
+
+### 💫 Code Refactoring
+
+* collapse optional pointer fields to value types ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+* **resourcerestrictions:** rename Create/Delete to ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+* **sdk:** unify method signatures and request payload types across all subclients ([#72099](https://github.com/Arize-ai/arize/issues/72099)) ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+
+
+### 🧪 Tests
+
+* expand subclient coverage with default-limit, create-validation, ([52612cf](https://github.com/Arize-ai/arize/commit/52612cf9d495ee86ff2cd8b6f44e935d0c1ec27f))
+
 ## [0.4.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.3.0...arize-go-sdk-v2/v0.4.0) (2026-05-16)
 
 

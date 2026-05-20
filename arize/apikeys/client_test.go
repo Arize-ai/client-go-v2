@@ -2,6 +2,7 @@ package apikeys_test
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -49,7 +50,7 @@ func TestApiKeys(t *testing.T) {
 						Name:            "my-key",
 						CreatedAt:       time.Now(),
 						CreatedByUserId: "user-1",
-						KeyType:         apikeys.ApiKeyKeyTypeUser,
+						KeyType:         apikeys.ApiKeyTypeUser,
 						RedactedKey:     "ak-abc...xyz",
 						Status:          apikeys.ApiKeyStatusActive,
 					}},
@@ -57,8 +58,7 @@ func TestApiKeys(t *testing.T) {
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				limit := 10
-				return c.APIKeys.List(ctx, apikeys.ListParams{Limit: &limit})
+				return c.APIKeys.List(ctx, apikeys.ListRequest{Limit: 10})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
@@ -79,11 +79,9 @@ func TestApiKeys(t *testing.T) {
 				json.NewEncoder(w).Encode(apikeys.ApiKeyList{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				kt := apikeys.ListParamsKeyTypeService
-				st := apikeys.ApiKeyStatusDeleted
-				return c.APIKeys.List(ctx, apikeys.ListParams{
-					KeyType: &kt,
-					Status:  &st,
+				return c.APIKeys.List(ctx, apikeys.ListRequest{
+					KeyType: apikeys.ApiKeyTypeService,
+					Status:  apikeys.ApiKeyStatusDeleted,
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -99,6 +97,24 @@ func TestApiKeys(t *testing.T) {
 			},
 		},
 		{
+			name: "List default limit",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if got := r.URL.Query().Get("limit"); got != "50" {
+					t.Errorf("expected limit=50, got %q", got)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(apikeys.ApiKeyList{Pagination: arize.PaginationMetadata{HasMore: false}})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.APIKeys.List(ctx, apikeys.ListRequest{})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
 			name: "List error",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
@@ -106,7 +122,7 @@ func TestApiKeys(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "forbidden", "status": 403})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.APIKeys.List(ctx, apikeys.ListParams{})
+				return c.APIKeys.List(ctx, apikeys.ListRequest{})
 			},
 			check: func(t *testing.T, got any, err error) {
 				var fe *arize.ForbiddenError
@@ -124,7 +140,7 @@ func TestApiKeys(t *testing.T) {
 				w.WriteHeader(204)
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return nil, c.APIKeys.Delete(ctx, "key-1")
+				return nil, c.APIKeys.Delete(ctx, apikeys.DeleteRequest{ApiKeyID: "key-1"})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
@@ -145,7 +161,7 @@ func TestApiKeys(t *testing.T) {
 					Name:            "new-key",
 					Key:             "ak-secret",
 					RedactedKey:     "ak-sec...ret",
-					KeyType:         apikeys.ApiKeyCreatedKeyTypeUser,
+					KeyType:         apikeys.ApiKeyTypeUser,
 					Status:          apikeys.ApiKeyStatusActive,
 					CreatedAt:       time.Now(),
 					CreatedByUserId: "user-1",
@@ -175,12 +191,64 @@ func TestApiKeys(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "bad request", "status": 400})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.APIKeys.Create(ctx, apikeys.CreateRequest{Name: ""})
+				return c.APIKeys.Create(ctx, apikeys.CreateRequest{Name: "valid-name"})
 			},
 			check: func(t *testing.T, got any, err error) {
 				var be *arize.BadRequestError
 				if !errors.As(err, &be) {
 					t.Errorf("expected *BadRequestError, got %T: %v", err, err)
+				}
+			},
+		},
+		{
+			name: "CreateServiceKey success",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodPost {
+					t.Errorf("expected POST, got %s", r.Method)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusCreated)
+				json.NewEncoder(w).Encode(apikeys.ApiKeyCreated{
+					Id:              "key-3",
+					Name:            "svc-key",
+					Key:             "ak-service-secret",
+					RedactedKey:     "ak-ser...ret",
+					KeyType:         apikeys.ApiKeyTypeService,
+					Status:          apikeys.ApiKeyStatusActive,
+					CreatedAt:       time.Now(),
+					CreatedByUserId: "user-1",
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				spaceID := base64.StdEncoding.EncodeToString([]byte("Space:test-space-id"))
+				return c.APIKeys.CreateServiceKey(ctx, apikeys.CreateServiceKeyRequest{
+					Name:      "svc-key",
+					Space:     spaceID,
+					SpaceRole: apikeys.ApiKeySpaceRoleMember,
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				resp := got.(*apikeys.ApiKeyCreated)
+				if resp.KeyType != apikeys.ApiKeyTypeService {
+					t.Errorf("expected service key type, got %v", resp.KeyType)
+				}
+				if resp.Key == "" {
+					t.Error("expected non-empty Key")
+				}
+			},
+		},
+		{
+			name:    "CreateServiceKey validation: missing space",
+			handler: func(w http.ResponseWriter, r *http.Request) { t.Error("server should not be called") },
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.APIKeys.CreateServiceKey(ctx, apikeys.CreateServiceKeyRequest{Name: "svc-key", Space: ""})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err == nil {
+					t.Fatal("expected error for missing space, got nil")
 				}
 			},
 		},
@@ -196,14 +264,14 @@ func TestApiKeys(t *testing.T) {
 					Name:            "rotated-key",
 					Key:             "ak-rotated",
 					RedactedKey:     "ak-rot...ted",
-					KeyType:         apikeys.ApiKeyCreatedKeyTypeUser,
+					KeyType:         apikeys.ApiKeyTypeUser,
 					Status:          apikeys.ApiKeyStatusActive,
 					CreatedAt:       time.Now(),
 					CreatedByUserId: "user-1",
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.APIKeys.Refresh(ctx, "key-1", apikeys.RefreshRequest{})
+				return c.APIKeys.Refresh(ctx, apikeys.RefreshRequest{ApiKeyID: "key-1"})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
@@ -223,7 +291,7 @@ func TestApiKeys(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.APIKeys.Refresh(ctx, "nonexistent", apikeys.RefreshRequest{})
+				return c.APIKeys.Refresh(ctx, apikeys.RefreshRequest{ApiKeyID: "nonexistent"})
 			},
 			check: func(t *testing.T, got any, err error) {
 				var nfe *arize.NotFoundError

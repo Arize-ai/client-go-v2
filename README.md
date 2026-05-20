@@ -61,7 +61,7 @@ The Go SDK v2 currently exposes the following surface area:
 - **Resource Restrictions** subclient — create and delete restrictions on Arize resources.
 - **Typed HTTP errors** matchable via `errors.As` (`BadRequestError`, `UnauthorizedError`, `NotFoundError`, …).
 
-Additional resource domains (spans, datasets, experiments, prompts, evaluators, tasks, projects, organizations, spaces, users) are tracked in the Python v8 SDK and will be ported to Go incrementally.
+Additional resource domains (spans, datasets, experiments, prompts, evaluators, tasks, projects, organizations, spaces, users) will be added incrementally.
 
 # Installation
 
@@ -175,7 +175,7 @@ All HTTP errors implement `error` and embed `arize.APIError`. Match on a specifi
 ```go
 import "errors"
 
-err := client.ResourceRestrictions.Delete(ctx, "nonexistent")
+err := client.ResourceRestrictions.Delete(ctx, resourcerestrictions.DeleteRequest{ResourceRestrictionID: "nonexistent"})
 
 var nfe *arize.NotFoundError
 if errors.As(err, &nfe) {
@@ -205,9 +205,8 @@ import (
 )
 
 ctx := context.Background()
-resp, err := client.ResourceRestrictions.Create(ctx, resourcerestrictions.CreateResourceRestrictionRequestBody{
-    ResourceId:   "<resource-id>",
-    ResourceType: "PROJECT",
+resp, err := client.ResourceRestrictions.Create(ctx, resourcerestrictions.CreateRequest{
+    ResourceID: "<resource-id>",
 })
 if err != nil {
     // handle error
@@ -218,7 +217,7 @@ _ = resp.ResourceRestriction
 ### Delete a Resource Restriction
 
 ```go
-if err := client.ResourceRestrictions.Delete(ctx, "<resource-id>"); err != nil {
+if err := client.ResourceRestrictions.Delete(ctx, resourcerestrictions.DeleteRequest{ResourceRestrictionID: "<resource-id>"}); err != nil {
     var nfe *arize.NotFoundError
     if errors.As(err, &nfe) {
         // resource restriction already gone
@@ -273,7 +272,7 @@ client, _ := arize.NewClient(arize.Config{
 
 ## Local Directory and Caching
 
-`ArizeDirectory` is reserved for SDK-managed local files (cache, logs). `DisableCaching` is wired through `Config` but caching itself is not yet active in v2 — these knobs exist for parity with the Python SDK and to keep call sites stable as features land.
+`ArizeDirectory` is reserved for SDK-managed local files (cache, logs). `DisableCaching` is wired through `Config` but caching itself is not yet active in v2 — these knobs exist now to keep call sites stable as features land.
 
 ```go
 client, _ := arize.NewClient(arize.Config{

@@ -14,7 +14,7 @@ import (
 )
 
 // b64 produces the encoded form of "Type:1:" + suffix — the shape of real
-// Arize global IDs.
+// Arize unique identifiers.
 func b64(suffix string) string {
 	return base64.StdEncoding.EncodeToString([]byte("Resource:1:" + suffix))
 }

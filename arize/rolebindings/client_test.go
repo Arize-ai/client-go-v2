@@ -13,6 +13,15 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/rolebindings"
 )
 
+// wireRoleBinding mirrors the API JSON shape for a role-binding create/update body,
+// so tests can decode incoming requests without importing internal/generated.
+type wireRoleBinding struct {
+	ResourceId   string                                  `json:"resource_id,omitempty"`
+	ResourceType rolebindings.RoleBindingResourceType    `json:"resource_type,omitempty"`
+	RoleId       string                                  `json:"role_id,omitempty"`
+	UserId       string                                  `json:"user_id,omitempty"`
+}
+
 func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *arize.Client) {
 	t.Helper()
 	srv := httptest.NewServer(handler)
@@ -53,14 +62,14 @@ func TestRoleBindings(t *testing.T) {
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.RoleBindings.Get(ctx, "binding-1")
+				return c.RoleBindings.Get(ctx, rolebindings.GetRequest{RoleBindingID: "binding-1"})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				if got.(*rolebindings.RoleBindingResponse).Id != "binding-1" {
-					t.Errorf("unexpected id: %s", got.(*rolebindings.RoleBindingResponse).Id)
+				if got.(*rolebindings.RoleBinding).Id != "binding-1" {
+					t.Errorf("unexpected id: %s", got.(*rolebindings.RoleBinding).Id)
 				}
 			},
 		},
@@ -72,7 +81,7 @@ func TestRoleBindings(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.RoleBindings.Get(ctx, "nonexistent")
+				return c.RoleBindings.Get(ctx, rolebindings.GetRequest{RoleBindingID: "nonexistent"})
 			},
 			check: func(t *testing.T, got any, err error) {
 				var nfe *arize.NotFoundError
@@ -87,7 +96,7 @@ func TestRoleBindings(t *testing.T) {
 				if r.Method != http.MethodPost {
 					t.Errorf("expected POST, got %s", r.Method)
 				}
-				var body rolebindings.CreateRequest
+				var body wireRoleBinding
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
@@ -109,10 +118,10 @@ func TestRoleBindings(t *testing.T) {
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.RoleBindings.Create(ctx, rolebindings.CreateRequest{
-					ResourceId:   "space-1",
+					ResourceID:   "space-1",
 					ResourceType: rolebindings.RoleBindingResourceTypeSPACE,
-					RoleId:       "role-1",
-					UserId:       "user-1",
+					RoleID:       "role-1",
+					UserID:       "user-1",
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -133,10 +142,10 @@ func TestRoleBindings(t *testing.T) {
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.RoleBindings.Create(ctx, rolebindings.CreateRequest{
-					ResourceId:   "dataset-1",
+					ResourceID:   "dataset-1",
 					ResourceType: rolebindings.RoleBindingResourceType("DATASET"),
-					RoleId:       "role-1",
-					UserId:       "user-1",
+					RoleID:       "role-1",
+					UserID:       "user-1",
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -147,12 +156,34 @@ func TestRoleBindings(t *testing.T) {
 			},
 		},
 		{
+			name: "Create conflict",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(409)
+				json.NewEncoder(w).Encode(map[string]any{"title": "conflict", "status": 409})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.RoleBindings.Create(ctx, rolebindings.CreateRequest{
+					ResourceID:   "space-1",
+					ResourceType: rolebindings.RoleBindingResourceTypeSPACE,
+					RoleID:       "role-1",
+					UserID:       "user-1",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var ce *arize.ConflictError
+				if !errors.As(err, &ce) {
+					t.Errorf("expected *ConflictError, got %T: %v", err, err)
+				}
+			},
+		},
+		{
 			name: "Update success",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				if r.Method != http.MethodPatch {
 					t.Errorf("expected PATCH, got %s", r.Method)
 				}
-				var body rolebindings.UpdateRequest
+				var body wireRoleBinding
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
@@ -171,16 +202,17 @@ func TestRoleBindings(t *testing.T) {
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.RoleBindings.Update(ctx, "binding-1", rolebindings.UpdateRequest{
-					RoleId: "role-2",
+				return c.RoleBindings.Update(ctx, rolebindings.UpdateRequest{
+					RoleBindingID: "binding-1",
+					RoleID:        "role-2",
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				if got.(*rolebindings.RoleBindingResponse).RoleId != "role-2" {
-					t.Errorf("unexpected role_id: %s", got.(*rolebindings.RoleBindingResponse).RoleId)
+				if got.(*rolebindings.RoleBinding).RoleId != "role-2" {
+					t.Errorf("unexpected role_id: %s", got.(*rolebindings.RoleBinding).RoleId)
 				}
 			},
 		},
@@ -192,8 +224,9 @@ func TestRoleBindings(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.RoleBindings.Update(ctx, "nonexistent", rolebindings.UpdateRequest{
-					RoleId: "role-2",
+				return c.RoleBindings.Update(ctx, rolebindings.UpdateRequest{
+					RoleBindingID: "nonexistent",
+					RoleID:        "role-2",
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -212,7 +245,7 @@ func TestRoleBindings(t *testing.T) {
 				w.WriteHeader(204)
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return nil, c.RoleBindings.Delete(ctx, "binding-1")
+				return nil, c.RoleBindings.Delete(ctx, rolebindings.DeleteRequest{RoleBindingID: "binding-1"})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
@@ -228,7 +261,7 @@ func TestRoleBindings(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return nil, c.RoleBindings.Delete(ctx, "nonexistent")
+				return nil, c.RoleBindings.Delete(ctx, rolebindings.DeleteRequest{RoleBindingID: "nonexistent"})
 			},
 			check: func(t *testing.T, got any, err error) {
 				var nfe *arize.NotFoundError

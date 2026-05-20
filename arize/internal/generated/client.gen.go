@@ -101,18 +101,18 @@ func (e AnnotationConfigType) Valid() bool {
 	}
 }
 
-// Defines values for AnnotationQueueAssignedUserCompletionStatus.
+// Defines values for AnnotationQueueCompletionStatus.
 const (
-	AnnotationQueueAssignedUserCompletionStatusCompleted AnnotationQueueAssignedUserCompletionStatus = "completed"
-	AnnotationQueueAssignedUserCompletionStatusPending   AnnotationQueueAssignedUserCompletionStatus = "pending"
+	AnnotationQueueCompletionStatusCompleted AnnotationQueueCompletionStatus = "completed"
+	AnnotationQueueCompletionStatusPending   AnnotationQueueCompletionStatus = "pending"
 )
 
-// Valid indicates whether the value is a known member of the AnnotationQueueAssignedUserCompletionStatus enum.
-func (e AnnotationQueueAssignedUserCompletionStatus) Valid() bool {
+// Valid indicates whether the value is a known member of the AnnotationQueueCompletionStatus enum.
+func (e AnnotationQueueCompletionStatus) Valid() bool {
 	switch e {
-	case AnnotationQueueAssignedUserCompletionStatusCompleted:
+	case AnnotationQueueCompletionStatusCompleted:
 		return true
-	case AnnotationQueueAssignedUserCompletionStatusPending:
+	case AnnotationQueueCompletionStatusPending:
 		return true
 	default:
 		return false
@@ -134,54 +134,18 @@ func (e AnnotationQueueExampleRecordInputRecordType) Valid() bool {
 	}
 }
 
-// Defines values for AnnotationQueueRecordSourceType.
+// Defines values for AnnotationQueueSourceType.
 const (
-	AnnotationQueueRecordSourceTypeDataset AnnotationQueueRecordSourceType = "dataset"
-	AnnotationQueueRecordSourceTypeSpans   AnnotationQueueRecordSourceType = "spans"
+	AnnotationQueueSourceTypeDataset AnnotationQueueSourceType = "dataset"
+	AnnotationQueueSourceTypeSpans   AnnotationQueueSourceType = "spans"
 )
 
-// Valid indicates whether the value is a known member of the AnnotationQueueRecordSourceType enum.
-func (e AnnotationQueueRecordSourceType) Valid() bool {
+// Valid indicates whether the value is a known member of the AnnotationQueueSourceType enum.
+func (e AnnotationQueueSourceType) Valid() bool {
 	switch e {
-	case AnnotationQueueRecordSourceTypeDataset:
+	case AnnotationQueueSourceTypeDataset:
 		return true
-	case AnnotationQueueRecordSourceTypeSpans:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for AnnotationQueueRecordAnnotateResultSourceType.
-const (
-	AnnotationQueueRecordAnnotateResultSourceTypeDataset AnnotationQueueRecordAnnotateResultSourceType = "dataset"
-	AnnotationQueueRecordAnnotateResultSourceTypeSpans   AnnotationQueueRecordAnnotateResultSourceType = "spans"
-)
-
-// Valid indicates whether the value is a known member of the AnnotationQueueRecordAnnotateResultSourceType enum.
-func (e AnnotationQueueRecordAnnotateResultSourceType) Valid() bool {
-	switch e {
-	case AnnotationQueueRecordAnnotateResultSourceTypeDataset:
-		return true
-	case AnnotationQueueRecordAnnotateResultSourceTypeSpans:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for AnnotationQueueRecordAssignResultSourceType.
-const (
-	AnnotationQueueRecordAssignResultSourceTypeDataset AnnotationQueueRecordAssignResultSourceType = "dataset"
-	AnnotationQueueRecordAssignResultSourceTypeSpans   AnnotationQueueRecordAssignResultSourceType = "spans"
-)
-
-// Valid indicates whether the value is a known member of the AnnotationQueueRecordAssignResultSourceType enum.
-func (e AnnotationQueueRecordAssignResultSourceType) Valid() bool {
-	switch e {
-	case AnnotationQueueRecordAssignResultSourceTypeDataset:
-		return true
-	case AnnotationQueueRecordAssignResultSourceTypeSpans:
+	case AnnotationQueueSourceTypeSpans:
 		return true
 	default:
 		return false
@@ -203,114 +167,60 @@ func (e AnnotationQueueSpanRecordInputRecordType) Valid() bool {
 	}
 }
 
-// Defines values for ApiKeyKeyType.
+// Defines values for ApiKeyAccountRole.
 const (
-	ApiKeyKeyTypeService ApiKeyKeyType = "service"
-	ApiKeyKeyTypeUser    ApiKeyKeyType = "user"
+	ApiKeyAccountRoleAdmin  ApiKeyAccountRole = "admin"
+	ApiKeyAccountRoleMember ApiKeyAccountRole = "member"
 )
 
-// Valid indicates whether the value is a known member of the ApiKeyKeyType enum.
-func (e ApiKeyKeyType) Valid() bool {
+// Valid indicates whether the value is a known member of the ApiKeyAccountRole enum.
+func (e ApiKeyAccountRole) Valid() bool {
 	switch e {
-	case ApiKeyKeyTypeService:
+	case ApiKeyAccountRoleAdmin:
 		return true
-	case ApiKeyKeyTypeUser:
+	case ApiKeyAccountRoleMember:
 		return true
 	default:
 		return false
 	}
 }
 
-// Defines values for ApiKeyCreateKeyType.
+// Defines values for ApiKeyOrganizationRole.
 const (
-	ApiKeyCreateKeyTypeService ApiKeyCreateKeyType = "service"
-	ApiKeyCreateKeyTypeUser    ApiKeyCreateKeyType = "user"
+	ApiKeyOrganizationRoleAdmin    ApiKeyOrganizationRole = "admin"
+	ApiKeyOrganizationRoleMember   ApiKeyOrganizationRole = "member"
+	ApiKeyOrganizationRoleReadOnly ApiKeyOrganizationRole = "read-only"
 )
 
-// Valid indicates whether the value is a known member of the ApiKeyCreateKeyType enum.
-func (e ApiKeyCreateKeyType) Valid() bool {
+// Valid indicates whether the value is a known member of the ApiKeyOrganizationRole enum.
+func (e ApiKeyOrganizationRole) Valid() bool {
 	switch e {
-	case ApiKeyCreateKeyTypeService:
+	case ApiKeyOrganizationRoleAdmin:
 		return true
-	case ApiKeyCreateKeyTypeUser:
+	case ApiKeyOrganizationRoleMember:
+		return true
+	case ApiKeyOrganizationRoleReadOnly:
 		return true
 	default:
 		return false
 	}
 }
 
-// Defines values for ApiKeyCreatedKeyType.
+// Defines values for ApiKeySpaceRole.
 const (
-	ApiKeyCreatedKeyTypeService ApiKeyCreatedKeyType = "service"
-	ApiKeyCreatedKeyTypeUser    ApiKeyCreatedKeyType = "user"
+	ApiKeySpaceRoleAdmin    ApiKeySpaceRole = "admin"
+	ApiKeySpaceRoleMember   ApiKeySpaceRole = "member"
+	ApiKeySpaceRoleReadOnly ApiKeySpaceRole = "read-only"
 )
 
-// Valid indicates whether the value is a known member of the ApiKeyCreatedKeyType enum.
-func (e ApiKeyCreatedKeyType) Valid() bool {
+// Valid indicates whether the value is a known member of the ApiKeySpaceRole enum.
+func (e ApiKeySpaceRole) Valid() bool {
 	switch e {
-	case ApiKeyCreatedKeyTypeService:
+	case ApiKeySpaceRoleAdmin:
 		return true
-	case ApiKeyCreatedKeyTypeUser:
+	case ApiKeySpaceRoleMember:
 		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for ApiKeyRolesAccountRole.
-const (
-	ApiKeyRolesAccountRoleAdmin  ApiKeyRolesAccountRole = "admin"
-	ApiKeyRolesAccountRoleMember ApiKeyRolesAccountRole = "member"
-)
-
-// Valid indicates whether the value is a known member of the ApiKeyRolesAccountRole enum.
-func (e ApiKeyRolesAccountRole) Valid() bool {
-	switch e {
-	case ApiKeyRolesAccountRoleAdmin:
-		return true
-	case ApiKeyRolesAccountRoleMember:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for ApiKeyRolesOrgRole.
-const (
-	ApiKeyRolesOrgRoleAdmin    ApiKeyRolesOrgRole = "admin"
-	ApiKeyRolesOrgRoleMember   ApiKeyRolesOrgRole = "member"
-	ApiKeyRolesOrgRoleReadOnly ApiKeyRolesOrgRole = "read-only"
-)
-
-// Valid indicates whether the value is a known member of the ApiKeyRolesOrgRole enum.
-func (e ApiKeyRolesOrgRole) Valid() bool {
-	switch e {
-	case ApiKeyRolesOrgRoleAdmin:
-		return true
-	case ApiKeyRolesOrgRoleMember:
-		return true
-	case ApiKeyRolesOrgRoleReadOnly:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for ApiKeyRolesSpaceRole.
-const (
-	ApiKeyRolesSpaceRoleAdmin    ApiKeyRolesSpaceRole = "admin"
-	ApiKeyRolesSpaceRoleMember   ApiKeyRolesSpaceRole = "member"
-	ApiKeyRolesSpaceRoleReadOnly ApiKeyRolesSpaceRole = "read-only"
-)
-
-// Valid indicates whether the value is a known member of the ApiKeyRolesSpaceRole enum.
-func (e ApiKeyRolesSpaceRole) Valid() bool {
-	switch e {
-	case ApiKeyRolesSpaceRoleAdmin:
-		return true
-	case ApiKeyRolesSpaceRoleMember:
-		return true
-	case ApiKeyRolesSpaceRoleReadOnly:
+	case ApiKeySpaceRoleReadOnly:
 		return true
 	default:
 		return false
@@ -329,6 +239,24 @@ func (e ApiKeyStatus) Valid() bool {
 	case ApiKeyStatusActive:
 		return true
 	case ApiKeyStatusDeleted:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ApiKeyType.
+const (
+	ApiKeyTypeService ApiKeyType = "service"
+	ApiKeyTypeUser    ApiKeyType = "user"
+)
+
+// Valid indicates whether the value is a known member of the ApiKeyType enum.
+func (e ApiKeyType) Valid() bool {
+	switch e {
+	case ApiKeyTypeService:
+		return true
+	case ApiKeyTypeUser:
 		return true
 	default:
 		return false
@@ -392,27 +320,6 @@ const (
 func (e CategoricalAnnotationConfigCreateAnnotationConfigType) Valid() bool {
 	switch e {
 	case CategoricalAnnotationConfigCreateAnnotationConfigTypeCategorical:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for CodeConfigCommonDataGranularity.
-const (
-	CodeConfigCommonDataGranularitySession CodeConfigCommonDataGranularity = "session"
-	CodeConfigCommonDataGranularitySpan    CodeConfigCommonDataGranularity = "span"
-	CodeConfigCommonDataGranularityTrace   CodeConfigCommonDataGranularity = "trace"
-)
-
-// Valid indicates whether the value is a known member of the CodeConfigCommonDataGranularity enum.
-func (e CodeConfigCommonDataGranularity) Valid() bool {
-	switch e {
-	case CodeConfigCommonDataGranularitySession:
-		return true
-	case CodeConfigCommonDataGranularitySpan:
-		return true
-	case CodeConfigCommonDataGranularityTrace:
 		return true
 	default:
 		return false
@@ -494,27 +401,6 @@ func (e CreateTemplateEvaluationTaskRequestType) Valid() bool {
 	}
 }
 
-// Defines values for CustomCodeConfigDataGranularity.
-const (
-	CustomCodeConfigDataGranularitySession CustomCodeConfigDataGranularity = "session"
-	CustomCodeConfigDataGranularitySpan    CustomCodeConfigDataGranularity = "span"
-	CustomCodeConfigDataGranularityTrace   CustomCodeConfigDataGranularity = "trace"
-)
-
-// Valid indicates whether the value is a known member of the CustomCodeConfigDataGranularity enum.
-func (e CustomCodeConfigDataGranularity) Valid() bool {
-	switch e {
-	case CustomCodeConfigDataGranularitySession:
-		return true
-	case CustomCodeConfigDataGranularitySpan:
-		return true
-	case CustomCodeConfigDataGranularityTrace:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for CustomCodeConfigType.
 const (
 	CustomCodeConfigTypeCustom CustomCodeConfigType = "custom"
@@ -524,6 +410,27 @@ const (
 func (e CustomCodeConfigType) Valid() bool {
 	switch e {
 	case CustomCodeConfigTypeCustom:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DataGranularity.
+const (
+	DataGranularitySession DataGranularity = "session"
+	DataGranularitySpan    DataGranularity = "span"
+	DataGranularityTrace   DataGranularity = "trace"
+)
+
+// Valid indicates whether the value is a known member of the DataGranularity enum.
+func (e DataGranularity) Valid() bool {
+	switch e {
+	case DataGranularitySession:
+		return true
+	case DataGranularitySpan:
+		return true
+	case DataGranularityTrace:
 		return true
 	default:
 		return false
@@ -704,27 +611,6 @@ func (e LlmProvider) Valid() bool {
 	case LlmProviderOpenAi:
 		return true
 	case LlmProviderVertexAi:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for ManagedCodeConfigDataGranularity.
-const (
-	ManagedCodeConfigDataGranularitySession ManagedCodeConfigDataGranularity = "session"
-	ManagedCodeConfigDataGranularitySpan    ManagedCodeConfigDataGranularity = "span"
-	ManagedCodeConfigDataGranularityTrace   ManagedCodeConfigDataGranularity = "trace"
-)
-
-// Valid indicates whether the value is a known member of the ManagedCodeConfigDataGranularity enum.
-func (e ManagedCodeConfigDataGranularity) Valid() bool {
-	switch e {
-	case ManagedCodeConfigDataGranularitySession:
-		return true
-	case ManagedCodeConfigDataGranularitySpan:
-		return true
-	case ManagedCodeConfigDataGranularityTrace:
 		return true
 	default:
 		return false
@@ -1235,15 +1121,15 @@ func (e Permission) Valid() bool {
 	}
 }
 
-// Defines values for ResourceRestrictionResourceType.
+// Defines values for ResourceRestrictionType.
 const (
-	ResourceRestrictionResourceTypePROJECT ResourceRestrictionResourceType = "PROJECT"
+	ResourceRestrictionTypePROJECT ResourceRestrictionType = "PROJECT"
 )
 
-// Valid indicates whether the value is a known member of the ResourceRestrictionResourceType enum.
-func (e ResourceRestrictionResourceType) Valid() bool {
+// Valid indicates whether the value is a known member of the ResourceRestrictionType enum.
+func (e ResourceRestrictionType) Valid() bool {
 	switch e {
-	case ResourceRestrictionResourceTypePROJECT:
+	case ResourceRestrictionTypePROJECT:
 		return true
 	default:
 		return false
@@ -1349,27 +1235,6 @@ func (e StaticParamType) Valid() bool {
 	}
 }
 
-// Defines values for TaskType.
-const (
-	TaskTypeCodeEvaluation     TaskType = "code_evaluation"
-	TaskTypeRunExperiment      TaskType = "run_experiment"
-	TaskTypeTemplateEvaluation TaskType = "template_evaluation"
-)
-
-// Valid indicates whether the value is a known member of the TaskType enum.
-func (e TaskType) Valid() bool {
-	switch e {
-	case TaskTypeCodeEvaluation:
-		return true
-	case TaskTypeRunExperiment:
-		return true
-	case TaskTypeTemplateEvaluation:
-		return true
-	default:
-		return false
-	}
-}
-
 // Defines values for TaskRunStatus.
 const (
 	TaskRunStatusCancelled TaskRunStatus = "cancelled"
@@ -1397,21 +1262,21 @@ func (e TaskRunStatus) Valid() bool {
 	}
 }
 
-// Defines values for TemplateConfigDataGranularity.
+// Defines values for TaskType.
 const (
-	TemplateConfigDataGranularitySession TemplateConfigDataGranularity = "session"
-	TemplateConfigDataGranularitySpan    TemplateConfigDataGranularity = "span"
-	TemplateConfigDataGranularityTrace   TemplateConfigDataGranularity = "trace"
+	TaskTypeCodeEvaluation     TaskType = "code_evaluation"
+	TaskTypeRunExperiment      TaskType = "run_experiment"
+	TaskTypeTemplateEvaluation TaskType = "template_evaluation"
 )
 
-// Valid indicates whether the value is a known member of the TemplateConfigDataGranularity enum.
-func (e TemplateConfigDataGranularity) Valid() bool {
+// Valid indicates whether the value is a known member of the TaskType enum.
+func (e TaskType) Valid() bool {
 	switch e {
-	case TemplateConfigDataGranularitySession:
+	case TaskTypeCodeEvaluation:
 		return true
-	case TemplateConfigDataGranularitySpan:
+	case TaskTypeRunExperiment:
 		return true
-	case TemplateConfigDataGranularityTrace:
+	case TaskTypeTemplateEvaluation:
 		return true
 	default:
 		return false
@@ -1532,174 +1397,6 @@ func (e UserStatus) Valid() bool {
 	}
 }
 
-// Defines values for ApiKeyTypeQueryParam.
-const (
-	ApiKeyTypeQueryParamService ApiKeyTypeQueryParam = "service"
-	ApiKeyTypeQueryParamUser    ApiKeyTypeQueryParam = "user"
-)
-
-// Valid indicates whether the value is a known member of the ApiKeyTypeQueryParam enum.
-func (e ApiKeyTypeQueryParam) Valid() bool {
-	switch e {
-	case ApiKeyTypeQueryParamService:
-		return true
-	case ApiKeyTypeQueryParamUser:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for TaskRunStatusQueryParam.
-const (
-	TaskRunStatusQueryParamCancelled TaskRunStatusQueryParam = "cancelled"
-	TaskRunStatusQueryParamCompleted TaskRunStatusQueryParam = "completed"
-	TaskRunStatusQueryParamFailed    TaskRunStatusQueryParam = "failed"
-	TaskRunStatusQueryParamPending   TaskRunStatusQueryParam = "pending"
-	TaskRunStatusQueryParamRunning   TaskRunStatusQueryParam = "running"
-)
-
-// Valid indicates whether the value is a known member of the TaskRunStatusQueryParam enum.
-func (e TaskRunStatusQueryParam) Valid() bool {
-	switch e {
-	case TaskRunStatusQueryParamCancelled:
-		return true
-	case TaskRunStatusQueryParamCompleted:
-		return true
-	case TaskRunStatusQueryParamFailed:
-		return true
-	case TaskRunStatusQueryParamPending:
-		return true
-	case TaskRunStatusQueryParamRunning:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for TaskTypeQueryParam.
-const (
-	TaskTypeQueryParamCodeEvaluation     TaskTypeQueryParam = "code_evaluation"
-	TaskTypeQueryParamRunExperiment      TaskTypeQueryParam = "run_experiment"
-	TaskTypeQueryParamTemplateEvaluation TaskTypeQueryParam = "template_evaluation"
-)
-
-// Valid indicates whether the value is a known member of the TaskTypeQueryParam enum.
-func (e TaskTypeQueryParam) Valid() bool {
-	switch e {
-	case TaskTypeQueryParamCodeEvaluation:
-		return true
-	case TaskTypeQueryParamRunExperiment:
-		return true
-	case TaskTypeQueryParamTemplateEvaluation:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for CreateEvaluatorRequestBodyType.
-const (
-	CreateEvaluatorRequestBodyTypeCode     CreateEvaluatorRequestBodyType = "code"
-	CreateEvaluatorRequestBodyTypeTemplate CreateEvaluatorRequestBodyType = "template"
-)
-
-// Valid indicates whether the value is a known member of the CreateEvaluatorRequestBodyType enum.
-func (e CreateEvaluatorRequestBodyType) Valid() bool {
-	switch e {
-	case CreateEvaluatorRequestBodyTypeCode:
-		return true
-	case CreateEvaluatorRequestBodyTypeTemplate:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for ApiKeysListParamsKeyType.
-const (
-	ApiKeysListParamsKeyTypeService ApiKeysListParamsKeyType = "service"
-	ApiKeysListParamsKeyTypeUser    ApiKeysListParamsKeyType = "user"
-)
-
-// Valid indicates whether the value is a known member of the ApiKeysListParamsKeyType enum.
-func (e ApiKeysListParamsKeyType) Valid() bool {
-	switch e {
-	case ApiKeysListParamsKeyTypeService:
-		return true
-	case ApiKeysListParamsKeyTypeUser:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for EvaluatorsCreateJSONBodyType.
-const (
-	EvaluatorsCreateJSONBodyTypeCode     EvaluatorsCreateJSONBodyType = "code"
-	EvaluatorsCreateJSONBodyTypeTemplate EvaluatorsCreateJSONBodyType = "template"
-)
-
-// Valid indicates whether the value is a known member of the EvaluatorsCreateJSONBodyType enum.
-func (e EvaluatorsCreateJSONBodyType) Valid() bool {
-	switch e {
-	case EvaluatorsCreateJSONBodyTypeCode:
-		return true
-	case EvaluatorsCreateJSONBodyTypeTemplate:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for TasksListParamsType.
-const (
-	TasksListParamsTypeCodeEvaluation     TasksListParamsType = "code_evaluation"
-	TasksListParamsTypeRunExperiment      TasksListParamsType = "run_experiment"
-	TasksListParamsTypeTemplateEvaluation TasksListParamsType = "template_evaluation"
-)
-
-// Valid indicates whether the value is a known member of the TasksListParamsType enum.
-func (e TasksListParamsType) Valid() bool {
-	switch e {
-	case TasksListParamsTypeCodeEvaluation:
-		return true
-	case TasksListParamsTypeRunExperiment:
-		return true
-	case TasksListParamsTypeTemplateEvaluation:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for TasksListRunsParamsStatus.
-const (
-	TasksListRunsParamsStatusCancelled TasksListRunsParamsStatus = "cancelled"
-	TasksListRunsParamsStatusCompleted TasksListRunsParamsStatus = "completed"
-	TasksListRunsParamsStatusFailed    TasksListRunsParamsStatus = "failed"
-	TasksListRunsParamsStatusPending   TasksListRunsParamsStatus = "pending"
-	TasksListRunsParamsStatusRunning   TasksListRunsParamsStatus = "running"
-)
-
-// Valid indicates whether the value is a known member of the TasksListRunsParamsStatus enum.
-func (e TasksListRunsParamsStatus) Valid() bool {
-	switch e {
-	case TasksListRunsParamsStatusCancelled:
-		return true
-	case TasksListRunsParamsStatusCompleted:
-		return true
-	case TasksListRunsParamsStatusFailed:
-		return true
-	case TasksListRunsParamsStatusPending:
-		return true
-	case TasksListRunsParamsStatusRunning:
-		return true
-	default:
-		return false
-	}
-}
-
 // AddAnnotationQueueRecordsRequestBody defines model for AddAnnotationQueueRecordsRequestBody.
 type AddAnnotationQueueRecordsRequestBody struct {
 	// RecordSources Record sources to add to the annotation queue. At most 2 record sources (projects or datasets) may be provided in a single request.
@@ -1769,10 +1466,10 @@ type AiIntegrationProvider string
 
 // AiIntegrationScoping Visibility scoping for the integration
 type AiIntegrationScoping struct {
-	// OrganizationId Organization global ID. Null means account-wide.
+	// OrganizationId Organization identifier (base64). Null means account-wide.
 	OrganizationId *string `json:"organization_id,omitempty"`
 
-	// SpaceId Space global ID. Null means organization-wide (or account-wide if organization_id is also null).
+	// SpaceId Space identifier (base64). Null means organization-wide (or account-wide if organization_id is also null).
 	SpaceId *string `json:"space_id,omitempty"`
 }
 
@@ -1918,15 +1615,19 @@ type AnnotationQueue struct {
 
 // AnnotationQueueAssignedUser A user assigned to a record with their completion status
 type AnnotationQueueAssignedUser struct {
-	// CompletionStatus The completion status for this user on this record
-	CompletionStatus AnnotationQueueAssignedUserCompletionStatus `json:"completion_status"`
+	// CompletionStatus Completion status for a user's annotation assignment on a record.
+	// - pending - The user has not yet submitted annotations.
+	// - completed - The user has submitted annotations.
+	CompletionStatus AnnotationQueueCompletionStatus `json:"completion_status"`
 
 	// User A user assigned as an annotator, identified by ID and email.
 	User AnnotatorUser `json:"user"`
 }
 
-// AnnotationQueueAssignedUserCompletionStatus The completion status for this user on this record
-type AnnotationQueueAssignedUserCompletionStatus string
+// AnnotationQueueCompletionStatus Completion status for a user's annotation assignment on a record.
+// - pending - The user has not yet submitted annotations.
+// - completed - The user has submitted annotations.
+type AnnotationQueueCompletionStatus string
 
 // AnnotationQueueExampleRecordInput defines model for AnnotationQueueExampleRecordInput.
 type AnnotationQueueExampleRecordInput struct {
@@ -1937,13 +1638,11 @@ type AnnotationQueueExampleRecordInput struct {
 	DatasetVersionId *string `json:"dataset_version_id,omitempty"`
 
 	// ExampleIds Optional. List of example IDs within the dataset to add to the queue. If omitted, all examples in the dataset (or dataset version) are added.
-	ExampleIds *[]string `json:"example_ids,omitempty"`
-
-	// RecordType The type of record
+	ExampleIds *[]string                                   `json:"example_ids,omitempty"`
 	RecordType AnnotationQueueExampleRecordInputRecordType `json:"record_type"`
 }
 
-// AnnotationQueueExampleRecordInputRecordType The type of record
+// AnnotationQueueExampleRecordInputRecordType defines model for AnnotationQueueExampleRecordInput.RecordType.
 type AnnotationQueueExampleRecordInputRecordType string
 
 // AnnotationQueueRecord A record in an annotation queue with its data
@@ -1966,12 +1665,11 @@ type AnnotationQueueRecord struct {
 	// Id The unique identifier for the record
 	Id string `json:"id"`
 
-	// SourceType The source type of the record (spans or dataset)
-	SourceType AnnotationQueueRecordSourceType `json:"source_type"`
+	// SourceType Source type of the annotation queue record.
+	// - spans - The record originates from span data.
+	// - dataset - The record originates from a dataset example.
+	SourceType AnnotationQueueSourceType `json:"source_type"`
 }
-
-// AnnotationQueueRecordSourceType The source type of the record (spans or dataset)
-type AnnotationQueueRecordSourceType string
 
 // AnnotationQueueRecordAnnotateResult A snapshot of the annotation queue record fields that were modified by an annotate operation. Only the record identity fields and the submitted annotations are returned. Evaluations and user assignments are not fetched and are not included in this response for performance reasons; use the list records endpoint to retrieve the full record state.
 type AnnotationQueueRecordAnnotateResult struct {
@@ -1984,12 +1682,11 @@ type AnnotationQueueRecordAnnotateResult struct {
 	// Id The unique identifier for the record
 	Id string `json:"id"`
 
-	// SourceType The source type of the record (spans or dataset)
-	SourceType AnnotationQueueRecordAnnotateResultSourceType `json:"source_type"`
+	// SourceType Source type of the annotation queue record.
+	// - spans - The record originates from span data.
+	// - dataset - The record originates from a dataset example.
+	SourceType AnnotationQueueSourceType `json:"source_type"`
 }
-
-// AnnotationQueueRecordAnnotateResultSourceType The source type of the record (spans or dataset)
-type AnnotationQueueRecordAnnotateResultSourceType string
 
 // AnnotationQueueRecordAssignResult A snapshot of the annotation queue record fields that were modified by an assign operation. Only the record identity fields and the resulting user assignments are returned. Annotations and evaluations are not fetched and are not included in this response for performance reasons; use the list records endpoint to retrieve the full record state.
 type AnnotationQueueRecordAssignResult struct {
@@ -2002,17 +1699,21 @@ type AnnotationQueueRecordAssignResult struct {
 	// Id The unique identifier for the record
 	Id string `json:"id"`
 
-	// SourceType The source type of the record (spans or dataset)
-	SourceType AnnotationQueueRecordAssignResultSourceType `json:"source_type"`
+	// SourceType Source type of the annotation queue record.
+	// - spans - The record originates from span data.
+	// - dataset - The record originates from a dataset example.
+	SourceType AnnotationQueueSourceType `json:"source_type"`
 }
-
-// AnnotationQueueRecordAssignResultSourceType The source type of the record (spans or dataset)
-type AnnotationQueueRecordAssignResultSourceType string
 
 // AnnotationQueueRecordInput defines model for AnnotationQueueRecordInput.
 type AnnotationQueueRecordInput struct {
 	union json.RawMessage
 }
+
+// AnnotationQueueSourceType Source type of the annotation queue record.
+// - spans - The record originates from span data.
+// - dataset - The record originates from a dataset example.
+type AnnotationQueueSourceType string
 
 // AnnotationQueueSpanRecordInput defines model for AnnotationQueueSpanRecordInput.
 type AnnotationQueueSpanRecordInput struct {
@@ -2020,9 +1721,7 @@ type AnnotationQueueSpanRecordInput struct {
 	EndTime time.Time `json:"end_time"`
 
 	// ProjectId The project ID these spans belong to
-	ProjectId string `json:"project_id"`
-
-	// RecordType The type of record
+	ProjectId  string                                   `json:"project_id"`
 	RecordType AnnotationQueueSpanRecordInputRecordType `json:"record_type"`
 
 	// SpanIds List of span IDs to add to the queue
@@ -2032,7 +1731,7 @@ type AnnotationQueueSpanRecordInput struct {
 	StartTime time.Time `json:"start_time"`
 }
 
-// AnnotationQueueSpanRecordInputRecordType The type of record
+// AnnotationQueueSpanRecordInputRecordType defines model for AnnotationQueueSpanRecordInput.RecordType.
 type AnnotationQueueSpanRecordInputRecordType string
 
 // AnnotatorUser A user assigned as an annotator, identified by ID and email.
@@ -2064,7 +1763,7 @@ type ApiKey struct {
 	// KeyType Type of the API key.
 	// - user - Key associated with a specific user.
 	// - service - Key associated with a bot user for service authentication.
-	KeyType ApiKeyKeyType `json:"key_type"`
+	KeyType ApiKeyType `json:"key_type"`
 
 	// Name User-defined name for the API key.
 	Name string `json:"name"`
@@ -2078,10 +1777,10 @@ type ApiKey struct {
 	Status ApiKeyStatus `json:"status"`
 }
 
-// ApiKeyKeyType Type of the API key.
-// - user - Key associated with a specific user.
-// - service - Key associated with a bot user for service authentication.
-type ApiKeyKeyType string
+// ApiKeyAccountRole Account-level role for a service key's bot user.
+// - admin - Full account administrative access.
+// - member - Standard account access.
+type ApiKeyAccountRole string
 
 // ApiKeyCreate defines model for ApiKeyCreate.
 type ApiKeyCreate struct {
@@ -2096,7 +1795,7 @@ type ApiKeyCreate struct {
 	//   `space_id` and `roles` must not be set (returns `400`).
 	// - service - Key scoped to a specific space backed by a dedicated bot user.
 	//   Requires `space_id`. All roles default to minimum privilege when omitted.
-	KeyType *ApiKeyCreateKeyType `json:"key_type,omitempty"`
+	KeyType *ApiKeyType `json:"key_type,omitempty"`
 
 	// Name User-defined name for the API key.
 	Name string `json:"name"`
@@ -2108,13 +1807,6 @@ type ApiKeyCreate struct {
 	// invalid for `user` keys (returns `400`).
 	SpaceId *string `json:"space_id,omitempty"`
 }
-
-// ApiKeyCreateKeyType Type of the API key to create. Defaults to `user`.
-//   - user - Key that authenticates as the creating user with their full permissions.
-//     `space_id` and `roles` must not be set (returns `400`).
-//   - service - Key scoped to a specific space backed by a dedicated bot user.
-//     Requires `space_id`. All roles default to minimum privilege when omitted.
-type ApiKeyCreateKeyType string
 
 // ApiKeyCreated defines model for ApiKeyCreated.
 type ApiKeyCreated struct {
@@ -2140,7 +1832,7 @@ type ApiKeyCreated struct {
 	// KeyType Type of the API key.
 	// - user - Key associated with a specific user.
 	// - service - Key associated with a bot user for service authentication.
-	KeyType ApiKeyCreatedKeyType `json:"key_type"`
+	KeyType ApiKeyType `json:"key_type"`
 
 	// Name User-defined name for the API key.
 	Name string `json:"name"`
@@ -2154,10 +1846,11 @@ type ApiKeyCreated struct {
 	Status ApiKeyStatus `json:"status"`
 }
 
-// ApiKeyCreatedKeyType Type of the API key.
-// - user - Key associated with a specific user.
-// - service - Key associated with a bot user for service authentication.
-type ApiKeyCreatedKeyType string
+// ApiKeyOrganizationRole Organization-level role for a service key's bot user.
+// - admin - Full control within the organization.
+// - member - Standard organization access.
+// - read-only - View-only access.
+type ApiKeyOrganizationRole string
 
 // ApiKeyRefresh defines model for ApiKeyRefresh.
 type ApiKeyRefresh struct {
@@ -2170,33 +1863,32 @@ type ApiKeyRefresh struct {
 type ApiKeyRoles struct {
 	// AccountRole Account-level role to assign the bot user. Defaults to `member` when omitted.
 	// Must be at or below the caller's own account role.
-	AccountRole *ApiKeyRolesAccountRole `json:"account_role,omitempty"`
+	AccountRole *ApiKeyAccountRole `json:"account_role,omitempty"`
 
 	// OrgRole Role to assign the bot user within the organization. Defaults to `read-only` when
 	// omitted. Must be at or below the caller's own organization role.
-	OrgRole *ApiKeyRolesOrgRole `json:"org_role,omitempty"`
+	OrgRole *ApiKeyOrganizationRole `json:"org_role,omitempty"`
 
 	// SpaceRole Role to assign the bot user within the space. Defaults to `member` when omitted.
 	// Must be at or below the caller's own effective space role.
-	SpaceRole *ApiKeyRolesSpaceRole `json:"space_role,omitempty"`
+	SpaceRole *ApiKeySpaceRole `json:"space_role,omitempty"`
 }
 
-// ApiKeyRolesAccountRole Account-level role to assign the bot user. Defaults to `member` when omitted.
-// Must be at or below the caller's own account role.
-type ApiKeyRolesAccountRole string
-
-// ApiKeyRolesOrgRole Role to assign the bot user within the organization. Defaults to `read-only` when
-// omitted. Must be at or below the caller's own organization role.
-type ApiKeyRolesOrgRole string
-
-// ApiKeyRolesSpaceRole Role to assign the bot user within the space. Defaults to `member` when omitted.
-// Must be at or below the caller's own effective space role.
-type ApiKeyRolesSpaceRole string
+// ApiKeySpaceRole Space-level role for a service key's bot user.
+// - admin - Full control within the space.
+// - member - Standard space access.
+// - read-only - View-only access.
+type ApiKeySpaceRole string
 
 // ApiKeyStatus Current status of the API key.
 // - active - The key is valid for use.
 // - deleted - The key has been deleted by a user.
 type ApiKeyStatus string
+
+// ApiKeyType Type of the API key.
+// - user - Key associated with a specific user.
+// - service - Key associated with a bot user for service authentication.
+type ApiKeyType string
 
 // AssignAnnotationQueueRecordRequestBody User assignment for an annotation queue record. Fully replaces the current record-level user assignment. Pass an empty array to remove all assignments.
 type AssignAnnotationQueueRecordRequestBody struct {
@@ -2226,7 +1918,7 @@ type AwsProviderMetadataKind string
 
 // BaseEvaluationTaskRequest defines model for BaseEvaluationTaskRequest.
 type BaseEvaluationTaskRequest struct {
-	// DatasetId Dataset global ID (base64). Required when `project_id` is not provided.
+	// DatasetId Dataset identifier (base64). Required when `project_id` is not provided.
 	// Mutually exclusive with `project_id`.
 	DatasetId *string `json:"dataset_id,omitempty"`
 
@@ -2235,14 +1927,14 @@ type BaseEvaluationTaskRequest struct {
 		// ColumnMappings Maps evaluator template variable names to data source column names.
 		ColumnMappings *map[string]string `json:"column_mappings,omitempty"`
 
-		// EvaluatorId Evaluator global ID (base64). Duplicates are not allowed.
+		// EvaluatorId Evaluator identifier (base64). Duplicates are not allowed.
 		EvaluatorId string `json:"evaluator_id"`
 
 		// QueryFilter Per-evaluator query filter. Combined with the task-level filter (AND).
 		QueryFilter *string `json:"query_filter,omitempty"`
 	} `json:"evaluators"`
 
-	// ExperimentIds Experiment global IDs (base64). Required when `dataset_id` is provided
+	// ExperimentIds Experiment identifiers (base64). Required when `dataset_id` is provided
 	// (at least one entry). Must be omitted or empty for project-based tasks.
 	ExperimentIds *[]string `json:"experiment_ids,omitempty"`
 
@@ -2253,7 +1945,7 @@ type BaseEvaluationTaskRequest struct {
 	// Name Task name
 	Name string `json:"name"`
 
-	// ProjectId Project global ID (base64). Required when `dataset_id` is not provided.
+	// ProjectId Project identifier (base64). Required when `dataset_id` is not provided.
 	// Mutually exclusive with `dataset_id`.
 	ProjectId *string `json:"project_id,omitempty"`
 
@@ -2343,16 +2035,12 @@ type CodeConfig struct {
 type CodeConfigCommon struct {
 	// DataGranularity Data granularity level for evaluation. When omitted or null, no granularity
 	// filter is applied (span-level evaluation is used by default on the server).
-	DataGranularity *CodeConfigCommonDataGranularity `json:"data_granularity,omitempty"`
+	DataGranularity *DataGranularity `json:"data_granularity,omitempty"`
 
 	// QueryFilter Optional filter query over the chosen data granularity. When omitted or null,
 	// no filter is applied.
 	QueryFilter *string `json:"query_filter,omitempty"`
 }
-
-// CodeConfigCommonDataGranularity Data granularity level for evaluation. When omitted or null, no granularity
-// filter is applied (span-level evaluation is used by default on the server).
-type CodeConfigCommonDataGranularity string
 
 // ContinuousAnnotationConfig defines model for ContinuousAnnotationConfig.
 type ContinuousAnnotationConfig struct {
@@ -2452,7 +2140,7 @@ type CreateAnnotationQueueRequestBody struct {
 
 // CreateCodeEvaluationTaskRequest defines model for CreateCodeEvaluationTaskRequest.
 type CreateCodeEvaluationTaskRequest struct {
-	// DatasetId Dataset global ID (base64). Required when `project_id` is not provided.
+	// DatasetId Dataset identifier (base64). Required when `project_id` is not provided.
 	// Mutually exclusive with `project_id`.
 	DatasetId *string `json:"dataset_id,omitempty"`
 
@@ -2461,14 +2149,14 @@ type CreateCodeEvaluationTaskRequest struct {
 		// ColumnMappings Maps evaluator template variable names to data source column names.
 		ColumnMappings *map[string]string `json:"column_mappings,omitempty"`
 
-		// EvaluatorId Evaluator global ID (base64). Duplicates are not allowed.
+		// EvaluatorId Evaluator identifier (base64). Duplicates are not allowed.
 		EvaluatorId string `json:"evaluator_id"`
 
 		// QueryFilter Per-evaluator query filter. Combined with the task-level filter (AND).
 		QueryFilter *string `json:"query_filter,omitempty"`
 	} `json:"evaluators"`
 
-	// ExperimentIds Experiment global IDs (base64). Required when `dataset_id` is provided
+	// ExperimentIds Experiment identifiers (base64). Required when `dataset_id` is provided
 	// (at least one entry). Must be omitted or empty for project-based tasks.
 	ExperimentIds *[]string `json:"experiment_ids,omitempty"`
 
@@ -2479,7 +2167,7 @@ type CreateCodeEvaluationTaskRequest struct {
 	// Name Task name
 	Name string `json:"name"`
 
-	// ProjectId Project global ID (base64). Required when `dataset_id` is not provided.
+	// ProjectId Project identifier (base64). Required when `dataset_id` is not provided.
 	// Mutually exclusive with `dataset_id`.
 	ProjectId *string `json:"project_id,omitempty"`
 
@@ -2500,7 +2188,7 @@ type CreateCodeEvaluationTaskRequestType string
 // `run_configuration`. Does not support continuous execution — runs are triggered
 // explicitly via `POST /v2/tasks/{task_id}/trigger`.
 type CreateRunExperimentTaskRequest struct {
-	// DatasetId Dataset global ID (base64). Required for `run_experiment` tasks.
+	// DatasetId Dataset identifier (base64). Required for `run_experiment` tasks.
 	DatasetId string `json:"dataset_id"`
 
 	// Name Task name
@@ -2520,7 +2208,7 @@ type CreateRunExperimentTaskRequestType string
 
 // CreateTemplateEvaluationTaskRequest defines model for CreateTemplateEvaluationTaskRequest.
 type CreateTemplateEvaluationTaskRequest struct {
-	// DatasetId Dataset global ID (base64). Required when `project_id` is not provided.
+	// DatasetId Dataset identifier (base64). Required when `project_id` is not provided.
 	// Mutually exclusive with `project_id`.
 	DatasetId *string `json:"dataset_id,omitempty"`
 
@@ -2529,14 +2217,14 @@ type CreateTemplateEvaluationTaskRequest struct {
 		// ColumnMappings Maps evaluator template variable names to data source column names.
 		ColumnMappings *map[string]string `json:"column_mappings,omitempty"`
 
-		// EvaluatorId Evaluator global ID (base64). Duplicates are not allowed.
+		// EvaluatorId Evaluator identifier (base64). Duplicates are not allowed.
 		EvaluatorId string `json:"evaluator_id"`
 
 		// QueryFilter Per-evaluator query filter. Combined with the task-level filter (AND).
 		QueryFilter *string `json:"query_filter,omitempty"`
 	} `json:"evaluators"`
 
-	// ExperimentIds Experiment global IDs (base64). Required when `dataset_id` is provided
+	// ExperimentIds Experiment identifiers (base64). Required when `dataset_id` is provided
 	// (at least one entry). Must be omitted or empty for project-based tasks.
 	ExperimentIds *[]string `json:"experiment_ids,omitempty"`
 
@@ -2547,7 +2235,7 @@ type CreateTemplateEvaluationTaskRequest struct {
 	// Name Task name
 	Name string `json:"name"`
 
-	// ProjectId Project global ID (base64). Required when `dataset_id` is not provided.
+	// ProjectId Project identifier (base64). Required when `dataset_id` is not provided.
 	// Mutually exclusive with `dataset_id`.
 	ProjectId *string `json:"project_id,omitempty"`
 
@@ -2594,7 +2282,7 @@ type CustomCodeConfig struct {
 
 	// DataGranularity Data granularity level for evaluation. When omitted or null, no granularity
 	// filter is applied (span-level evaluation is used by default on the server).
-	DataGranularity *CustomCodeConfigDataGranularity `json:"data_granularity,omitempty"`
+	DataGranularity *DataGranularity `json:"data_granularity,omitempty"`
 
 	// Imports Optional package import block prepended when running the evaluator
 	Imports *string `json:"imports,omitempty"`
@@ -2608,20 +2296,14 @@ type CustomCodeConfig struct {
 
 	// StaticParams Optional typed defaults accessible on the evaluator instance. Omit or pass an
 	// empty array when the custom class does not read any static parameters.
-	StaticParams *[]StaticParam `json:"static_params,omitempty"`
-
-	// Type Discriminator for custom Python code evaluators
-	Type CustomCodeConfigType `json:"type"`
+	StaticParams *[]StaticParam       `json:"static_params,omitempty"`
+	Type         CustomCodeConfigType `json:"type"`
 
 	// Variables Dataset columns or span attributes mapped to evaluate() arguments
 	Variables []string `json:"variables"`
 }
 
-// CustomCodeConfigDataGranularity Data granularity level for evaluation. When omitted or null, no granularity
-// filter is applied (span-level evaluation is used by default on the server).
-type CustomCodeConfigDataGranularity string
-
-// CustomCodeConfigType Discriminator for custom Python code evaluators
+// CustomCodeConfigType defines model for CustomCodeConfig.Type.
 type CustomCodeConfigType string
 
 // CustomRoleAssignment A custom RBAC role assignment.
@@ -2647,6 +2329,12 @@ type CustomUserRoleAssignment struct {
 	// Type Discriminator identifying this as a custom role assignment. Must be `custom`.
 	Type UserRoleAssignmentType `json:"type"`
 }
+
+// DataGranularity Data granularity level for evaluation.
+// - span - Evaluate at the individual span level.
+// - trace - Evaluate at the full trace level.
+// - session - Evaluate at the session level.
+type DataGranularity string
 
 // Dataset A dataset is a structured collection of examples used to test and evaluate
 // LLM applications. Datasets allow you to test models consistently across
@@ -2816,7 +2504,7 @@ type Evaluator struct {
 
 // EvaluatorLlmConfig defines model for EvaluatorLlmConfig.
 type EvaluatorLlmConfig struct {
-	// AiIntegrationId AI integration global ID (base64)
+	// AiIntegrationId AI integration identifier (base64)
 	AiIntegrationId string `json:"ai_integration_id"`
 
 	// InvocationParameters Parameters for the LLM invocation
@@ -2867,13 +2555,11 @@ type EvaluatorVersionCode struct {
 	EvaluatorId string `json:"evaluator_id"`
 
 	// Id The unique identifier for this version
-	Id string `json:"id"`
-
-	// Type Evaluator version type. Must be `code` for code evaluator versions; must match the parent evaluator's `type`.
+	Id   string                   `json:"id"`
 	Type EvaluatorVersionCodeType `json:"type"`
 }
 
-// EvaluatorVersionCodeType Evaluator version type. Must be `code` for code evaluator versions; must match the parent evaluator's `type`.
+// EvaluatorVersionCodeType defines model for EvaluatorVersionCode.Type.
 type EvaluatorVersionCodeType string
 
 // EvaluatorVersionCodeCreate defines model for EvaluatorVersionCodeCreate.
@@ -2940,14 +2626,12 @@ type EvaluatorVersionTemplate struct {
 	EvaluatorId string `json:"evaluator_id"`
 
 	// Id The unique identifier for this version
-	Id             string         `json:"id"`
-	TemplateConfig TemplateConfig `json:"template_config"`
-
-	// Type Evaluator version type. Must be `template` for template evaluator versions; must match the parent evaluator's `type`.
-	Type EvaluatorVersionTemplateType `json:"type"`
+	Id             string                       `json:"id"`
+	TemplateConfig TemplateConfig               `json:"template_config"`
+	Type           EvaluatorVersionTemplateType `json:"type"`
 }
 
-// EvaluatorVersionTemplateType Evaluator version type. Must be `template` for template evaluator versions; must match the parent evaluator's `type`.
+// EvaluatorVersionTemplateType defines model for EvaluatorVersionTemplate.Type.
 type EvaluatorVersionTemplateType string
 
 // EvaluatorVersionTemplateCreate defines model for EvaluatorVersionTemplateCreate.
@@ -3107,7 +2791,7 @@ type GcpProviderMetadata struct {
 // GcpProviderMetadataKind Discriminator value identifying Vertex AI (GCP) provider metadata.
 type GcpProviderMetadataKind string
 
-// Id A universally unique identifier
+// Id A universally unique identifier (base64-encoded opaque string).
 type Id = string
 
 // InputVariableFormat The format for input variables in the prompt messages. Defaults to `f_string` if not provided.
@@ -3187,7 +2871,7 @@ type ListSpansRequest struct {
 
 // LlmGenerationRunConfig Configuration for running an LLM prompt against each dataset example.
 type LlmGenerationRunConfig struct {
-	// AiIntegrationId AI integration global ID (base64).
+	// AiIntegrationId AI integration identifier (base64).
 	AiIntegrationId string `json:"ai_integration_id"`
 
 	// ExperimentType Discriminator. Must be `"llm_generation"`.
@@ -3208,7 +2892,7 @@ type LlmGenerationRunConfig struct {
 	// ModelName Model name (e.g. `gpt-4o`). Falls back to the integration's default if omitted.
 	ModelName *string `json:"model_name,omitempty"`
 
-	// PromptVersionId Prompt version global ID (base64). Links to a Prompt Hub version for traceability.
+	// PromptVersionId Prompt version identifier (base64). Links to a Prompt Hub version for traceability.
 	PromptVersionId *string `json:"prompt_version_id,omitempty"`
 
 	// ProviderParameters Provider-specific parameters. Defaults to `{}` (no overrides) if omitted.
@@ -3228,7 +2912,7 @@ type LlmProvider string
 type ManagedCodeConfig struct {
 	// DataGranularity Data granularity level for evaluation. When omitted or null, no granularity
 	// filter is applied (span-level evaluation is used by default on the server).
-	DataGranularity *ManagedCodeConfigDataGranularity `json:"data_granularity,omitempty"`
+	DataGranularity *DataGranularity `json:"data_granularity,omitempty"`
 
 	// ManagedEvaluator Built-in managed code evaluator name
 	ManagedEvaluator ManagedCodeEvaluator `json:"managed_evaluator"`
@@ -3244,21 +2928,15 @@ type ManagedCodeConfig struct {
 	// the registry's required arguments must be satisfied by defaults on the evaluator
 	// class; otherwise validation fails with 400. If the registry has no args, omitting
 	// this field is equivalent to an empty list.
-	StaticParams *[]StaticParam `json:"static_params,omitempty"`
-
-	// Type Discriminator for managed (built-in) code evaluators
-	Type ManagedCodeConfigType `json:"type"`
+	StaticParams *[]StaticParam        `json:"static_params,omitempty"`
+	Type         ManagedCodeConfigType `json:"type"`
 
 	// Variables Dataset columns or span attributes passed into the evaluator (order and count
 	// must match the managed evaluator's requirements).
 	Variables []string `json:"variables"`
 }
 
-// ManagedCodeConfigDataGranularity Data granularity level for evaluation. When omitted or null, no granularity
-// filter is applied (span-level evaluation is used by default on the server).
-type ManagedCodeConfigDataGranularity string
-
-// ManagedCodeConfigType Discriminator for managed (built-in) code evaluators
+// ManagedCodeConfigType defines model for ManagedCodeConfig.Type.
 type ManagedCodeConfigType string
 
 // ManagedCodeEvaluator Built-in managed code evaluator name
@@ -3620,18 +3298,20 @@ type ResourceRestriction struct {
 	// ResourceId The ID of the restricted resource
 	ResourceId string `json:"resource_id"`
 
-	// ResourceType The type of the restricted resource (e.g. "PROJECT")
-	ResourceType ResourceRestrictionResourceType `json:"resource_type"`
+	// ResourceType Type of the restricted resource.
+	// - PROJECT - A project within a space.
+	ResourceType ResourceRestrictionType `json:"resource_type"`
 }
-
-// ResourceRestrictionResourceType The type of the restricted resource (e.g. "PROJECT")
-type ResourceRestrictionResourceType string
 
 // ResourceRestrictionCreate defines model for ResourceRestrictionCreate.
 type ResourceRestrictionCreate struct {
 	// ResourceId The ID of the resource to restrict
 	ResourceId Id `json:"resource_id"`
 }
+
+// ResourceRestrictionType Type of the restricted resource.
+// - PROJECT - A project within a space.
+type ResourceRestrictionType string
 
 // ResponseFormat Response format configuration
 type ResponseFormat struct {
@@ -3691,36 +3371,36 @@ type RoleBinding struct {
 	// Id Unique identifier for the role binding.
 	Id string `json:"id"`
 
-	// ResourceId A universally unique identifier
+	// ResourceId A universally unique identifier (base64-encoded opaque string).
 	ResourceId Id `json:"resource_id"`
 
 	// ResourceType Resource type for the binding. Only `SPACE` and `PROJECT` are supported for
 	// single-binding CRUD. `resource_id` must encode the same resource type.
 	ResourceType RoleBindingResourceType `json:"resource_type"`
 
-	// RoleId A universally unique identifier
+	// RoleId A universally unique identifier (base64-encoded opaque string).
 	RoleId Id `json:"role_id"`
 
 	// UpdatedAt Timestamp when the binding was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 
-	// UserId A universally unique identifier
+	// UserId A universally unique identifier (base64-encoded opaque string).
 	UserId Id `json:"user_id"`
 }
 
 // RoleBindingCreate defines model for RoleBindingCreate.
 type RoleBindingCreate struct {
-	// ResourceId A universally unique identifier
+	// ResourceId A universally unique identifier (base64-encoded opaque string).
 	ResourceId Id `json:"resource_id"`
 
 	// ResourceType Resource type for the binding. Only `SPACE` and `PROJECT` are supported for
 	// single-binding CRUD. `resource_id` must encode the same resource type.
 	ResourceType RoleBindingResourceType `json:"resource_type"`
 
-	// RoleId A universally unique identifier
+	// RoleId A universally unique identifier (base64-encoded opaque string).
 	RoleId Id `json:"role_id"`
 
-	// UserId A universally unique identifier
+	// UserId A universally unique identifier (base64-encoded opaque string).
 	UserId Id `json:"user_id"`
 }
 
@@ -3730,7 +3410,7 @@ type RoleBindingResourceType string
 
 // RoleBindingUpdate defines model for RoleBindingUpdate.
 type RoleBindingUpdate struct {
-	// RoleId A universally unique identifier
+	// RoleId A universally unique identifier (base64-encoded opaque string).
 	RoleId Id `json:"role_id"`
 }
 
@@ -3854,15 +3534,15 @@ type Span struct {
 	// StartTime Timestamp when the span started
 	StartTime time.Time `json:"start_time"`
 
-	// StatusCode Status code of the span. Defaults to `UNSET` if not provided.
+	// StatusCode Status code of the span.
+	// - OK - The operation completed successfully.
+	// - ERROR - The operation failed with an error.
+	// - UNSET - No status code was set (default, treated as OK).
 	StatusCode *SpanStatusCode `json:"status_code,omitempty"`
 
 	// StatusMessage Status message associated with the span
 	StatusMessage *string `json:"status_message,omitempty"`
 }
-
-// SpanStatusCode Status code of the span. Defaults to `UNSET` if not provided.
-type SpanStatusCode string
 
 // SpanContext defines model for SpanContext.
 type SpanContext struct {
@@ -3885,6 +3565,12 @@ type SpanEvent struct {
 	Timestamp time.Time `json:"timestamp"`
 }
 
+// SpanStatusCode Status code of the span.
+// - OK - The operation completed successfully.
+// - ERROR - The operation failed with an error.
+// - UNSET - No status code was set (default, treated as OK).
+type SpanStatusCode string
+
 // StaticParam defines model for StaticParam.
 type StaticParam struct {
 	// DefaultValue Default value. Must be a string when `type` is STRING or REGEX, and a string
@@ -3894,7 +3580,10 @@ type StaticParam struct {
 	// Name Parameter name (matches the managed evaluator's argument name)
 	Name string `json:"name"`
 
-	// Type Argument type for static parameters
+	// Type Argument type for static evaluator parameters.
+	// - STRING - A single string value.
+	// - STRING_ARRAY - An array of string values.
+	// - REGEX - A regular expression string.
 	Type StaticParamType `json:"type"`
 }
 
@@ -3910,7 +3599,10 @@ type StaticParam_DefaultValue struct {
 	union json.RawMessage
 }
 
-// StaticParamType Argument type for static parameters
+// StaticParamType Argument type for static evaluator parameters.
+// - STRING - A single string value.
+// - STRING_ARRAY - An array of string values.
+// - REGEX - A regular expression string.
 type StaticParamType string
 
 // Task A task is a typed, configurable unit of work that ties one or more evaluators
@@ -3924,13 +3616,13 @@ type Task struct {
 	// CreatedByUserId The unique identifier for the user who created the task.
 	CreatedByUserId *string `json:"created_by_user_id"`
 
-	// DatasetId The dataset global ID (base64). Present for dataset-based tasks.
+	// DatasetId The dataset identifier (base64). Present for dataset-based tasks.
 	DatasetId *string `json:"dataset_id,omitempty"`
 
 	// Evaluators The evaluators attached to this task. Empty for run_experiment tasks.
 	Evaluators []TaskEvaluator `json:"evaluators"`
 
-	// ExperimentIds Experiment global IDs (base64) for dataset-based tasks.
+	// ExperimentIds Experiment identifiers (base64) for dataset-based tasks.
 	ExperimentIds []string `json:"experiment_ids"`
 
 	// Id The unique identifier for the task
@@ -3945,7 +3637,7 @@ type Task struct {
 	// Name The name of the task
 	Name string `json:"name"`
 
-	// ProjectId The project global ID (base64). Present for project-based tasks.
+	// ProjectId The project identifier (base64). Present for project-based tasks.
 	ProjectId *string `json:"project_id,omitempty"`
 
 	// QueryFilter Task-level query filter applied to all data.
@@ -3958,22 +3650,22 @@ type Task struct {
 	// SamplingRate Sampling rate between 0 and 1. Only applicable for project-based tasks.
 	SamplingRate *float32 `json:"sampling_rate,omitempty"`
 
-	// Type The task type: template_evaluation, code_evaluation, or run_experiment
+	// Type The task type.
+	// - template_evaluation - An LLM template-based evaluation task.
+	// - code_evaluation - A code-based evaluation task.
+	// - run_experiment - A task that runs experiments.
 	Type TaskType `json:"type"`
 
 	// UpdatedAt When the task was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// TaskType The task type: template_evaluation, code_evaluation, or run_experiment
-type TaskType string
-
 // TaskEvaluator defines model for TaskEvaluator.
 type TaskEvaluator struct {
 	// ColumnMappings Maps evaluator template variable names to data source column names.
 	ColumnMappings *map[string]string `json:"column_mappings"`
 
-	// EvaluatorId Evaluator global ID (base64).
+	// EvaluatorId Evaluator identifier (base64).
 	EvaluatorId string `json:"evaluator_id"`
 
 	// EvaluatorName The name of the attached evaluator.
@@ -4001,7 +3693,7 @@ type TaskRun struct {
 	// DataStartTime Start of the data window evaluated. Null for run_experiment runs.
 	DataStartTime *time.Time `json:"data_start_time"`
 
-	// ExperimentId Created experiment global ID (base64). Present only for `run_experiment`
+	// ExperimentId Created experiment identifier (base64). Present only for `run_experiment`
 	// task runs; null for all other task types.
 	ExperimentId *string `json:"experiment_id,omitempty"`
 
@@ -4023,15 +3715,31 @@ type TaskRun struct {
 	// RunStartedAt When the run started processing.
 	RunStartedAt *time.Time `json:"run_started_at"`
 
-	// Status The current status of the run.
+	// Status Status of a task run.
+	// - pending - The run has been created but not yet started.
+	// - running - The run is currently in progress.
+	// - completed - The run finished successfully.
+	// - failed - The run encountered an error and stopped.
+	// - cancelled - The run was cancelled before completion.
 	Status TaskRunStatus `json:"status"`
 
-	// TaskId The parent task global ID (base64).
+	// TaskId The parent task identifier (base64).
 	TaskId string `json:"task_id"`
 }
 
-// TaskRunStatus The current status of the run.
+// TaskRunStatus Status of a task run.
+// - pending - The run has been created but not yet started.
+// - running - The run is currently in progress.
+// - completed - The run finished successfully.
+// - failed - The run encountered an error and stopped.
+// - cancelled - The run was cancelled before completion.
 type TaskRunStatus string
+
+// TaskType The task type.
+// - template_evaluation - An LLM template-based evaluation task.
+// - code_evaluation - A code-based evaluation task.
+// - run_experiment - A task that runs experiments.
+type TaskType string
 
 // TemplateConfig defines model for TemplateConfig.
 type TemplateConfig struct {
@@ -4039,7 +3747,7 @@ type TemplateConfig struct {
 	ClassificationChoices *map[string]float32 `json:"classification_choices,omitempty"`
 
 	// DataGranularity Data granularity level. Defaults to null when omitted.
-	DataGranularity *TemplateConfigDataGranularity `json:"data_granularity,omitempty"`
+	DataGranularity *DataGranularity `json:"data_granularity,omitempty"`
 
 	// Direction The direction for optimization. Defaults to `none` when omitted.
 	// - maximize: higher scores are better
@@ -4061,12 +3769,9 @@ type TemplateConfig struct {
 	UseFunctionCallingIfAvailable bool `json:"use_function_calling_if_available"`
 }
 
-// TemplateConfigDataGranularity Data granularity level. Defaults to null when omitted.
-type TemplateConfigDataGranularity string
-
 // TemplateEvaluationRunConfig Configuration for running a template-based LLM evaluator against each dataset example.
 type TemplateEvaluationRunConfig struct {
-	// AiIntegrationId AI integration global ID (base64). The LLM that judges each example.
+	// AiIntegrationId AI integration identifier (base64). The LLM that judges each example.
 	AiIntegrationId string `json:"ai_integration_id"`
 
 	// ClassificationChoices Map of choice label to numeric score (e.g. `{"relevant": 1, "irrelevant": 0}`).
@@ -4075,7 +3780,7 @@ type TemplateEvaluationRunConfig struct {
 	// ColumnMapping Maps template variable names to dataset column paths.
 	ColumnMapping *map[string]string `json:"column_mapping,omitempty"`
 
-	// EvaluatorVersionId EvaluatorVersion global ID (base64). Links this run to an Eval Hub evaluator version.
+	// EvaluatorVersionId EvaluatorVersion identifier (base64). Links this run to an Eval Hub evaluator version.
 	EvaluatorVersionId *string `json:"evaluator_version_id,omitempty"`
 
 	// ExperimentType Discriminator. Must be `"template_evaluation"`.
@@ -4145,7 +3850,7 @@ type TriggerEvaluationTaskRunRequest struct {
 	// the task's last run time (or 7 days ago on first run).
 	DataStartTime *time.Time `json:"data_start_time,omitempty"`
 
-	// ExperimentIds Experiment global IDs (base64) to run against. Only for dataset-based
+	// ExperimentIds Experiment identifiers (base64) to run against. Only for dataset-based
 	// `template_evaluation` / `code_evaluation` tasks.
 	ExperimentIds *[]string `json:"experiment_ids,omitempty"`
 
@@ -4160,11 +3865,11 @@ type TriggerEvaluationTaskRunRequest struct {
 // TriggerRunExperimentTaskRunRequest Trigger request for `run_experiment` tasks. `example_ids` and `max_examples`
 // are mutually exclusive; at most one may be provided.
 type TriggerRunExperimentTaskRunRequest struct {
-	// DatasetVersionId Dataset version global ID (base64). Defaults to the latest version
+	// DatasetVersionId Dataset version identifier (base64). Defaults to the latest version
 	// when omitted.
 	DatasetVersionId *string `json:"dataset_version_id,omitempty"`
 
-	// EvaluationTaskIds Task global IDs (base64) of evaluation tasks to trigger after the
+	// EvaluationTaskIds Task identifiers (base64) of evaluation tasks to trigger after the
 	// experiment run completes. Supported for all `run_experiment`
 	// experiment types.
 	EvaluationTaskIds *[]string `json:"evaluation_task_ids,omitempty"`
@@ -4215,7 +3920,7 @@ type UpdateEvaluationTaskRequest struct {
 		// ColumnMappings Maps evaluator template variable names to data source column names.
 		ColumnMappings *map[string]string `json:"column_mappings,omitempty"`
 
-		// EvaluatorId Evaluator global ID (base64). Duplicates are not allowed.
+		// EvaluatorId Evaluator identifier (base64). Duplicates are not allowed.
 		EvaluatorId string `json:"evaluator_id"`
 
 		// QueryFilter Per-evaluator query filter. Combined with the task-level filter (AND).
@@ -4259,7 +3964,7 @@ type User struct {
 	// Email An email address
 	Email Email `json:"email"`
 
-	// Id A universally unique identifier
+	// Id A universally unique identifier (base64-encoded opaque string).
 	Id Id `json:"id"`
 
 	// IsDeveloper Whether the user has developer permissions (can use the Arize API)
@@ -4362,19 +4067,19 @@ type UserUpdate struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// AiIntegrationIdPathParam A universally unique identifier
+// AiIntegrationIdPathParam A universally unique identifier (base64-encoded opaque string).
 type AiIntegrationIdPathParam = Id
 
-// AnnotationConfigIdPathParam A universally unique identifier
+// AnnotationConfigIdPathParam A universally unique identifier (base64-encoded opaque string).
 type AnnotationConfigIdPathParam = Id
 
-// AnnotationQueueIdPathParam A universally unique identifier
+// AnnotationQueueIdPathParam A universally unique identifier (base64-encoded opaque string).
 type AnnotationQueueIdPathParam = Id
 
-// AnnotationQueueRecordIdPathParam A universally unique identifier
+// AnnotationQueueRecordIdPathParam A universally unique identifier (base64-encoded opaque string).
 type AnnotationQueueRecordIdPathParam = Id
 
-// ApiKeyIdPathParam A universally unique identifier
+// ApiKeyIdPathParam A universally unique identifier (base64-encoded opaque string).
 type ApiKeyIdPathParam = Id
 
 // ApiKeyStatusQueryParam Current status of the API key.
@@ -4382,34 +4087,36 @@ type ApiKeyIdPathParam = Id
 // - deleted - The key has been deleted by a user.
 type ApiKeyStatusQueryParam = ApiKeyStatus
 
-// ApiKeyTypeQueryParam defines model for ApiKeyTypeQueryParam.
-type ApiKeyTypeQueryParam string
+// ApiKeyTypeQueryParam Type of the API key.
+// - user - Key associated with a specific user.
+// - service - Key associated with a bot user for service authentication.
+type ApiKeyTypeQueryParam = ApiKeyType
 
 // CursorQueryParam defines model for CursorQueryParam.
 type CursorQueryParam = string
 
-// DatasetIdPathParam A universally unique identifier
+// DatasetIdPathParam A universally unique identifier (base64-encoded opaque string).
 type DatasetIdPathParam = Id
 
-// DatasetIdQueryParam A universally unique identifier
+// DatasetIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type DatasetIdQueryParam = Id
 
-// DatasetVersionIdQueryParam A universally unique identifier
+// DatasetVersionIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type DatasetVersionIdQueryParam = Id
 
 // EmailSearchQueryParam defines model for EmailSearchQueryParam.
 type EmailSearchQueryParam = string
 
-// EvaluatorIdPathParam A universally unique identifier
+// EvaluatorIdPathParam A universally unique identifier (base64-encoded opaque string).
 type EvaluatorIdPathParam = Id
 
-// EvaluatorVersionIdPathParam A universally unique identifier
+// EvaluatorVersionIdPathParam A universally unique identifier (base64-encoded opaque string).
 type EvaluatorVersionIdPathParam = Id
 
-// EvaluatorVersionIdQueryParam A universally unique identifier
+// EvaluatorVersionIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type EvaluatorVersionIdQueryParam = Id
 
-// ExperimentIdPathParam A universally unique identifier
+// ExperimentIdPathParam A universally unique identifier (base64-encoded opaque string).
 type ExperimentIdPathParam = Id
 
 // LabelNamePathParam defines model for LabelNamePathParam.
@@ -4427,67 +4134,75 @@ type LimitQueryParamMax500 = int
 // NameSearchQueryParam defines model for NameSearchQueryParam.
 type NameSearchQueryParam = string
 
-// OrgIdPathParam A universally unique identifier
+// OrgIdPathParam A universally unique identifier (base64-encoded opaque string).
 type OrgIdPathParam = Id
 
-// OrganizationIdQueryParam A universally unique identifier
+// OrganizationIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type OrganizationIdQueryParam = Id
 
-// ProjectIdPathParam A universally unique identifier
+// ProjectIdPathParam A universally unique identifier (base64-encoded opaque string).
 type ProjectIdPathParam = Id
 
-// ProjectIdQueryParam A universally unique identifier
+// ProjectIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type ProjectIdQueryParam = Id
 
-// PromptIdPathParam A universally unique identifier
+// PromptIdPathParam A universally unique identifier (base64-encoded opaque string).
 type PromptIdPathParam = Id
 
-// PromptVersionIdPathParam A universally unique identifier
+// PromptVersionIdPathParam A universally unique identifier (base64-encoded opaque string).
 type PromptVersionIdPathParam = Id
 
-// ResourceIdPathParam A universally unique identifier
+// ResourceIdPathParam A universally unique identifier (base64-encoded opaque string).
 type ResourceIdPathParam = Id
 
-// RoleBindingIdPathParam A universally unique identifier
+// RoleBindingIdPathParam A universally unique identifier (base64-encoded opaque string).
 type RoleBindingIdPathParam = Id
 
-// RoleIdPathParam A universally unique identifier
+// RoleIdPathParam A universally unique identifier (base64-encoded opaque string).
 type RoleIdPathParam = Id
 
 // RolesIsPredefinedQueryParam defines model for RolesIsPredefinedQueryParam.
 type RolesIsPredefinedQueryParam = bool
 
-// SpaceIdPathParam A universally unique identifier
+// SpaceIdPathParam A universally unique identifier (base64-encoded opaque string).
 type SpaceIdPathParam = Id
 
-// SpaceIdQueryParam A universally unique identifier
+// SpaceIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type SpaceIdQueryParam = Id
 
 // SpaceNameQueryParam defines model for SpaceNameQueryParam.
 type SpaceNameQueryParam = string
 
-// TaskIdPathParam A universally unique identifier
+// TaskIdPathParam A universally unique identifier (base64-encoded opaque string).
 type TaskIdPathParam = Id
 
-// TaskRunIdPathParam A universally unique identifier
+// TaskRunIdPathParam A universally unique identifier (base64-encoded opaque string).
 type TaskRunIdPathParam = Id
 
-// TaskRunStatusQueryParam defines model for TaskRunStatusQueryParam.
-type TaskRunStatusQueryParam string
+// TaskRunStatusQueryParam Status of a task run.
+// - pending - The run has been created but not yet started.
+// - running - The run is currently in progress.
+// - completed - The run finished successfully.
+// - failed - The run encountered an error and stopped.
+// - cancelled - The run was cancelled before completion.
+type TaskRunStatusQueryParam = TaskRunStatus
 
-// TaskTypeQueryParam defines model for TaskTypeQueryParam.
-type TaskTypeQueryParam string
+// TaskTypeQueryParam The task type.
+// - template_evaluation - An LLM template-based evaluation task.
+// - code_evaluation - A code-based evaluation task.
+// - run_experiment - A task that runs experiments.
+type TaskTypeQueryParam = TaskType
 
-// UserIdPathParam A universally unique identifier
+// UserIdPathParam A universally unique identifier (base64-encoded opaque string).
 type UserIdPathParam = Id
 
-// UserIdQueryParam A universally unique identifier
+// UserIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type UserIdQueryParam = Id
 
 // UserStatusQueryParam defines model for UserStatusQueryParam.
 type UserStatusQueryParam = []UserStatus
 
-// VersionIdQueryParam A universally unique identifier
+// VersionIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type VersionIdQueryParam = Id
 
 // AiIntegrationList defines model for AiIntegrationList.
@@ -4824,6 +4539,9 @@ type TaskUpdated = Task
 // Unauthorized RFC 9457 Problem Details
 type Unauthorized = Problem
 
+// UnprocessableEntity RFC 9457 Problem Details
+type UnprocessableEntity = Problem
+
 // UserCreated defines model for UserCreated.
 type UserCreated = UserCreatedResponse
 
@@ -4911,21 +4629,20 @@ type CreateEvaluatorRequestBody struct {
 	// Name Evaluator name (must be unique within the space)
 	Name string `json:"name"`
 
-	// SpaceId Space global ID (base64)
+	// SpaceId Space identifier (base64)
 	SpaceId string `json:"space_id"`
 
-	// Type Evaluator type. Use `template` with `version.template_config`, or `code`
-	// with `version.code_config`.
-	Type CreateEvaluatorRequestBodyType `json:"type"`
+	// Type The evaluator type: `template` (LLM-based) or `code` (managed built-in
+	// evaluators or custom Python code — both are subtypes of `code`,
+	// discriminated by the nested `CodeConfig.type` = `managed` | `custom`).
+	// Applies to both the parent `Evaluator.type` field and every version's `type`
+	// discriminator — a version's `type` must always match its parent evaluator's `type`.
+	Type EvaluatorType `json:"type"`
 
 	// Version Payload for an evaluator version: exactly one of `template_config` or `code_config`.
 	// Used both when creating an evaluator (initial `version`) and when appending a version.
 	Version EvaluatorVersionCreate `json:"version"`
 }
-
-// CreateEvaluatorRequestBodyType Evaluator type. Use `template` with `version.template_config`, or `code`
-// with `version.code_config`.
-type CreateEvaluatorRequestBodyType string
 
 // CreateEvaluatorVersionRequestBody Payload for an evaluator version: exactly one of `template_config` or `code_config`.
 // Used both when creating an evaluator (initial `version`) and when appending a version.
@@ -5097,6 +4814,12 @@ type UpdateDatasetExamplesRequestBody struct {
 	//
 	// If omitted or empty, updates the existing version in-place.
 	NewVersion *string `json:"new_version,omitempty"`
+}
+
+// UpdateDatasetRequestBody defines model for UpdateDatasetRequestBody.
+type UpdateDatasetRequestBody struct {
+	// Name New name for the dataset. Must be unique within the space.
+	Name string `json:"name"`
 }
 
 // UpdateEvaluatorRequestBody defines model for UpdateEvaluatorRequestBody.
@@ -5313,7 +5036,7 @@ type ApiKeysListParams struct {
 	// KeyType Filter by API key type.
 	// - user - Key associated with a specific user.
 	// - service - Key associated with a bot user for service authentication.
-	KeyType *ApiKeysListParamsKeyType `form:"key_type,omitempty" json:"key_type,omitempty"`
+	KeyType *ApiKeyTypeQueryParam `form:"key_type,omitempty" json:"key_type,omitempty"`
 
 	// Status Filter by API key status.
 	// - active - Only return keys that are valid for use.
@@ -5325,7 +5048,7 @@ type ApiKeysListParams struct {
 	// SpaceId Filter search results to a particular space ID
 	SpaceId *SpaceIdQueryParam `form:"space_id,omitempty" json:"space_id,omitempty"`
 
-	// UserId Filter API keys by the user who created them (base64 global ID).
+	// UserId Filter API keys by the user who created them (base64 identifier (base64)).
 	// When used with `space_id`, filters service keys by creator — available to any user with space access.
 	// When used without `space_id`, filters user keys by creator — account admins only (non-admins receive `403`).
 	// Can be combined with `key_type` to further narrow results by key type.
@@ -5339,9 +5062,6 @@ type ApiKeysListParams struct {
 	// attempt to parse or construct it.
 	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
 }
-
-// ApiKeysListParamsKeyType defines parameters for ApiKeysList.
-type ApiKeysListParamsKeyType string
 
 // DatasetsListParams defines parameters for DatasetsList.
 type DatasetsListParams struct {
@@ -5378,6 +5098,12 @@ type DatasetsCreateJSONBody struct {
 
 	// SpaceId ID of the space the dataset will belong to
 	SpaceId string `json:"space_id"`
+}
+
+// DatasetsUpdateJSONBody defines parameters for DatasetsUpdate.
+type DatasetsUpdateJSONBody struct {
+	// Name New name for the dataset. Must be unique within the space.
+	Name string `json:"name"`
 }
 
 // DatasetsExamplesListParams defines parameters for DatasetsExamplesList.
@@ -5452,24 +5178,24 @@ type EvaluatorsCreateJSONBody struct {
 	// Name Evaluator name (must be unique within the space)
 	Name string `json:"name"`
 
-	// SpaceId Space global ID (base64)
+	// SpaceId Space identifier (base64)
 	SpaceId string `json:"space_id"`
 
-	// Type Evaluator type. Use `template` with `version.template_config`, or `code`
-	// with `version.code_config`.
-	Type EvaluatorsCreateJSONBodyType `json:"type"`
+	// Type The evaluator type: `template` (LLM-based) or `code` (managed built-in
+	// evaluators or custom Python code — both are subtypes of `code`,
+	// discriminated by the nested `CodeConfig.type` = `managed` | `custom`).
+	// Applies to both the parent `Evaluator.type` field and every version's `type`
+	// discriminator — a version's `type` must always match its parent evaluator's `type`.
+	Type EvaluatorType `json:"type"`
 
 	// Version Payload for an evaluator version: exactly one of `template_config` or `code_config`.
 	// Used both when creating an evaluator (initial `version`) and when appending a version.
 	Version EvaluatorVersionCreate `json:"version"`
 }
 
-// EvaluatorsCreateJSONBodyType defines parameters for EvaluatorsCreate.
-type EvaluatorsCreateJSONBodyType string
-
 // EvaluatorsGetParams defines parameters for EvaluatorsGet.
 type EvaluatorsGetParams struct {
-	// VersionId Return the evaluator with this specific version (base64 global ID). If omitted, returns the latest version.
+	// VersionId Return the evaluator with this specific version (base64 identifier (base64)). If omitted, returns the latest version.
 	VersionId *EvaluatorVersionIdQueryParam `form:"version_id,omitempty" json:"version_id,omitempty"`
 }
 
@@ -5495,7 +5221,7 @@ type EvaluatorVersionsListParams struct {
 
 // ExperimentsListParams defines parameters for ExperimentsList.
 type ExperimentsListParams struct {
-	// DatasetId Filter to a specific dataset (base64 global ID)
+	// DatasetId Filter to a specific dataset (base64 identifier (base64))
 	DatasetId *DatasetIdQueryParam `form:"dataset_id,omitempty" json:"dataset_id,omitempty"`
 
 	// Name Case-insensitive substring filter on the resource name. Returns only
@@ -5621,7 +5347,7 @@ type PromptsCreateJSONBody struct {
 
 // PromptsGetParams defines parameters for PromptsGet.
 type PromptsGetParams struct {
-	// VersionId Return the prompt with this specific version. Mutually exclusive with `label`.
+	// VersionId Return the prompt with this specific version (base64 identifier (base64)). Mutually exclusive with `label`.
 	VersionId *VersionIdQueryParam `form:"version_id,omitempty" json:"version_id,omitempty"`
 
 	// Label Return the prompt with the version pointed to by this label (e.g., "production"). Mutually exclusive with `version_id`.
@@ -5692,7 +5418,7 @@ type RolesListParams struct {
 
 // SpacesListParams defines parameters for SpacesList.
 type SpacesListParams struct {
-	// OrgId The unique identifier of an organization. When provided, only spaces belonging to this organization are returned.
+	// OrgId The unique organization identifier (base64). When provided, only spaces belonging to this organization are returned.
 	OrgId *OrganizationIdQueryParam `form:"org_id,omitempty" json:"org_id,omitempty"`
 
 	// Name Case-insensitive substring filter on the resource name. Returns only
@@ -5758,14 +5484,14 @@ type TasksListParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// ProjectId Filter to tasks for a specific project (base64 global ID)
+	// ProjectId Filter to tasks for a specific project (base64 identifier (base64))
 	ProjectId *ProjectIdQueryParam `form:"project_id,omitempty" json:"project_id,omitempty"`
 
-	// DatasetId Filter to a specific dataset (base64 global ID)
+	// DatasetId Filter to a specific dataset (base64 identifier (base64))
 	DatasetId *DatasetIdQueryParam `form:"dataset_id,omitempty" json:"dataset_id,omitempty"`
 
 	// Type Filter by task type: template_evaluation, code_evaluation, or run_experiment
-	Type *TasksListParamsType `form:"type,omitempty" json:"type,omitempty"`
+	Type *TaskTypeQueryParam `form:"type,omitempty" json:"type,omitempty"`
 
 	// Limit Maximum items to return
 	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
@@ -5775,9 +5501,6 @@ type TasksListParams struct {
 	// attempt to parse or construct it.
 	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
 }
-
-// TasksListParamsType defines parameters for TasksList.
-type TasksListParamsType string
 
 // TasksCreateJSONBody defines parameters for TasksCreate.
 type TasksCreateJSONBody struct {
@@ -5792,7 +5515,7 @@ type TasksUpdateJSONBody struct {
 // TasksListRunsParams defines parameters for TasksListRuns.
 type TasksListRunsParams struct {
 	// Status Filter by run status: pending, running, completed, failed, cancelled
-	Status *TasksListRunsParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+	Status *TaskRunStatusQueryParam `form:"status,omitempty" json:"status,omitempty"`
 
 	// Limit Maximum items to return
 	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
@@ -5802,9 +5525,6 @@ type TasksListRunsParams struct {
 	// attempt to parse or construct it.
 	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
 }
-
-// TasksListRunsParamsStatus defines parameters for TasksListRuns.
-type TasksListRunsParamsStatus string
 
 // TasksTriggerRunJSONBody defines parameters for TasksTriggerRun.
 type TasksTriggerRunJSONBody struct {
@@ -5865,6 +5585,9 @@ type ApiKeysRefreshJSONRequestBody = ApiKeyRefresh
 
 // DatasetsCreateJSONRequestBody defines body for DatasetsCreate for application/json ContentType.
 type DatasetsCreateJSONRequestBody DatasetsCreateJSONBody
+
+// DatasetsUpdateJSONRequestBody defines body for DatasetsUpdate for application/json ContentType.
+type DatasetsUpdateJSONRequestBody DatasetsUpdateJSONBody
 
 // DatasetsExamplesUpdateJSONRequestBody defines body for DatasetsExamplesUpdate for application/json ContentType.
 type DatasetsExamplesUpdateJSONRequestBody DatasetsExamplesUpdateJSONBody
@@ -8050,6 +7773,11 @@ type ClientInterface interface {
 	// DatasetsGet request
 	DatasetsGet(ctx context.Context, datasetId DatasetIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DatasetsUpdateWithBody request with any body
+	DatasetsUpdateWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DatasetsUpdate(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DatasetsExamplesList request
 	DatasetsExamplesList(ctx context.Context, datasetId DatasetIdPathParam, params *DatasetsExamplesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -8804,6 +8532,30 @@ func (c *Client) DatasetsDelete(ctx context.Context, datasetId DatasetIdPathPara
 
 func (c *Client) DatasetsGet(ctx context.Context, datasetId DatasetIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDatasetsGetRequest(c.Server, datasetId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DatasetsUpdateWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDatasetsUpdateRequestWithBody(c.Server, datasetId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DatasetsUpdate(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDatasetsUpdateRequest(c.Server, datasetId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -11620,6 +11372,53 @@ func NewDatasetsGetRequest(server string, datasetId DatasetIdPathParam) (*http.R
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewDatasetsUpdateRequest calls the generic DatasetsUpdate builder with application/json body
+func NewDatasetsUpdateRequest(server string, datasetId DatasetIdPathParam, body DatasetsUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDatasetsUpdateRequestWithBody(server, datasetId, "application/json", bodyReader)
+}
+
+// NewDatasetsUpdateRequestWithBody generates requests for DatasetsUpdate with any type of body
+func NewDatasetsUpdateRequestWithBody(server string, datasetId DatasetIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "dataset_id", datasetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/datasets/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -15715,6 +15514,11 @@ type ClientWithResponsesInterface interface {
 	// DatasetsGetWithResponse request
 	DatasetsGetWithResponse(ctx context.Context, datasetId DatasetIdPathParam, reqEditors ...RequestEditorFn) (*DatasetsGetResponse, error)
 
+	// DatasetsUpdateWithBodyWithResponse request with any body
+	DatasetsUpdateWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DatasetsUpdateResponse, error)
+
+	DatasetsUpdateWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DatasetsUpdateResponse, error)
+
 	// DatasetsExamplesListWithResponse request
 	DatasetsExamplesListWithResponse(ctx context.Context, datasetId DatasetIdPathParam, params *DatasetsExamplesListParams, reqEditors ...RequestEditorFn) (*DatasetsExamplesListResponse, error)
 
@@ -16046,6 +15850,7 @@ type AiIntegrationsCreateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16126,6 +15931,7 @@ type AiIntegrationsUpdateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16180,6 +15986,7 @@ type AnnotationConfigsCreateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16286,6 +16093,7 @@ type AnnotationQueuesCreateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16366,6 +16174,7 @@ type AnnotationQueuesUpdateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16392,6 +16201,7 @@ type AnnotationQueuesRecordsDeleteResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16447,6 +16257,7 @@ type AnnotationQueuesRecordsCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16474,6 +16285,7 @@ type AnnotationQueuesRecordsAnnotateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16501,6 +16313,7 @@ type AnnotationQueuesRecordsAssignResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16555,6 +16368,7 @@ type ApiKeysCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16608,6 +16422,7 @@ type ApiKeysRefreshResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16662,6 +16477,7 @@ type DatasetsCreateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 }
 
 // Status returns HTTPResponse.Status
@@ -16732,6 +16548,35 @@ func (r DatasetsGetResponse) StatusCode() int {
 	return 0
 }
 
+type DatasetsUpdateResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Dataset
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r DatasetsUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DatasetsUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type DatasetsExamplesListResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -16768,6 +16613,7 @@ type DatasetsExamplesUpdateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16795,6 +16641,7 @@ type DatasetsExamplesInsertResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16821,6 +16668,7 @@ type DatasetsExamplesAnnotateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16901,6 +16749,7 @@ type EvaluatorsCreateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -16981,6 +16830,7 @@ type EvaluatorsUpdateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17035,6 +16885,7 @@ type EvaluatorVersionsCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17089,6 +16940,7 @@ type ExperimentsCreateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17194,6 +17046,7 @@ type ExperimentsRunsAnnotateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17247,6 +17100,7 @@ type OrganizationsCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17327,6 +17181,7 @@ type OrganizationsUpdateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17354,6 +17209,7 @@ type OrganizationsAddUserResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17433,6 +17289,7 @@ type ProjectsCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17539,6 +17396,7 @@ type PromptVersionLabelsSetResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17618,6 +17476,7 @@ type PromptsCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17697,6 +17556,7 @@ type PromptsUpdateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17777,6 +17637,7 @@ type PromptVersionsCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17804,6 +17665,7 @@ type ResourceRestrictionsCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17858,6 +17720,7 @@ type RoleBindingsCreateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17936,6 +17799,7 @@ type RoleBindingsUpdateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -17989,6 +17853,7 @@ type RolesCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18069,6 +17934,7 @@ type RolesUpdateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18123,6 +17989,7 @@ type SpacesCreateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18204,6 +18071,7 @@ type SpacesUpdateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18231,6 +18099,7 @@ type SpacesAddUserResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18284,6 +18153,7 @@ type SpansDeleteResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 	ApplicationproblemJSON500 *SpanDeleteError
 }
@@ -18312,6 +18182,7 @@ type SpansListResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18338,6 +18209,7 @@ type SpansAnnotateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18445,6 +18317,7 @@ type TasksCreateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18524,6 +18397,7 @@ type TasksUpdateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18579,6 +18453,7 @@ type TasksTriggerRunResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18634,6 +18509,7 @@ type UsersCreateResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -18713,6 +18589,7 @@ type UsersUpdateResponse struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -19121,6 +18998,23 @@ func (c *ClientWithResponses) DatasetsGetWithResponse(ctx context.Context, datas
 		return nil, err
 	}
 	return ParseDatasetsGetResponse(rsp)
+}
+
+// DatasetsUpdateWithBodyWithResponse request with arbitrary body returning *DatasetsUpdateResponse
+func (c *ClientWithResponses) DatasetsUpdateWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DatasetsUpdateResponse, error) {
+	rsp, err := c.DatasetsUpdateWithBody(ctx, datasetId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDatasetsUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) DatasetsUpdateWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DatasetsUpdateResponse, error) {
+	rsp, err := c.DatasetsUpdate(ctx, datasetId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDatasetsUpdateResponse(rsp)
 }
 
 // DatasetsExamplesListWithResponse request returning *DatasetsExamplesListResponse
@@ -20182,6 +20076,13 @@ func ParseAiIntegrationsCreateResponse(rsp *http.Response) (*AiIntegrationsCreat
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -20358,6 +20259,13 @@ func ParseAiIntegrationsUpdateResponse(rsp *http.Response) (*AiIntegrationsUpdat
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -20479,6 +20387,13 @@ func ParseAnnotationConfigsCreateResponse(rsp *http.Response) (*AnnotationConfig
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -20710,6 +20625,13 @@ func ParseAnnotationQueuesCreateResponse(rsp *http.Response) (*AnnotationQueuesC
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -20886,6 +20808,13 @@ func ParseAnnotationQueuesUpdateResponse(rsp *http.Response) (*AnnotationQueuesU
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -20939,6 +20868,13 @@ func ParseAnnotationQueuesRecordsDeleteResponse(rsp *http.Response) (*Annotation
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -21069,6 +21005,13 @@ func ParseAnnotationQueuesRecordsCreateResponse(rsp *http.Response) (*Annotation
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21130,6 +21073,13 @@ func ParseAnnotationQueuesRecordsAnnotateResponse(rsp *http.Response) (*Annotati
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21190,6 +21140,13 @@ func ParseAnnotationQueuesRecordsAssignResponse(rsp *http.Response) (*Annotation
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -21313,6 +21270,13 @@ func ParseApiKeysCreateResponse(rsp *http.Response) (*ApiKeysCreateResponse, err
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21427,6 +21391,13 @@ func ParseApiKeysRefreshResponse(rsp *http.Response) (*ApiKeysRefreshResponse, e
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -21550,6 +21521,13 @@ func ParseDatasetsCreateResponse(rsp *http.Response) (*DatasetsCreateResponse, e
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	}
 
 	return response, nil
@@ -21650,6 +21628,81 @@ func ParseDatasetsGetResponse(rsp *http.Response) (*DatasetsGetResponse, error) 
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDatasetsUpdateResponse parses an HTTP response from a DatasetsUpdateWithResponse call
+func ParseDatasetsUpdateResponse(rsp *http.Response) (*DatasetsUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DatasetsUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Dataset
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -21780,6 +21833,13 @@ func ParseDatasetsExamplesUpdateResponse(rsp *http.Response) (*DatasetsExamplesU
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21841,6 +21901,13 @@ func ParseDatasetsExamplesInsertResponse(rsp *http.Response) (*DatasetsExamplesI
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -21894,6 +21961,13 @@ func ParseDatasetsExamplesAnnotateResponse(rsp *http.Response) (*DatasetsExample
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -22071,6 +22145,13 @@ func ParseEvaluatorsCreateResponse(rsp *http.Response) (*EvaluatorsCreateRespons
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22247,6 +22328,13 @@ func ParseEvaluatorsUpdateResponse(rsp *http.Response) (*EvaluatorsUpdateRespons
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22369,6 +22457,13 @@ func ParseEvaluatorVersionsCreateResponse(rsp *http.Response) (*EvaluatorVersion
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22490,6 +22585,13 @@ func ParseExperimentsCreateResponse(rsp *http.Response) (*ExperimentsCreateRespo
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -22714,6 +22816,13 @@ func ParseExperimentsRunsAnnotateResponse(rsp *http.Response) (*ExperimentsRunsA
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -22828,6 +22937,13 @@ func ParseOrganizationsCreateResponse(rsp *http.Response) (*OrganizationsCreateR
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -23005,6 +23121,13 @@ func ParseOrganizationsUpdateResponse(rsp *http.Response) (*OrganizationsUpdateR
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -23065,6 +23188,13 @@ func ParseOrganizationsAddUserResponse(rsp *http.Response) (*OrganizationsAddUse
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -23234,6 +23364,13 @@ func ParseProjectsCreateResponse(rsp *http.Response) (*ProjectsCreateResponse, e
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -23465,6 +23602,13 @@ func ParsePromptVersionLabelsSetResponse(rsp *http.Response) (*PromptVersionLabe
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -23634,6 +23778,13 @@ func ParsePromptsCreateResponse(rsp *http.Response) (*PromptsCreateResponse, err
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -23802,6 +23953,13 @@ func ParsePromptsUpdateResponse(rsp *http.Response) (*PromptsUpdateResponse, err
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -23979,6 +24137,13 @@ func ParsePromptVersionsCreateResponse(rsp *http.Response) (*PromptVersionsCreat
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -24039,6 +24204,13 @@ func ParseResourceRestrictionsCreateResponse(rsp *http.Response) (*ResourceRestr
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -24161,6 +24333,13 @@ func ParseRoleBindingsCreateResponse(rsp *http.Response) (*RoleBindingsCreateRes
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -24324,6 +24503,13 @@ func ParseRoleBindingsUpdateResponse(rsp *http.Response) (*RoleBindingsUpdateRes
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -24438,6 +24624,13 @@ func ParseRolesCreateResponse(rsp *http.Response) (*RolesCreateResponse, error) 
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -24615,6 +24808,13 @@ func ParseRolesUpdateResponse(rsp *http.Response) (*RolesUpdateResponse, error) 
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -24736,6 +24936,13 @@ func ParseSpacesCreateResponse(rsp *http.Response) (*SpacesCreateResponse, error
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -24920,6 +25127,13 @@ func ParseSpacesUpdateResponse(rsp *http.Response) (*SpacesUpdateResponse, error
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -24980,6 +25194,13 @@ func ParseSpacesAddUserResponse(rsp *http.Response) (*SpacesAddUserResponse, err
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -25096,6 +25317,13 @@ func ParseSpansDeleteResponse(rsp *http.Response) (*SpansDeleteResponse, error) 
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -25164,6 +25392,13 @@ func ParseSpansListResponse(rsp *http.Response) (*SpansListResponse, error) {
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -25217,6 +25452,13 @@ func ParseSpansAnnotateResponse(rsp *http.Response) (*SpansAnnotateResponse, err
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -25455,6 +25697,13 @@ func ParseTasksCreateResponse(rsp *http.Response) (*TasksCreateResponse, error) 
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -25624,6 +25873,13 @@ func ParseTasksUpdateResponse(rsp *http.Response) (*TasksUpdateResponse, error) 
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -25753,6 +26009,13 @@ func ParseTasksTriggerRunResponse(rsp *http.Response) (*TasksTriggerRunResponse,
 		}
 		response.ApplicationproblemJSON409 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -25881,6 +26144,13 @@ func ParseUsersCreateResponse(rsp *http.Response) (*UsersCreateResponse, error) 
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -26050,6 +26320,13 @@ func ParseUsersUpdateResponse(rsp *http.Response) (*UsersUpdateResponse, error) 
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded

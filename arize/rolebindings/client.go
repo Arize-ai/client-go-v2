@@ -19,9 +19,12 @@ func New(gen *generated.ClientWithResponses) *Client {
 }
 
 // Get returns a single role binding by ID.
-func (c *Client) Get(ctx context.Context, bindingID string) (*RoleBindingResponse, error) {
+func (c *Client) Get(
+	ctx context.Context,
+	req GetRequest,
+) (*RoleBinding, error) {
 	prerelease.Warn("rolebindings.get", prerelease.Alpha)
-	resp, err := c.gen.RoleBindingsGetWithResponse(ctx, bindingID)
+	resp, err := c.gen.RoleBindingsGetWithResponse(ctx, req.RoleBindingID)
 	if err != nil {
 		return nil, err
 	}
@@ -32,9 +35,18 @@ func (c *Client) Get(ctx context.Context, bindingID string) (*RoleBindingRespons
 }
 
 // Create creates a new role binding and returns it.
-func (c *Client) Create(ctx context.Context, req CreateRequest) (*RoleBindingResponse, error) {
+func (c *Client) Create(
+	ctx context.Context,
+	req CreateRequest,
+) (*RoleBinding, error) {
 	prerelease.Warn("rolebindings.create", prerelease.Alpha)
-	resp, err := c.gen.RoleBindingsCreateWithResponse(ctx, req)
+	body := generated.RoleBindingCreate{
+		ResourceId:   req.ResourceID,
+		ResourceType: req.ResourceType,
+		RoleId:       req.RoleID,
+		UserId:       req.UserID,
+	}
+	resp, err := c.gen.RoleBindingsCreateWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -45,9 +57,15 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*RoleBindingRes
 }
 
 // Update updates an existing role binding and returns the updated binding.
-func (c *Client) Update(ctx context.Context, bindingID string, req UpdateRequest) (*RoleBindingResponse, error) {
+func (c *Client) Update(
+	ctx context.Context,
+	req UpdateRequest,
+) (*RoleBinding, error) {
 	prerelease.Warn("rolebindings.update", prerelease.Alpha)
-	resp, err := c.gen.RoleBindingsUpdateWithResponse(ctx, bindingID, req)
+	body := generated.RoleBindingUpdate{
+		RoleId: req.RoleID,
+	}
+	resp, err := c.gen.RoleBindingsUpdateWithResponse(ctx, req.RoleBindingID, body)
 	if err != nil {
 		return nil, err
 	}
@@ -58,9 +76,12 @@ func (c *Client) Update(ctx context.Context, bindingID string, req UpdateRequest
 }
 
 // Delete removes a role binding by ID.
-func (c *Client) Delete(ctx context.Context, bindingID string) error {
+func (c *Client) Delete(
+	ctx context.Context,
+	req DeleteRequest,
+) error {
 	prerelease.Warn("rolebindings.delete", prerelease.Alpha)
-	resp, err := c.gen.RoleBindingsDeleteWithResponse(ctx, bindingID)
+	resp, err := c.gen.RoleBindingsDeleteWithResponse(ctx, req.RoleBindingID)
 	if err != nil {
 		return err
 	}

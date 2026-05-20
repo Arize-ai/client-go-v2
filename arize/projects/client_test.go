@@ -12,12 +12,15 @@ import (
 	"time"
 
 	"github.com/Arize-ai/client-go-v2/arize"
-	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/projects"
 )
 
-func testID(suffix string) string {
+func projectID(suffix string) string {
 	return base64.StdEncoding.EncodeToString([]byte("Project:1:" + suffix))
+}
+
+func spaceID(suffix string) string {
+	return base64.StdEncoding.EncodeToString([]byte("Space:1:" + suffix))
 }
 
 func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *arize.Client) {
@@ -35,6 +38,14 @@ func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *a
 	return srv, client
 }
 
+// wireProject mirrors the JSON shape the API sends/receives for project create
+// requests. Tests use it so they can decode request bodies without importing
+// internal/generated.
+type wireProject struct {
+	Name    string `json:"name"`
+	SpaceId string `json:"space_id"`
+}
+
 func TestProjects(t *testing.T) {
 	var listFiltersQuery url.Values
 
@@ -48,43 +59,66 @@ func TestProjects(t *testing.T) {
 			name: "List",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(generated.ProjectList{
-					Projects:   []generated.Project{{Id: "proj-1", Name: "my-project", CreatedAt: time.Now(), SpaceId: "space-1"}},
-					Pagination: generated.PaginationMetadata{HasMore: false},
+				json.NewEncoder(w).Encode(projects.ProjectList{
+					Projects:   []projects.Project{{Id: "proj-1", Name: "my-project", CreatedAt: time.Now(), SpaceId: "space-1"}},
+					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				limit := 10
-				return c.Projects.List(ctx, projects.ListParams{Limit: &limit})
+				return c.Projects.List(ctx, projects.ListRequest{Limit: 10})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*generated.ProjectList)
+				resp := got.(*projects.ProjectList)
 				if len(resp.Projects) != 1 {
 					t.Errorf("expected 1 project, got %d", len(resp.Projects))
 				}
 			},
 		},
 		{
-			name: "List_NewFilters",
+			name: "List_SpaceAsID",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				listFiltersQuery = r.URL.Query()
 				w.Header().Set("Content-Type", "application/json")
 				_, _ = w.Write([]byte(`{"projects":[],"pagination":{"has_more":false}}`))
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				name, spaceID, spaceName := "prod", "sp-1", "demo"
-				return c.Projects.List(ctx, projects.ListParams{
-					Name: &name, SpaceId: &spaceID, SpaceName: &spaceName,
+				return c.Projects.List(ctx, projects.ListRequest{
+					Name:  "prod",
+					Space: spaceID("space-1"),
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				if listFiltersQuery.Get("name") != "prod" || listFiltersQuery.Get("space_id") != "sp-1" || listFiltersQuery.Get("space_name") != "demo" {
+				if listFiltersQuery.Get("name") != "prod" ||
+					listFiltersQuery.Get("space_id") != spaceID("space-1") ||
+					listFiltersQuery.Get("space_name") != "" {
+					t.Errorf("query: %v", listFiltersQuery)
+				}
+			},
+		},
+		{
+			name: "List_SpaceAsName",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				listFiltersQuery = r.URL.Query()
+				w.Header().Set("Content-Type", "application/json")
+				_, _ = w.Write([]byte(`{"projects":[],"pagination":{"has_more":false}}`))
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Projects.List(ctx, projects.ListRequest{
+					Space: "demo",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				if listFiltersQuery.Get("space_id") != "" ||
+					listFiltersQuery.Get("space_name") != "demo" {
 					t.Errorf("query: %v", listFiltersQuery)
 				}
 			},
@@ -93,16 +127,16 @@ func TestProjects(t *testing.T) {
 			name: "Get",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(generated.Project{Id: "proj-1", Name: "my-project", CreatedAt: time.Now(), SpaceId: "space-1"})
+				json.NewEncoder(w).Encode(projects.Project{Id: "proj-1", Name: "my-project", CreatedAt: time.Now(), SpaceId: "space-1"})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.Projects.Get(ctx, testID("proj-1"), "")
+				return c.Projects.Get(ctx, projects.GetRequest{Project: projectID("proj-1")})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				proj := got.(*generated.Project)
+				proj := got.(*projects.Project)
 				if proj.Id != "proj-1" {
 					t.Errorf("unexpected id: %s", proj.Id)
 				}
@@ -116,7 +150,7 @@ func TestProjects(t *testing.T) {
 				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.Projects.Get(ctx, testID("missing"), "")
+				return c.Projects.Get(ctx, projects.GetRequest{Project: projectID("missing")})
 			},
 			check: func(t *testing.T, got any, err error) {
 				var nfe *arize.NotFoundError
@@ -131,18 +165,31 @@ func TestProjects(t *testing.T) {
 				if r.Method != http.MethodPost {
 					t.Errorf("expected POST, got %s", r.Method)
 				}
+				var body wireProject
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if body.Name != "new-project" {
+					t.Errorf("body name: want new-project, got %q", body.Name)
+				}
+				if body.SpaceId != spaceID("space-1") {
+					t.Errorf("body space_id: want %q, got %q", spaceID("space-1"), body.SpaceId)
+				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(201)
-				json.NewEncoder(w).Encode(generated.Project{Id: "proj-new", Name: "new-project", CreatedAt: time.Now(), SpaceId: "space-1"})
+				json.NewEncoder(w).Encode(projects.Project{Id: "proj-new", Name: "new-project", CreatedAt: time.Now(), SpaceId: "space-1"})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.Projects.Create(ctx, testID("space-1"), "new-project")
+				return c.Projects.Create(ctx, projects.CreateRequest{
+					Name:  "new-project",
+					Space: spaceID("space-1"),
+				})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				proj := got.(*generated.Project)
+				proj := got.(*projects.Project)
 				if proj.Id != "proj-new" {
 					t.Errorf("unexpected id: %s", proj.Id)
 				}
@@ -157,7 +204,7 @@ func TestProjects(t *testing.T) {
 				w.WriteHeader(204)
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return nil, c.Projects.Delete(ctx, testID("proj-1"), "")
+				return nil, c.Projects.Delete(ctx, projects.DeleteRequest{Project: projectID("proj-1")})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {

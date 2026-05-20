@@ -13,6 +13,24 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/resourcerestrictions"
 )
 
+// wireResourceRestrictionCreate mirrors the API JSON body for creating a
+// resource restriction. Tests decode incoming request bodies into this struct
+// rather than importing the generated package.
+type wireResourceRestrictionCreate struct {
+	ResourceID string `json:"resource_id"`
+}
+
+// wireResourceRestrictionResponse mirrors the API JSON response envelope.
+type wireResourceRestrictionResponse struct {
+	ResourceRestriction wireResourceRestriction `json:"resource_restriction"`
+}
+
+type wireResourceRestriction struct {
+	ResourceID   string    `json:"resource_id"`
+	ResourceType string    `json:"resource_type"`
+	CreatedAt    time.Time `json:"created_at"`
+}
+
 func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *arize.Client) {
 	t.Helper()
 	srv := httptest.NewServer(handler)
@@ -36,52 +54,53 @@ func TestResourceRestrictions(t *testing.T) {
 		check   func(t *testing.T, got any, err error)
 	}{
 		{
-			name: "Create success",
+			name: "Restrict success",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				if r.Method != http.MethodPost {
 					t.Errorf("expected POST, got %s", r.Method)
 				}
-				var body resourcerestrictions.CreateRequest
+				var body wireResourceRestrictionCreate
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				if body.ResourceId != "proj-1" {
-					t.Errorf("body resource_id: want proj-1, got %q", body.ResourceId)
+				if body.ResourceID != "proj-1" {
+					t.Errorf("body resource_id: want proj-1, got %q", body.ResourceID)
 				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(200)
-				json.NewEncoder(w).Encode(resourcerestrictions.ResourceRestrictionResponse{
-					ResourceRestriction: resourcerestrictions.ResourceRestriction{
-						ResourceId:   "proj-1",
-						ResourceType: resourcerestrictions.ResourceRestrictionResourceTypePROJECT,
+				json.NewEncoder(w).Encode(wireResourceRestrictionResponse{
+					ResourceRestriction: wireResourceRestriction{
+						ResourceID:   "proj-1",
+						ResourceType: "PROJECT",
 						CreatedAt:    time.Now(),
 					},
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.ResourceRestrictions.Create(ctx, resourcerestrictions.CreateRequest{
-					ResourceId: "proj-1",
+				return c.ResourceRestrictions.Restrict(ctx, resourcerestrictions.RestrictRequest{
+					ResourceID: "proj-1",
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				if got.(*resourcerestrictions.ResourceRestrictionResponse).ResourceRestriction.ResourceId != "proj-1" {
-					t.Errorf("unexpected resource_id: %s", got.(*resourcerestrictions.ResourceRestrictionResponse).ResourceRestriction.ResourceId)
+				rr := got.(*resourcerestrictions.ResourceRestriction)
+				if rr.ResourceId != "proj-1" {
+					t.Errorf("unexpected resource_id: %s", rr.ResourceId)
 				}
 			},
 		},
 		{
-			name: "Create bad request",
+			name: "Restrict bad request",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(400)
 				json.NewEncoder(w).Encode(map[string]any{"title": "bad request", "status": 400})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.ResourceRestrictions.Create(ctx, resourcerestrictions.CreateRequest{
-					ResourceId: "not-a-project",
+				return c.ResourceRestrictions.Restrict(ctx, resourcerestrictions.RestrictRequest{
+					ResourceID: "not-a-project",
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -92,7 +111,7 @@ func TestResourceRestrictions(t *testing.T) {
 			},
 		},
 		{
-			name: "Delete success",
+			name: "Unrestrict success",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				if r.Method != http.MethodDelete {
 					t.Errorf("expected DELETE, got %s", r.Method)
@@ -100,7 +119,9 @@ func TestResourceRestrictions(t *testing.T) {
 				w.WriteHeader(204)
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return nil, c.ResourceRestrictions.Delete(ctx, "proj-1")
+				return nil, c.ResourceRestrictions.Unrestrict(ctx, resourcerestrictions.UnrestrictRequest{
+					ResourceID: "proj-1",
+				})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
@@ -109,14 +130,16 @@ func TestResourceRestrictions(t *testing.T) {
 			},
 		},
 		{
-			name: "Delete not found",
+			name: "Unrestrict not found",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(404)
 				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return nil, c.ResourceRestrictions.Delete(ctx, "nonexistent")
+				return nil, c.ResourceRestrictions.Unrestrict(ctx, resourcerestrictions.UnrestrictRequest{
+					ResourceID: "nonexistent",
+				})
 			},
 			check: func(t *testing.T, got any, err error) {
 				var nfe *arize.NotFoundError

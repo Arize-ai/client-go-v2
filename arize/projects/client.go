@@ -5,6 +5,7 @@ import (
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
+	"github.com/Arize-ai/client-go-v2/arize/internal/optfields"
 	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
 	"github.com/Arize-ai/client-go-v2/arize/internal/resolve"
 )
@@ -19,9 +20,26 @@ func New(gen *generated.ClientWithResponses) *Client {
 	return &Client{gen: gen}
 }
 
-// List returns a paginated list of projects.
-func (c *Client) List(ctx context.Context, params ListParams) (*ProjectList, error) {
-	prerelease.Warn("projects.list", prerelease.Alpha)
+// List returns a paginated list of projects. When req.Space is a base64
+// resource ID, it is sent as the space_id filter (exact match); otherwise it
+// is sent as the space_name filter (case-insensitive substring match).
+func (c *Client) List(
+	ctx context.Context,
+	req ListRequest,
+) (*ProjectList, error) {
+	prerelease.Warn("projects.list", prerelease.Beta)
+	params := generated.ProjectsListParams{
+		Name:   optfields.PtrIfSet(req.Name),
+		Limit:  optfields.PtrIfSet(req.Limit),
+		Cursor: optfields.PtrIfSet(req.Cursor),
+	}
+	if req.Space != "" {
+		if resolve.IsResourceID(req.Space) {
+			params.SpaceId = &req.Space
+		} else {
+			params.SpaceName = &req.Space
+		}
+	}
 	resp, err := c.gen.ProjectsListWithResponse(ctx, &params)
 	if err != nil {
 		return nil, err
@@ -32,11 +50,14 @@ func (c *Client) List(ctx context.Context, params ListParams) (*ProjectList, err
 	return resp.JSON200, nil
 }
 
-// Get returns a single project, resolving by name or ID.
-// space is required when project is a name rather than an ID.
-func (c *Client) Get(ctx context.Context, project, space string) (*Project, error) {
-	prerelease.Warn("projects.get", prerelease.Alpha)
-	id, err := resolve.FindProjectID(ctx, c.gen, project, space)
+// Get returns a single project. req.Project accepts a name or ID; req.Space
+// is required when req.Project is a name.
+func (c *Client) Get(
+	ctx context.Context,
+	req GetRequest,
+) (*Project, error) {
+	prerelease.Warn("projects.get", prerelease.Beta)
+	id, err := resolve.FindProjectID(ctx, c.gen, req.Project, req.Space)
 	if err != nil {
 		return nil, err
 	}
@@ -50,17 +71,21 @@ func (c *Client) Get(ctx context.Context, project, space string) (*Project, erro
 	return resp.JSON200, nil
 }
 
-// Create creates a new project, resolving the parent space by name or ID.
-func (c *Client) Create(ctx context.Context, space, name string) (*Project, error) {
-	prerelease.Warn("projects.create", prerelease.Alpha)
-	spaceID, err := resolve.FindSpaceID(ctx, c.gen, space)
+// Create creates a new project. req.Space accepts a space name or ID.
+func (c *Client) Create(
+	ctx context.Context,
+	req CreateRequest,
+) (*Project, error) {
+	prerelease.Warn("projects.create", prerelease.Beta)
+	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.ProjectsCreateWithResponse(ctx, CreateRequest{
-		Name:    name,
+	body := generated.ProjectCreate{
+		Name:    req.Name,
 		SpaceId: spaceID,
-	})
+	}
+	resp, err := c.gen.ProjectsCreateWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -70,11 +95,14 @@ func (c *Client) Create(ctx context.Context, space, name string) (*Project, erro
 	return resp.JSON201, nil
 }
 
-// Delete removes a project, resolving by name or ID.
-// space is required when project is a name rather than an ID.
-func (c *Client) Delete(ctx context.Context, project, space string) error {
-	prerelease.Warn("projects.delete", prerelease.Alpha)
-	id, err := resolve.FindProjectID(ctx, c.gen, project, space)
+// Delete removes a project. req.Project accepts a name or ID; req.Space is
+// required when req.Project is a name.
+func (c *Client) Delete(
+	ctx context.Context,
+	req DeleteRequest,
+) error {
+	prerelease.Warn("projects.delete", prerelease.Beta)
+	id, err := resolve.FindProjectID(ctx, c.gen, req.Project, req.Space)
 	if err != nil {
 		return err
 	}
