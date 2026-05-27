@@ -11,6 +11,8 @@ examples/
 ├── projects/             client.Projects.{List, Get, Create, Delete}
 ├── resourcerestrictions/ client.ResourceRestrictions.{Create, Delete}
 ├── rolebindings/         client.RoleBindings.{Get, Create, Update, Delete}
+├── roles/                client.Roles.{List, Get, Create, Update, Delete}
+├── spaces/               client.Spaces.{List, Get, Create, Update, Delete, AddUser, RemoveUser}
 └── spans/                client.Spans.{List, Delete}
 ```
 

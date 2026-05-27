@@ -1461,6 +1461,16 @@ type AiIntegration_ProviderMetadata struct {
 // AiIntegrationAuthType The authentication method for this integration
 type AiIntegrationAuthType string
 
+// AiIntegrationListResponse defines model for AiIntegrationListResponse.
+type AiIntegrationListResponse struct {
+	// AiIntegrations A list of AI integrations
+	AiIntegrations []AiIntegration `json:"ai_integrations"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
 // AiIntegrationProvider The AI provider for this integration
 type AiIntegrationProvider string
 
@@ -1565,6 +1575,16 @@ type AnnotationConfigCreateBase struct {
 	SpaceId string `json:"space_id"`
 }
 
+// AnnotationConfigListResponse defines model for AnnotationConfigListResponse.
+type AnnotationConfigListResponse struct {
+	// AnnotationConfigs A list of annotation configs
+	AnnotationConfigs []AnnotationConfig `json:"annotation_configs"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
 // AnnotationConfigType The type of annotation config:
 // - continuous: a numeric score within a defined range
 // - categorical: a set of labeled values each with an optional score
@@ -1645,6 +1665,16 @@ type AnnotationQueueExampleRecordInput struct {
 // AnnotationQueueExampleRecordInputRecordType defines model for AnnotationQueueExampleRecordInput.RecordType.
 type AnnotationQueueExampleRecordInputRecordType string
 
+// AnnotationQueueListResponse defines model for AnnotationQueueListResponse.
+type AnnotationQueueListResponse struct {
+	// AnnotationQueues A list of annotation queues
+	AnnotationQueues []AnnotationQueue `json:"annotation_queues"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
 // AnnotationQueueRecord A record in an annotation queue with its data
 type AnnotationQueueRecord struct {
 	// AnnotationQueueId The annotation queue this record belongs to
@@ -1705,9 +1735,25 @@ type AnnotationQueueRecordAssignResult struct {
 	SourceType AnnotationQueueSourceType `json:"source_type"`
 }
 
+// AnnotationQueueRecordCreateResponse defines model for AnnotationQueueRecordCreateResponse.
+type AnnotationQueueRecordCreateResponse struct {
+	// RecordSources The created annotation queue records
+	RecordSources []AnnotationQueueRecord `json:"record_sources"`
+}
+
 // AnnotationQueueRecordInput defines model for AnnotationQueueRecordInput.
 type AnnotationQueueRecordInput struct {
 	union json.RawMessage
+}
+
+// AnnotationQueueRecordListResponse defines model for AnnotationQueueRecordListResponse.
+type AnnotationQueueRecordListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Records A list of annotation queue records
+	Records []AnnotationQueueRecord `json:"records"`
 }
 
 // AnnotationQueueSourceType Source type of the annotation queue record.
@@ -1764,6 +1810,9 @@ type ApiKey struct {
 	// - user - Key associated with a specific user.
 	// - service - Key associated with a bot user for service authentication.
 	KeyType ApiKeyType `json:"key_type"`
+
+	// LastUsedAt Approximate timestamp when the key was last used for authentication. This value is periodically updated and may not reflect the most recent usage.
+	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
 
 	// Name User-defined name for the API key.
 	Name string `json:"name"`
@@ -1834,6 +1883,9 @@ type ApiKeyCreated struct {
 	// - service - Key associated with a bot user for service authentication.
 	KeyType ApiKeyType `json:"key_type"`
 
+	// LastUsedAt Approximate timestamp when the key was last used for authentication. This value is periodically updated and may not reflect the most recent usage.
+	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
+
 	// Name User-defined name for the API key.
 	Name string `json:"name"`
 
@@ -1844,6 +1896,16 @@ type ApiKeyCreated struct {
 	// - active - The key is valid for use.
 	// - deleted - The key has been deleted by a user.
 	Status ApiKeyStatus `json:"status"`
+}
+
+// ApiKeyListResponse defines model for ApiKeyListResponse.
+type ApiKeyListResponse struct {
+	// ApiKeys API keys matching the request filters.
+	ApiKeys []ApiKey `json:"api_keys"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
 }
 
 // ApiKeyOrganizationRole Organization-level role for a service key's bot user.
@@ -2381,12 +2443,32 @@ type DatasetExample struct {
 // fields are excluded for creation requests.
 type DatasetExampleCreate map[string]interface{}
 
+// DatasetExampleListResponse defines model for DatasetExampleListResponse.
+type DatasetExampleListResponse struct {
+	// Examples Array of example objects from the dataset
+	Examples []DatasetExample `json:"examples"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
 // DatasetExampleUpdate A dataset example with arbitrary user-defined fields. System-managed
 // fields, except 'id', are excluded for update requests.
 type DatasetExampleUpdate struct {
 	// Id System-assigned unique ID for the example
 	Id                   string                 `json:"id"`
 	AdditionalProperties map[string]interface{} `json:"-"`
+}
+
+// DatasetListResponse defines model for DatasetListResponse.
+type DatasetListResponse struct {
+	// Datasets A list of datasets
+	Datasets []Dataset `json:"datasets"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
 }
 
 // DatasetVersion A dataset version is a saved snapshot of a dataset. Arize stores datasets
@@ -2502,6 +2584,16 @@ type Evaluator struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// EvaluatorListResponse defines model for EvaluatorListResponse.
+type EvaluatorListResponse struct {
+	// Evaluators A list of evaluators
+	Evaluators []Evaluator `json:"evaluators"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
 // EvaluatorLlmConfig defines model for EvaluatorLlmConfig.
 type EvaluatorLlmConfig struct {
 	// AiIntegrationId AI integration identifier (base64)
@@ -2608,6 +2700,16 @@ type EvaluatorVersionCreate struct {
 	union json.RawMessage
 }
 
+// EvaluatorVersionListResponse defines model for EvaluatorVersionListResponse.
+type EvaluatorVersionListResponse struct {
+	// EvaluatorVersions A list of evaluator versions
+	EvaluatorVersions []EvaluatorVersion `json:"evaluator_versions"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
 // EvaluatorVersionTemplate defines model for EvaluatorVersionTemplate.
 type EvaluatorVersionTemplate struct {
 	// CommitHash A unique hash identifying this version
@@ -2708,6 +2810,16 @@ type Experiment struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// ExperimentListResponse defines model for ExperimentListResponse.
+type ExperimentListResponse struct {
+	// Experiments A list of experiments
+	Experiments []Experiment `json:"experiments"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
 // ExperimentRun An experiment run with experiment data including outputs, evaluations, and trace metadata
 type ExperimentRun struct {
 	// Annotations List of human annotations on this experiment run
@@ -2735,6 +2847,16 @@ type ExperimentRunCreate struct {
 	// Output output of the task for the matching example
 	Output               string                 `json:"output"`
 	AdditionalProperties map[string]interface{} `json:"-"`
+}
+
+// ExperimentRunsListResponse defines model for ExperimentRunsListResponse.
+type ExperimentRunsListResponse struct {
+	// ExperimentRuns Array of experiment run objects containing experiment fields and evaluations
+	ExperimentRuns []ExperimentRun `json:"experiment_runs"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
 }
 
 // FreeformAnnotationConfig defines model for FreeformAnnotationConfig.
@@ -2820,6 +2942,9 @@ type InvocationParams struct {
 	// PresencePenalty Presence penalty (-2.0 to 2.0)
 	PresencePenalty *float32 `json:"presence_penalty,omitempty"`
 
+	// ReasoningEffort Controls how much reasoning the model performs before responding. Supported by OpenAI o-series and GPT-5 models. o-series: 'low' | 'medium' | 'high'. GPT-5: 'none' | 'low' | 'medium' | 'high' | 'xhigh'.
+	ReasoningEffort *string `json:"reasoning_effort,omitempty"`
+
 	// ResponseFormat Response format configuration. Optional. When omitted, no structured output constraint is applied (the provider's default plain-text behavior is used).
 	ResponseFormat *ResponseFormat `json:"response_format,omitempty"`
 
@@ -2829,11 +2954,24 @@ type InvocationParams struct {
 	// Temperature Sampling temperature (higher = more random)
 	Temperature *float32 `json:"temperature,omitempty"`
 
+	// ThinkingBudget Maximum tokens the model may use for internal reasoning. Supported by Gemini 2.5 models. Range: 0-24576 (Flash/Flash-Lite) or 128-32768 (Pro). Set 0 to disable thinking on Flash models.
+	ThinkingBudget *int `json:"thinking_budget,omitempty"`
+
+	// ThinkingLevel Controls how much reasoning the model performs before responding. Supported by Gemini 3.x models. Accepted values: 'low', 'high'.
+	ThinkingLevel *string `json:"thinking_level,omitempty"`
+
 	// ToolConfig Tool configuration for the LLM invocation. Optional. When omitted, no tools are made available to the model.
 	ToolConfig *ToolConfig `json:"tool_config,omitempty"`
 
+	// TopK Top-K sampling parameter. A top-K of 1 means the next selected token is the most probable (greedy decoding).
+	TopK *int `json:"top_k,omitempty"`
+
 	// TopP Nucleus sampling parameter
 	TopP *float32 `json:"top_p,omitempty"`
+
+	// Verbosity Controls the verbosity of model output. Supported by OpenAI GPT-5 series. Accepted values: 'low' | 'medium' | 'high'.
+	Verbosity            *string                `json:"verbosity,omitempty"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // LLMMessage A message in the prompt template
@@ -2988,6 +3126,16 @@ type OrganizationCustomRoleAssignment struct {
 	Type OrganizationRoleAssignmentType `json:"type"`
 }
 
+// OrganizationListResponse defines model for OrganizationListResponse.
+type OrganizationListResponse struct {
+	// Organizations A list of organizations
+	Organizations []Organization `json:"organizations"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
 // OrganizationMembership defines model for OrganizationMembership.
 type OrganizationMembership struct {
 	// Id Unique identifier for the membership record
@@ -3131,6 +3279,22 @@ type ProjectCreate struct {
 	SpaceId string `json:"space_id"`
 }
 
+// ProjectListResponse defines model for ProjectListResponse.
+type ProjectListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Projects A list of projects
+	Projects []Project `json:"projects"`
+}
+
+// ProjectUpdate defines model for ProjectUpdate.
+type ProjectUpdate struct {
+	// Name New project name. Must be unique within the space.
+	Name string `json:"name"`
+}
+
 // Prompt A prompt is a reusable template for LLM interactions. Prompts can be versioned
 // and labeled to track changes over time. Use prompts to standardize how you
 // interact with LLMs across your application.
@@ -3155,6 +3319,16 @@ type Prompt struct {
 
 	// UpdatedAt When the prompt was last updated
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// PromptListResponse defines model for PromptListResponse.
+type PromptListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Prompts A list of prompts
+	Prompts []Prompt `json:"prompts"`
 }
 
 // PromptVersion A prompt version represents a specific snapshot of a prompt's configuration.
@@ -3228,6 +3402,22 @@ type PromptVersionCreateRequest struct {
 	ProviderParams *ProviderParams `json:"provider_params,omitempty"`
 }
 
+// PromptVersionLabelsResponse defines model for PromptVersionLabelsResponse.
+type PromptVersionLabelsResponse struct {
+	// Labels Label names on the version
+	Labels []string `json:"labels"`
+}
+
+// PromptVersionListResponse defines model for PromptVersionListResponse.
+type PromptVersionListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// PromptVersions A list of prompt versions
+	PromptVersions []PromptVersion `json:"prompt_versions"`
+}
+
 // PromptWithVersion defines model for PromptWithVersion.
 type PromptWithVersion struct {
 	// CreatedAt When the prompt was created
@@ -3287,7 +3477,8 @@ type ProviderParams struct {
 	} `json:"bedrock_options,omitempty"`
 
 	// Region Region for the model deployment
-	Region *string `json:"region,omitempty"`
+	Region               *string                `json:"region,omitempty"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // ResourceRestriction defines model for ResourceRestriction.
@@ -3307,6 +3498,11 @@ type ResourceRestriction struct {
 type ResourceRestrictionCreate struct {
 	// ResourceId The ID of the resource to restrict
 	ResourceId Id `json:"resource_id"`
+}
+
+// ResourceRestrictionResponseBody defines model for ResourceRestrictionResponseBody.
+type ResourceRestrictionResponseBody struct {
+	ResourceRestriction ResourceRestriction `json:"resource_restriction"`
 }
 
 // ResourceRestrictionType Type of the restricted resource.
@@ -3404,6 +3600,16 @@ type RoleBindingCreate struct {
 	UserId Id `json:"user_id"`
 }
 
+// RoleBindingListResponse defines model for RoleBindingListResponse.
+type RoleBindingListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// RoleBindings A list of role bindings.
+	RoleBindings []RoleBinding `json:"role_bindings"`
+}
+
 // RoleBindingResourceType Resource type for the binding. Only `SPACE` and `PROJECT` are supported for
 // single-binding CRUD. `resource_id` must encode the same resource type.
 type RoleBindingResourceType string
@@ -3425,6 +3631,16 @@ type RoleCreate struct {
 	// Permissions List of permissions to grant. At least one permission is required. Each value
 	// must be a valid permission identifier (e.g. `PROJECT_READ`, `DATASET_CREATE`).
 	Permissions []Permission `json:"permissions"`
+}
+
+// RoleListResponse defines model for RoleListResponse.
+type RoleListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Roles A list of roles.
+	Roles []Role `json:"roles"`
 }
 
 // RoleUpdate defines model for RoleUpdate.
@@ -3462,6 +3678,16 @@ type Space struct {
 
 	// Name Name of the space
 	Name string `json:"name"`
+}
+
+// SpaceListResponse defines model for SpaceListResponse.
+type SpaceListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Spaces A list of spaces
+	Spaces []Space `json:"spaces"`
 }
 
 // SpaceMembership A space membership record.
@@ -3553,6 +3779,33 @@ type SpanContext struct {
 	TraceId string `json:"trace_id"`
 }
 
+// SpanDeleteErrorResponse defines model for SpanDeleteErrorResponse.
+type SpanDeleteErrorResponse struct {
+	// DeletedSpanIds Span IDs confirmed deleted before the fatal error occurred.
+	DeletedSpanIds *[]string `json:"deleted_span_ids,omitempty"`
+
+	// Detail A human-readable explanation specific to this occurrence of the problem
+	Detail *string `json:"detail,omitempty"`
+
+	// Instance A URI reference that identifies the specific occurrence of the problem
+	Instance *string `json:"instance,omitempty"`
+
+	// Status The HTTP status code generated by the origin server for this occurrence of the problem
+	Status int `json:"status"`
+
+	// Title A short, human-readable summary of the problem type
+	Title string `json:"title"`
+
+	// Type A URI reference that identifies the problem type
+	Type *string `json:"type,omitempty"`
+}
+
+// SpanDeletePartialResponse defines model for SpanDeletePartialResponse.
+type SpanDeletePartialResponse struct {
+	// DeletedSpanIds Span IDs confirmed deleted across all successfully processed intervals.
+	DeletedSpanIds []string `json:"deleted_span_ids"`
+}
+
 // SpanEvent defines model for SpanEvent.
 type SpanEvent struct {
 	// Attributes Key-value pairs of event attributes
@@ -3563,6 +3816,16 @@ type SpanEvent struct {
 
 	// Timestamp Timestamp when the event occurred
 	Timestamp time.Time `json:"timestamp"`
+}
+
+// SpanListResponse defines model for SpanListResponse.
+type SpanListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Spans A list of spans
+	Spans []Span `json:"spans"`
 }
 
 // SpanStatusCode Status code of the span.
@@ -3675,6 +3938,16 @@ type TaskEvaluator struct {
 	QueryFilter *string `json:"query_filter"`
 }
 
+// TaskListResponse defines model for TaskListResponse.
+type TaskListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Tasks A list of tasks
+	Tasks []Task `json:"tasks"`
+}
+
 // TaskRun A task run is an async job that executes the work defined on a task. Runs are
 // created by triggering an existing task (`POST /v2/tasks/{task_id}/trigger`).
 // For `run_experiment` tasks, `experiment_id` is populated after the experiment
@@ -3727,6 +4000,16 @@ type TaskRun struct {
 	TaskId string `json:"task_id"`
 }
 
+// TaskRunListResponse defines model for TaskRunListResponse.
+type TaskRunListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// TaskRuns A list of task runs
+	TaskRuns []TaskRun `json:"task_runs"`
+}
+
 // TaskRunStatus Status of a task run.
 // - pending - The run has been created but not yet started.
 // - running - The run is currently in progress.
@@ -3747,13 +4030,8 @@ type TemplateConfig struct {
 	ClassificationChoices *map[string]float32 `json:"classification_choices,omitempty"`
 
 	// DataGranularity Data granularity level. Defaults to null when omitted.
-	DataGranularity *DataGranularity `json:"data_granularity,omitempty"`
-
-	// Direction The direction for optimization. Defaults to `none` when omitted.
-	// - maximize: higher scores are better
-	// - minimize: lower scores are better
-	// - none: higher or lower scores are neither better nor worse
-	Direction *OptimizationDirection `json:"direction,omitempty"`
+	DataGranularity *DataGranularity       `json:"data_granularity,omitempty"`
+	Direction       *OptimizationDirection `json:"direction,omitempty"`
 
 	// IncludeExplanations Whether to include explanations in the evaluation output
 	IncludeExplanations bool               `json:"include_explanations"`
@@ -3843,11 +4121,13 @@ type ToolConfig struct {
 // `data_start_time` and `data_end_time` together must span no more than 30 days.
 // `data_start_time` must be before `data_end_time`.
 type TriggerEvaluationTaskRunRequest struct {
-	// DataEndTime ISO 8601 end of the data window to evaluate. If omitted, defaults to now.
+	// DataEndTime ISO 8601 end of the data window to evaluate. For model-based tasks,
+	// defaults to now. Not applicable to dataset-based tasks.
 	DataEndTime *time.Time `json:"data_end_time,omitempty"`
 
-	// DataStartTime ISO 8601 start of the data window to evaluate. If omitted, defaults to
-	// the task's last run time (or 7 days ago on first run).
+	// DataStartTime ISO 8601 start of the data window to evaluate. For model-based tasks,
+	// defaults to the task's last run time. Required on the first run (when no
+	// previous run exists). Not applicable to dataset-based tasks.
 	DataStartTime *time.Time `json:"data_start_time,omitempty"`
 
 	// ExperimentIds Experiment identifiers (base64) to run against. Only for dataset-based
@@ -4030,6 +4310,16 @@ type UserCreatedResponse struct {
 	TemporaryPassword *string `json:"temporary_password,omitempty"`
 }
 
+// UserListResponse defines model for UserListResponse.
+type UserListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Users A list of account users
+	Users []User `json:"users"`
+}
+
 // UserRole Account-level role of the user. These are pre-defined roles in Arize.
 type UserRole string
 
@@ -4158,6 +4448,13 @@ type ResourceIdPathParam = Id
 // RoleBindingIdPathParam A universally unique identifier (base64-encoded opaque string).
 type RoleBindingIdPathParam = Id
 
+// RoleBindingsResourceTypeQueryParam Resource type for the binding. Only `SPACE` and `PROJECT` are supported for
+// single-binding CRUD. `resource_id` must encode the same resource type.
+type RoleBindingsResourceTypeQueryParam = RoleBindingResourceType
+
+// RoleBindingsUserIdQueryParam A universally unique identifier (base64-encoded opaque string).
+type RoleBindingsUserIdQueryParam = Id
+
 // RoleIdPathParam A universally unique identifier (base64-encoded opaque string).
 type RoleIdPathParam = Id
 
@@ -4206,37 +4503,16 @@ type UserStatusQueryParam = []UserStatus
 type VersionIdQueryParam = Id
 
 // AiIntegrationList defines model for AiIntegrationList.
-type AiIntegrationList struct {
-	// AiIntegrations A list of AI integrations
-	AiIntegrations []AiIntegration `json:"ai_integrations"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type AiIntegrationList = AiIntegrationListResponse
 
 // AnnotationConfigList defines model for AnnotationConfigList.
-type AnnotationConfigList struct {
-	// AnnotationConfigs A list of annotation configs
-	AnnotationConfigs []AnnotationConfig `json:"annotation_configs"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type AnnotationConfigList = AnnotationConfigListResponse
 
 // AnnotationQueueCreate defines model for AnnotationQueueCreate.
 type AnnotationQueueCreate = AnnotationQueue
 
 // AnnotationQueueList defines model for AnnotationQueueList.
-type AnnotationQueueList struct {
-	// AnnotationQueues A list of annotation queues
-	AnnotationQueues []AnnotationQueue `json:"annotation_queues"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type AnnotationQueueList = AnnotationQueueListResponse
 
 // AnnotationQueueRecordAnnotated A snapshot of the annotation queue record fields that were modified by an annotate operation. Only the record identity fields and the submitted annotations are returned. Evaluations and user assignments are not fetched and are not included in this response for performance reasons; use the list records endpoint to retrieve the full record state.
 type AnnotationQueueRecordAnnotated = AnnotationQueueRecordAnnotateResult
@@ -4245,33 +4521,16 @@ type AnnotationQueueRecordAnnotated = AnnotationQueueRecordAnnotateResult
 type AnnotationQueueRecordAssigned = AnnotationQueueRecordAssignResult
 
 // AnnotationQueueRecordCreate defines model for AnnotationQueueRecordCreate.
-type AnnotationQueueRecordCreate struct {
-	// RecordSources The created annotation queue records
-	RecordSources []AnnotationQueueRecord `json:"record_sources"`
-}
+type AnnotationQueueRecordCreate = AnnotationQueueRecordCreateResponse
 
 // AnnotationQueueRecordList defines model for AnnotationQueueRecordList.
-type AnnotationQueueRecordList struct {
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-
-	// Records A list of annotation queue records
-	Records []AnnotationQueueRecord `json:"records"`
-}
+type AnnotationQueueRecordList = AnnotationQueueRecordListResponse
 
 // AnnotationQueueUpdated defines model for AnnotationQueueUpdated.
 type AnnotationQueueUpdated = AnnotationQueue
 
 // ApiKeyList defines model for ApiKeyList.
-type ApiKeyList struct {
-	// ApiKeys API keys matching the request filters.
-	ApiKeys []ApiKey `json:"api_keys"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type ApiKeyList = ApiKeyListResponse
 
 // BadRequest RFC 9457 Problem Details
 type BadRequest = Problem
@@ -4280,14 +4539,7 @@ type BadRequest = Problem
 type Conflict = Problem
 
 // DatasetExampleList defines model for DatasetExampleList.
-type DatasetExampleList struct {
-	// Examples Array of example objects from the dataset
-	Examples []DatasetExample `json:"examples"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type DatasetExampleList = DatasetExampleListResponse
 
 // DatasetExamplesInserted A dataset with the IDs of examples that were inserted or updated.
 // Includes the version the examples were written to and the list of
@@ -4300,24 +4552,10 @@ type DatasetExamplesInserted = DatasetVersionWithExampleIds
 type DatasetExamplesUpdated = DatasetVersionWithExampleIds
 
 // DatasetList defines model for DatasetList.
-type DatasetList struct {
-	// Datasets A list of datasets
-	Datasets []Dataset `json:"datasets"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type DatasetList = DatasetListResponse
 
 // EvaluatorList defines model for EvaluatorList.
-type EvaluatorList struct {
-	// Evaluators A list of evaluators
-	Evaluators []Evaluator `json:"evaluators"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type EvaluatorList = EvaluatorListResponse
 
 // EvaluatorUpdated An evaluator defines reusable evaluation logic that can be attached to
 // evaluation tasks. The type field determines the kind of evaluation:
@@ -4330,37 +4568,16 @@ type EvaluatorUpdated = Evaluator
 type EvaluatorVersionCreated = EvaluatorVersion
 
 // EvaluatorVersionList defines model for EvaluatorVersionList.
-type EvaluatorVersionList struct {
-	// EvaluatorVersions A list of evaluator versions
-	EvaluatorVersions []EvaluatorVersion `json:"evaluator_versions"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type EvaluatorVersionList = EvaluatorVersionListResponse
 
 // EvaluatorWithVersionCreated defines model for EvaluatorWithVersionCreated.
 type EvaluatorWithVersionCreated = EvaluatorWithVersion
 
 // ExperimentList defines model for ExperimentList.
-type ExperimentList struct {
-	// Experiments A list of experiments
-	Experiments []Experiment `json:"experiments"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type ExperimentList = ExperimentListResponse
 
 // ExperimentRunsList defines model for ExperimentRunsList.
-type ExperimentRunsList struct {
-	// ExperimentRuns Array of experiment run objects containing experiment fields and evaluations
-	ExperimentRuns []ExperimentRun `json:"experiment_runs"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type ExperimentRunsList = ExperimentRunsListResponse
 
 // Forbidden RFC 9457 Problem Details
 type Forbidden = Problem
@@ -4369,64 +4586,38 @@ type Forbidden = Problem
 type NotFound = Problem
 
 // OrganizationList defines model for OrganizationList.
-type OrganizationList struct {
-	// Organizations A list of organizations
-	Organizations []Organization `json:"organizations"`
-
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-}
+type OrganizationList = OrganizationListResponse
 
 // OrganizationUserAdded defines model for OrganizationUserAdded.
 type OrganizationUserAdded = OrganizationMembership
 
 // ProjectList defines model for ProjectList.
-type ProjectList struct {
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
+type ProjectList = ProjectListResponse
 
-	// Projects A list of projects
-	Projects []Project `json:"projects"`
-}
+// ProjectUpdated A project represents an LLM application and serves as the primary container for observability data. Each project collects traces and spans that capture the execution flow of your application, enabling you to debug issues, monitor latency, and analyze token usage.
+// Projects belong to a space and provide a centralized view of your application's performance. Use projects to organize related traces, run experiments against datasets, and track improvements over time.
+type ProjectUpdated = Project
 
 // PromptList defines model for PromptList.
-type PromptList struct {
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-
-	// Prompts A list of prompts
-	Prompts []Prompt `json:"prompts"`
-}
+type PromptList = PromptListResponse
 
 // PromptVersionLabelsSet defines model for PromptVersionLabelsSet.
-type PromptVersionLabelsSet struct {
-	// Labels Label names on the version
-	Labels []string `json:"labels"`
-}
+type PromptVersionLabelsSet = PromptVersionLabelsResponse
 
 // PromptVersionList defines model for PromptVersionList.
-type PromptVersionList struct {
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-
-	// PromptVersions A list of prompt versions
-	PromptVersions []PromptVersion `json:"prompt_versions"`
-}
+type PromptVersionList = PromptVersionListResponse
 
 // RateLimitExceeded RFC 9457 Problem Details
 type RateLimitExceeded = Problem
 
 // ResourceRestrictionResponse defines model for ResourceRestrictionResponse.
-type ResourceRestrictionResponse struct {
-	ResourceRestriction ResourceRestriction `json:"resource_restriction"`
-}
+type ResourceRestrictionResponse = ResourceRestrictionResponseBody
 
 // RoleBindingCreated defines model for RoleBindingCreated.
 type RoleBindingCreated = RoleBinding
+
+// RoleBindingList defines model for RoleBindingList.
+type RoleBindingList = RoleBindingListResponse
 
 // RoleBindingResponse defines model for RoleBindingResponse.
 type RoleBindingResponse = RoleBinding
@@ -4435,67 +4626,25 @@ type RoleBindingResponse = RoleBinding
 type RoleCreated = Role
 
 // RoleList defines model for RoleList.
-type RoleList struct {
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-
-	// Roles A list of roles.
-	Roles []Role `json:"roles"`
-}
+type RoleList = RoleListResponse
 
 // RoleResponse defines model for RoleResponse.
 type RoleResponse = Role
 
 // SpaceList defines model for SpaceList.
-type SpaceList struct {
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-
-	// Spaces A list of spaces
-	Spaces []Space `json:"spaces"`
-}
+type SpaceList = SpaceListResponse
 
 // SpaceUserAdded A space membership record.
 type SpaceUserAdded = SpaceMembership
 
 // SpanDeleteError defines model for SpanDeleteError.
-type SpanDeleteError struct {
-	// DeletedSpanIds Span IDs confirmed deleted before the fatal error occurred.
-	DeletedSpanIds *[]string `json:"deleted_span_ids,omitempty"`
-
-	// Detail A human-readable explanation specific to this occurrence of the problem
-	Detail *string `json:"detail,omitempty"`
-
-	// Instance A URI reference that identifies the specific occurrence of the problem
-	Instance *string `json:"instance,omitempty"`
-
-	// Status The HTTP status code generated by the origin server for this occurrence of the problem
-	Status int `json:"status"`
-
-	// Title A short, human-readable summary of the problem type
-	Title string `json:"title"`
-
-	// Type A URI reference that identifies the problem type
-	Type *string `json:"type,omitempty"`
-}
+type SpanDeleteError = SpanDeleteErrorResponse
 
 // SpanDeletePartial defines model for SpanDeletePartial.
-type SpanDeletePartial struct {
-	// DeletedSpanIds Span IDs confirmed deleted across all successfully processed intervals.
-	DeletedSpanIds []string `json:"deleted_span_ids"`
-}
+type SpanDeletePartial = SpanDeletePartialResponse
 
 // SpanList defines model for SpanList.
-type SpanList struct {
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-
-	// Spans A list of spans
-	Spans []Span `json:"spans"`
-}
+type SpanList = SpanListResponse
 
 // TaskCreated A task is a typed, configurable unit of work that ties one or more evaluators
 // to a data source (project or dataset). `run_experiment` tasks additionally
@@ -4504,14 +4653,7 @@ type SpanList struct {
 type TaskCreated = Task
 
 // TaskList defines model for TaskList.
-type TaskList struct {
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-
-	// Tasks A list of tasks
-	Tasks []Task `json:"tasks"`
-}
+type TaskList = TaskListResponse
 
 // TaskRunCreated A task run is an async job that executes the work defined on a task. Runs are
 // created by triggering an existing task (`POST /v2/tasks/{task_id}/trigger`).
@@ -4521,14 +4663,7 @@ type TaskList struct {
 type TaskRunCreated = TaskRun
 
 // TaskRunList defines model for TaskRunList.
-type TaskRunList struct {
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-
-	// TaskRuns A list of task runs
-	TaskRuns []TaskRun `json:"task_runs"`
-}
+type TaskRunList = TaskRunListResponse
 
 // TaskUpdated A task is a typed, configurable unit of work that ties one or more evaluators
 // to a data source (project or dataset). `run_experiment` tasks additionally
@@ -4546,14 +4681,7 @@ type UnprocessableEntity = Problem
 type UserCreated = UserCreatedResponse
 
 // UserList defines model for UserList.
-type UserList struct {
-	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
-	// request's `cursor` query parameter.
-	Pagination PaginationMetadata `json:"pagination"`
-
-	// Users A list of account users
-	Users []User `json:"users"`
-}
+type UserList = UserListResponse
 
 // UserResponse An account user represents a member of the account. Users can be listed,
 // updated, or removed from the account.
@@ -4833,6 +4961,9 @@ type UpdateEvaluatorRequestBody struct {
 
 // UpdateOrganizationRequestBody defines model for UpdateOrganizationRequestBody.
 type UpdateOrganizationRequestBody = OrganizationUpdate
+
+// UpdateProjectRequestBody defines model for UpdateProjectRequestBody.
+type UpdateProjectRequestBody = ProjectUpdate
 
 // UpdatePromptRequestBody defines model for UpdatePromptRequestBody.
 type UpdatePromptRequestBody struct {
@@ -5398,6 +5529,26 @@ type PromptVersionsCreateJSONBody struct {
 	ProviderParams *ProviderParams `json:"provider_params,omitempty"`
 }
 
+// RoleBindingsListParams defines parameters for RoleBindingsList.
+type RoleBindingsListParams struct {
+	// Limit Maximum items to return
+	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// UserId Filter role bindings by user. When provided, only bindings assigned to this
+	// user are returned. Must be a valid global user ID.
+	UserId *RoleBindingsUserIdQueryParam `form:"user_id,omitempty" json:"user_id,omitempty"`
+
+	// ResourceType Filter role bindings by resource type.
+	// - `SPACE` — Return only space-level bindings.
+	// - `PROJECT` — Return only project-level bindings.
+	ResourceType RoleBindingsResourceTypeQueryParam `form:"resource_type" json:"resource_type"`
+}
+
 // RolesListParams defines parameters for RolesList.
 type RolesListParams struct {
 	// Limit Maximum items to return
@@ -5624,6 +5775,9 @@ type OrganizationsAddUserJSONRequestBody = OrganizationMembershipInput
 
 // ProjectsCreateJSONRequestBody defines body for ProjectsCreate for application/json ContentType.
 type ProjectsCreateJSONRequestBody = ProjectCreate
+
+// ProjectsUpdateJSONRequestBody defines body for ProjectsUpdate for application/json ContentType.
+type ProjectsUpdateJSONRequestBody = ProjectUpdate
 
 // PromptVersionLabelsSetJSONRequestBody defines body for PromptVersionLabelsSet for application/json ContentType.
 type PromptVersionLabelsSetJSONRequestBody PromptVersionLabelsSetJSONBody
@@ -6050,6 +6204,397 @@ func (a ExperimentRunCreate) MarshalJSON() ([]byte, error) {
 	object["output"], err = json.Marshal(a.Output)
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling 'output': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for InvocationParams. Returns the specified
+// element and whether it was found
+func (a InvocationParams) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for InvocationParams
+func (a *InvocationParams) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for InvocationParams to handle AdditionalProperties
+func (a *InvocationParams) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["frequency_penalty"]; found {
+		err = json.Unmarshal(raw, &a.FrequencyPenalty)
+		if err != nil {
+			return fmt.Errorf("error reading 'frequency_penalty': %w", err)
+		}
+		delete(object, "frequency_penalty")
+	}
+
+	if raw, found := object["max_completion_tokens"]; found {
+		err = json.Unmarshal(raw, &a.MaxCompletionTokens)
+		if err != nil {
+			return fmt.Errorf("error reading 'max_completion_tokens': %w", err)
+		}
+		delete(object, "max_completion_tokens")
+	}
+
+	if raw, found := object["max_tokens"]; found {
+		err = json.Unmarshal(raw, &a.MaxTokens)
+		if err != nil {
+			return fmt.Errorf("error reading 'max_tokens': %w", err)
+		}
+		delete(object, "max_tokens")
+	}
+
+	if raw, found := object["presence_penalty"]; found {
+		err = json.Unmarshal(raw, &a.PresencePenalty)
+		if err != nil {
+			return fmt.Errorf("error reading 'presence_penalty': %w", err)
+		}
+		delete(object, "presence_penalty")
+	}
+
+	if raw, found := object["reasoning_effort"]; found {
+		err = json.Unmarshal(raw, &a.ReasoningEffort)
+		if err != nil {
+			return fmt.Errorf("error reading 'reasoning_effort': %w", err)
+		}
+		delete(object, "reasoning_effort")
+	}
+
+	if raw, found := object["response_format"]; found {
+		err = json.Unmarshal(raw, &a.ResponseFormat)
+		if err != nil {
+			return fmt.Errorf("error reading 'response_format': %w", err)
+		}
+		delete(object, "response_format")
+	}
+
+	if raw, found := object["stop"]; found {
+		err = json.Unmarshal(raw, &a.Stop)
+		if err != nil {
+			return fmt.Errorf("error reading 'stop': %w", err)
+		}
+		delete(object, "stop")
+	}
+
+	if raw, found := object["temperature"]; found {
+		err = json.Unmarshal(raw, &a.Temperature)
+		if err != nil {
+			return fmt.Errorf("error reading 'temperature': %w", err)
+		}
+		delete(object, "temperature")
+	}
+
+	if raw, found := object["thinking_budget"]; found {
+		err = json.Unmarshal(raw, &a.ThinkingBudget)
+		if err != nil {
+			return fmt.Errorf("error reading 'thinking_budget': %w", err)
+		}
+		delete(object, "thinking_budget")
+	}
+
+	if raw, found := object["thinking_level"]; found {
+		err = json.Unmarshal(raw, &a.ThinkingLevel)
+		if err != nil {
+			return fmt.Errorf("error reading 'thinking_level': %w", err)
+		}
+		delete(object, "thinking_level")
+	}
+
+	if raw, found := object["tool_config"]; found {
+		err = json.Unmarshal(raw, &a.ToolConfig)
+		if err != nil {
+			return fmt.Errorf("error reading 'tool_config': %w", err)
+		}
+		delete(object, "tool_config")
+	}
+
+	if raw, found := object["top_k"]; found {
+		err = json.Unmarshal(raw, &a.TopK)
+		if err != nil {
+			return fmt.Errorf("error reading 'top_k': %w", err)
+		}
+		delete(object, "top_k")
+	}
+
+	if raw, found := object["top_p"]; found {
+		err = json.Unmarshal(raw, &a.TopP)
+		if err != nil {
+			return fmt.Errorf("error reading 'top_p': %w", err)
+		}
+		delete(object, "top_p")
+	}
+
+	if raw, found := object["verbosity"]; found {
+		err = json.Unmarshal(raw, &a.Verbosity)
+		if err != nil {
+			return fmt.Errorf("error reading 'verbosity': %w", err)
+		}
+		delete(object, "verbosity")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for InvocationParams to handle AdditionalProperties
+func (a InvocationParams) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	if a.FrequencyPenalty != nil {
+		object["frequency_penalty"], err = json.Marshal(a.FrequencyPenalty)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'frequency_penalty': %w", err)
+		}
+	}
+
+	if a.MaxCompletionTokens != nil {
+		object["max_completion_tokens"], err = json.Marshal(a.MaxCompletionTokens)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'max_completion_tokens': %w", err)
+		}
+	}
+
+	if a.MaxTokens != nil {
+		object["max_tokens"], err = json.Marshal(a.MaxTokens)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'max_tokens': %w", err)
+		}
+	}
+
+	if a.PresencePenalty != nil {
+		object["presence_penalty"], err = json.Marshal(a.PresencePenalty)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'presence_penalty': %w", err)
+		}
+	}
+
+	if a.ReasoningEffort != nil {
+		object["reasoning_effort"], err = json.Marshal(a.ReasoningEffort)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'reasoning_effort': %w", err)
+		}
+	}
+
+	if a.ResponseFormat != nil {
+		object["response_format"], err = json.Marshal(a.ResponseFormat)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'response_format': %w", err)
+		}
+	}
+
+	if a.Stop != nil {
+		object["stop"], err = json.Marshal(a.Stop)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'stop': %w", err)
+		}
+	}
+
+	if a.Temperature != nil {
+		object["temperature"], err = json.Marshal(a.Temperature)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'temperature': %w", err)
+		}
+	}
+
+	if a.ThinkingBudget != nil {
+		object["thinking_budget"], err = json.Marshal(a.ThinkingBudget)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'thinking_budget': %w", err)
+		}
+	}
+
+	if a.ThinkingLevel != nil {
+		object["thinking_level"], err = json.Marshal(a.ThinkingLevel)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'thinking_level': %w", err)
+		}
+	}
+
+	if a.ToolConfig != nil {
+		object["tool_config"], err = json.Marshal(a.ToolConfig)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'tool_config': %w", err)
+		}
+	}
+
+	if a.TopK != nil {
+		object["top_k"], err = json.Marshal(a.TopK)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'top_k': %w", err)
+		}
+	}
+
+	if a.TopP != nil {
+		object["top_p"], err = json.Marshal(a.TopP)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'top_p': %w", err)
+		}
+	}
+
+	if a.Verbosity != nil {
+		object["verbosity"], err = json.Marshal(a.Verbosity)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'verbosity': %w", err)
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for ProviderParams. Returns the specified
+// element and whether it was found
+func (a ProviderParams) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for ProviderParams
+func (a *ProviderParams) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for ProviderParams to handle AdditionalProperties
+func (a *ProviderParams) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["anthropic_headers"]; found {
+		err = json.Unmarshal(raw, &a.AnthropicHeaders)
+		if err != nil {
+			return fmt.Errorf("error reading 'anthropic_headers': %w", err)
+		}
+		delete(object, "anthropic_headers")
+	}
+
+	if raw, found := object["anthropic_version"]; found {
+		err = json.Unmarshal(raw, &a.AnthropicVersion)
+		if err != nil {
+			return fmt.Errorf("error reading 'anthropic_version': %w", err)
+		}
+		delete(object, "anthropic_version")
+	}
+
+	if raw, found := object["azure_params"]; found {
+		err = json.Unmarshal(raw, &a.AzureParams)
+		if err != nil {
+			return fmt.Errorf("error reading 'azure_params': %w", err)
+		}
+		delete(object, "azure_params")
+	}
+
+	if raw, found := object["bedrock_options"]; found {
+		err = json.Unmarshal(raw, &a.BedrockOptions)
+		if err != nil {
+			return fmt.Errorf("error reading 'bedrock_options': %w", err)
+		}
+		delete(object, "bedrock_options")
+	}
+
+	if raw, found := object["region"]; found {
+		err = json.Unmarshal(raw, &a.Region)
+		if err != nil {
+			return fmt.Errorf("error reading 'region': %w", err)
+		}
+		delete(object, "region")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for ProviderParams to handle AdditionalProperties
+func (a ProviderParams) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	if a.AnthropicHeaders != nil {
+		object["anthropic_headers"], err = json.Marshal(a.AnthropicHeaders)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'anthropic_headers': %w", err)
+		}
+	}
+
+	if a.AnthropicVersion != nil {
+		object["anthropic_version"], err = json.Marshal(a.AnthropicVersion)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'anthropic_version': %w", err)
+		}
+	}
+
+	if a.AzureParams != nil {
+		object["azure_params"], err = json.Marshal(a.AzureParams)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'azure_params': %w", err)
+		}
+	}
+
+	if a.BedrockOptions != nil {
+		object["bedrock_options"], err = json.Marshal(a.BedrockOptions)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'bedrock_options': %w", err)
+		}
+	}
+
+	if a.Region != nil {
+		object["region"], err = json.Marshal(a.Region)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'region': %w", err)
+		}
 	}
 
 	for fieldName, field := range a.AdditionalProperties {
@@ -7889,6 +8434,11 @@ type ClientInterface interface {
 	// ProjectsGet request
 	ProjectsGet(ctx context.Context, projectId ProjectIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ProjectsUpdateWithBody request with any body
+	ProjectsUpdateWithBody(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ProjectsUpdate(ctx context.Context, projectId ProjectIdPathParam, body ProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// PromptVersionsGet request
 	PromptVersionsGet(ctx context.Context, versionId PromptVersionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -7937,6 +8487,9 @@ type ClientInterface interface {
 
 	// ResourceRestrictionsDelete request
 	ResourceRestrictionsDelete(ctx context.Context, resourceId ResourceIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RoleBindingsList request
+	RoleBindingsList(ctx context.Context, params *RoleBindingsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// RoleBindingsCreateWithBody request with any body
 	RoleBindingsCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9058,6 +9611,30 @@ func (c *Client) ProjectsGet(ctx context.Context, projectId ProjectIdPathParam, 
 	return c.Client.Do(req)
 }
 
+func (c *Client) ProjectsUpdateWithBody(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewProjectsUpdateRequestWithBody(c.Server, projectId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ProjectsUpdate(ctx context.Context, projectId ProjectIdPathParam, body ProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewProjectsUpdateRequest(c.Server, projectId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) PromptVersionsGet(ctx context.Context, versionId PromptVersionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPromptVersionsGetRequest(c.Server, versionId)
 	if err != nil {
@@ -9264,6 +9841,18 @@ func (c *Client) ResourceRestrictionsCreate(ctx context.Context, body ResourceRe
 
 func (c *Client) ResourceRestrictionsDelete(ctx context.Context, resourceId ResourceIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewResourceRestrictionsDeleteRequest(c.Server, resourceId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RoleBindingsList(ctx context.Context, params *RoleBindingsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRoleBindingsListRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -12976,6 +13565,53 @@ func NewProjectsGetRequest(server string, projectId ProjectIdPathParam) (*http.R
 	return req, nil
 }
 
+// NewProjectsUpdateRequest calls the generic ProjectsUpdate builder with application/json body
+func NewProjectsUpdateRequest(server string, projectId ProjectIdPathParam, body ProjectsUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewProjectsUpdateRequestWithBody(server, projectId, "application/json", bodyReader)
+}
+
+// NewProjectsUpdateRequestWithBody generates requests for ProjectsUpdate with any type of body
+func NewProjectsUpdateRequestWithBody(server string, projectId ProjectIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "project_id", projectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/projects/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewPromptVersionsGetRequest generates requests for PromptVersionsGet
 func NewPromptVersionsGetRequest(server string, versionId PromptVersionIdPathParam) (*http.Request, error) {
 	var err error
@@ -13631,6 +14267,99 @@ func NewResourceRestrictionsDeleteRequest(server string, resourceId ResourceIdPa
 	}
 
 	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewRoleBindingsListRequest generates requests for RoleBindingsList
+func NewRoleBindingsListRequest(server string, params *RoleBindingsListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/role-bindings")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.UserId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "user_id", *params.UserId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "resource_type", params.ResourceType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -15630,6 +16359,11 @@ type ClientWithResponsesInterface interface {
 	// ProjectsGetWithResponse request
 	ProjectsGetWithResponse(ctx context.Context, projectId ProjectIdPathParam, reqEditors ...RequestEditorFn) (*ProjectsGetResponse, error)
 
+	// ProjectsUpdateWithBodyWithResponse request with any body
+	ProjectsUpdateWithBodyWithResponse(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ProjectsUpdateResponse, error)
+
+	ProjectsUpdateWithResponse(ctx context.Context, projectId ProjectIdPathParam, body ProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*ProjectsUpdateResponse, error)
+
 	// PromptVersionsGetWithResponse request
 	PromptVersionsGetWithResponse(ctx context.Context, versionId PromptVersionIdPathParam, reqEditors ...RequestEditorFn) (*PromptVersionsGetResponse, error)
 
@@ -15678,6 +16412,9 @@ type ClientWithResponsesInterface interface {
 
 	// ResourceRestrictionsDeleteWithResponse request
 	ResourceRestrictionsDeleteWithResponse(ctx context.Context, resourceId ResourceIdPathParam, reqEditors ...RequestEditorFn) (*ResourceRestrictionsDeleteResponse, error)
+
+	// RoleBindingsListWithResponse request
+	RoleBindingsListWithResponse(ctx context.Context, params *RoleBindingsListParams, reqEditors ...RequestEditorFn) (*RoleBindingsListResponse, error)
 
 	// RoleBindingsCreateWithBodyWithResponse request with any body
 	RoleBindingsCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RoleBindingsCreateResponse, error)
@@ -17362,6 +18099,34 @@ func (r ProjectsGetResponse) StatusCode() int {
 	return 0
 }
 
+type ProjectsUpdateResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ProjectUpdated
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ProjectsUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ProjectsUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type PromptVersionsGetResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -17705,6 +18470,31 @@ func (r ResourceRestrictionsDeleteResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ResourceRestrictionsDeleteResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RoleBindingsListResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *RoleBindingList
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r RoleBindingsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RoleBindingsListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -19374,6 +20164,23 @@ func (c *ClientWithResponses) ProjectsGetWithResponse(ctx context.Context, proje
 	return ParseProjectsGetResponse(rsp)
 }
 
+// ProjectsUpdateWithBodyWithResponse request with arbitrary body returning *ProjectsUpdateResponse
+func (c *ClientWithResponses) ProjectsUpdateWithBodyWithResponse(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ProjectsUpdateResponse, error) {
+	rsp, err := c.ProjectsUpdateWithBody(ctx, projectId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseProjectsUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ProjectsUpdateWithResponse(ctx context.Context, projectId ProjectIdPathParam, body ProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*ProjectsUpdateResponse, error) {
+	rsp, err := c.ProjectsUpdate(ctx, projectId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseProjectsUpdateResponse(rsp)
+}
+
 // PromptVersionsGetWithResponse request returning *PromptVersionsGetResponse
 func (c *ClientWithResponses) PromptVersionsGetWithResponse(ctx context.Context, versionId PromptVersionIdPathParam, reqEditors ...RequestEditorFn) (*PromptVersionsGetResponse, error) {
 	rsp, err := c.PromptVersionsGet(ctx, versionId, reqEditors...)
@@ -19529,6 +20336,15 @@ func (c *ClientWithResponses) ResourceRestrictionsDeleteWithResponse(ctx context
 		return nil, err
 	}
 	return ParseResourceRestrictionsDeleteResponse(rsp)
+}
+
+// RoleBindingsListWithResponse request returning *RoleBindingsListResponse
+func (c *ClientWithResponses) RoleBindingsListWithResponse(ctx context.Context, params *RoleBindingsListParams, reqEditors ...RequestEditorFn) (*RoleBindingsListResponse, error) {
+	rsp, err := c.RoleBindingsList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRoleBindingsListResponse(rsp)
 }
 
 // RoleBindingsCreateWithBodyWithResponse request with arbitrary body returning *RoleBindingsCreateResponse
@@ -23499,6 +24315,74 @@ func ParseProjectsGetResponse(rsp *http.Response) (*ProjectsGetResponse, error) 
 	return response, nil
 }
 
+// ParseProjectsUpdateResponse parses an HTTP response from a ProjectsUpdateWithResponse call
+func ParseProjectsUpdateResponse(rsp *http.Response) (*ProjectsUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ProjectsUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ProjectUpdated
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParsePromptVersionsGetResponse parses an HTTP response from a PromptVersionsGetWithResponse call
 func ParsePromptVersionsGetResponse(rsp *http.Response) (*PromptVersionsGetResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -24265,6 +25149,53 @@ func ParseResourceRestrictionsDeleteResponse(rsp *http.Response) (*ResourceRestr
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRoleBindingsListResponse parses an HTTP response from a RoleBindingsListWithResponse call
+func ParseRoleBindingsListResponse(rsp *http.Response) (*RoleBindingsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RoleBindingsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RoleBindingList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded

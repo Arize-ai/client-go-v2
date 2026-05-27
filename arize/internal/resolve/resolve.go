@@ -34,6 +34,23 @@ type ResourceNotFoundError struct {
 	Hint         string
 }
 
+// AmbiguousNameError is returned when a resource name matches more than one
+// resource (e.g. a space name shared across different organizations). The
+// caller should pass a resource ID instead of the name to disambiguate.
+type AmbiguousNameError struct {
+	ResourceType string
+	Name         string
+	MatchingIDs  []string
+}
+
+func (e *AmbiguousNameError) Error() string {
+	var b strings.Builder
+	fmt.Fprintf(&b, "Multiple %ss named %q found. ", e.ResourceType, e.Name)
+	fmt.Fprintf(&b, "Use a %s ID to disambiguate. ", e.ResourceType)
+	fmt.Fprintf(&b, "Matching IDs: %s", strings.Join(e.MatchingIDs, ", "))
+	return b.String()
+}
+
 func (e *ResourceNotFoundError) Error() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "%s %q not found", e.ResourceType, e.Name)
@@ -96,11 +113,14 @@ func requireParent(resourceType, name, parent string) error {
 // ===========================================================================
 
 // FindSpaceID resolves a space ID or name to a space ID.
+//
+// Returns AmbiguousNameError if multiple spaces share the same name (e.g.
+// across different organizations). Pass a space ID to disambiguate.
 func FindSpaceID(ctx context.Context, gen *generated.ClientWithResponses, space string) (string, error) {
 	if IsResourceID(space) {
 		return space, nil
 	}
-	var available []string
+	var matches []string
 	limit := listPageSize
 	var cursor string
 	for {
@@ -117,16 +137,21 @@ func FindSpaceID(ctx context.Context, gen *generated.ClientWithResponses, space 
 		}
 		for _, s := range resp.JSON200.Spaces {
 			if s.Name == space {
-				return s.Id, nil
+				matches = append(matches, s.Id)
 			}
-			available = append(available, s.Name)
 		}
 		if !resp.JSON200.Pagination.HasMore || resp.JSON200.Pagination.NextCursor == nil {
 			break
 		}
 		cursor = *resp.JSON200.Pagination.NextCursor
 	}
-	return "", &ResourceNotFoundError{ResourceType: "space", Name: space, Available: available}
+	if len(matches) > 1 {
+		return "", &AmbiguousNameError{ResourceType: "space", Name: space, MatchingIDs: matches}
+	}
+	if len(matches) == 1 {
+		return matches[0], nil
+	}
+	return "", &ResourceNotFoundError{ResourceType: "space", Name: space}
 }
 
 // ===========================================================================

@@ -130,6 +130,145 @@ func TestFind_NameWithoutSpace_Errors(t *testing.T) {
 	}
 }
 
+func TestAmbiguousNameError_Format(t *testing.T) {
+	e := &resolve.AmbiguousNameError{
+		ResourceType: "space",
+		Name:         "shared-space",
+		MatchingIDs:  []string{"id1", "id2"},
+	}
+	msg := e.Error()
+
+	tests := []struct {
+		name string
+		want string
+	}{
+		{"includes resource type", "space"},
+		{"includes quoted name", `"shared-space"`},
+		{"includes disambiguation hint", "ID"},
+		{"includes matching IDs", "id1, id2"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if !strings.Contains(msg, tt.want) {
+				t.Errorf("Error() %q missing %q", msg, tt.want)
+			}
+		})
+	}
+}
+
+func TestFindSpaceID(t *testing.T) {
+	tests := []struct {
+		name    string
+		setup   func(t *testing.T) *generated.ClientWithResponses
+		input   string
+		wantID  string
+		wantErr func(t *testing.T, err error)
+	}{
+		{
+			name:  "passes through resource ID",
+			input: b64("sp-1"),
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				called := false
+				gen := newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					called = true
+					w.WriteHeader(500)
+				})
+				t.Cleanup(func() {
+					if called {
+						t.Error("server should not have been hit when input is an ID")
+					}
+				})
+				return gen
+			},
+			wantID:  b64("sp-1"),
+			wantErr: nil,
+		},
+		{
+			name:  "resolves by name",
+			input: "my-space",
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				spID := b64("sp-real")
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Set("Content-Type", "application/json")
+					_, _ = w.Write([]byte(`{"spaces":[{"id":"` + spID + `","name":"my-space","created_at":"2026-01-01T00:00:00Z"}],"pagination":{"has_more":false}}`))
+				})
+			},
+			wantID:  b64("sp-real"),
+			wantErr: nil,
+		},
+		{
+			name:  "not found returns ResourceNotFoundError",
+			input: "missing",
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Set("Content-Type", "application/json")
+					_, _ = w.Write([]byte(`{"spaces":[],"pagination":{"has_more":false}}`))
+				})
+			},
+			wantID: "",
+			wantErr: func(t *testing.T, err error) {
+				t.Helper()
+				var rnfe *resolve.ResourceNotFoundError
+				if !errors.As(err, &rnfe) {
+					t.Fatalf("want *ResourceNotFoundError, got %T: %v", err, err)
+				}
+				if rnfe.Name != "missing" {
+					t.Errorf("Name: want missing, got %q", rnfe.Name)
+				}
+			},
+		},
+		{
+			name:  "ambiguous name returns AmbiguousNameError",
+			input: "shared-space",
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				id1, id2 := b64("sp-a"), b64("sp-b")
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Set("Content-Type", "application/json")
+					_, _ = w.Write([]byte(`{"spaces":[` +
+						`{"id":"` + id1 + `","name":"shared-space","created_at":"2026-01-01T00:00:00Z"},` +
+						`{"id":"` + id2 + `","name":"shared-space","created_at":"2026-01-01T00:00:00Z"}` +
+						`],"pagination":{"has_more":false}}`))
+				})
+			},
+			wantID: "",
+			wantErr: func(t *testing.T, err error) {
+				t.Helper()
+				var ane *resolve.AmbiguousNameError
+				if !errors.As(err, &ane) {
+					t.Fatalf("want *AmbiguousNameError, got %T: %v", err, err)
+				}
+				if ane.Name != "shared-space" {
+					t.Errorf("Name: want shared-space, got %q", ane.Name)
+				}
+				if len(ane.MatchingIDs) != 2 {
+					t.Errorf("MatchingIDs: want 2, got %d: %v", len(ane.MatchingIDs), ane.MatchingIDs)
+				}
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gen := tt.setup(t)
+			got, err := resolve.FindSpaceID(context.Background(), gen, tt.input)
+			if tt.wantErr != nil {
+				tt.wantErr(t, err)
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got != tt.wantID {
+				t.Errorf("want %q, got %q", tt.wantID, got)
+			}
+		})
+	}
+}
+
 func TestFindDatasetID(t *testing.T) {
 	tests := []struct {
 		name    string

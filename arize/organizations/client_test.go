@@ -237,22 +237,6 @@ func TestOrganizations(t *testing.T) {
 			},
 		},
 		{
-			name: "Update_NoFields",
-			handler: func(w http.ResponseWriter, r *http.Request) {
-				t.Errorf("Update with no fields should not contact the server, got %s %s", r.Method, r.URL.Path)
-			},
-			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return c.Organizations.Update(ctx, organizations.UpdateRequest{
-					Organization: testID("org-1"),
-				})
-			},
-			check: func(t *testing.T, got any, err error) {
-				if !errors.Is(err, organizations.ErrNoUpdateFields) {
-					t.Errorf("expected ErrNoUpdateFields, got %v", err)
-				}
-			},
-		},
-		{
 			name: "Delete",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				if r.Method != http.MethodDelete {

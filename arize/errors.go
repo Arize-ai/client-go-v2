@@ -18,6 +18,11 @@ var (
 // server. Callers can check via errors.As(err, &arize.ResourceNotFoundError{}).
 type ResourceNotFoundError = resolve.ResourceNotFoundError
 
+// AmbiguousNameError is returned when a resource name matches more than one
+// resource (e.g. a space name shared across different organizations). The
+// caller should pass a resource ID instead of the name to disambiguate.
+type AmbiguousNameError = resolve.AmbiguousNameError
+
 // Re-export error types from internal/apierrors so callers only need to import
 // the root arize package for both client construction and error handling.
 

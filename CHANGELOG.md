@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.5.0...arize-go-sdk-v2/v0.6.0) (2026-05-27)
+
+
+### 🎁 New Features
+
+* add Roles client with List, Get, Create, Update, Delete and auto-generated Permissions namespace ([#71414](https://github.com/Arize-ai/arize/issues/71414)) ([4d33e77](https://github.com/Arize-ai/arize/commit/4d33e77cb7f94ab1c160e9dd617d4983b4df0dd3))
+* add spaces subclient with full CRUD and membership operations ([#71416](https://github.com/Arize-ai/arize/issues/71416)) ([155eecb](https://github.com/Arize-ai/arize/commit/155eecb410d20c7960be9c5a8e6131d02a1a824f))
+
+
+### 🐛 Bug Fixes
+
+* raise AmbiguousNameError when multiple spaces share a name ([#72449](https://github.com/Arize-ai/arize/issues/72449)) ([6e71959](https://github.com/Arize-ai/arize/commit/6e71959db6b952aad77648532921355c028cfb98))
+
 ## [0.5.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.4.0...arize-go-sdk-v2/v0.5.0) (2026-05-20)
 
 

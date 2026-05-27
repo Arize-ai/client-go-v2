@@ -11,6 +11,8 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/projects"
 	"github.com/Arize-ai/client-go-v2/arize/resourcerestrictions"
 	"github.com/Arize-ai/client-go-v2/arize/rolebindings"
+	"github.com/Arize-ai/client-go-v2/arize/roles"
+	"github.com/Arize-ai/client-go-v2/arize/spaces"
 	"github.com/Arize-ai/client-go-v2/arize/spans"
 )
 
@@ -23,6 +25,8 @@ type Client struct {
 	APIKeys              *apikeys.Client
 	Organizations        *organizations.Client
 	ResourceRestrictions *resourcerestrictions.Client
+	Roles                *roles.Client
+	Spaces               *spaces.Client
 	Spans                *spans.Client
 	RoleBindings         *rolebindings.Client
 }
@@ -71,7 +75,9 @@ func NewClient(cfg Config) (*Client, error) {
 		Organizations:        organizations.New(gen),
 		Projects:             projects.New(gen),
 		ResourceRestrictions: resourcerestrictions.New(gen),
+		Spaces:               spaces.New(gen),
 		RoleBindings:         rolebindings.New(gen),
+		Roles:                roles.New(gen),
 		Spans:                spans.New(gen),
 	}, nil
 }

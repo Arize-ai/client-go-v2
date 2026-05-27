@@ -82,16 +82,12 @@ func (c *Client) Create(
 }
 
 // Update updates an existing organization. req.Organization accepts a name or
-// ID. At least one of req.Name or req.Description must be non-nil; otherwise
-// the call returns ErrNoUpdateFields without contacting the server.
+// ID. Leave a patch field nil to preserve its current value.
 func (c *Client) Update(
 	ctx context.Context,
 	req UpdateRequest,
 ) (*Organization, error) {
 	prerelease.Warn("organizations.update", prerelease.Alpha)
-	if req.Name == nil && req.Description == nil {
-		return nil, ErrNoUpdateFields
-	}
 	id, err := resolve.FindOrganizationID(ctx, c.gen, req.Organization)
 	if err != nil {
 		return nil, err
