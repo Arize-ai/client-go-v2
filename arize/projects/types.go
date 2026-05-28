@@ -53,3 +53,14 @@ type ListRequest struct {
 	// first page.
 	Cursor string
 }
+
+// UpdateRequest selects a project to rename.
+type UpdateRequest struct {
+	// Project accepts either a project name or ID.
+	Project string
+	// Space accepts either a space name or ID. Required when Project is a
+	// name; ignored when Project is an ID.
+	Space string
+	// Name is the new name for the project. Must be unique within the space.
+	Name string
+}

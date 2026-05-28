@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.7.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.6.0...arize-go-sdk-v2/v0.7.0) (2026-05-28)
+
+
+### 🎁 New Features
+
+* Add AI Integrations support ([#71415](https://github.com/Arize-ai/arize/issues/71415)) ([b1ccab6](https://github.com/Arize-ai/arize/commit/b1ccab60f7aaf9da296d39f2d470f0fdba07b0e9))
+* Add datasets support ([#72996](https://github.com/Arize-ai/arize/issues/72996)) ([561eef6](https://github.com/Arize-ai/arize/commit/561eef62bb4e8790c46c215d3ce405e7449ab7f0))
+* Add annotationconfigs support ([#71417](https://github.com/Arize-ai/arize/issues/71417)) ([91fef1f](https://github.com/Arize-ai/arize/commit/91fef1f67dcb9801c909edfd66136e302d3cfa0d))
+* Support for project updates ([#72941](https://github.com/Arize-ai/arize/issues/72941)) ([6f3fb05](https://github.com/Arize-ai/arize/commit/6f3fb0525ae386fe57ff9a30234825e311c4c891))
+* Add prompts support ([#72998](https://github.com/Arize-ai/arize/issues/72998)) ([1a3d5d3](https://github.com/Arize-ai/arize/commit/1a3d5d3b120b75037579c01ad71f7aaf80666dc0))
+
+
 ## [0.6.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.5.0...arize-go-sdk-v2/v0.6.0) (2026-05-27)
 
 

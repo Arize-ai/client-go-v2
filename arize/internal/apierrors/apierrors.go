@@ -27,18 +27,20 @@ type UnauthorizedError struct{ APIError }
 type ForbiddenError struct{ APIError }
 type NotFoundError struct{ APIError }
 type ConflictError struct{ APIError }
+type UnprocessableEntityError struct{ APIError }
 type RateLimitError struct{ APIError }
 type ServerError struct{ APIError }
 
 // Unwrap methods allow errors.As to traverse from a subtype up to *APIError.
 
-func (e *BadRequestError) Unwrap() error   { return &e.APIError }
-func (e *UnauthorizedError) Unwrap() error { return &e.APIError }
-func (e *ForbiddenError) Unwrap() error    { return &e.APIError }
-func (e *NotFoundError) Unwrap() error     { return &e.APIError }
-func (e *ConflictError) Unwrap() error     { return &e.APIError }
-func (e *RateLimitError) Unwrap() error    { return &e.APIError }
-func (e *ServerError) Unwrap() error       { return &e.APIError }
+func (e *BadRequestError) Unwrap() error          { return &e.APIError }
+func (e *UnauthorizedError) Unwrap() error        { return &e.APIError }
+func (e *ForbiddenError) Unwrap() error           { return &e.APIError }
+func (e *NotFoundError) Unwrap() error            { return &e.APIError }
+func (e *ConflictError) Unwrap() error            { return &e.APIError }
+func (e *UnprocessableEntityError) Unwrap() error { return &e.APIError }
+func (e *RateLimitError) Unwrap() error           { return &e.APIError }
+func (e *ServerError) Unwrap() error              { return &e.APIError }
 
 // CheckResponse converts a non-2xx HTTP response into a typed error.
 // Returns nil for status codes below 400.
@@ -72,6 +74,8 @@ func CheckResponse(resp *http.Response, body []byte) error {
 		return &NotFoundError{base}
 	case 409:
 		return &ConflictError{base}
+	case 422:
+		return &UnprocessableEntityError{base}
 	case 429:
 		return &RateLimitError{base}
 	default:

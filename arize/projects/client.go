@@ -33,13 +33,7 @@ func (c *Client) List(
 		Limit:  optfields.PtrIfSet(req.Limit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
-	if req.Space != "" {
-		if resolve.IsResourceID(req.Space) {
-			params.SpaceId = &req.Space
-		} else {
-			params.SpaceName = &req.Space
-		}
-	}
+	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
 	resp, err := c.gen.ProjectsListWithResponse(ctx, &params)
 	if err != nil {
 		return nil, err
@@ -111,4 +105,27 @@ func (c *Client) Delete(
 		return err
 	}
 	return apierrors.CheckResponse(resp.HTTPResponse, resp.Body)
+}
+
+// Update an existing project.
+func (c *Client) Update(
+	ctx context.Context,
+	req UpdateRequest,
+) (*Project, error) {
+	prerelease.Warn("projects.update", prerelease.Alpha)
+	projectID, err := resolve.FindProjectID(ctx, c.gen, req.Project, req.Space)
+	if err != nil {
+		return nil, err
+	}
+	body := generated.ProjectUpdate{
+		Name: req.Name,
+	}
+	resp, err := c.gen.ProjectsUpdateWithResponse(ctx, projectID, body)
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON200, nil
 }

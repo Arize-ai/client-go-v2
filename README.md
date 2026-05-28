@@ -27,6 +27,12 @@
   - [Regions](#regions)
   - [Endpoint Overrides](#endpoint-overrides)
   - [Error Handling](#error-handling)
+  - [Operations on Projects](#operations-on-projects)
+    - [List Projects](#list-projects)
+    - [Create a Project](#create-a-project)
+    - [Get a Project](#get-a-project)
+    - [Update a Project](#update-a-project)
+    - [Delete a Project](#delete-a-project)
   - [Operations on Resource Restrictions](#operations-on-resource-restrictions)
     - [Create a Resource Restriction](#create-a-resource-restriction)
     - [Delete a Resource Restriction](#delete-a-resource-restriction)
@@ -58,10 +64,11 @@ We log over 1 trillion inferences and spans, 10 million evaluation runs, and 2 m
 The Go SDK v2 currently exposes the following surface area:
 
 - **Client construction** with environment-aware configuration, region resolution, and on-prem endpoint overrides.
+- **Projects** subclient — list, create, get, update, and delete projects.
 - **Resource Restrictions** subclient — create and delete restrictions on Arize resources.
 - **Typed HTTP errors** matchable via `errors.As` (`BadRequestError`, `UnauthorizedError`, `NotFoundError`, …).
 
-Additional resource domains (spans, datasets, experiments, prompts, evaluators, tasks, projects, organizations, spaces, users) will be added incrementally.
+Additional resource domains (spans, datasets, experiments, prompts, evaluators, tasks, organizations, spaces, users) will be added incrementally.
 
 # Installation
 
@@ -189,6 +196,57 @@ if errors.As(err, &apiErr) {
 ```
 
 Available typed errors: `BadRequestError`, `UnauthorizedError`, `ForbiddenError`, `NotFoundError`, `ConflictError`, `RateLimitError`, `ServerError`. Compare with `errors.Is` / `errors.As`, never with `==` — wrapping with `fmt.Errorf("...: %w", err)` breaks direct comparison.
+
+## Operations on Projects
+
+Use `client.Projects` to manage projects, which are namespaces for organizing tracing data.
+
+### List Projects
+
+```go
+resp, err := client.Projects.List(ctx, projects.ListRequest{
+    Space: "<space-id-or-name>", // optional
+    Name:  "prod",               // optional substring filter
+    Limit: 50,                   // optional
+})
+```
+
+### Create a Project
+
+```go
+proj, err := client.Projects.Create(ctx, projects.CreateRequest{
+    Name:  "my-project", // must be unique within the space
+    Space: "<space-id-or-name>",
+})
+```
+
+### Get a Project
+
+```go
+proj, err := client.Projects.Get(ctx, projects.GetRequest{
+    Project: "<project-id-or-name>",
+    Space:   "<space-id-or-name>", // required when Project is a name
+})
+```
+
+### Update a Project
+
+```go
+proj, err := client.Projects.Update(ctx, projects.UpdateRequest{
+    Project: "<project-id-or-name>",
+    Space:   "<space-id-or-name>", // required when Project is a name
+    Name:    "renamed-project",    // must be unique within the space
+})
+```
+
+### Delete a Project
+
+```go
+err := client.Projects.Delete(ctx, projects.DeleteRequest{
+    Project: "<project-id-or-name>",
+    Space:   "<space-id-or-name>", // required when Project is a name
+})
+```
 
 ## Operations on Resource Restrictions
 

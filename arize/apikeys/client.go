@@ -25,7 +25,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*ApiKeyList, error) {
+) (*APIKeyList, error) {
 	prerelease.Warn("apikeys.list", prerelease.Alpha)
 	params := &generated.ApiKeysListParams{
 		KeyType: optfields.PtrIfSet(req.KeyType),
@@ -55,9 +55,9 @@ func (c *Client) List(
 func (c *Client) Create(
 	ctx context.Context,
 	req CreateRequest,
-) (*ApiKeyCreated, error) {
+) (*APIKeyCreated, error) {
 	prerelease.Warn("apikeys.create", prerelease.Alpha)
-	keyType := ApiKeyTypeUser
+	keyType := APIKeyTypeUser
 	body := generated.ApiKeyCreate{
 		Name:        req.Name,
 		Description: optfields.PtrIfSet(req.Description),
@@ -78,7 +78,7 @@ func (c *Client) Create(
 func (c *Client) CreateServiceKey(
 	ctx context.Context,
 	req CreateServiceKeyRequest,
-) (*ApiKeyCreated, error) {
+) (*APIKeyCreated, error) {
 	prerelease.Warn("apikeys.create_service_key", prerelease.Alpha)
 	if req.Space == "" {
 		return nil, fmt.Errorf("apikeys: space is required for service keys")
@@ -87,7 +87,7 @@ func (c *Client) CreateServiceKey(
 	if err != nil {
 		return nil, err
 	}
-	keyType := ApiKeyTypeService
+	keyType := APIKeyTypeService
 	body := generated.ApiKeyCreate{
 		Name:        req.Name,
 		Description: optfields.PtrIfSet(req.Description),
@@ -118,7 +118,7 @@ func (c *Client) Delete(
 	req DeleteRequest,
 ) error {
 	prerelease.Warn("apikeys.delete", prerelease.Alpha)
-	resp, err := c.gen.ApiKeysDeleteWithResponse(ctx, req.ApiKeyID)
+	resp, err := c.gen.ApiKeysDeleteWithResponse(ctx, req.APIKeyID)
 	if err != nil {
 		return err
 	}
@@ -129,12 +129,12 @@ func (c *Client) Delete(
 func (c *Client) Refresh(
 	ctx context.Context,
 	req RefreshRequest,
-) (*ApiKeyCreated, error) {
+) (*APIKeyCreated, error) {
 	prerelease.Warn("apikeys.refresh", prerelease.Alpha)
 	body := generated.RefreshApiKeyRequestBody{
 		ExpiresAt: optfields.PtrIfSet(req.ExpiresAt),
 	}
-	resp, err := c.gen.ApiKeysRefreshWithResponse(ctx, req.ApiKeyID, body)
+	resp, err := c.gen.ApiKeysRefreshWithResponse(ctx, req.APIKeyID, body)
 	if err != nil {
 		return nil, err
 	}

@@ -5,10 +5,14 @@ import (
 	"crypto/tls"
 	"net/http"
 
+	"github.com/Arize-ai/client-go-v2/arize/aiintegrations"
+	"github.com/Arize-ai/client-go-v2/arize/annotationconfigs"
 	"github.com/Arize-ai/client-go-v2/arize/apikeys"
+	"github.com/Arize-ai/client-go-v2/arize/datasets"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/organizations"
 	"github.com/Arize-ai/client-go-v2/arize/projects"
+	"github.com/Arize-ai/client-go-v2/arize/prompts"
 	"github.com/Arize-ai/client-go-v2/arize/resourcerestrictions"
 	"github.com/Arize-ai/client-go-v2/arize/rolebindings"
 	"github.com/Arize-ai/client-go-v2/arize/roles"
@@ -21,14 +25,18 @@ import (
 type Client struct {
 	cfg Config
 
-	Projects             *projects.Client
+	AIIntegrations       *aiintegrations.Client
 	APIKeys              *apikeys.Client
+	AnnotationConfigs    *annotationconfigs.Client
+	Datasets             *datasets.Client
 	Organizations        *organizations.Client
+	Projects             *projects.Client
+	Prompts              *prompts.Client
 	ResourceRestrictions *resourcerestrictions.Client
+	RoleBindings         *rolebindings.Client
 	Roles                *roles.Client
 	Spaces               *spaces.Client
 	Spans                *spans.Client
-	RoleBindings         *rolebindings.Client
 }
 
 // NewClient constructs a Client from the provided Config.
@@ -71,13 +79,17 @@ func NewClient(cfg Config) (*Client, error) {
 	return &Client{
 		cfg: resolved,
 
+		AIIntegrations:       aiintegrations.New(gen),
 		APIKeys:              apikeys.New(gen),
+		AnnotationConfigs:    annotationconfigs.New(gen),
+		Datasets:             datasets.New(gen),
 		Organizations:        organizations.New(gen),
 		Projects:             projects.New(gen),
+		Prompts:              prompts.New(gen),
 		ResourceRestrictions: resourcerestrictions.New(gen),
-		Spaces:               spaces.New(gen),
 		RoleBindings:         rolebindings.New(gen),
 		Roles:                roles.New(gen),
+		Spaces:               spaces.New(gen),
 		Spans:                spans.New(gen),
 	}, nil
 }

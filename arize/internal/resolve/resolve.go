@@ -78,6 +78,25 @@ func IsResourceID(value string) bool {
 	return strings.Contains(string(decoded), ":")
 }
 
+// ResolveSpaceFilter classifies a space input into the space_id / space_name
+// query params used by space-scoped list endpoints. When space is empty, both
+// returns are nil. When space looks like a resource ID, spaceID is set and
+// spaceName is nil. Otherwise spaceName is set (substring filter on the
+// server) and spaceID is nil.
+//
+// Typical call site:
+//
+//	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
+func ResolveSpaceFilter(space string) (spaceID, spaceName *string) {
+	if space == "" {
+		return nil, nil
+	}
+	if IsResourceID(space) {
+		return &space, nil
+	}
+	return nil, &space
+}
+
 // applySpaceFilter wires a space (passed as either an ID or a name) into the
 // space_id / space_name query params used by every space-scoped list call.
 type spaceFilter struct {
@@ -86,13 +105,8 @@ type spaceFilter struct {
 }
 
 func resolveSpaceFilter(space string) spaceFilter {
-	if space == "" {
-		return spaceFilter{}
-	}
-	if IsResourceID(space) {
-		return spaceFilter{spaceID: &space}
-	}
-	return spaceFilter{spaceName: &space}
+	id, name := ResolveSpaceFilter(space)
+	return spaceFilter{spaceID: id, spaceName: name}
 }
 
 // requireParent constructs a ResourceNotFoundError when a name lookup needs a

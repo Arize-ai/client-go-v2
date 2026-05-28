@@ -115,23 +115,12 @@ func addSpaceUser(ctx context.Context, client *arize.Client, spaceID, userID str
 	}
 	fmt.Printf("added user %s to space %s (membership %s)\n", m.UserId, m.SpaceId, m.Id)
 
-	// The server returns the role as a discriminated union. Two ways to unwrap:
-	//
-	// 1. Per-branch comma-ok helpers (best for single-arm checks):
-	//      if pre, ok := spaces.AsPredefined(m.Role); ok { ... }
-	//
-	// 2. Type switch via the generated ValueByDiscriminator (best when you
-	//    handle every variant):
-	decoded, err := m.Role.ValueByDiscriminator()
-	if err != nil {
-		log.Printf("decode role: %v", err)
-		return
-	}
-	switch r := decoded.(type) {
-	case spaces.PredefinedSpaceRole:
-		fmt.Printf("  role: predefined %s\n", r.Name)
-	case spaces.CustomSpaceRole:
-		fmt.Printf("  role: custom %s\n", r.Id)
+	// The server returns the role as a discriminated union. Use the AsXxx
+	// helpers to unwrap a single variant; chain them to cover both kinds.
+	if pre, ok := spaces.AsPredefined(m.Role); ok {
+		fmt.Printf("  role: predefined %s\n", pre.Name)
+	} else if custom, ok := spaces.AsCustom(m.Role); ok {
+		fmt.Printf("  role: custom %s\n", custom.Id)
 	}
 }
 

@@ -30,8 +30,8 @@ func main() {
 // listAPIKeys shows filtering the list by key_type and status.
 func listAPIKeys(ctx context.Context, client *arize.Client) {
 	resp, err := client.APIKeys.List(ctx, apikeys.ListRequest{
-		KeyType: apikeys.ApiKeyTypeUser,
-		Status:  apikeys.ApiKeyStatusActive,
+		KeyType: apikeys.APIKeyTypeUser,
+		Status:  apikeys.APIKeyStatusActive,
 		Limit:   25,
 	})
 	if err != nil {
@@ -44,7 +44,7 @@ func listAPIKeys(ctx context.Context, client *arize.Client) {
 
 // createAPIKey returns the only response that ever contains the plaintext
 // Key — store it immediately, you cannot retrieve it later.
-func createAPIKey(ctx context.Context, client *arize.Client, name string) *apikeys.ApiKeyCreated {
+func createAPIKey(ctx context.Context, client *arize.Client, name string) *apikeys.APIKeyCreated {
 	created, err := client.APIKeys.Create(ctx, apikeys.CreateRequest{
 		Name:      name,
 		ExpiresAt: time.Now().Add(30 * 24 * time.Hour),
@@ -60,7 +60,7 @@ func createAPIKey(ctx context.Context, client *arize.Client, name string) *apike
 
 func refreshAPIKey(ctx context.Context, client *arize.Client, keyID string) {
 	rotated, err := client.APIKeys.Refresh(ctx, apikeys.RefreshRequest{
-		ApiKeyID:  keyID,
+		APIKeyID:  keyID,
 		ExpiresAt: time.Now().Add(90 * 24 * time.Hour),
 	})
 	if err != nil {
@@ -72,7 +72,7 @@ func refreshAPIKey(ctx context.Context, client *arize.Client, keyID string) {
 }
 
 func deleteAPIKey(ctx context.Context, client *arize.Client, keyID string) {
-	if err := client.APIKeys.Delete(ctx, apikeys.DeleteRequest{ApiKeyID: keyID}); err != nil {
+	if err := client.APIKeys.Delete(ctx, apikeys.DeleteRequest{APIKeyID: keyID}); err != nil {
 		log.Fatalf("delete api key: %v", err)
 	}
 }

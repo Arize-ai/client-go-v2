@@ -71,6 +71,17 @@ func TestCheckResponse_StatusCodeMapping(t *testing.T) {
 			},
 		},
 		{
+			name:       "422 returns UnprocessableEntityError",
+			statusCode: 422,
+			body:       []byte(`{"title":"validation failed"}`),
+			checkErr: func(t *testing.T, err error) {
+				var uee *apierrors.UnprocessableEntityError
+				if !errors.As(err, &uee) {
+					t.Errorf("expected *UnprocessableEntityError, got %T", err)
+				}
+			},
+		},
+		{
 			name:       "429 returns RateLimitError",
 			statusCode: 429,
 			body:       []byte(`{"title":"rate limited"}`),

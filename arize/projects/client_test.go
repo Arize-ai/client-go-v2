@@ -46,6 +46,11 @@ type wireProject struct {
 	SpaceId string `json:"space_id"`
 }
 
+// wireProjectUpdate mirrors the JSON shape of a PATCH /v2/projects/{id} body.
+type wireProjectUpdate struct {
+	Name string `json:"name"`
+}
+
 func TestProjects(t *testing.T) {
 	var listFiltersQuery url.Values
 
@@ -209,6 +214,78 @@ func TestProjects(t *testing.T) {
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "Update",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodPatch {
+					t.Errorf("expected PATCH, got %s", r.Method)
+				}
+				var body wireProjectUpdate
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if body.Name != "renamed-project" {
+					t.Errorf("body name: want renamed-project, got %q", body.Name)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(projects.Project{Id: "proj-1", Name: "renamed-project", CreatedAt: time.Now(), SpaceId: "space-1"})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Projects.Update(ctx, projects.UpdateRequest{
+					Project: projectID("proj-1"),
+					Name:    "renamed-project",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				proj := got.(*projects.Project)
+				if proj.Name != "renamed-project" {
+					t.Errorf("unexpected name: %s", proj.Name)
+				}
+			},
+		},
+		{
+			name: "Update_NotFound",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(404)
+				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Projects.Update(ctx, projects.UpdateRequest{
+					Project: projectID("missing"),
+					Name:    "renamed-project",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var nfe *arize.NotFoundError
+				if !errors.As(err, &nfe) {
+					t.Errorf("expected *NotFoundError, got %T: %v", err, err)
+				}
+			},
+		},
+		{
+			name: "Update_Conflict",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(409)
+				json.NewEncoder(w).Encode(map[string]any{"title": "conflict", "status": 409})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Projects.Update(ctx, projects.UpdateRequest{
+					Project: projectID("proj-1"),
+					Name:    "existing-project",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var ce *arize.ConflictError
+				if !errors.As(err, &ce) {
+					t.Errorf("expected *ConflictError, got %T: %v", err, err)
 				}
 			},
 		},

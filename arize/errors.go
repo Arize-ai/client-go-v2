@@ -32,5 +32,6 @@ type UnauthorizedError = apierrors.UnauthorizedError
 type ForbiddenError = apierrors.ForbiddenError
 type NotFoundError = apierrors.NotFoundError
 type ConflictError = apierrors.ConflictError
+type UnprocessableEntityError = apierrors.UnprocessableEntityError
 type RateLimitError = apierrors.RateLimitError
 type ServerError = apierrors.ServerError

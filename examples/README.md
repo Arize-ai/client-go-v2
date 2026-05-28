@@ -6,6 +6,8 @@ Runnable examples for every subclient on `*arize.Client`. Each subdirectory is a
 
 ```
 examples/
+├── aiintegrations/       client.AIIntegrations.{List, Get, Create, Update, Delete}
+├── annotationconfigs/    client.AnnotationConfigs.{List, Get, Create, Delete}
 ├── apikeys/              client.APIKeys.{List, Create, Refresh, Delete}
 ├── organizations/        client.Organizations.{List, Get, Create, Update}
 ├── projects/             client.Projects.{List, Get, Create, Delete}
