@@ -1658,11 +1658,13 @@ type AnnotationQueueExampleRecordInput struct {
 	DatasetVersionId *string `json:"dataset_version_id,omitempty"`
 
 	// ExampleIds Optional. List of example IDs within the dataset to add to the queue. If omitted, all examples in the dataset (or dataset version) are added.
-	ExampleIds *[]string                                   `json:"example_ids,omitempty"`
+	ExampleIds *[]string `json:"example_ids,omitempty"`
+
+	// RecordType Discriminator identifying the record source type. Must be `example` for dataset example records.
 	RecordType AnnotationQueueExampleRecordInputRecordType `json:"record_type"`
 }
 
-// AnnotationQueueExampleRecordInputRecordType defines model for AnnotationQueueExampleRecordInput.RecordType.
+// AnnotationQueueExampleRecordInputRecordType Discriminator identifying the record source type. Must be `example` for dataset example records.
 type AnnotationQueueExampleRecordInputRecordType string
 
 // AnnotationQueueListResponse defines model for AnnotationQueueListResponse.
@@ -1767,7 +1769,9 @@ type AnnotationQueueSpanRecordInput struct {
 	EndTime time.Time `json:"end_time"`
 
 	// ProjectId The project ID these spans belong to
-	ProjectId  string                                   `json:"project_id"`
+	ProjectId string `json:"project_id"`
+
+	// RecordType Discriminator identifying the record source type. Must be `span` for span records.
 	RecordType AnnotationQueueSpanRecordInputRecordType `json:"record_type"`
 
 	// SpanIds List of span IDs to add to the queue
@@ -1777,7 +1781,7 @@ type AnnotationQueueSpanRecordInput struct {
 	StartTime time.Time `json:"start_time"`
 }
 
-// AnnotationQueueSpanRecordInputRecordType defines model for AnnotationQueueSpanRecordInput.RecordType.
+// AnnotationQueueSpanRecordInputRecordType Discriminator identifying the record source type. Must be `span` for span records.
 type AnnotationQueueSpanRecordInputRecordType string
 
 // AnnotatorUser A user assigned as an annotator, identified by ID and email.

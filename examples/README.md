@@ -8,14 +8,18 @@ Runnable examples for every subclient on `*arize.Client`. Each subdirectory is a
 examples/
 ├── aiintegrations/       client.AIIntegrations.{List, Get, Create, Update, Delete}
 ├── annotationconfigs/    client.AnnotationConfigs.{List, Get, Create, Delete}
-├── apikeys/              client.APIKeys.{List, Create, Refresh, Delete}
-├── organizations/        client.Organizations.{List, Get, Create, Update}
+├── annotationqueues/     client.AnnotationQueues.{List, Get, Create, Update, Delete, ListRecords, AddRecords, DeleteRecords, Annotate, Assign}
+├── apikeys/              client.APIKeys.{List, Create, CreateServiceKey, Refresh, Delete}
+├── datasets/             client.Datasets.{List, Get, Create, Update, Delete, ListExamples, AppendExamples, AnnotateExamples}
+├── evaluators/           client.Evaluators.{List, Get, Create, Update, Delete, ListVersions, CreateVersion, GetVersion}
+├── organizations/        client.Organizations.{List, Get, Create, Update, Delete, AddUser, RemoveUser}
 ├── projects/             client.Projects.{List, Get, Create, Delete}
+├── prompts/              client.Prompts.{List, Get, Create, Update, Delete, ListVersions, CreateVersion, GetVersion, GetVersionByLabel, SetVersionLabels, DeleteVersionLabel}
 ├── resourcerestrictions/ client.ResourceRestrictions.{Create, Delete}
 ├── rolebindings/         client.RoleBindings.{Get, Create, Update, Delete}
 ├── roles/                client.Roles.{List, Get, Create, Update, Delete}
 ├── spaces/               client.Spaces.{List, Get, Create, Update, Delete, AddUser, RemoveUser}
-└── spans/                client.Spans.{List, Delete}
+└── spans/                client.Spans.{List, Delete, Annotate}
 ```
 
 ## Running

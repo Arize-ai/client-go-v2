@@ -7,8 +7,10 @@ import (
 
 	"github.com/Arize-ai/client-go-v2/arize/aiintegrations"
 	"github.com/Arize-ai/client-go-v2/arize/annotationconfigs"
+	"github.com/Arize-ai/client-go-v2/arize/annotationqueues"
 	"github.com/Arize-ai/client-go-v2/arize/apikeys"
 	"github.com/Arize-ai/client-go-v2/arize/datasets"
+	"github.com/Arize-ai/client-go-v2/arize/evaluators"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/organizations"
 	"github.com/Arize-ai/client-go-v2/arize/projects"
@@ -28,7 +30,9 @@ type Client struct {
 	AIIntegrations       *aiintegrations.Client
 	APIKeys              *apikeys.Client
 	AnnotationConfigs    *annotationconfigs.Client
+	AnnotationQueues     *annotationqueues.Client
 	Datasets             *datasets.Client
+	Evaluators           *evaluators.Client
 	Organizations        *organizations.Client
 	Projects             *projects.Client
 	Prompts              *prompts.Client
@@ -82,7 +86,9 @@ func NewClient(cfg Config) (*Client, error) {
 		AIIntegrations:       aiintegrations.New(gen),
 		APIKeys:              apikeys.New(gen),
 		AnnotationConfigs:    annotationconfigs.New(gen),
+		AnnotationQueues:     annotationqueues.New(gen),
 		Datasets:             datasets.New(gen),
+		Evaluators:           evaluators.New(gen),
 		Organizations:        organizations.New(gen),
 		Projects:             projects.New(gen),
 		Prompts:              prompts.New(gen),

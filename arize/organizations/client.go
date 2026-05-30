@@ -25,7 +25,7 @@ func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
 ) (*OrganizationList, error) {
-	prerelease.Warn("organizations.list", prerelease.Alpha)
+	prerelease.Warn("organizations.list", prerelease.Beta)
 	params := generated.OrganizationsListParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrIfSet(req.Limit),
@@ -46,7 +46,7 @@ func (c *Client) Get(
 	ctx context.Context,
 	req GetRequest,
 ) (*Organization, error) {
-	prerelease.Warn("organizations.get", prerelease.Alpha)
+	prerelease.Warn("organizations.get", prerelease.Beta)
 	id, err := resolve.FindOrganizationID(ctx, c.gen, req.Organization)
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (c *Client) Create(
 	ctx context.Context,
 	req CreateRequest,
 ) (*Organization, error) {
-	prerelease.Warn("organizations.create", prerelease.Alpha)
+	prerelease.Warn("organizations.create", prerelease.Beta)
 	body := generated.OrganizationCreate{
 		Name:        req.Name,
 		Description: optfields.PtrIfSet(req.Description),
@@ -87,7 +87,7 @@ func (c *Client) Update(
 	ctx context.Context,
 	req UpdateRequest,
 ) (*Organization, error) {
-	prerelease.Warn("organizations.update", prerelease.Alpha)
+	prerelease.Warn("organizations.update", prerelease.Beta)
 	id, err := resolve.FindOrganizationID(ctx, c.gen, req.Organization)
 	if err != nil {
 		return nil, err
@@ -113,7 +113,7 @@ func (c *Client) Delete(
 	ctx context.Context,
 	req DeleteRequest,
 ) error {
-	prerelease.Warn("organizations.delete", prerelease.Alpha)
+	prerelease.Warn("organizations.delete", prerelease.Beta)
 	id, err := resolve.FindOrganizationID(ctx, c.gen, req.Organization)
 	if err != nil {
 		return err

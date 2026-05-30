@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.7.0...arize-go-sdk-v2/v0.8.0) (2026-05-29)
+
+
+### 🎁 New Features
+
+* Add Evaluators support ([#73226](https://github.com/Arize-ai/arize/issues/73226)) ([1b02ac8](https://github.com/Arize-ai/arize/commit/1b02ac8bd754ffb02cb07ba3439df2a66e48c4cc))
+* Add Annotation Queues support ([#71421](https://github.com/Arize-ai/arize/issues/71421)) ([39a971e](https://github.com/Arize-ai/arize/commit/39a971ebec5a3235d85ea76a5084dd2530e5c79f))
+
 ## [0.7.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.6.0...arize-go-sdk-v2/v0.7.0) (2026-05-28)
 
 

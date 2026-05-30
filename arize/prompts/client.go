@@ -27,7 +27,7 @@ func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
 ) (*PromptList, error) {
-	prerelease.Warn("prompts.list", prerelease.Alpha)
+	prerelease.Warn("prompts.list", prerelease.Beta)
 	params := generated.PromptsListParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrIfSet(req.Limit),
@@ -51,7 +51,7 @@ func (c *Client) Get(
 	ctx context.Context,
 	req GetRequest,
 ) (*PromptWithVersion, error) {
-	prerelease.Warn("prompts.get", prerelease.Alpha)
+	prerelease.Warn("prompts.get", prerelease.Beta)
 	id, err := resolve.FindPromptID(ctx, c.gen, req.Prompt, req.Space)
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func (c *Client) Create(
 	ctx context.Context,
 	req CreateRequest,
 ) (*PromptWithVersion, error) {
-	prerelease.Warn("prompts.create", prerelease.Alpha)
+	prerelease.Warn("prompts.create", prerelease.Beta)
 	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
@@ -103,7 +103,7 @@ func (c *Client) Update(
 	ctx context.Context,
 	req UpdateRequest,
 ) (*Prompt, error) {
-	prerelease.Warn("prompts.update", prerelease.Alpha)
+	prerelease.Warn("prompts.update", prerelease.Beta)
 	id, err := resolve.FindPromptID(ctx, c.gen, req.Prompt, req.Space)
 	if err != nil {
 		return nil, err
@@ -126,7 +126,7 @@ func (c *Client) Delete(
 	ctx context.Context,
 	req DeleteRequest,
 ) error {
-	prerelease.Warn("prompts.delete", prerelease.Alpha)
+	prerelease.Warn("prompts.delete", prerelease.Beta)
 	id, err := resolve.FindPromptID(ctx, c.gen, req.Prompt, req.Space)
 	if err != nil {
 		return err
@@ -144,7 +144,7 @@ func (c *Client) ListVersions(
 	ctx context.Context,
 	req ListVersionsRequest,
 ) (*PromptVersionList, error) {
-	prerelease.Warn("prompts.list_versions", prerelease.Alpha)
+	prerelease.Warn("prompts.list_versions", prerelease.Beta)
 	id, err := resolve.FindPromptID(ctx, c.gen, req.Prompt, req.Space)
 	if err != nil {
 		return nil, err
@@ -169,7 +169,7 @@ func (c *Client) CreateVersion(
 	ctx context.Context,
 	req CreateVersionRequest,
 ) (*PromptVersion, error) {
-	prerelease.Warn("prompts.create_version", prerelease.Alpha)
+	prerelease.Warn("prompts.create_version", prerelease.Beta)
 	id, err := resolve.FindPromptID(ctx, c.gen, req.Prompt, req.Space)
 	if err != nil {
 		return nil, err
@@ -199,7 +199,7 @@ func (c *Client) GetVersion(
 	ctx context.Context,
 	req GetVersionRequest,
 ) (*PromptVersion, error) {
-	prerelease.Warn("prompts.get_version", prerelease.Alpha)
+	prerelease.Warn("prompts.get_version", prerelease.Beta)
 	resp, err := c.gen.PromptVersionsGetWithResponse(ctx, req.VersionID)
 	if err != nil {
 		return nil, err
@@ -216,7 +216,7 @@ func (c *Client) GetVersionByLabel(
 	ctx context.Context,
 	req GetVersionByLabelRequest,
 ) (*PromptVersion, error) {
-	prerelease.Warn("prompts.get_version_by_label", prerelease.Alpha)
+	prerelease.Warn("prompts.get_version_by_label", prerelease.Beta)
 	id, err := resolve.FindPromptID(ctx, c.gen, req.Prompt, req.Space)
 	if err != nil {
 		return nil, err
@@ -238,7 +238,7 @@ func (c *Client) SetVersionLabels(
 	ctx context.Context,
 	req SetVersionLabelsRequest,
 ) (*PromptVersionLabels, error) {
-	prerelease.Warn("prompts.set_version_labels", prerelease.Alpha)
+	prerelease.Warn("prompts.set_version_labels", prerelease.Beta)
 	body := generated.PromptVersionLabelsSetJSONRequestBody{
 		Labels: req.Labels,
 	}
@@ -258,7 +258,7 @@ func (c *Client) DeleteVersionLabel(
 	ctx context.Context,
 	req DeleteVersionLabelRequest,
 ) error {
-	prerelease.Warn("prompts.delete_version_label", prerelease.Alpha)
+	prerelease.Warn("prompts.delete_version_label", prerelease.Beta)
 	resp, err := c.gen.PromptVersionLabelsDeleteWithResponse(ctx, req.VersionID, req.LabelName)
 	if err != nil {
 		return err

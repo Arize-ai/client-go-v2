@@ -25,7 +25,7 @@ func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
 ) (*RoleList, error) {
-	prerelease.Warn("roles.list", prerelease.Alpha)
+	prerelease.Warn("roles.list", prerelease.Beta)
 	params := &generated.RolesListParams{
 		IsPredefined: req.IsPredefined,
 		Limit:        optfields.PtrWithDefault(req.Limit, 100),
@@ -46,7 +46,7 @@ func (c *Client) Get(
 	ctx context.Context,
 	req GetRequest,
 ) (*Role, error) {
-	prerelease.Warn("roles.get", prerelease.Alpha)
+	prerelease.Warn("roles.get", prerelease.Beta)
 	id, err := resolve.FindRoleID(ctx, c.gen, req.Role)
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (c *Client) Create(
 	ctx context.Context,
 	req CreateRequest,
 ) (*Role, error) {
-	prerelease.Warn("roles.create", prerelease.Alpha)
+	prerelease.Warn("roles.create", prerelease.Beta)
 	body := generated.RoleCreate{
 		Name:        req.Name,
 		Permissions: req.Permissions,
@@ -88,7 +88,7 @@ func (c *Client) Update(
 	ctx context.Context,
 	req UpdateRequest,
 ) (*Role, error) {
-	prerelease.Warn("roles.update", prerelease.Alpha)
+	prerelease.Warn("roles.update", prerelease.Beta)
 	id, err := resolve.FindRoleID(ctx, c.gen, req.Role)
 	if err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ func (c *Client) Delete(
 	ctx context.Context,
 	req DeleteRequest,
 ) error {
-	prerelease.Warn("roles.delete", prerelease.Alpha)
+	prerelease.Warn("roles.delete", prerelease.Beta)
 	id, err := resolve.FindRoleID(ctx, c.gen, req.Role)
 	if err != nil {
 		return err

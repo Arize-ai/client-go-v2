@@ -27,7 +27,7 @@ func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
 ) (*SpaceList, error) {
-	prerelease.Warn("spaces.list", prerelease.Alpha)
+	prerelease.Warn("spaces.list", prerelease.Beta)
 	var orgID string
 	if req.Organization != "" {
 		resolved, err := resolve.FindOrganizationID(ctx, c.gen, req.Organization)
@@ -57,7 +57,7 @@ func (c *Client) Get(
 	ctx context.Context,
 	req GetRequest,
 ) (*Space, error) {
-	prerelease.Warn("spaces.get", prerelease.Alpha)
+	prerelease.Warn("spaces.get", prerelease.Beta)
 	id, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
@@ -78,7 +78,7 @@ func (c *Client) Create(
 	ctx context.Context,
 	req CreateRequest,
 ) (*Space, error) {
-	prerelease.Warn("spaces.create", prerelease.Alpha)
+	prerelease.Warn("spaces.create", prerelease.Beta)
 	orgID, err := resolve.FindOrganizationID(ctx, c.gen, req.Organization)
 	if err != nil {
 		return nil, err
@@ -104,7 +104,7 @@ func (c *Client) Update(
 	ctx context.Context,
 	req UpdateRequest,
 ) (*Space, error) {
-	prerelease.Warn("spaces.update", prerelease.Alpha)
+	prerelease.Warn("spaces.update", prerelease.Beta)
 	id, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
@@ -130,7 +130,7 @@ func (c *Client) Delete(
 	ctx context.Context,
 	req DeleteRequest,
 ) error {
-	prerelease.Warn("spaces.delete", prerelease.Alpha)
+	prerelease.Warn("spaces.delete", prerelease.Beta)
 	id, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return err
