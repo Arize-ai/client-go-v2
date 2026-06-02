@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.10.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.9.0...arize-go-sdk-v2/v0.10.0) (2026-06-02)
+
+
+### 🎁 New Features
+
+* add support for Users management ([#73532](https://github.com/Arize-ai/arize/issues/73532)) ([aeeaaf5](https://github.com/Arize-ai/arize/commit/aeeaaf55f21f81ab7fe01c4b40066f44606ace97))
+
+
+### ❔ Miscellaneous Chores
+
+* promote evaluators, role-bindings (CRUD), spans list, and users to BETA ([#73280](https://github.com/Arize-ai/arize/issues/73280)) ([ad1ee37](https://github.com/Arize-ai/arize/commit/ad1ee374872dd0d9afdbcccec1b74275b26d3a7c))
+
 ## [0.9.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.8.0...arize-go-sdk-v2/v0.9.0) (2026-06-02)
 
 

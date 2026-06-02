@@ -122,10 +122,6 @@ func requireParent(resourceType, name, parent string) error {
 	}
 }
 
-// ===========================================================================
-// FindSpaceID
-// ===========================================================================
-
 // FindSpaceID resolves a space ID or name to a space ID.
 //
 // Returns AmbiguousNameError if multiple spaces share the same name (e.g.
@@ -168,10 +164,6 @@ func FindSpaceID(ctx context.Context, gen *generated.ClientWithResponses, space 
 	return "", &ResourceNotFoundError{ResourceType: "space", Name: space}
 }
 
-// ===========================================================================
-// FindOrganizationID
-// ===========================================================================
-
 // FindOrganizationID resolves an organization ID or name to an ID.
 func FindOrganizationID(ctx context.Context, gen *generated.ClientWithResponses, organization string) (string, error) {
 	if IsResourceID(organization) {
@@ -206,10 +198,6 @@ func FindOrganizationID(ctx context.Context, gen *generated.ClientWithResponses,
 	return "", &ResourceNotFoundError{ResourceType: "organization", Name: organization, Available: available}
 }
 
-// ===========================================================================
-// FindRoleID
-// ===========================================================================
-
 // FindRoleID resolves a role ID or name to an ID.
 func FindRoleID(ctx context.Context, gen *generated.ClientWithResponses, role string) (string, error) {
 	if IsResourceID(role) {
@@ -243,10 +231,6 @@ func FindRoleID(ctx context.Context, gen *generated.ClientWithResponses, role st
 	}
 	return "", &ResourceNotFoundError{ResourceType: "role", Name: role, Available: available}
 }
-
-// ===========================================================================
-// FindProjectID
-// ===========================================================================
 
 // FindProjectID resolves a project ID or name to an ID. Space (ID or name) is
 // required when project is a name.
@@ -287,10 +271,6 @@ func FindProjectID(ctx context.Context, gen *generated.ClientWithResponses, proj
 	return "", &ResourceNotFoundError{ResourceType: "project", Name: project, Available: available}
 }
 
-// ===========================================================================
-// FindDatasetID
-// ===========================================================================
-
 // FindDatasetID resolves a dataset ID or name to an ID. Space (ID or name) is
 // required when dataset is a name.
 func FindDatasetID(ctx context.Context, gen *generated.ClientWithResponses, dataset, space string) (string, error) {
@@ -329,10 +309,6 @@ func FindDatasetID(ctx context.Context, gen *generated.ClientWithResponses, data
 	}
 	return "", &ResourceNotFoundError{ResourceType: "dataset", Name: dataset, Available: available}
 }
-
-// ===========================================================================
-// FindExperimentID
-// ===========================================================================
 
 // FindExperimentID resolves an experiment ID or name to an ID. Dataset (ID or
 // name) is required when experiment is a name; space is required when dataset
@@ -386,10 +362,6 @@ func FindExperimentID(ctx context.Context, gen *generated.ClientWithResponses, e
 	return "", &ResourceNotFoundError{ResourceType: "experiment", Name: experiment, Available: available}
 }
 
-// ===========================================================================
-// FindPromptID
-// ===========================================================================
-
 // FindPromptID resolves a prompt ID or name to an ID. Space (ID or name) is
 // required when prompt is a name.
 func FindPromptID(ctx context.Context, gen *generated.ClientWithResponses, prompt, space string) (string, error) {
@@ -429,10 +401,6 @@ func FindPromptID(ctx context.Context, gen *generated.ClientWithResponses, promp
 	return "", &ResourceNotFoundError{ResourceType: "prompt", Name: prompt, Available: available}
 }
 
-// ===========================================================================
-// FindEvaluatorID
-// ===========================================================================
-
 // FindEvaluatorID resolves an evaluator ID or name to an ID. Space (ID or
 // name) is required when evaluator is a name.
 func FindEvaluatorID(ctx context.Context, gen *generated.ClientWithResponses, evaluator, space string) (string, error) {
@@ -471,10 +439,6 @@ func FindEvaluatorID(ctx context.Context, gen *generated.ClientWithResponses, ev
 	}
 	return "", &ResourceNotFoundError{ResourceType: "evaluator", Name: evaluator, Available: available}
 }
-
-// ===========================================================================
-// FindAnnotationConfigID
-// ===========================================================================
 
 // FindAnnotationConfigID resolves an annotation config ID or name to an ID.
 // Space (ID or name) is required when annotationConfig is a name. Annotation
@@ -535,10 +499,6 @@ func annotationConfigIDAndName(cfg generated.AnnotationConfig) (string, string, 
 	return base.Id, base.Name, true
 }
 
-// ===========================================================================
-// FindAnnotationQueueID
-// ===========================================================================
-
 // FindAnnotationQueueID resolves an annotation queue ID or name to an ID.
 // Space (ID or name) is required when annotationQueue is a name.
 func FindAnnotationQueueID(ctx context.Context, gen *generated.ClientWithResponses, annotationQueue, space string) (string, error) {
@@ -577,10 +537,6 @@ func FindAnnotationQueueID(ctx context.Context, gen *generated.ClientWithRespons
 	}
 	return "", &ResourceNotFoundError{ResourceType: "annotation queue", Name: annotationQueue, Available: available}
 }
-
-// ===========================================================================
-// FindAIIntegrationID
-// ===========================================================================
 
 // FindAIIntegrationID resolves an AI integration ID or name to an ID. Space
 // (ID or name) is required when integration is a name.
@@ -621,10 +577,6 @@ func FindAIIntegrationID(ctx context.Context, gen *generated.ClientWithResponses
 	return "", &ResourceNotFoundError{ResourceType: "AI integration", Name: integration, Available: available}
 }
 
-// ===========================================================================
-// FindTaskID
-// ===========================================================================
-
 // FindTaskID resolves a task ID or name to an ID. Space (ID or name) is
 // required when task is a name.
 func FindTaskID(ctx context.Context, gen *generated.ClientWithResponses, task, space string) (string, error) {
@@ -662,4 +614,43 @@ func FindTaskID(ctx context.Context, gen *generated.ClientWithResponses, task, s
 		cursor = *resp.JSON200.Pagination.NextCursor
 	}
 	return "", &ResourceNotFoundError{ResourceType: "task", Name: task, Available: available}
+}
+
+// FindUserID resolves a user ID or email address to a user ID. When the input
+// is a base64-encoded ID it is returned as-is. Otherwise it is treated as an
+// email address and matched case-insensitively (exact) against the users list
+// endpoint, which is filtered server-side by the email substring. Returns
+// ResourceNotFoundError when no user has that email.
+//
+// Emails are unique within an account, so the first exact match wins; there is
+// no AmbiguousNameError path.
+func FindUserID(ctx context.Context, gen *generated.ClientWithResponses, user string) (string, error) {
+	if IsResourceID(user) {
+		return user, nil
+	}
+	limit := listPageSize
+	var cursor string
+	for {
+		p := &generated.UsersListParams{Email: &user, Limit: &limit}
+		if cursor != "" {
+			p.Cursor = &cursor
+		}
+		resp, err := gen.UsersListWithResponse(ctx, p)
+		if err != nil {
+			return "", err
+		}
+		if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+			return "", err
+		}
+		for _, u := range resp.JSON200.Users {
+			if strings.EqualFold(string(u.Email), user) {
+				return u.Id, nil
+			}
+		}
+		if !resp.JSON200.Pagination.HasMore || resp.JSON200.Pagination.NextCursor == nil {
+			break
+		}
+		cursor = *resp.JSON200.Pagination.NextCursor
+	}
+	return "", &ResourceNotFoundError{ResourceType: "user", Name: user}
 }

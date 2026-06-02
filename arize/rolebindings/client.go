@@ -47,7 +47,7 @@ func (c *Client) Get(
 	ctx context.Context,
 	req GetRequest,
 ) (*RoleBinding, error) {
-	prerelease.Warn("rolebindings.get", prerelease.Alpha)
+	prerelease.Warn("rolebindings.get", prerelease.Beta)
 	resp, err := c.gen.RoleBindingsGetWithResponse(ctx, req.RoleBindingID)
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func (c *Client) Create(
 	ctx context.Context,
 	req CreateRequest,
 ) (*RoleBinding, error) {
-	prerelease.Warn("rolebindings.create", prerelease.Alpha)
+	prerelease.Warn("rolebindings.create", prerelease.Beta)
 	body := generated.RoleBindingCreate{
 		ResourceId:   req.ResourceID,
 		ResourceType: req.ResourceType,
@@ -85,7 +85,7 @@ func (c *Client) Update(
 	ctx context.Context,
 	req UpdateRequest,
 ) (*RoleBinding, error) {
-	prerelease.Warn("rolebindings.update", prerelease.Alpha)
+	prerelease.Warn("rolebindings.update", prerelease.Beta)
 	body := generated.RoleBindingUpdate{
 		RoleId: req.RoleID,
 	}
@@ -104,7 +104,7 @@ func (c *Client) Delete(
 	ctx context.Context,
 	req DeleteRequest,
 ) error {
-	prerelease.Warn("rolebindings.delete", prerelease.Alpha)
+	prerelease.Warn("rolebindings.delete", prerelease.Beta)
 	resp, err := c.gen.RoleBindingsDeleteWithResponse(ctx, req.RoleBindingID)
 	if err != nil {
 		return err

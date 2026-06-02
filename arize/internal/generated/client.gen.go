@@ -1660,11 +1660,11 @@ type AnnotationQueueExampleRecordInput struct {
 	// ExampleIds Optional. List of example IDs within the dataset to add to the queue. If omitted, all examples in the dataset (or dataset version) are added.
 	ExampleIds *[]string `json:"example_ids,omitempty"`
 
-	// RecordType Discriminator identifying the record source type. Must be `example` for dataset example records.
+	// RecordType Discriminator identifying this record source as dataset examples. Must be `example` for dataset example records.
 	RecordType AnnotationQueueExampleRecordInputRecordType `json:"record_type"`
 }
 
-// AnnotationQueueExampleRecordInputRecordType Discriminator identifying the record source type. Must be `example` for dataset example records.
+// AnnotationQueueExampleRecordInputRecordType Discriminator identifying this record source as dataset examples. Must be `example` for dataset example records.
 type AnnotationQueueExampleRecordInputRecordType string
 
 // AnnotationQueueListResponse defines model for AnnotationQueueListResponse.
@@ -1771,7 +1771,7 @@ type AnnotationQueueSpanRecordInput struct {
 	// ProjectId The project ID these spans belong to
 	ProjectId string `json:"project_id"`
 
-	// RecordType Discriminator identifying the record source type. Must be `span` for span records.
+	// RecordType Discriminator identifying this record source as project spans. Must be `span` for span records.
 	RecordType AnnotationQueueSpanRecordInputRecordType `json:"record_type"`
 
 	// SpanIds List of span IDs to add to the queue
@@ -1781,7 +1781,7 @@ type AnnotationQueueSpanRecordInput struct {
 	StartTime time.Time `json:"start_time"`
 }
 
-// AnnotationQueueSpanRecordInputRecordType Discriminator identifying the record source type. Must be `span` for span records.
+// AnnotationQueueSpanRecordInputRecordType Discriminator identifying this record source as project spans. Must be `span` for span records.
 type AnnotationQueueSpanRecordInputRecordType string
 
 // AnnotatorUser A user assigned as an annotator, identified by ID and email.
@@ -2370,14 +2370,16 @@ type CustomCodeConfig struct {
 
 	// StaticParams Optional typed defaults accessible on the evaluator instance. Omit or pass an
 	// empty array when the custom class does not read any static parameters.
-	StaticParams *[]StaticParam       `json:"static_params,omitempty"`
-	Type         CustomCodeConfigType `json:"type"`
+	StaticParams *[]StaticParam `json:"static_params,omitempty"`
+
+	// Type Discriminator identifying this as a custom (user-supplied Python) code evaluator
+	Type CustomCodeConfigType `json:"type"`
 
 	// Variables Dataset columns or span attributes mapped to evaluate() arguments
 	Variables []string `json:"variables"`
 }
 
-// CustomCodeConfigType defines model for CustomCodeConfig.Type.
+// CustomCodeConfigType Discriminator identifying this as a custom (user-supplied Python) code evaluator
 type CustomCodeConfigType string
 
 // CustomRoleAssignment A custom RBAC role assignment.
@@ -2659,11 +2661,13 @@ type EvaluatorVersionCode struct {
 	EvaluatorId string `json:"evaluator_id"`
 
 	// Id The unique identifier for this version
-	Id   string                   `json:"id"`
+	Id string `json:"id"`
+
+	// Type Discriminator identifying this as a code evaluator version
 	Type EvaluatorVersionCodeType `json:"type"`
 }
 
-// EvaluatorVersionCodeType defines model for EvaluatorVersionCode.Type.
+// EvaluatorVersionCodeType Discriminator identifying this as a code evaluator version
 type EvaluatorVersionCodeType string
 
 // EvaluatorVersionCodeCreate defines model for EvaluatorVersionCodeCreate.
@@ -2740,12 +2744,14 @@ type EvaluatorVersionTemplate struct {
 	EvaluatorId string `json:"evaluator_id"`
 
 	// Id The unique identifier for this version
-	Id             string                       `json:"id"`
-	TemplateConfig TemplateConfig               `json:"template_config"`
-	Type           EvaluatorVersionTemplateType `json:"type"`
+	Id             string         `json:"id"`
+	TemplateConfig TemplateConfig `json:"template_config"`
+
+	// Type Discriminator identifying this as a template evaluator version
+	Type EvaluatorVersionTemplateType `json:"type"`
 }
 
-// EvaluatorVersionTemplateType defines model for EvaluatorVersionTemplate.Type.
+// EvaluatorVersionTemplateType Discriminator identifying this as a template evaluator version
 type EvaluatorVersionTemplateType string
 
 // EvaluatorVersionTemplateCreate defines model for EvaluatorVersionTemplateCreate.
@@ -3111,15 +3117,17 @@ type ManagedCodeConfig struct {
 	// the registry's required arguments must be satisfied by defaults on the evaluator
 	// class; otherwise validation fails with 400. If the registry has no args, omitting
 	// this field is equivalent to an empty list.
-	StaticParams *[]StaticParam        `json:"static_params,omitempty"`
-	Type         ManagedCodeConfigType `json:"type"`
+	StaticParams *[]StaticParam `json:"static_params,omitempty"`
+
+	// Type Discriminator identifying this as a managed (built-in) code evaluator
+	Type ManagedCodeConfigType `json:"type"`
 
 	// Variables Dataset columns or span attributes passed into the evaluator (order and count
 	// must match the managed evaluator's requirements).
 	Variables []string `json:"variables"`
 }
 
-// ManagedCodeConfigType defines model for ManagedCodeConfig.Type.
+// ManagedCodeConfigType Discriminator identifying this as a managed (built-in) code evaluator
 type ManagedCodeConfigType string
 
 // ManagedCodeEvaluator Built-in managed code evaluator name

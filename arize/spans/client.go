@@ -33,7 +33,7 @@ func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
 ) (*SpanList, error) {
-	prerelease.Warn("spans.list", prerelease.Alpha)
+	prerelease.Warn("spans.list", prerelease.Beta)
 	projectID, err := resolve.FindProjectID(ctx, c.gen, req.Project, req.Space)
 	if err != nil {
 		return nil, err

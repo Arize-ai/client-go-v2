@@ -128,6 +128,15 @@
     - [Annotate a Record](#annotate-a-record)
     - [Update an Annotation Queue](#update-an-annotation-queue)
     - [Delete an Annotation Queue](#delete-an-annotation-queue)
+  - [Operations on Users](#operations-on-users)
+    - [List Users](#list-users)
+    - [Get a User](#get-a-user)
+    - [Create a User](#create-a-user)
+    - [Update a User](#update-a-user)
+    - [Resend an Invitation](#resend-an-invitation)
+    - [Reset a Password](#reset-a-password)
+    - [Delete a User](#delete-a-user)
+    - [Bulk Delete Users](#bulk-delete-users)
 - [SDK Configuration](#sdk-configuration)
   - [Environment Variables](#environment-variables)
   - [TLS Verification](#tls-verification)
@@ -172,8 +181,9 @@ The Go SDK v2 currently exposes the following surface area:
   - **API Keys** — list, create, create service keys, refresh, delete.
   - **Resource Restrictions** — restrict and unrestrict access to Arize resources.
   - **Annotation Queues** — list, get, create, update, delete, add records, and annotate. *(Alpha)*
+  - **Users** — list, get, create, update, delete, bulk delete, resend invitations, and reset passwords. *(Alpha)*
 
-Additional resource domains (tasks, users) will be added incrementally.
+Additional resource domains (tasks) will be added incrementally.
 
 Runnable, end-to-end programs for every subclient live in [`examples/`](./examples).
 
@@ -1196,6 +1206,104 @@ err := client.AnnotationQueues.Delete(ctx, annotationqueues.DeleteRequest{
     AnnotationQueue: "<queue-id-or-name>",
     Space:           "<space-id-or-name>", // required when AnnotationQueue is a name
 })
+```
+
+## Operations on Users
+
+`client.Users` manages account users. These take strict user IDs, except `Get`,
+whose `User` field accepts a user ID **or** an email address. *(Alpha)*
+
+### List Users
+
+`Email` is a case-insensitive substring filter; `Status` filters by account state
+(active, invited, expired).
+
+```go
+resp, err := client.Users.List(ctx, users.ListRequest{
+    Status: []users.UserStatus{users.UserStatusActive, users.UserStatusInvited},
+    Limit:  25,
+})
+```
+
+### Get a User
+
+`User` accepts a user ID or an email address (resolved by case-insensitive exact
+match; a non-matching email yields a `*ResourceNotFoundError`).
+
+```go
+user, err := client.Users.Get(ctx, users.GetRequest{User: "user@example.com"})
+```
+
+### Create a User
+
+Build the account-level role with `AssignPredefinedRole` (or `AssignCustomRole`).
+`InviteMode` controls whether and how an invitation is sent.
+
+```go
+user, err := client.Users.Create(ctx, users.CreateRequest{
+    Name:       "Ada Lovelace",
+    Email:      "user@example.com",
+    Role:       users.AssignPredefinedRole(users.UserRoleMember),
+    InviteMode: users.InviteModeEmailLink,
+})
+```
+
+### Update a User
+
+`Name`/`IsDeveloper` are PATCH pointers: nil preserves the current value, non-nil
+sets it. At least one must be non-nil.
+
+```go
+newName := "Ada Lovelace"
+isDeveloper := true
+user, err := client.Users.Update(ctx, users.UpdateRequest{
+    UserID:      "<user-id>",
+    Name:        &newName,
+    IsDeveloper: &isDeveloper,
+})
+```
+
+### Resend an Invitation
+
+The target user must still be in the invited state.
+
+```go
+err := client.Users.ResendInvitation(ctx, users.ResendInvitationRequest{UserID: "<user-id>"})
+```
+
+### Reset a Password
+
+Password-auth users only (not SSO/SAML); the account must be verified.
+
+```go
+err := client.Users.ResetPassword(ctx, users.ResetPasswordRequest{UserID: "<user-id>"})
+```
+
+### Delete a User
+
+Soft-delete; cascades to org/space memberships, API keys, and role bindings.
+Idempotent.
+
+```go
+err := client.Users.Delete(ctx, users.DeleteRequest{UserID: "<user-id>"})
+```
+
+### Bulk Delete Users
+
+Delete by ID and/or email. Per-user outcomes are returned rather than aborting
+the batch: an unresolved email is `DeletionStatusNotFound`, a failed delete is
+`DeletionStatusFailed`.
+
+```go
+results, err := client.Users.BulkDelete(ctx, users.BulkDeleteRequest{
+    UserIDs: []string{"<user-id>"},
+    Emails:  []string{"user@example.com"},
+})
+for _, r := range results {
+    // UserID is set for resolved users; Email is set when the user was
+    // specified by email (and is the only identifier for not_found).
+    fmt.Printf("user=%q email=%q: %s\n", r.UserID, r.Email, r.Status)
+}
 ```
 
 # SDK Configuration

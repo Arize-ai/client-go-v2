@@ -21,6 +21,7 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/roles"
 	"github.com/Arize-ai/client-go-v2/arize/spaces"
 	"github.com/Arize-ai/client-go-v2/arize/spans"
+	"github.com/Arize-ai/client-go-v2/arize/users"
 )
 
 // Client is the top-level client for the Arize REST API.
@@ -43,6 +44,7 @@ type Client struct {
 	Roles                *roles.Client
 	Spaces               *spaces.Client
 	Spans                *spans.Client
+	Users                *users.Client
 }
 
 // NewClient constructs a Client from the provided Config.
@@ -100,6 +102,7 @@ func NewClient(cfg Config) (*Client, error) {
 		Roles:                roles.New(gen),
 		Spaces:               spaces.New(gen),
 		Spans:                spans.New(gen),
+		Users:                users.New(gen),
 	}, nil
 }
 

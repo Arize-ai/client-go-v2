@@ -20,7 +20,8 @@ examples/
 ├── rolebindings/         client.RoleBindings.{Get, Create, Update, Delete}
 ├── roles/                client.Roles.{List, Get, Create, Update, Delete}
 ├── spaces/               client.Spaces.{List, Get, Create, Update, Delete, AddUser, RemoveUser}
-└── spans/                client.Spans.{List, Delete, Annotate}
+├── spans/                client.Spans.{List, Delete, Annotate}
+└── users/                client.Users.{List, Get, Create, Update, Delete, ResendInvitation, ResetPassword, BulkDelete}
 ```
 
 ## Running

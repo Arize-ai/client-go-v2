@@ -365,3 +365,86 @@ func TestFindDatasetID(t *testing.T) {
 		})
 	}
 }
+
+func TestFindUserID(t *testing.T) {
+	tests := []struct {
+		name    string
+		setup   func(t *testing.T) *generated.ClientWithResponses
+		input   string
+		wantID  string
+		wantErr func(t *testing.T, err error)
+	}{
+		{
+			name:  "passes through resource ID without hitting the server",
+			input: b64("usr-1"),
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				called := false
+				gen := newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					called = true
+					w.WriteHeader(500)
+				})
+				t.Cleanup(func() {
+					if called {
+						t.Error("server should not have been hit when input is an ID")
+					}
+				})
+				return gen
+			},
+			wantID: b64("usr-1"),
+		},
+		{
+			name:  "resolves by email (case-insensitive exact match)",
+			input: "Alice@Example.com",
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				uid := b64("usr-real")
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					if got := r.URL.Query().Get("email"); got != "Alice@Example.com" {
+						t.Errorf("email query = %q, want Alice@Example.com", got)
+					}
+					w.Header().Set("Content-Type", "application/json")
+					_, _ = w.Write([]byte(`{"users":[{"id":"` + uid + `","name":"Alice","email":"alice@example.com","created_at":"2026-01-01T00:00:00Z","status":"active","is_developer":true,"role":{"type":"predefined","name":"member"}}],"pagination":{"has_more":false}}`))
+				})
+			},
+			wantID: b64("usr-real"),
+		},
+		{
+			name:  "no email match returns ResourceNotFoundError",
+			input: "missing@example.com",
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Set("Content-Type", "application/json")
+					_, _ = w.Write([]byte(`{"users":[],"pagination":{"has_more":false}}`))
+				})
+			},
+			wantErr: func(t *testing.T, err error) {
+				t.Helper()
+				var rnfe *resolve.ResourceNotFoundError
+				if !errors.As(err, &rnfe) {
+					t.Fatalf("want *ResourceNotFoundError, got %T: %v", err, err)
+				}
+				if rnfe.ResourceType != "user" {
+					t.Errorf("ResourceType: want user, got %q", rnfe.ResourceType)
+				}
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gen := tt.setup(t)
+			got, err := resolve.FindUserID(context.Background(), gen, tt.input)
+			if tt.wantErr != nil {
+				tt.wantErr(t, err)
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got != tt.wantID {
+				t.Errorf("FindUserID = %q, want %q", got, tt.wantID)
+			}
+		})
+	}
+}
