@@ -30,7 +30,7 @@ func (c *Client) List(
 	prerelease.Warn("prompts.list", prerelease.Beta)
 	params := generated.PromptsListParams{
 		Name:   optfields.PtrIfSet(req.Name),
-		Limit:  optfields.PtrIfSet(req.Limit),
+		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
@@ -150,7 +150,7 @@ func (c *Client) ListVersions(
 		return nil, err
 	}
 	params := generated.PromptVersionsListParams{
-		Limit:  optfields.PtrIfSet(req.Limit),
+		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	resp, err := c.gen.PromptVersionsListWithResponse(ctx, id, &params)

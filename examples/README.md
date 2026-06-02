@@ -12,6 +12,7 @@ examples/
 ├── apikeys/              client.APIKeys.{List, Create, CreateServiceKey, Refresh, Delete}
 ├── datasets/             client.Datasets.{List, Get, Create, Update, Delete, ListExamples, AppendExamples, AnnotateExamples}
 ├── evaluators/           client.Evaluators.{List, Get, Create, Update, Delete, ListVersions, CreateVersion, GetVersion}
+├── experiments/          client.Experiments.{List, Get, Create, ListRuns, Delete}
 ├── organizations/        client.Organizations.{List, Get, Create, Update, Delete, AddUser, RemoveUser}
 ├── projects/             client.Projects.{List, Get, Create, Delete}
 ├── prompts/              client.Prompts.{List, Get, Create, Update, Delete, ListVersions, CreateVersion, GetVersion, GetVersionByLabel, SetVersionLabels, DeleteVersionLabel}

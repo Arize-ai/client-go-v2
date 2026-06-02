@@ -1923,6 +1923,14 @@ type ApiKeyRefresh struct {
 	// ExpiresAt Expiration timestamp for the refreshed key. If omitted, the refreshed key
 	// has no expiration (infinite lifetime).
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`
+
+	// GracePeriodSeconds Grace period in seconds during which the old key remains valid after the
+	// refresh. When set, the old key's expiration is updated to `now + grace_period_seconds`
+	// instead of being immediately revoked — it expires naturally at the end of the window.
+	// If the old key already has an `expires_at` that is sooner than the grace window end,
+	// the shorter value is used (the grace period cannot extend a key's original lifetime).
+	// Defaults to 0 (immediate revocation). Maximum is 86400 (24 hours).
+	GracePeriodSeconds *int `json:"grace_period_seconds,omitempty"`
 }
 
 // ApiKeyRoles Role assignments for the bot user created with a service key.
@@ -2863,6 +2871,33 @@ type ExperimentRunsListResponse struct {
 	Pagination PaginationMetadata `json:"pagination"`
 }
 
+// ExperimentWithRunIds defines model for ExperimentWithRunIds.
+type ExperimentWithRunIds struct {
+	// CreatedAt Timestamp for when the experiment was created
+	CreatedAt time.Time `json:"created_at"`
+
+	// DatasetId Unique identifier for the dataset this experiment belongs to
+	DatasetId string `json:"dataset_id"`
+
+	// DatasetVersionId Unique identifier for the dataset version this experiment belongs to
+	DatasetVersionId string `json:"dataset_version_id"`
+
+	// ExperimentTracesProjectId Unique identifier for the experiment traces project this experiment belongs to (if it exists)
+	ExperimentTracesProjectId *string `json:"experiment_traces_project_id,omitempty"`
+
+	// Id Unique identifier for the experiment
+	Id string `json:"id"`
+
+	// Name Name of the experiment
+	Name string `json:"name"`
+
+	// RunIds IDs of the newly inserted experiment runs, in input order.
+	RunIds []string `json:"run_ids"`
+
+	// UpdatedAt Timestamp for the last update of the experiment
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
 // FreeformAnnotationConfig defines model for FreeformAnnotationConfig.
 type FreeformAnnotationConfig struct {
 	// CreatedAt The timestamp for when the annotation config was created
@@ -2925,6 +2960,12 @@ type Id = string
 // - `mustache`: Double curly braces ({{variable_name}})
 // - `none`: **Deprecated.** Treated as `f_string`. Will be removed in a future version.
 type InputVariableFormat string
+
+// InsertExperimentRunsBody defines model for InsertExperimentRunsBody.
+type InsertExperimentRunsBody struct {
+	// ExperimentRuns Array of experiment run data to append to the experiment. Between 1 and 1000 runs per request.
+	ExperimentRuns []ExperimentRunCreate `json:"experiment_runs"`
+}
 
 // InviteMode Controls how the user is invited to the account.
 // - `none` — add the user directly with no invitation email (for SSO-only accounts).
@@ -4878,6 +4919,9 @@ type InsertDatasetExamplesRequestBody struct {
 	Examples []DatasetExampleCreate `json:"examples"`
 }
 
+// InsertExperimentRunsRequestBody defines model for InsertExperimentRunsRequestBody.
+type InsertExperimentRunsRequestBody = InsertExperimentRunsBody
+
 // ListSpansRequestBody defines model for ListSpansRequestBody.
 type ListSpansRequestBody = ListSpansRequest
 
@@ -5764,6 +5808,9 @@ type EvaluatorVersionsCreateJSONRequestBody = EvaluatorVersionCreate
 
 // ExperimentsCreateJSONRequestBody defines body for ExperimentsCreate for application/json ContentType.
 type ExperimentsCreateJSONRequestBody ExperimentsCreateJSONBody
+
+// ExperimentsRunsInsertJSONRequestBody defines body for ExperimentsRunsInsert for application/json ContentType.
+type ExperimentsRunsInsertJSONRequestBody = InsertExperimentRunsBody
 
 // ExperimentsRunsAnnotateJSONRequestBody defines body for ExperimentsRunsAnnotate for application/json ContentType.
 type ExperimentsRunsAnnotateJSONRequestBody = AnnotateExperimentRunsRequestBody
@@ -8392,6 +8439,11 @@ type ClientInterface interface {
 	// ExperimentsRunsList request
 	ExperimentsRunsList(ctx context.Context, experimentId ExperimentIdPathParam, params *ExperimentsRunsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ExperimentsRunsInsertWithBody request with any body
+	ExperimentsRunsInsertWithBody(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ExperimentsRunsInsert(ctx context.Context, experimentId ExperimentIdPathParam, body ExperimentsRunsInsertJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ExperimentsRunsAnnotateWithBody request with any body
 	ExperimentsRunsAnnotateWithBody(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9401,6 +9453,30 @@ func (c *Client) ExperimentsGet(ctx context.Context, experimentId ExperimentIdPa
 
 func (c *Client) ExperimentsRunsList(ctx context.Context, experimentId ExperimentIdPathParam, params *ExperimentsRunsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewExperimentsRunsListRequest(c.Server, experimentId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ExperimentsRunsInsertWithBody(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExperimentsRunsInsertRequestWithBody(c.Server, experimentId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ExperimentsRunsInsert(ctx context.Context, experimentId ExperimentIdPathParam, body ExperimentsRunsInsertJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExperimentsRunsInsertRequest(c.Server, experimentId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -12977,6 +13053,53 @@ func NewExperimentsRunsListRequest(server string, experimentId ExperimentIdPathP
 	return req, nil
 }
 
+// NewExperimentsRunsInsertRequest calls the generic ExperimentsRunsInsert builder with application/json body
+func NewExperimentsRunsInsertRequest(server string, experimentId ExperimentIdPathParam, body ExperimentsRunsInsertJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewExperimentsRunsInsertRequestWithBody(server, experimentId, "application/json", bodyReader)
+}
+
+// NewExperimentsRunsInsertRequestWithBody generates requests for ExperimentsRunsInsert with any type of body
+func NewExperimentsRunsInsertRequestWithBody(server string, experimentId ExperimentIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "experiment_id", experimentId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/experiments/%s/runs", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewExperimentsRunsAnnotateRequest calls the generic ExperimentsRunsAnnotate builder with application/json body
 func NewExperimentsRunsAnnotateRequest(server string, experimentId ExperimentIdPathParam, body ExperimentsRunsAnnotateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -16317,6 +16440,11 @@ type ClientWithResponsesInterface interface {
 	// ExperimentsRunsListWithResponse request
 	ExperimentsRunsListWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, params *ExperimentsRunsListParams, reqEditors ...RequestEditorFn) (*ExperimentsRunsListResponse, error)
 
+	// ExperimentsRunsInsertWithBodyWithResponse request with any body
+	ExperimentsRunsInsertWithBodyWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ExperimentsRunsInsertResponse, error)
+
+	ExperimentsRunsInsertWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, body ExperimentsRunsInsertJSONRequestBody, reqEditors ...RequestEditorFn) (*ExperimentsRunsInsertResponse, error)
+
 	// ExperimentsRunsAnnotateWithBodyWithResponse request with any body
 	ExperimentsRunsAnnotateWithBodyWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ExperimentsRunsAnnotateResponse, error)
 
@@ -17774,6 +17902,34 @@ func (r ExperimentsRunsListResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ExperimentsRunsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ExperimentsRunsInsertResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON201                   *ExperimentWithRunIds
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ExperimentsRunsInsertResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ExperimentsRunsInsertResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -20018,6 +20174,23 @@ func (c *ClientWithResponses) ExperimentsRunsListWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseExperimentsRunsListResponse(rsp)
+}
+
+// ExperimentsRunsInsertWithBodyWithResponse request with arbitrary body returning *ExperimentsRunsInsertResponse
+func (c *ClientWithResponses) ExperimentsRunsInsertWithBodyWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ExperimentsRunsInsertResponse, error) {
+	rsp, err := c.ExperimentsRunsInsertWithBody(ctx, experimentId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExperimentsRunsInsertResponse(rsp)
+}
+
+func (c *ClientWithResponses) ExperimentsRunsInsertWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, body ExperimentsRunsInsertJSONRequestBody, reqEditors ...RequestEditorFn) (*ExperimentsRunsInsertResponse, error) {
+	rsp, err := c.ExperimentsRunsInsert(ctx, experimentId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExperimentsRunsInsertResponse(rsp)
 }
 
 // ExperimentsRunsAnnotateWithBodyWithResponse request with arbitrary body returning *ExperimentsRunsAnnotateResponse
@@ -23581,6 +23754,74 @@ func ParseExperimentsRunsListResponse(rsp *http.Response) (*ExperimentsRunsListR
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseExperimentsRunsInsertResponse parses an HTTP response from a ExperimentsRunsInsertWithResponse call
+func ParseExperimentsRunsInsertResponse(rsp *http.Response) (*ExperimentsRunsInsertResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ExperimentsRunsInsertResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ExperimentWithRunIds
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded

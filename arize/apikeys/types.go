@@ -77,6 +77,9 @@ type RefreshRequest struct {
 	// ExpiresAt is the optional new expiration timestamp. When zero, the
 	// refreshed key has no expiration (infinite lifetime).
 	ExpiresAt time.Time
+	// GracePeriodSeconds is the optional number of seconds the old key remains
+	// valid after the refresh. When zero, the old key is invalidated immediately.
+	GracePeriodSeconds int
 }
 
 type (

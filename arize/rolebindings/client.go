@@ -5,6 +5,7 @@ import (
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
+	"github.com/Arize-ai/client-go-v2/arize/internal/optfields"
 	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
 )
 
@@ -16,6 +17,29 @@ type Client struct {
 // New constructs a Client from a generated ClientWithResponses.
 func New(gen *generated.ClientWithResponses) *Client {
 	return &Client{gen: gen}
+}
+
+// List returns a paginated list of role bindings for the authenticated user's
+// account, filtered by resource type. Defaults to a page size of 50.
+func (c *Client) List(
+	ctx context.Context,
+	req ListRequest,
+) (*RoleBindingList, error) {
+	prerelease.Warn("rolebindings.list", prerelease.Alpha)
+	params := &generated.RoleBindingsListParams{
+		ResourceType: req.ResourceType,
+		UserId:       optfields.PtrIfSet(req.UserID),
+		Limit:        optfields.PtrWithDefault(req.Limit, 50),
+		Cursor:       optfields.PtrIfSet(req.Cursor),
+	}
+	resp, err := c.gen.RoleBindingsListWithResponse(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON200, nil
 }
 
 // Get returns a single role binding by ID.

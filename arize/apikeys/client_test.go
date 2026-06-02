@@ -300,6 +300,125 @@ func TestAPIKeys(t *testing.T) {
 				}
 			},
 		},
+		{
+			name: "Refresh with grace period sends correct wire body",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var wire struct {
+					GracePeriodSeconds *int `json:"grace_period_seconds"`
+					ExpiresAt          any  `json:"expires_at"`
+				}
+				if err := json.NewDecoder(r.Body).Decode(&wire); err != nil {
+					t.Errorf("failed to decode request body: %v", err)
+				}
+				if wire.GracePeriodSeconds == nil {
+					t.Error("expected grace_period_seconds in request body, got nil")
+				} else if *wire.GracePeriodSeconds != 3600 {
+					t.Errorf("grace_period_seconds: want 3600, got %d", *wire.GracePeriodSeconds)
+				}
+				if wire.ExpiresAt != nil {
+					t.Errorf("expires_at should be omitted when zero, got %v", wire.ExpiresAt)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(apikeys.APIKeyCreated{
+					Id: "key-1", Key: "ak-new", KeyType: apikeys.APIKeyTypeUser,
+					Status: apikeys.APIKeyStatusActive, CreatedAt: time.Now(),
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.APIKeys.Refresh(ctx, apikeys.RefreshRequest{
+					APIKeyID:           "key-1",
+					GracePeriodSeconds: 3600,
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "Refresh zero grace period omits field from wire body",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				// Decode into a raw map so we can distinguish missing key from zero value.
+				var wire map[string]json.RawMessage
+				if err := json.NewDecoder(r.Body).Decode(&wire); err != nil {
+					t.Errorf("failed to decode request body: %v", err)
+				}
+				if _, present := wire["grace_period_seconds"]; present {
+					t.Error("grace_period_seconds should be omitted when GracePeriodSeconds is 0")
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(apikeys.APIKeyCreated{
+					Id: "key-1", Key: "ak-new", KeyType: apikeys.APIKeyTypeUser,
+					Status: apikeys.APIKeyStatusActive, CreatedAt: time.Now(),
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.APIKeys.Refresh(ctx, apikeys.RefreshRequest{APIKeyID: "key-1"})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "Refresh with grace period and expires_at sends both fields",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var wire struct {
+					GracePeriodSeconds *int    `json:"grace_period_seconds"`
+					ExpiresAt          *string `json:"expires_at"`
+				}
+				if err := json.NewDecoder(r.Body).Decode(&wire); err != nil {
+					t.Errorf("failed to decode request body: %v", err)
+				}
+				if wire.GracePeriodSeconds == nil {
+					t.Error("expected grace_period_seconds in request body, got nil")
+				} else if *wire.GracePeriodSeconds != 86400 {
+					t.Errorf("grace_period_seconds: want 86400 (max), got %d", *wire.GracePeriodSeconds)
+				}
+				if wire.ExpiresAt == nil {
+					t.Error("expected expires_at in request body, got nil")
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(apikeys.APIKeyCreated{
+					Id: "key-1", Key: "ak-new", KeyType: apikeys.APIKeyTypeUser,
+					Status: apikeys.APIKeyStatusActive, CreatedAt: time.Now(),
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.APIKeys.Refresh(ctx, apikeys.RefreshRequest{
+					APIKeyID:           "key-1",
+					ExpiresAt:          time.Now().Add(30 * 24 * time.Hour),
+					GracePeriodSeconds: 86400,
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "Refresh with grace period propagates server error",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusBadRequest)
+				json.NewEncoder(w).Encode(map[string]any{"title": "grace_period_seconds exceeds maximum", "status": 400})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.APIKeys.Refresh(ctx, apikeys.RefreshRequest{
+					APIKeyID:           "key-1",
+					GracePeriodSeconds: 999999,
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var be *arize.BadRequestError
+				if !errors.As(err, &be) {
+					t.Errorf("expected *BadRequestError, got %T: %v", err, err)
+				}
+			},
+		},
 	}
 
 	for _, tt := range tests {

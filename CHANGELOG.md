@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.8.0...arize-go-sdk-v2/v0.9.0) (2026-06-02)
+
+
+### 🎁 New Features
+
+* add grace period support to API key refresh ([#73305](https://github.com/Arize-ai/arize/issues/73305)) ([34cb476](https://github.com/Arize-ai/arize/commit/34cb4766c9da9f881daf75a56807ae415d37080a))
+* add Experiments subclient and API operations to SDK ([#73225](https://github.com/Arize-ai/arize/issues/73225)) ([4802109](https://github.com/Arize-ai/arize/commit/4802109eae0d8d676c00b223652458a737e32aea))
+* **role-bindings:** add list support ([#73167](https://github.com/Arize-ai/arize/issues/73167)) ([b724a90](https://github.com/Arize-ai/arize/commit/b724a904ddd3e6f0ecbd0942c64888da9fad344b))
+
+
+### 🐛 Bug Fixes
+
+* set default pagination limit to 50 for all list operations ([#73195](https://github.com/Arize-ai/arize/issues/73195)) ([ac402f3](https://github.com/Arize-ai/arize/commit/ac402f37a099a09f0eee65952418509c89113ea2))
+
 ## [0.8.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.7.0...arize-go-sdk-v2/v0.8.0) (2026-05-29)
 
 

@@ -58,10 +58,15 @@ func createAPIKey(ctx context.Context, client *arize.Client, name string) *apike
 	return created
 }
 
+// refreshAPIKey rotates an API key and returns the new plaintext key —
+// store it immediately, you cannot retrieve it later.
 func refreshAPIKey(ctx context.Context, client *arize.Client, keyID string) {
 	rotated, err := client.APIKeys.Refresh(ctx, apikeys.RefreshRequest{
 		APIKeyID:  keyID,
 		ExpiresAt: time.Now().Add(90 * 24 * time.Hour),
+		// Allow 5 minutes for callers to switch to the new key before the
+		// old one is invalidated. Omit or set to 0 for immediate revocation.
+		GracePeriodSeconds: 300,
 	})
 	if err != nil {
 		log.Fatalf("refresh api key: %v", err)

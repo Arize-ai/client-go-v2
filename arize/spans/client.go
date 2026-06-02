@@ -45,7 +45,7 @@ func (c *Client) List(
 		Filter:    optfields.PtrIfSet(req.Filter),
 	}
 	params := generated.SpansListParams{
-		Limit:  optfields.PtrIfSet(req.Limit),
+		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	resp, err := c.gen.SpansListWithResponse(ctx, &params, body)

@@ -30,7 +30,7 @@ func (c *Client) List(
 	prerelease.Warn("projects.list", prerelease.Beta)
 	params := generated.ProjectsListParams{
 		Name:   optfields.PtrIfSet(req.Name),
-		Limit:  optfields.PtrIfSet(req.Limit),
+		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)

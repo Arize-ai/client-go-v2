@@ -26,7 +26,7 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*EvaluatorList, err
 	prerelease.Warn("evaluators.list", prerelease.Alpha)
 	params := &generated.EvaluatorsListParams{
 		Name:   optfields.PtrIfSet(req.Name),
-		Limit:  optfields.PtrWithDefault(req.Limit, 50),
+		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
@@ -138,7 +138,7 @@ func (c *Client) ListVersions(ctx context.Context, req ListVersionsRequest) (*Ev
 		return nil, err
 	}
 	resp, err := c.gen.EvaluatorVersionsListWithResponse(ctx, id, &generated.EvaluatorVersionsListParams{
-		Limit:  optfields.PtrWithDefault(req.Limit, 50),
+		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	})
 	if err != nil {

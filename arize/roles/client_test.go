@@ -104,9 +104,9 @@ func TestRoles(t *testing.T) {
 				if got := r.URL.Query().Get("is_predefined"); got != "true" {
 					t.Errorf("is_predefined query: want true, got %q", got)
 				}
-				// SDK applies a default of 100 (matches Python) when Limit is omitted.
-				if got := r.URL.Query().Get("limit"); got != "100" {
-					t.Errorf("limit default: want 100, got %q", got)
+				// SDK applies a default of 50 when Limit is omitted.
+				if got := r.URL.Query().Get("limit"); got != "50" {
+					t.Errorf("limit default: want 50, got %q", got)
 				}
 				rolesListPage(w, nil, nil)
 			},

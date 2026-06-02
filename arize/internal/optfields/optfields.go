@@ -3,6 +3,11 @@
 // pointers for optionality).
 package optfields
 
+// DefaultListLimit is the page size the SDK substitutes when a list request
+// leaves Limit unset (zero). Centralized here so every subclient shares one
+// source of truth; change it in one place to change the default everywhere.
+const DefaultListLimit = 50
+
 // PtrIfSet returns &v when v is not the zero value of T, else nil. Use to
 // forward an optional value-typed request field into a generated body that
 // uses pointers, omitting it when the caller left it zero.

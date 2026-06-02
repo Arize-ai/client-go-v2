@@ -26,7 +26,7 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*AnnotationConfigLi
 	prerelease.Warn("annotationconfigs.list", prerelease.Alpha)
 	params := &generated.AnnotationConfigsListParams{
 		Name:   optfields.PtrIfSet(req.Name),
-		Limit:  optfields.PtrIfSet(req.Limit),
+		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	if req.Space != "" {

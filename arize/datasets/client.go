@@ -34,7 +34,7 @@ func (c *Client) List(
 	prerelease.Warn("datasets.list", prerelease.Alpha)
 	params := generated.DatasetsListParams{
 		Name:   optfields.PtrIfSet(req.Name),
-		Limit:  optfields.PtrIfSet(req.Limit),
+		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
@@ -154,7 +154,7 @@ func (c *Client) ListExamples(
 		return nil, err
 	}
 	params := generated.DatasetsExamplesListParams{
-		Limit:            optfields.PtrIfSet(req.Limit),
+		Limit:            optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		DatasetVersionId: optfields.PtrIfSet(req.DatasetVersionID),
 	}
 	resp, err := c.gen.DatasetsExamplesListWithResponse(ctx, id, &params)

@@ -31,7 +31,7 @@ func (c *Client) List(
 		KeyType: optfields.PtrIfSet(req.KeyType),
 		Status:  optfields.PtrIfSet(req.Status),
 		UserId:  optfields.PtrIfSet(req.UserID),
-		Limit:   optfields.PtrWithDefault(req.Limit, 50),
+		Limit:   optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor:  optfields.PtrIfSet(req.Cursor),
 	}
 	if req.Space != "" {
@@ -132,7 +132,8 @@ func (c *Client) Refresh(
 ) (*APIKeyCreated, error) {
 	prerelease.Warn("apikeys.refresh", prerelease.Alpha)
 	body := generated.RefreshApiKeyRequestBody{
-		ExpiresAt: optfields.PtrIfSet(req.ExpiresAt),
+		ExpiresAt:          optfields.PtrIfSet(req.ExpiresAt),
+		GracePeriodSeconds: optfields.PtrIfSet(req.GracePeriodSeconds),
 	}
 	resp, err := c.gen.ApiKeysRefreshWithResponse(ctx, req.APIKeyID, body)
 	if err != nil {

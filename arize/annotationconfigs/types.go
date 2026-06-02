@@ -75,7 +75,7 @@ type ListRequest struct {
 	// annotation config name.
 	Name string
 	// Limit is the optional maximum number of items to return. When zero, the
-	// server applies its default page size.
+	// SDK applies a default of 50.
 	Limit int
 	// Cursor is the optional opaque pagination cursor returned from a previous
 	// response. When empty, results start from the first page.

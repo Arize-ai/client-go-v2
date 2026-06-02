@@ -36,7 +36,7 @@ type ListRequest struct {
 	// name. When empty, results are not filtered by name.
 	Name string
 	// Limit is the optional maximum number of items to return (max 100). When
-	// zero, the server applies its default page size.
+	// zero, the SDK applies a default of 50.
 	Limit int
 	// Cursor is the optional opaque pagination cursor from a previous
 	// response's pagination.next_cursor. When empty, results start from the
@@ -94,7 +94,7 @@ type ListExamplesRequest struct {
 	// name; ignored when Dataset is an ID.
 	Space string
 	// Limit is the optional maximum number of items to return (max 500). When
-	// zero, the server applies its default page size.
+	// zero, the SDK applies a default of 50.
 	Limit int
 	// DatasetVersionID is the optional version to list examples from. When
 	// empty, the server uses the dataset's latest version.

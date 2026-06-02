@@ -16,10 +16,10 @@ import (
 // wireRoleBinding mirrors the API JSON shape for a role-binding create/update body,
 // so tests can decode incoming requests without importing internal/generated.
 type wireRoleBinding struct {
-	ResourceId   string                                  `json:"resource_id,omitempty"`
-	ResourceType rolebindings.RoleBindingResourceType    `json:"resource_type,omitempty"`
-	RoleId       string                                  `json:"role_id,omitempty"`
-	UserId       string                                  `json:"user_id,omitempty"`
+	ResourceId   string                               `json:"resource_id,omitempty"`
+	ResourceType rolebindings.RoleBindingResourceType `json:"resource_type,omitempty"`
+	RoleId       string                               `json:"role_id,omitempty"`
+	UserId       string                               `json:"user_id,omitempty"`
 }
 
 func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *arize.Client) {
@@ -44,6 +44,81 @@ func TestRoleBindings(t *testing.T) {
 		invoke  func(ctx context.Context, c *arize.Client) (any, error)
 		check   func(t *testing.T, got any, err error)
 	}{
+		{
+			name: "List success",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodGet {
+					t.Errorf("expected GET, got %s", r.Method)
+				}
+				q := r.URL.Query()
+				if got := q.Get("resource_type"); got != string(rolebindings.RoleBindingResourceTypeSPACE) {
+					t.Errorf("resource_type: got %q, want %q", got, rolebindings.RoleBindingResourceTypeSPACE)
+				}
+				if got := q.Get("user_id"); got != "user-1" {
+					t.Errorf("user_id: got %q, want %q", got, "user-1")
+				}
+				if got := q.Get("limit"); got != "25" {
+					t.Errorf("limit: got %q, want %q", got, "25")
+				}
+				if got := q.Get("cursor"); got != "next-page-token" {
+					t.Errorf("cursor: got %q, want %q", got, "next-page-token")
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(rolebindings.RoleBindingList{
+					Pagination: arize.PaginationMetadata{HasMore: false},
+					RoleBindings: []rolebindings.RoleBinding{
+						{
+							Id:           "binding-1",
+							ResourceId:   "space-1",
+							ResourceType: rolebindings.RoleBindingResourceTypeSPACE,
+							RoleId:       "role-1",
+							UserId:       "user-1",
+							CreatedAt:    time.Now(),
+							UpdatedAt:    time.Now(),
+						},
+					},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.RoleBindings.List(ctx, rolebindings.ListRequest{
+					ResourceType: rolebindings.RoleBindingResourceTypeSPACE,
+					UserID:       "user-1",
+					Limit:        25,
+					Cursor:       "next-page-token",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				list := got.(*rolebindings.RoleBindingList)
+				if len(list.RoleBindings) != 1 || list.RoleBindings[0].Id != "binding-1" {
+					t.Errorf("unexpected list: %+v", list)
+				}
+			},
+		},
+		{
+			name: "List default limit",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if got := r.URL.Query().Get("limit"); got != "50" {
+					t.Errorf("default limit: got %q, want %q", got, "50")
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(rolebindings.RoleBindingList{
+					Pagination: arize.PaginationMetadata{HasMore: false},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.RoleBindings.List(ctx, rolebindings.ListRequest{
+					ResourceType: rolebindings.RoleBindingResourceTypeSPACE,
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
 		{
 			name: "Get success",
 			handler: func(w http.ResponseWriter, r *http.Request) {

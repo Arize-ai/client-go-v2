@@ -28,7 +28,7 @@ func (c *Client) List(
 	prerelease.Warn("organizations.list", prerelease.Beta)
 	params := generated.OrganizationsListParams{
 		Name:   optfields.PtrIfSet(req.Name),
-		Limit:  optfields.PtrIfSet(req.Limit),
+		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	resp, err := c.gen.OrganizationsListWithResponse(ctx, &params)

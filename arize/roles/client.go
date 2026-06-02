@@ -28,7 +28,7 @@ func (c *Client) List(
 	prerelease.Warn("roles.list", prerelease.Beta)
 	params := &generated.RolesListParams{
 		IsPredefined: req.IsPredefined,
-		Limit:        optfields.PtrWithDefault(req.Limit, 100),
+		Limit:        optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor:       optfields.PtrIfSet(req.Cursor),
 	}
 	resp, err := c.gen.RolesListWithResponse(ctx, params)

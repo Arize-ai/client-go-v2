@@ -54,6 +54,12 @@
     - [List Examples](#list-examples)
     - [Append Examples](#append-examples)
     - [Annotate Examples](#annotate-examples)
+  - [Operations on Experiments](#operations-on-experiments)
+    - [List Experiments](#list-experiments)
+    - [Get an Experiment](#get-an-experiment)
+    - [Create an Experiment](#create-an-experiment)
+    - [Delete an Experiment](#delete-an-experiment)
+    - [List Runs](#list-runs)
   - [Operations on Prompts](#operations-on-prompts)
     - [List Prompts](#list-prompts)
     - [Get a Prompt](#get-a-prompt)
@@ -112,8 +118,8 @@
     - [Refresh an API Key](#refresh-an-api-key)
     - [Delete an API Key](#delete-an-api-key)
   - [Operations on Resource Restrictions](#operations-on-resource-restrictions)
-    - [Create a Restriction](#create-a-restriction)
-    - [Delete a Restriction](#delete-a-restriction)
+    - [Restrict a Resource](#restrict-a-resource)
+    - [Unrestrict a Resource](#unrestrict-a-resource)
   - [Operations on Annotation Queues](#operations-on-annotation-queues)
     - [List Annotation Queues](#list-annotation-queues)
     - [Create an Annotation Queue](#create-an-annotation-queue)
@@ -156,6 +162,7 @@ The Go SDK v2 currently exposes the following surface area:
   - **Projects** — list, get, create, update, delete.
   - **Spans** — list, delete, and annotate spans.
   - **Datasets** — list, get, create, update, delete, and manage examples.
+  - **Experiments** — list, get, create, delete, and list their runs.
   - **Prompts** — list, get, create, update, delete, and manage versions and labels.
   - **Evaluators** — list, get, create, update, delete, and manage versions.
   - **Annotation Configs** — list, get, create, delete.
@@ -163,9 +170,10 @@ The Go SDK v2 currently exposes the following surface area:
   - **Organizations** — list, get, create, update, delete, and manage memberships.
   - **Roles** & **Role Bindings** — manage RBAC roles and their bindings.
   - **API Keys** — list, create, create service keys, refresh, delete.
-  - **Resource Restrictions** — create and delete restrictions on Arize resources.
+  - **Resource Restrictions** — restrict and unrestrict access to Arize resources.
+  - **Annotation Queues** — list, get, create, update, delete, add records, and annotate. *(Alpha)*
 
-Additional resource domains (experiments, tasks, users) will be added incrementally.
+Additional resource domains (tasks, users) will be added incrementally.
 
 Runnable, end-to-end programs for every subclient live in [`examples/`](./examples).
 
@@ -281,7 +289,7 @@ All HTTP errors implement `error` and embed `arize.APIError`. Match on a specifi
 ```go
 import "errors"
 
-err := client.ResourceRestrictions.Delete(ctx, resourcerestrictions.DeleteRequest{ResourceRestrictionID: "nonexistent"})
+err := client.ResourceRestrictions.Unrestrict(ctx, resourcerestrictions.UnrestrictRequest{ResourceID: "nonexistent"})
 
 var nfe *arize.NotFoundError
 if errors.As(err, &nfe) {
@@ -524,6 +532,71 @@ ins, err := client.Datasets.AppendExamples(ctx, datasets.AppendExamplesRequest{
 err := client.Datasets.AnnotateExamples(ctx, datasets.AnnotateExamplesRequest{
     Dataset: "<dataset-id-or-name>", Space: "<space-id-or-name>",
     Annotations: []datasets.AnnotateRecordInput{ /* RecordId + AnnotationInput values */ },
+})
+```
+
+## Operations on Experiments
+
+`client.Experiments` manages experiments — a named set of task runs over a dataset,
+optionally carrying evaluator results. `Dataset` is required to create or resolve an
+experiment by name; `Space` is required when `Dataset` is itself a name. On `Create`,
+each run is a row of user-named columns: `TaskFields` names the example-ID and output
+columns, and `EvaluatorColumns` remaps evaluator result columns to the wire format.
+
+### List Experiments
+
+```go
+resp, err := client.Experiments.List(ctx, experiments.ListRequest{
+    Dataset: "<dataset-id-or-name>", // optional filter
+    Space:   "<space-id-or-name>",   // required when Dataset is a name
+    Limit:   25,
+})
+```
+
+### Get an Experiment
+
+```go
+exp, err := client.Experiments.Get(ctx, experiments.GetRequest{
+    Experiment: "<experiment-id-or-name>",
+    Dataset:    "<dataset-id-or-name>", // required when Experiment is a name
+    Space:      "<space-id-or-name>",   // required when Dataset is also a name
+})
+```
+
+### Create an Experiment
+
+Each run maps your column names to the wire format via `TaskFields` (required) and
+`EvaluatorColumns` (optional). Non-string outputs are JSON-encoded automatically.
+
+```go
+exp, err := client.Experiments.Create(ctx, experiments.CreateRequest{
+    Dataset: "<dataset-id-or-name>",
+    Space:   "<space-id-or-name>", // required when Dataset is a name
+    Name:    "my-experiment",
+    Runs: []map[string]any{
+        {"example_id": "ex-1", "answer": "Paris", "relevance_score": 0.9, "relevance_label": "relevant"},
+    },
+    TaskFields: experiments.TaskFields{ExampleID: "example_id", Output: "answer"},
+    EvaluatorColumns: map[string]experiments.EvaluatorFields{
+        "relevance": {Score: "relevance_score", Label: "relevance_label"},
+    },
+})
+```
+
+### Delete an Experiment
+
+```go
+err := client.Experiments.Delete(ctx, experiments.DeleteRequest{Experiment: "<experiment-id>"})
+```
+
+### List Runs
+
+```go
+runs, err := client.Experiments.ListRuns(ctx, experiments.ListRunsRequest{
+    Experiment: "<experiment-id-or-name>",
+    Dataset:    "<dataset-id-or-name>", // required when Experiment is a name
+    Space:      "<space-id-or-name>",   // required when Dataset is also a name
+    Limit:      50,
 })
 ```
 
@@ -980,10 +1053,16 @@ svc, err := client.APIKeys.CreateServiceKey(ctx, apikeys.CreateServiceKeyRequest
 
 ### Refresh an API Key
 
-Rotates the secret.
+Refresh rotates an existing API key, invalidating the old one and returning a new key value. Use `GracePeriodSeconds` to keep the old key valid for a short overlap period while rolling over clients.
 
 ```go
-rotated, err := client.APIKeys.Refresh(ctx, apikeys.RefreshRequest{APIKeyID: "<key-id>", ExpiresAt: time.Now().Add(90 * 24 * time.Hour)})
+newKey, err := client.APIKeys.Refresh(ctx, apikeys.RefreshRequest{
+    APIKeyID:           "<api-key-id>",
+    ExpiresAt:          time.Now().Add(90 * 24 * time.Hour), // optional; zero = never expires
+    GracePeriodSeconds: 3600, // optional; if not specified, old key is deleted immediately
+})
+// newKey.ApiKeyValue — the new raw key value (only returned at refresh time)
+
 ```
 
 ### Delete an API Key
@@ -994,22 +1073,26 @@ err := client.APIKeys.Delete(ctx, apikeys.DeleteRequest{APIKeyID: "<key-id>"})
 
 ## Operations on Resource Restrictions
 
-`client.ResourceRestrictions` restricts access to resources (e.g. projects) for
-users without the relevant permissions.
+`client.ResourceRestrictions` restricts a resource (e.g. a project), preventing
+roles bound at higher levels (space, org, account) from granting access. Both
+calls take the restricted **resource** ID (e.g. a project ID), not a
+restriction-record ID. Only `PROJECT` resources are supported today.
 
-### Create a Restriction
+### Restrict a Resource
+
+`Restrict` is idempotent — restricting an already-restricted resource returns the existing restriction without error.
 
 ```go
-resp, err := client.ResourceRestrictions.Create(ctx, resourcerestrictions.CreateRequest{
+rr, err := client.ResourceRestrictions.Restrict(ctx, resourcerestrictions.RestrictRequest{
     ResourceID: "<resource-id>",
 })
-_ = resp.ResourceRestriction
+_ = rr // *ResourceRestriction
 ```
 
-### Delete a Restriction
+### Unrestrict a Resource
 
 ```go
-if err := client.ResourceRestrictions.Delete(ctx, resourcerestrictions.DeleteRequest{ResourceRestrictionID: "<resource-id>"}); err != nil {
+if err := client.ResourceRestrictions.Unrestrict(ctx, resourcerestrictions.UnrestrictRequest{ResourceID: "<resource-id>"}); err != nil {
     var nfe *arize.NotFoundError
     if errors.As(err, &nfe) {
         // resource restriction already gone
@@ -1182,4 +1265,4 @@ Join our community to connect with thousands of AI builders.
 - 𝕏 Follow us on [𝕏](https://twitter.com/ArizeAI).
 - 🧑‍🏫 Deep dive into everything [Agents](http://arize.com/ai-agents/) and [LLM Evaluations](https://arize.com/llm-evaluation) on Arize's Learning Hubs.
 
-Copyright 2025 Arize AI, Inc. All Rights Reserved.
+Copyright 2026 Arize AI, Inc. All Rights Reserved.

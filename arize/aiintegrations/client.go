@@ -28,7 +28,7 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*AIIntegrationList,
 	prerelease.Warn("aiintegrations.list", prerelease.Alpha)
 	params := &generated.AiIntegrationsListParams{
 		Name:   optfields.PtrIfSet(req.Name),
-		Limit:  optfields.PtrWithDefault(req.Limit, 50),
+		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
