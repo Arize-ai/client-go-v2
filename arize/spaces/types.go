@@ -30,35 +30,6 @@ const (
 	RoleAssignmentTypeCustom     = generated.SpaceRoleAssignmentTypeCustom
 )
 
-// AsPredefined returns the role's predefined assignment and true if the role's
-// discriminator is "predefined". Returns the zero value and false otherwise —
-// including when the discriminator says "custom" or when JSON parsing fails.
-func AsPredefined(role SpaceRoleAssignment) (PredefinedSpaceRole, bool) {
-	d, err := role.Discriminator()
-	if err != nil || d != string(RoleAssignmentTypePredefined) {
-		return PredefinedSpaceRole{}, false
-	}
-	pre, err := role.AsPredefinedRoleAssignment()
-	if err != nil {
-		return PredefinedSpaceRole{}, false
-	}
-	return pre, true
-}
-
-// AsCustom returns the role's custom assignment and true if the role's
-// discriminator is "custom". Returns the zero value and false otherwise.
-func AsCustom(role SpaceRoleAssignment) (CustomSpaceRole, bool) {
-	d, err := role.Discriminator()
-	if err != nil || d != string(RoleAssignmentTypeCustom) {
-		return CustomSpaceRole{}, false
-	}
-	custom, err := role.AsCustomRoleAssignment()
-	if err != nil {
-		return CustomSpaceRole{}, false
-	}
-	return custom, true
-}
-
 // AssignPredefinedRole builds a role assignment naming one of the predefined
 // UserSpaceRole values (e.g. UserSpaceRoleMember). Pass the result as
 // AddUserRequest.Role.

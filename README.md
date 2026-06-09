@@ -60,6 +60,7 @@
     - [Create an Experiment](#create-an-experiment)
     - [Delete an Experiment](#delete-an-experiment)
     - [List Runs](#list-runs)
+    - [Append Runs](#append-runs)
   - [Operations on Prompts](#operations-on-prompts)
     - [List Prompts](#list-prompts)
     - [Get a Prompt](#get-a-prompt)
@@ -137,6 +138,18 @@
     - [Reset a Password](#reset-a-password)
     - [Delete a User](#delete-a-user)
     - [Bulk Delete Users](#bulk-delete-users)
+  - [Operations on Tasks](#operations-on-tasks)
+    - [List Tasks](#list-tasks)
+    - [Get a Task](#get-a-task)
+    - [Create an Evaluation Task](#create-an-evaluation-task)
+    - [Create a Run-Experiment Task](#create-a-run-experiment-task)
+    - [Update a Task](#update-a-task)
+    - [Delete a Task](#delete-a-task)
+    - [Trigger a Run](#trigger-a-run)
+    - [List Task Runs](#list-task-runs)
+    - [Get a Run](#get-a-run)
+    - [Cancel a Run](#cancel-a-run)
+    - [Wait for a Run](#wait-for-a-run)
 - [SDK Configuration](#sdk-configuration)
   - [Environment Variables](#environment-variables)
   - [TLS Verification](#tls-verification)
@@ -180,10 +193,11 @@ The Go SDK v2 currently exposes the following surface area:
   - **Roles** & **Role Bindings** — manage RBAC roles and their bindings.
   - **API Keys** — list, create, create service keys, refresh, delete.
   - **Resource Restrictions** — restrict and unrestrict access to Arize resources.
-  - **Annotation Queues** — list, get, create, update, delete, add records, and annotate. *(Alpha)*
-  - **Users** — list, get, create, update, delete, bulk delete, resend invitations, and reset passwords. *(Alpha)*
+  - **Annotation Queues** — list, get, create, update, delete, add records, and annotate.
+  - **Users** — list, get, create, update, delete, bulk delete, resend invitations, and reset passwords.
+  - **Tasks** — list, get, create, update, delete, and trigger, list, poll, and cancel their runs.
 
-Additional resource domains (tasks) will be added incrementally.
+Additional resource domains will be added incrementally.
 
 Runnable, end-to-end programs for every subclient live in [`examples/`](./examples).
 
@@ -323,8 +337,10 @@ program in [`examples/`](./examples).
 
 ## Operations on Spaces
 
-`client.Spaces` manages spaces (containers for projects, datasets, …) and their
+Use `client.Spaces` to manage spaces (containers for projects, datasets, …) and their
 memberships. `Organization` accepts a name or ID.
+
+A full runnable example lives in [`examples/spaces`](./examples/spaces).
 
 ### List Spaces
 
@@ -384,8 +400,10 @@ err := client.Spaces.RemoveUser(ctx, spaces.RemoveUserRequest{Space: "<space-id>
 
 ## Operations on Projects
 
-`client.Projects` manages projects, which are namespaces for organizing tracing
+Use `client.Projects` to manage projects, which are namespaces for organizing tracing
 data. `Space` is required when `Project` is a name.
+
+A full runnable example lives in [`examples/projects`](./examples/projects).
 
 ### List Projects
 
@@ -433,10 +451,12 @@ err := client.Projects.Delete(ctx, projects.DeleteRequest{Project: "<project-id-
 
 ## Operations on Spans
 
-`client.Spans` lists, deletes, and annotates spans. `List` is a POST under the hood
+Use `client.Spans` to list, delete, and annotate spans. `List` is a POST under the hood
 (the filter DSL can be too large for a query string), so its body fields (project,
 time range, filter) and query params (limit, cursor) are flattened into one
 `ListRequest`.
+
+A full runnable example lives in [`examples/spans`](./examples/spans).
 
 ### List Spans
 
@@ -478,8 +498,10 @@ err := client.Spans.Annotate(ctx, spans.AnnotateRequest{
 
 ## Operations on Datasets
 
-`client.Datasets` manages datasets and their examples. `Space` is required when
+Use `client.Datasets` to manage datasets and their examples. `Space` is required when
 `Dataset` is a name. Each example is an arbitrary set of user-defined fields.
+
+A full runnable example lives in [`examples/datasets`](./examples/datasets).
 
 ### List Datasets
 
@@ -547,11 +569,13 @@ err := client.Datasets.AnnotateExamples(ctx, datasets.AnnotateExamplesRequest{
 
 ## Operations on Experiments
 
-`client.Experiments` manages experiments — a named set of task runs over a dataset,
+Use `client.Experiments` to manage experiments — a named set of task runs over a dataset,
 optionally carrying evaluator results. `Dataset` is required to create or resolve an
 experiment by name; `Space` is required when `Dataset` is itself a name. On `Create`,
 each run is a row of user-named columns: `TaskFields` names the example-ID and output
 columns, and `EvaluatorColumns` remaps evaluator result columns to the wire format.
+
+A full runnable example lives in [`examples/experiments`](./examples/experiments).
 
 ### List Experiments
 
@@ -610,11 +634,27 @@ runs, err := client.Experiments.ListRuns(ctx, experiments.ListRunsRequest{
 })
 ```
 
+### Append Runs
+
+Append between 1 and 1000 new runs to an existing experiment. Each run must include `ExampleId` (the ID of an example from the experiment's dataset) and `Output`; additional user-defined fields go in `AdditionalProperties`. The response includes the updated experiment and the generated run IDs in input order.
+
+```go
+result, err := client.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
+    ExperimentID: "<experiment-id>",
+    ExperimentRuns: []experiments.ExperimentRunCreate{
+        {ExampleId: "example-1", Output: "An AI observability platform."},
+        {ExampleId: "example-2", Output: "A unit of work in a trace."},
+    },
+})
+```
+
 ## Operations on Prompts
 
-`client.Prompts` manages prompts, their versions, and version labels. `Space` is
+Use `client.Prompts` to manage prompts, their versions, and version labels. `Space` is
 required when `Prompt` is a name; version-by-ID and label operations take a strict
 `VersionID`.
+
+A full runnable example lives in [`examples/prompts`](./examples/prompts).
 
 ### List Prompts
 
@@ -709,9 +749,11 @@ err := client.Prompts.DeleteVersionLabel(ctx, prompts.DeleteVersionLabelRequest{
 
 ## Operations on Evaluators
 
-`client.Evaluators` manages evaluators and their versions. An evaluator is either a
+Use `client.Evaluators` to manage evaluators and their versions. An evaluator is either a
 `template` (LLM-based) or `code` (managed built-in or custom Python) evaluator — the
 type is derived from `Version`. `Space` is required when `Evaluator` is a name.
+
+A full runnable example lives in [`examples/evaluators`](./examples/evaluators).
 
 ### List Evaluators
 
@@ -721,12 +763,14 @@ resp, err := client.Evaluators.List(ctx, evaluators.ListRequest{Limit: 25})
 
 ### Get an Evaluator
 
-The returned version is a oneOf — read the active variant with `AsTemplate` / `AsCode`.
+The returned version is a oneOf — read the active variant via `ValueByDiscriminator` and a type switch.
 
 ```go
 ev, err := client.Evaluators.Get(ctx, evaluators.GetRequest{Evaluator: "<evaluator-id-or-name>", Space: "<space-id-or-name>"})
-if tmpl, ok := evaluators.AsTemplate(ev.Version); ok {
-    _ = tmpl.TemplateConfig.Template
+if v, err := ev.Version.ValueByDiscriminator(); err == nil {
+    if tmpl, ok := v.(evaluators.EvaluatorVersionTemplate); ok {
+        _ = tmpl.TemplateConfig.Template
+    }
 }
 ```
 
@@ -789,10 +833,12 @@ ver, err := client.Evaluators.GetVersion(ctx, evaluators.GetVersionRequest{Versi
 
 ## Operations on Annotation Configs
 
-`client.AnnotationConfigs` manages annotation configs. The config type
+Use `client.AnnotationConfigs` to manage annotation configs. The config type
 (`Categorical`, `Continuous`, `Freeform`) selects which fields are required. The
-returned `AnnotationConfig` is a discriminated union — read it with the
-`AsCategorical` / `AsContinuous` / `AsFreeform` helpers.
+returned `AnnotationConfig` is a discriminated union — read it via
+`ValueByDiscriminator` and a type switch over the variant.
+
+A full runnable example lives in [`examples/annotationconfigs`](./examples/annotationconfigs).
 
 ### List Annotation Configs
 
@@ -804,8 +850,10 @@ resp, err := client.AnnotationConfigs.List(ctx, annotationconfigs.ListRequest{Sp
 
 ```go
 ac, err := client.AnnotationConfigs.Get(ctx, annotationconfigs.GetRequest{AnnotationConfig: "<config-id-or-name>", Space: "<space-id-or-name>"})
-if v, ok := annotationconfigs.AsCategorical(*ac); ok {
-    _ = v.Values
+if v, err := ac.ValueByDiscriminator(); err == nil {
+    if cfg, ok := v.(annotationconfigs.CategoricalAnnotationConfig); ok {
+        _ = cfg.Values
+    }
 }
 ```
 
@@ -834,9 +882,11 @@ err := client.AnnotationConfigs.Delete(ctx, annotationconfigs.DeleteRequest{Anno
 
 ## Operations on AI Integrations
 
-`client.AIIntegrations` manages connections to LLM providers (OpenAI, Anthropic,
+Use `client.AIIntegrations` to manage connections to LLM providers (OpenAI, Anthropic,
 AWS Bedrock, Vertex AI, …). On `Update`, nil patch fields are preserved and
 pointer-to-empty-string clears a clearable field.
+
+A full runnable example lives in [`examples/aiintegrations`](./examples/aiintegrations).
 
 ### List AI Integrations
 
@@ -881,8 +931,10 @@ err := client.AIIntegrations.Delete(ctx, aiintegrations.DeleteRequest{Integratio
 
 ## Operations on Organizations
 
-`client.Organizations` manages organizations and their memberships. `Organization`
+Use `client.Organizations` to manage organizations and their memberships. `Organization`
 accepts a name or ID.
+
+A full runnable example lives in [`examples/organizations`](./examples/organizations).
 
 ### List Organizations
 
@@ -921,7 +973,7 @@ err := client.Organizations.Delete(ctx, organizations.DeleteRequest{Organization
 
 ### Add a User
 
-The returned membership's `Role` is a discriminated union (`AsPredefined` / type switch).
+The returned membership's `Role` is a discriminated union — read it via `ValueByDiscriminator` and a type switch.
 
 ```go
 m, err := client.Organizations.AddUser(ctx, organizations.AddUserRequest{
@@ -938,8 +990,10 @@ err := client.Organizations.RemoveUser(ctx, organizations.RemoveUserRequest{Orga
 
 ## Operations on Roles
 
-`client.Roles` manages RBAC roles. Permissions are referenced through the typed
+Use `client.Roles` to manage RBAC roles. Permissions are referenced through the typed
 `roles.Permissions` namespace. `Role` accepts a name or ID.
+
+A full runnable example lives in [`examples/roles`](./examples/roles).
 
 ### List Roles
 
@@ -989,8 +1043,10 @@ err := client.Roles.Delete(ctx, roles.DeleteRequest{Role: "<role-id>"})
 
 ## Operations on Role Bindings
 
-`client.RoleBindings` binds a role to a user on a resource. These take strict IDs
+Use `client.RoleBindings` to bind a role to a user on a resource. These take strict IDs
 (no name resolution).
+
+A full runnable example lives in [`examples/rolebindings`](./examples/rolebindings).
 
 ### Get a Role Binding
 
@@ -1023,9 +1079,11 @@ err := client.RoleBindings.Delete(ctx, rolebindings.DeleteRequest{RoleBindingID:
 
 ## Operations on API Keys
 
-`client.APIKeys` manages API keys. The plaintext key is returned **only** at creation
+Use `client.APIKeys` to manage API keys. The plaintext key is returned **only** at creation
 or refresh — store it immediately, it cannot be retrieved later. `CreateServiceKey`
 provisions a bot user with space/org/account roles.
+
+A full runnable example lives in [`examples/apikeys`](./examples/apikeys).
 
 ### List API Keys
 
@@ -1083,10 +1141,12 @@ err := client.APIKeys.Delete(ctx, apikeys.DeleteRequest{APIKeyID: "<key-id>"})
 
 ## Operations on Resource Restrictions
 
-`client.ResourceRestrictions` restricts a resource (e.g. a project), preventing
+Use `client.ResourceRestrictions` to restrict a resource (e.g. a project), preventing
 roles bound at higher levels (space, org, account) from granting access. Both
 calls take the restricted **resource** ID (e.g. a project ID), not a
 restriction-record ID. Only `PROJECT` resources are supported today.
+
+A full runnable example lives in [`examples/resourcerestrictions`](./examples/resourcerestrictions).
 
 ### Restrict a Resource
 
@@ -1130,6 +1190,15 @@ resp, err := client.AnnotationQueues.List(ctx, annotationqueues.ListRequest{
 })
 ```
 
+### Get an Annotation Queue
+
+```go
+queue, err := client.AnnotationQueues.Get(ctx, annotationqueues.GetRequest{
+    AnnotationQueue: "<queue-id-or-name>",
+    Space:           "<space-id-or-name>", // required when AnnotationQueue is a name
+})
+```
+
 ### Create an Annotation Queue
 
 ```go
@@ -1139,15 +1208,6 @@ queue, err := client.AnnotationQueues.Create(ctx, annotationqueues.CreateRequest
     Instructions:     "Rate each response for helpfulness.",      // optional
     AnnotatorEmails:  []annotationqueues.Email{"annotator@example.com"}, // optional
     AssignmentMethod: annotationqueues.AssignmentMethodAll,        // optional
-})
-```
-
-### Get an Annotation Queue
-
-```go
-queue, err := client.AnnotationQueues.Get(ctx, annotationqueues.GetRequest{
-    AnnotationQueue: "<queue-id-or-name>",
-    Space:           "<space-id-or-name>", // required when AnnotationQueue is a name
 })
 ```
 
@@ -1210,8 +1270,13 @@ err := client.AnnotationQueues.Delete(ctx, annotationqueues.DeleteRequest{
 
 ## Operations on Users
 
-`client.Users` manages account users. These take strict user IDs, except `Get`,
-whose `User` field accepts a user ID **or** an email address. *(Alpha)*
+Use `client.Users` to manage account users. These take strict user IDs, except `Get`,
+whose `User` field accepts a user ID **or** an email address.
+
+> **Alpha:** users are a pre-release feature. Every method emits a one-time
+> pre-release warning and the API may change in a backward-incompatible way.
+
+A full runnable example lives in [`examples/users`](./examples/users).
 
 ### List Users
 
@@ -1263,22 +1328,6 @@ user, err := client.Users.Update(ctx, users.UpdateRequest{
 })
 ```
 
-### Resend an Invitation
-
-The target user must still be in the invited state.
-
-```go
-err := client.Users.ResendInvitation(ctx, users.ResendInvitationRequest{UserID: "<user-id>"})
-```
-
-### Reset a Password
-
-Password-auth users only (not SSO/SAML); the account must be verified.
-
-```go
-err := client.Users.ResetPassword(ctx, users.ResetPasswordRequest{UserID: "<user-id>"})
-```
-
 ### Delete a User
 
 Soft-delete; cascades to org/space memberships, API keys, and role bindings.
@@ -1304,6 +1353,181 @@ for _, r := range results {
     // specified by email (and is the only identifier for not_found).
     fmt.Printf("user=%q email=%q: %s\n", r.UserID, r.Email, r.Status)
 }
+```
+
+### Resend an Invitation
+
+The target user must still be in the invited state.
+
+```go
+err := client.Users.ResendInvitation(ctx, users.ResendInvitationRequest{UserID: "<user-id>"})
+```
+
+### Reset a Password
+
+Password-auth users only (not SSO/SAML); the account must be verified.
+
+```go
+err := client.Users.ResetPassword(ctx, users.ResetPasswordRequest{UserID: "<user-id>"})
+```
+
+## Operations on Tasks
+
+Use `client.Tasks` to manage tasks — automated jobs that evaluate data
+(`template_evaluation` / `code_evaluation`) or run experiments
+(`run_experiment`) — and their async runs.
+
+> **Alpha:** tasks are a pre-release feature. Every method emits a one-time
+> pre-release warning and the API may change in a backward-incompatible way.
+
+A full runnable example lives in [`examples/tasks`](./examples/tasks).
+
+### List Tasks
+
+`Space`, `Project`, and `Dataset` accept a name or ID and filter results;
+`Type` filters by task type.
+
+```go
+resp, err := client.Tasks.List(ctx, tasks.ListRequest{
+    Space: "demo",
+    Type:  tasks.TaskTypeTemplateEvaluation,
+    Limit: 25,
+})
+```
+
+### Get a Task
+
+`Task` accepts a task name or ID; `Space` is required when it is a name.
+
+```go
+task, err := client.Tasks.Get(ctx, tasks.GetRequest{Task: "my-task", Space: "demo"})
+```
+
+### Create an Evaluation Task
+
+Creates a `template_evaluation` or `code_evaluation` task (set `Type`).
+Exactly one of `Project` or `Dataset` must be set; dataset-based tasks
+require at least one entry in `ExperimentIDs`, and `SamplingRate` /
+`IsContinuous` apply only to project-based tasks.
+
+```go
+task, err := client.Tasks.CreateEvaluationTask(ctx, tasks.CreateEvaluationTaskRequest{
+    Name:    "relevance-eval",
+    Type:    tasks.TaskTypeTemplateEvaluation,
+    Project: "my-project",
+    Space:   "demo",
+    Evaluators: []tasks.EvaluatorInput{
+        {EvaluatorID: "<evaluator-id>"},
+    },
+    SamplingRate: 0.5,
+})
+```
+
+### Create a Run-Experiment Task
+
+`RunConfiguration` is a oneOf — populate exactly one variant via
+`FromLlmGenerationRunConfig` or `FromTemplateEvaluationRunConfig`.
+
+```go
+var rc tasks.RunConfiguration
+err := rc.FromTemplateEvaluationRunConfig(tasks.TemplateEvaluationRunConfig{
+    AiIntegrationId:    "<ai-integration-id>",
+    Template:           "Is the answer relevant?\n{{input}}",
+    ProvideExplanation: true,
+})
+
+task, err := client.Tasks.CreateRunExperimentTask(ctx, tasks.CreateRunExperimentTaskRequest{
+    Name:             "nightly-experiment",
+    Dataset:          "my-dataset",
+    Space:            "demo",
+    RunConfiguration: rc,
+})
+```
+
+### Update a Task
+
+Patch fields are pointers: nil preserves the current value, non-nil sets it
+(a pointer to `""` clears `QueryFilter`). The SDK fetches the task first to
+validate the fields against its type — `SamplingRate`, `IsContinuous`,
+`QueryFilter`, and `Evaluators` apply only to evaluation tasks;
+`RunConfiguration` only to run_experiment tasks. An empty patch returns
+`tasks.ErrNoUpdateFields`.
+
+```go
+rate := float32(0.25)
+task, err := client.Tasks.Update(ctx, tasks.UpdateRequest{
+    Task:         "relevance-eval",
+    Space:        "demo",
+    SamplingRate: &rate,
+})
+```
+
+### Delete a Task
+
+Irreversible; cascades to the task's runs and configurations.
+
+```go
+err := client.Tasks.Delete(ctx, tasks.DeleteRequest{Task: "relevance-eval", Space: "demo"})
+```
+
+### Trigger a Run
+
+Starts an async run (returned in `pending` status). The SDK fetches the task
+first to validate the fields against its type: evaluation tasks take
+`DataStartTime` / `DataEndTime` / `MaxSpans` / `OverrideEvaluations` /
+`ExperimentIDs`; run_experiment tasks take `ExperimentName` (required),
+`DatasetVersionID`, `ExampleIDs` / `MaxExamples` (mutually exclusive),
+`TracingMetadata`, and `EvaluationTaskIDs`.
+
+```go
+run, err := client.Tasks.TriggerRun(ctx, tasks.TriggerRunRequest{
+    Task:          "relevance-eval",
+    Space:         "demo",
+    DataStartTime: time.Now().Add(-time.Hour),
+    MaxSpans:      1000,
+})
+```
+
+### List Task Runs
+
+`Status` filters by run state (pending, running, completed, failed, cancelled).
+
+```go
+resp, err := client.Tasks.ListRuns(ctx, tasks.ListRunsRequest{
+    Task:   "relevance-eval",
+    Space:  "demo",
+    Status: tasks.TaskRunStatusCompleted,
+})
+```
+
+### Get a Run
+
+Takes a strict run ID; use it to poll a run triggered by `TriggerRun`.
+
+```go
+run, err := client.Tasks.GetRun(ctx, tasks.GetRunRequest{RunID: "<run-id>"})
+```
+
+### Cancel a Run
+
+Only valid while the run is pending or running.
+
+```go
+run, err := client.Tasks.CancelRun(ctx, tasks.CancelRunRequest{RunID: "<run-id>"})
+```
+
+### Wait for a Run
+
+Polls until the run reaches a terminal state (completed, failed, or
+cancelled). Defaults: 5s poll interval, 10m timeout; on expiry the error
+wraps `tasks.ErrWaitTimeout`.
+
+```go
+run, err := client.Tasks.WaitForRun(ctx, tasks.WaitForRunRequest{
+    RunID:        "<run-id>",
+    PollInterval: 5 * time.Second,
+    Timeout:      5 * time.Minute,
+})
 ```
 
 # SDK Configuration

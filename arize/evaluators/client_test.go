@@ -393,7 +393,11 @@ func TestEvaluators(t *testing.T) {
 					t.Fatal(err)
 				}
 				ver := got.(*evaluators.EvaluatorVersion)
-				tmpl, ok := evaluators.AsTemplate(*ver)
+				decoded, err := ver.ValueByDiscriminator()
+				if err != nil {
+					t.Fatalf("decode version: %v", err)
+				}
+				tmpl, ok := decoded.(evaluators.EvaluatorVersionTemplate)
 				if !ok {
 					t.Fatal("expected template variant")
 				}
@@ -416,7 +420,11 @@ func TestEvaluators(t *testing.T) {
 					t.Fatal(err)
 				}
 				ver := got.(*evaluators.EvaluatorVersion)
-				tmpl, ok := evaluators.AsTemplate(*ver)
+				decoded, err := ver.ValueByDiscriminator()
+				if err != nil {
+					t.Fatalf("decode version: %v", err)
+				}
+				tmpl, ok := decoded.(evaluators.EvaluatorVersionTemplate)
 				if !ok {
 					t.Fatal("expected template variant")
 				}

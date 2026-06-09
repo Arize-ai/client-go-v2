@@ -2,12 +2,15 @@ package experiments
 
 import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 
+// Response and nested types are aliases to generated wire shapes so callers
+// can construct/assert on them without importing internal/generated.
 type (
 	Experiment          = generated.Experiment
 	ExperimentList      = generated.ExperimentList
 	ExperimentRun       = generated.ExperimentRun
 	ExperimentRunCreate = generated.ExperimentRunCreate
 	ExperimentRunsList  = generated.ExperimentRunsList
+	ExperimentWithRunIds = generated.ExperimentWithRunIds
 )
 
 // TaskFields names the columns in each Run map that hold the dataset example
@@ -127,4 +130,14 @@ type ListRunsRequest struct {
 	// Limit is the optional maximum number of runs to return (max 500). When
 	// zero, the server applies its default page size.
 	Limit int
+}
+
+// AppendRunsRequest is the request shape for Client.AppendRuns.
+type AppendRunsRequest struct {
+	// ExperimentID is the ID of the experiment to append runs to. Required.
+	ExperimentID string
+
+	// ExperimentRuns is the list of runs to append. Between 1 and 1000 runs
+	// per request. Each run must include ExampleId and Output.
+	ExperimentRuns []ExperimentRunCreate
 }

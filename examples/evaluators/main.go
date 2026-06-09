@@ -81,7 +81,8 @@ func createEvaluator(ctx context.Context, client *arize.Client, name, space, aiI
 
 // getEvaluator accepts an evaluator name or ID. Space is required when the
 // evaluator is a name. The returned version is a oneOf — read the active
-// variant with evaluators.AsTemplate / evaluators.AsCode.
+// variant via ValueByDiscriminator and a type switch over
+// EvaluatorVersionTemplate / EvaluatorVersionCode.
 func getEvaluator(ctx context.Context, client *arize.Client, evaluator, space string) {
 	ev, err := client.Evaluators.Get(ctx, evaluators.GetRequest{Evaluator: evaluator, Space: space})
 	if err != nil {
@@ -93,7 +94,12 @@ func getEvaluator(ctx context.Context, client *arize.Client, evaluator, space st
 		log.Fatalf("get evaluator: %v", err)
 	}
 	fmt.Printf("found evaluator %s (%s), type %s\n", ev.Name, ev.Id, ev.Type)
-	if tmpl, ok := evaluators.AsTemplate(ev.Version); ok {
+	v, err := ev.Version.ValueByDiscriminator()
+	if err != nil {
+		log.Fatalf("decode version: %v", err)
+	}
+	switch tmpl := v.(type) {
+	case evaluators.EvaluatorVersionTemplate:
 		fmt.Printf("  latest template version %s: %q\n", tmpl.Id, tmpl.TemplateConfig.Template)
 	}
 }
@@ -133,7 +139,11 @@ func addVersion(ctx context.Context, client *arize.Client, evaluator, space, aiI
 	if err != nil {
 		log.Fatalf("create version: %v", err)
 	}
-	tmpl, ok := evaluators.AsTemplate(*v)
+	decoded, err := v.ValueByDiscriminator()
+	if err != nil {
+		log.Fatalf("decode version: %v", err)
+	}
+	tmpl, ok := decoded.(evaluators.EvaluatorVersionTemplate)
 	if !ok {
 		log.Fatal("expected a template version")
 	}
@@ -143,7 +153,12 @@ func addVersion(ctx context.Context, client *arize.Client, evaluator, space, aiI
 	if err != nil {
 		log.Fatalf("get version: %v", err)
 	}
-	if v, ok := evaluators.AsTemplate(*got); ok {
+	decoded, err = got.ValueByDiscriminator()
+	if err != nil {
+		log.Fatalf("decode version: %v", err)
+	}
+	switch v := decoded.(type) {
+	case evaluators.EvaluatorVersionTemplate:
 		fmt.Printf("fetched version %s: %q\n", v.Id, v.TemplateConfig.Template)
 	}
 }

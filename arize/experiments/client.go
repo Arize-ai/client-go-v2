@@ -28,6 +28,27 @@ func New(gen *generated.ClientWithResponses) *Client {
 	return &Client{gen: gen}
 }
 
+// AppendRuns appends new runs to an existing experiment.
+//
+// Between 1 and 1000 runs may be appended per request. Each run must include
+// ExampleId and Output. Additional user-defined fields can be set via
+// AdditionalProperties. The response includes the updated experiment and the
+// generated IDs for the inserted runs in input order.
+func (c *Client) AppendRuns(ctx context.Context, req AppendRunsRequest) (*ExperimentWithRunIds, error) {
+	prerelease.Warn("experiments.append_runs", prerelease.Beta)
+	body := generated.InsertExperimentRunsBody{
+		ExperimentRuns: req.ExperimentRuns,
+	}
+	resp, err := c.gen.ExperimentsRunsInsertWithResponse(ctx, req.ExperimentID, body)
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON201, nil
+}
+
 // List returns a paginated list of experiments. req.Dataset, when non-empty,
 // accepts a dataset name or ID and restricts results to that dataset.
 func (c *Client) List(ctx context.Context, req ListRequest) (*ExperimentList, error) {

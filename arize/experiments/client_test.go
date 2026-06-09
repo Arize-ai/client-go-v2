@@ -33,6 +33,7 @@ func newTestClient(t *testing.T, handler http.HandlerFunc) *arize.Client {
 }
 
 func TestExperiments(t *testing.T) {
+	const experimentID = "exp-abc123"
 	expID := testID("exp-1")
 	// A base64 "Dataset:..." value so resolve.FindDatasetID treats it as an ID
 	// (short-circuits, no lookup call) when used as a list filter.
@@ -49,6 +50,96 @@ func TestExperiments(t *testing.T) {
 		invoke  func(ctx context.Context, c *arize.Client) (any, error)
 		check   func(t *testing.T, got any, err error)
 	}{
+		{
+			name: "AppendRuns success",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodPost {
+					t.Errorf("expected POST, got %s", r.Method)
+				}
+				expectedPath := "/v2/experiments/" + experimentID + "/runs"
+				if r.URL.Path != expectedPath {
+					t.Errorf("expected path %q, got %q", expectedPath, r.URL.Path)
+				}
+
+				// Decode body to verify structure
+				var wireBody struct {
+					ExperimentRuns []struct {
+						ExampleId string `json:"example_id"`
+						Output    string `json:"output"`
+					} `json:"experiment_runs"`
+				}
+				if err := json.NewDecoder(r.Body).Decode(&wireBody); err != nil {
+					t.Errorf("failed to decode request body: %v", err)
+				}
+				if len(wireBody.ExperimentRuns) != 2 {
+					t.Errorf("expected 2 runs, got %d", len(wireBody.ExperimentRuns))
+				}
+
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusCreated)
+				json.NewEncoder(w).Encode(experiments.ExperimentWithRunIds{
+					RunIds: []string{"run-1", "run-2"},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
+					ExperimentID: experimentID,
+					ExperimentRuns: []experiments.ExperimentRunCreate{
+						{ExampleId: "ex-1", Output: "result-1"},
+						{ExampleId: "ex-2", Output: "result-2"},
+					},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				resp := got.(*experiments.ExperimentWithRunIds)
+				if len(resp.RunIds) != 2 {
+					t.Errorf("expected 2 run IDs, got %d", len(resp.RunIds))
+				}
+			},
+		},
+		{
+			name: "AppendRuns not found",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusNotFound)
+				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
+					ExperimentID:   "nonexistent",
+					ExperimentRuns: []experiments.ExperimentRunCreate{{ExampleId: "ex-1", Output: "out"}},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var nfe *arize.NotFoundError
+				if !errors.As(err, &nfe) {
+					t.Errorf("expected *NotFoundError, got %T: %v", err, err)
+				}
+			},
+		},
+		{
+			name: "AppendRuns unprocessable entity",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				json.NewEncoder(w).Encode(map[string]any{"title": "unprocessable entity", "status": 422})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
+					ExperimentID:   experimentID,
+					ExperimentRuns: []experiments.ExperimentRunCreate{{ExampleId: "ex-1", Output: "out"}},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var upe *arize.UnprocessableEntityError
+				if !errors.As(err, &upe) {
+					t.Errorf("expected *UnprocessableEntityError, got %T: %v", err, err)
+				}
+			},
+		},
 		{
 			name: "List",
 			handler: func(w http.ResponseWriter, r *http.Request) {

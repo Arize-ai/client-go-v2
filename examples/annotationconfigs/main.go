@@ -39,9 +39,8 @@ func main() {
 }
 
 // listAnnotationConfigs lists configs in a space. AnnotationConfig is a
-// discriminated union — use the AsCategorical / AsContinuous / AsFreeform
-// helpers to read variant-specific fields. Each helper returns the variant
-// and ok=true only when the discriminator matches.
+// discriminated union — call ValueByDiscriminator and type-switch over the
+// variant to read variant-specific fields (see identify).
 func listAnnotationConfigs(ctx context.Context, client *arize.Client, space string) {
 	resp, err := client.AnnotationConfigs.List(ctx, annotationconfigs.ListRequest{
 		Space: space,
@@ -147,18 +146,21 @@ func deleteAnnotationConfig(ctx context.Context, client *arize.Client, configID 
 }
 
 // identify unwraps the discriminated union and returns the common id/name
-// fields along with a human-readable variant label. The three AsXxx helpers
-// each return their variant when the discriminator matches; chain them to
-// cover every variant.
+// fields along with a human-readable variant label. ValueByDiscriminator reads
+// the discriminator and returns the matching concrete variant; type-switch over
+// it to cover every variant.
 func identify(ac *annotationconfigs.AnnotationConfig) (id, kind, name string) {
-	if v, ok := annotationconfigs.AsCategorical(*ac); ok {
-		return v.Id, string(annotationconfigs.AnnotationConfigTypeCategorical), v.Name
+	v, err := ac.ValueByDiscriminator()
+	if err != nil {
+		return "", "", ""
 	}
-	if v, ok := annotationconfigs.AsContinuous(*ac); ok {
-		return v.Id, string(annotationconfigs.AnnotationConfigTypeContinuous), v.Name
-	}
-	if v, ok := annotationconfigs.AsFreeform(*ac); ok {
-		return v.Id, string(annotationconfigs.AnnotationConfigTypeFreeform), v.Name
+	switch cfg := v.(type) {
+	case annotationconfigs.CategoricalAnnotationConfig:
+		return cfg.Id, string(annotationconfigs.AnnotationConfigTypeCategorical), cfg.Name
+	case annotationconfigs.ContinuousAnnotationConfig:
+		return cfg.Id, string(annotationconfigs.AnnotationConfigTypeContinuous), cfg.Name
+	case annotationconfigs.FreeformAnnotationConfig:
+		return cfg.Id, string(annotationconfigs.AnnotationConfigTypeFreeform), cfg.Name
 	}
 	return "", "", ""
 }

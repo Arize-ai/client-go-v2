@@ -425,19 +425,20 @@ func TestRoleAccessors(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			pre, ok := organizations.AsPredefined(tt.role)
-			if ok != tt.wantPre {
-				t.Errorf("AsPredefined ok: got %v, want %v", ok, tt.wantPre)
+			v, _ := tt.role.ValueByDiscriminator()
+			pre, isPre := v.(organizations.PredefinedOrgRole)
+			if isPre != tt.wantPre {
+				t.Errorf("predefined: got %v, want %v", isPre, tt.wantPre)
 			}
 			if tt.wantPre && pre.Name != tt.preName {
-				t.Errorf("AsPredefined name: got %q, want %q", pre.Name, tt.preName)
+				t.Errorf("predefined name: got %q, want %q", pre.Name, tt.preName)
 			}
-			c, ok := organizations.AsCustom(tt.role)
-			if ok != tt.wantCustom {
-				t.Errorf("AsCustom ok: got %v, want %v", ok, tt.wantCustom)
+			c, isCustom := v.(organizations.CustomOrgRole)
+			if isCustom != tt.wantCustom {
+				t.Errorf("custom: got %v, want %v", isCustom, tt.wantCustom)
 			}
 			if tt.wantCustom && c.Id != tt.customID {
-				t.Errorf("AsCustom id: got %q, want %q", c.Id, tt.customID)
+				t.Errorf("custom id: got %q, want %q", c.Id, tt.customID)
 			}
 		})
 	}

@@ -66,36 +66,6 @@ func AssignCustomRole(roleID string) UserRoleAssignment {
 	return role
 }
 
-// AsPredefined returns the role's predefined assignment and true when the
-// role's discriminator is "predefined". Returns the zero value and false
-// otherwise — including when the discriminator says "custom" or JSON parsing
-// fails. Use it to read the role off a User response.
-func AsPredefined(role UserRoleAssignment) (PredefinedUserRole, bool) {
-	d, err := role.Discriminator()
-	if err != nil || d != string(RoleAssignmentTypePredefined) {
-		return PredefinedUserRole{}, false
-	}
-	pre, err := role.AsPredefinedUserRoleAssignment()
-	if err != nil {
-		return PredefinedUserRole{}, false
-	}
-	return pre, true
-}
-
-// AsCustom returns the role's custom assignment and true when the role's
-// discriminator is "custom". Returns the zero value and false otherwise.
-func AsCustom(role UserRoleAssignment) (CustomUserRole, bool) {
-	d, err := role.Discriminator()
-	if err != nil || d != string(RoleAssignmentTypeCustom) {
-		return CustomUserRole{}, false
-	}
-	custom, err := role.AsCustomUserRoleAssignment()
-	if err != nil {
-		return CustomUserRole{}, false
-	}
-	return custom, true
-}
-
 // DeletionStatus is the per-user outcome of a BulkDelete attempt.
 type DeletionStatus string
 

@@ -14,8 +14,9 @@ type (
 	EvaluatorWithVersion = generated.EvaluatorWithVersion
 
 	// EvaluatorVersion is a versioned snapshot of an evaluator's
-	// configuration. It is a oneOf: read the active variant with AsTemplate or
-	// AsCode, which discriminate on the variant's Type field.
+	// configuration. It is a oneOf: read the active variant with
+	// ValueByDiscriminator and a type switch over EvaluatorVersionTemplate /
+	// EvaluatorVersionCode.
 	EvaluatorVersion = generated.EvaluatorVersion
 
 	// EvaluatorVersionList is the cursor-paginated version list response shape.
@@ -75,36 +76,6 @@ const (
 	// EvaluatorTypeCode is a code (managed built-in or custom Python) evaluator.
 	EvaluatorTypeCode EvaluatorType = generated.EvaluatorTypeCode
 )
-
-// AsTemplate returns the version's template variant and true when the
-// discriminator is "template". Returns the zero value and false otherwise —
-// including when the discriminator names another variant or JSON parsing fails.
-func AsTemplate(v EvaluatorVersion) (EvaluatorVersionTemplate, bool) {
-	d, err := v.Discriminator()
-	if err != nil || d != string(EvaluatorTypeTemplate) {
-		return EvaluatorVersionTemplate{}, false
-	}
-	t, err := v.AsEvaluatorVersionTemplate()
-	if err != nil {
-		return EvaluatorVersionTemplate{}, false
-	}
-	return t, true
-}
-
-// AsCode returns the version's code variant and true when the discriminator is
-// "code". Returns the zero value and false otherwise — including when the
-// discriminator names another variant or JSON parsing fails.
-func AsCode(v EvaluatorVersion) (EvaluatorVersionCode, bool) {
-	d, err := v.Discriminator()
-	if err != nil || d != string(EvaluatorTypeCode) {
-		return EvaluatorVersionCode{}, false
-	}
-	c, err := v.AsEvaluatorVersionCode()
-	if err != nil {
-		return EvaluatorVersionCode{}, false
-	}
-	return c, true
-}
 
 // VersionConfig is the configuration payload for a new evaluator version,
 // used by both Create (initial version) and CreateVersion. Set exactly one of

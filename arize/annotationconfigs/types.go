@@ -23,49 +23,6 @@ const (
 	OptimizationDirectionNone     OptimizationDirection = generated.OptimizationDirectionNone
 )
 
-// AsCategorical returns the config's categorical variant and true if the
-// discriminator is "categorical". Returns the zero value and false otherwise —
-// including when the discriminator names another variant or JSON parsing fails.
-func AsCategorical(ac AnnotationConfig) (CategoricalAnnotationConfig, bool) {
-	d, err := ac.Discriminator()
-	if err != nil || d != string(AnnotationConfigTypeCategorical) {
-		return CategoricalAnnotationConfig{}, false
-	}
-	v, err := ac.AsCategoricalAnnotationConfig()
-	if err != nil {
-		return CategoricalAnnotationConfig{}, false
-	}
-	return v, true
-}
-
-// AsContinuous returns the config's continuous variant and true if the
-// discriminator is "continuous". Returns the zero value and false otherwise.
-func AsContinuous(ac AnnotationConfig) (ContinuousAnnotationConfig, bool) {
-	d, err := ac.Discriminator()
-	if err != nil || d != string(AnnotationConfigTypeContinuous) {
-		return ContinuousAnnotationConfig{}, false
-	}
-	v, err := ac.AsContinuousAnnotationConfig()
-	if err != nil {
-		return ContinuousAnnotationConfig{}, false
-	}
-	return v, true
-}
-
-// AsFreeform returns the config's freeform variant and true if the
-// discriminator is "freeform". Returns the zero value and false otherwise.
-func AsFreeform(ac AnnotationConfig) (FreeformAnnotationConfig, bool) {
-	d, err := ac.Discriminator()
-	if err != nil || d != string(AnnotationConfigTypeFreeform) {
-		return FreeformAnnotationConfig{}, false
-	}
-	v, err := ac.AsFreeformAnnotationConfig()
-	if err != nil {
-		return FreeformAnnotationConfig{}, false
-	}
-	return v, true
-}
-
 // ListRequest is the request shape for Client.List.
 type ListRequest struct {
 	// Space, when non-empty, filters annotation configs to a single space.

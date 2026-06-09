@@ -1853,7 +1853,9 @@ type ApiKeyCreate struct {
 	// Name User-defined name for the API key.
 	Name string `json:"name"`
 
-	// Roles Role assignments for the bot user created with a service key.
+	// Roles Role assignments for the service key's bot user. Only valid when `key_type` is `service`;
+	// invalid for `user` keys (returns `400`). When omitted, each role field defaults to
+	// minimum privilege: `space_role` → `member`, `org_role` → `read-only`, `account_role` → `member`.
 	Roles *ApiKeyRoles `json:"roles,omitempty"`
 
 	// SpaceId ID of the space this service key is scoped to. Required when `key_type` is `service`;
@@ -2045,10 +2047,7 @@ type CategoricalAnnotationConfig struct {
 	// Name The name of the annotation config
 	Name string `json:"name"`
 
-	// OptimizationDirection The direction for optimization. Defaults to `none` when omitted.
-	// - maximize: higher scores are better
-	// - minimize: lower scores are better
-	// - none: higher or lower scores are neither better nor worse
+	// OptimizationDirection Direction for optimization. When absent, the server treats the value as `none`.
 	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
 
 	// SpaceId The space id the annotation config belongs to
@@ -2072,10 +2071,7 @@ type CategoricalAnnotationConfigCreate struct {
 	// Name Name of the new annotation config
 	Name string `json:"name"`
 
-	// OptimizationDirection The direction for optimization. Defaults to `none` when omitted.
-	// - maximize: higher scores are better
-	// - minimize: lower scores are better
-	// - none: higher or lower scores are neither better nor worse
+	// OptimizationDirection Direction for optimization. Defaults to `none` when omitted.
 	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
 
 	// SpaceId ID of the space the annotation config will belong to
@@ -2133,10 +2129,7 @@ type ContinuousAnnotationConfig struct {
 	// Name The name of the annotation config
 	Name string `json:"name"`
 
-	// OptimizationDirection The direction for optimization. Defaults to `none` when omitted.
-	// - maximize: higher scores are better
-	// - minimize: lower scores are better
-	// - none: higher or lower scores are neither better nor worse
+	// OptimizationDirection Direction for optimization. When absent, the server treats the value as `none`.
 	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
 
 	// SpaceId The space id the annotation config belongs to
@@ -2163,10 +2156,7 @@ type ContinuousAnnotationConfigCreate struct {
 	// Name Name of the new annotation config
 	Name string `json:"name"`
 
-	// OptimizationDirection The direction for optimization. Defaults to `none` when omitted.
-	// - maximize: higher scores are better
-	// - minimize: lower scores are better
-	// - none: higher or lower scores are neither better nor worse
+	// OptimizationDirection Direction for optimization. Defaults to `none` when omitted.
 	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
 
 	// SpaceId ID of the space the annotation config will belong to
@@ -2194,9 +2184,7 @@ type CreateAnnotationQueueRequestBody struct {
 	// AnnotatorEmails Email addresses of annotators to assign to the queue. Emails are resolved to user IDs server-side.
 	AnnotatorEmails []Email `json:"annotator_emails"`
 
-	// AssignmentMethod How records are assigned to annotators. Defaults to "all".
-	// - `all`: Every annotator is assigned to every record.
-	// - `random`: Each record is randomly assigned to one annotator.
+	// AssignmentMethod How records are assigned to annotators. Defaults to `all` when omitted.
 	AssignmentMethod *AssignmentMethod `json:"assignment_method,omitempty"`
 
 	// Instructions Instructions for annotators working on this queue
@@ -2663,11 +2651,11 @@ type EvaluatorVersionCode struct {
 	// Id The unique identifier for this version
 	Id string `json:"id"`
 
-	// Type Discriminator identifying this as a code evaluator version
+	// Type Discriminator identifying this as a code evaluator version. Always `code` for this variant.
 	Type EvaluatorVersionCodeType `json:"type"`
 }
 
-// EvaluatorVersionCodeType Discriminator identifying this as a code evaluator version
+// EvaluatorVersionCodeType Discriminator identifying this as a code evaluator version. Always `code` for this variant.
 type EvaluatorVersionCodeType string
 
 // EvaluatorVersionCodeCreate defines model for EvaluatorVersionCodeCreate.
@@ -2747,11 +2735,11 @@ type EvaluatorVersionTemplate struct {
 	Id             string         `json:"id"`
 	TemplateConfig TemplateConfig `json:"template_config"`
 
-	// Type Discriminator identifying this as a template evaluator version
+	// Type Discriminator identifying this as a template evaluator version. Always `template` for this variant.
 	Type EvaluatorVersionTemplateType `json:"type"`
 }
 
-// EvaluatorVersionTemplateType Discriminator identifying this as a template evaluator version
+// EvaluatorVersionTemplateType Discriminator identifying this as a template evaluator version. Always `template` for this variant.
 type EvaluatorVersionTemplateType string
 
 // EvaluatorVersionTemplateCreate defines model for EvaluatorVersionTemplateCreate.
@@ -3409,7 +3397,7 @@ type PromptVersion struct {
 	// - `none`: **Deprecated.** Treated as `f_string`. Will be removed in a future version.
 	InputVariableFormat InputVariableFormat `json:"input_variable_format"`
 
-	// InvocationParams Parameters for the LLM invocation
+	// InvocationParams LLM invocation parameters for this version. When absent, no invocation parameters were set on this version.
 	InvocationParams *InvocationParams `json:"invocation_params,omitempty"`
 
 	// Labels Label names currently pointing to this version (e.g., "production", "staging"). Labels are case-sensitive.
@@ -3427,7 +3415,7 @@ type PromptVersion struct {
 	// Provider The LLM provider to use
 	Provider LlmProvider `json:"provider"`
 
-	// ProviderParams Provider-specific parameters
+	// ProviderParams Provider-specific parameters for this version. When absent, no provider-specific parameters were set on this version.
 	ProviderParams *ProviderParams `json:"provider_params,omitempty"`
 }
 
@@ -3813,10 +3801,7 @@ type Span struct {
 	// StartTime Timestamp when the span started
 	StartTime time.Time `json:"start_time"`
 
-	// StatusCode Status code of the span.
-	// - OK - The operation completed successfully.
-	// - ERROR - The operation failed with an error.
-	// - UNSET - No status code was set (default, treated as OK).
+	// StatusCode Status code of the span. When absent, the server treats the value as `UNSET` (equivalent to OK).
 	StatusCode *SpanStatusCode `json:"status_code,omitempty"`
 
 	// StatusMessage Status message associated with the span
@@ -4083,8 +4068,10 @@ type TemplateConfig struct {
 	ClassificationChoices *map[string]float32 `json:"classification_choices,omitempty"`
 
 	// DataGranularity Data granularity level. Defaults to null when omitted.
-	DataGranularity *DataGranularity       `json:"data_granularity,omitempty"`
-	Direction       *OptimizationDirection `json:"direction,omitempty"`
+	DataGranularity *DataGranularity `json:"data_granularity,omitempty"`
+
+	// Direction Direction for optimization applied to this template's evaluation scores. Defaults to `maximize` when omitted.
+	Direction *OptimizationDirection `json:"direction,omitempty"`
 
 	// IncludeExplanations Whether to include explanations in the evaluation output
 	IncludeExplanations bool               `json:"include_explanations"`
@@ -5719,8 +5706,8 @@ type TasksUpdateJSONBody struct {
 	union json.RawMessage
 }
 
-// TasksListRunsParams defines parameters for TasksListRuns.
-type TasksListRunsParams struct {
+// TaskRunsListParams defines parameters for TaskRunsList.
+type TaskRunsListParams struct {
 	// Status Filter by run status: pending, running, completed, failed, cancelled
 	Status *TaskRunStatusQueryParam `form:"status,omitempty" json:"status,omitempty"`
 
@@ -8657,8 +8644,8 @@ type ClientInterface interface {
 
 	TasksUpdate(ctx context.Context, taskId TaskIdPathParam, body TasksUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// TasksListRuns request
-	TasksListRuns(ctx context.Context, taskId TaskIdPathParam, params *TasksListRunsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// TaskRunsList request
+	TaskRunsList(ctx context.Context, taskId TaskIdPathParam, params *TaskRunsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TasksTriggerRunWithBody request with any body
 	TasksTriggerRunWithBody(ctx context.Context, taskId TaskIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -10407,8 +10394,8 @@ func (c *Client) TasksUpdate(ctx context.Context, taskId TaskIdPathParam, body T
 	return c.Client.Do(req)
 }
 
-func (c *Client) TasksListRuns(ctx context.Context, taskId TaskIdPathParam, params *TasksListRunsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewTasksListRunsRequest(c.Server, taskId, params)
+func (c *Client) TaskRunsList(ctx context.Context, taskId TaskIdPathParam, params *TaskRunsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTaskRunsListRequest(c.Server, taskId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -15775,8 +15762,8 @@ func NewTasksUpdateRequestWithBody(server string, taskId TaskIdPathParam, conten
 	return req, nil
 }
 
-// NewTasksListRunsRequest generates requests for TasksListRuns
-func NewTasksListRunsRequest(server string, taskId TaskIdPathParam, params *TasksListRunsParams) (*http.Request, error) {
+// NewTaskRunsListRequest generates requests for TaskRunsList
+func NewTaskRunsListRequest(server string, taskId TaskIdPathParam, params *TaskRunsListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -16658,8 +16645,8 @@ type ClientWithResponsesInterface interface {
 
 	TasksUpdateWithResponse(ctx context.Context, taskId TaskIdPathParam, body TasksUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TasksUpdateResponse, error)
 
-	// TasksListRunsWithResponse request
-	TasksListRunsWithResponse(ctx context.Context, taskId TaskIdPathParam, params *TasksListRunsParams, reqEditors ...RequestEditorFn) (*TasksListRunsResponse, error)
+	// TaskRunsListWithResponse request
+	TaskRunsListWithResponse(ctx context.Context, taskId TaskIdPathParam, params *TaskRunsListParams, reqEditors ...RequestEditorFn) (*TaskRunsListResponse, error)
 
 	// TasksTriggerRunWithBodyWithResponse request with any body
 	TasksTriggerRunWithBodyWithResponse(ctx context.Context, taskId TaskIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TasksTriggerRunResponse, error)
@@ -19375,7 +19362,7 @@ func (r TasksUpdateResponse) StatusCode() int {
 	return 0
 }
 
-type TasksListRunsResponse struct {
+type TaskRunsListResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	JSON200                   *TaskRunList
@@ -19387,7 +19374,7 @@ type TasksListRunsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r TasksListRunsResponse) Status() string {
+func (r TaskRunsListResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -19395,7 +19382,7 @@ func (r TasksListRunsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r TasksListRunsResponse) StatusCode() int {
+func (r TaskRunsListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -20862,13 +20849,13 @@ func (c *ClientWithResponses) TasksUpdateWithResponse(ctx context.Context, taskI
 	return ParseTasksUpdateResponse(rsp)
 }
 
-// TasksListRunsWithResponse request returning *TasksListRunsResponse
-func (c *ClientWithResponses) TasksListRunsWithResponse(ctx context.Context, taskId TaskIdPathParam, params *TasksListRunsParams, reqEditors ...RequestEditorFn) (*TasksListRunsResponse, error) {
-	rsp, err := c.TasksListRuns(ctx, taskId, params, reqEditors...)
+// TaskRunsListWithResponse request returning *TaskRunsListResponse
+func (c *ClientWithResponses) TaskRunsListWithResponse(ctx context.Context, taskId TaskIdPathParam, params *TaskRunsListParams, reqEditors ...RequestEditorFn) (*TaskRunsListResponse, error) {
+	rsp, err := c.TaskRunsList(ctx, taskId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseTasksListRunsResponse(rsp)
+	return ParseTaskRunsListResponse(rsp)
 }
 
 // TasksTriggerRunWithBodyWithResponse request with arbitrary body returning *TasksTriggerRunResponse
@@ -27076,15 +27063,15 @@ func ParseTasksUpdateResponse(rsp *http.Response) (*TasksUpdateResponse, error) 
 	return response, nil
 }
 
-// ParseTasksListRunsResponse parses an HTTP response from a TasksListRunsWithResponse call
-func ParseTasksListRunsResponse(rsp *http.Response) (*TasksListRunsResponse, error) {
+// ParseTaskRunsListResponse parses an HTTP response from a TaskRunsListWithResponse call
+func ParseTaskRunsListResponse(rsp *http.Response) (*TaskRunsListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &TasksListRunsResponse{
+	response := &TaskRunsListResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}

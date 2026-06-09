@@ -21,6 +21,7 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/roles"
 	"github.com/Arize-ai/client-go-v2/arize/spaces"
 	"github.com/Arize-ai/client-go-v2/arize/spans"
+	"github.com/Arize-ai/client-go-v2/arize/tasks"
 	"github.com/Arize-ai/client-go-v2/arize/users"
 )
 
@@ -44,6 +45,7 @@ type Client struct {
 	Roles                *roles.Client
 	Spaces               *spaces.Client
 	Spans                *spans.Client
+	Tasks                *tasks.Client
 	Users                *users.Client
 }
 
@@ -102,6 +104,7 @@ func NewClient(cfg Config) (*Client, error) {
 		Roles:                roles.New(gen),
 		Spaces:               spaces.New(gen),
 		Spans:                spans.New(gen),
+		Tasks:                tasks.New(gen),
 		Users:                users.New(gen),
 	}, nil
 }

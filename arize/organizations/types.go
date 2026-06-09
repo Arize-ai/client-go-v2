@@ -31,35 +31,6 @@ const (
 	RoleAssignmentTypeCustom     = generated.OrganizationRoleAssignmentTypeCustom
 )
 
-// AsPredefined returns the role's predefined assignment and true if the role's
-// discriminator is "predefined". Returns the zero value and false otherwise —
-// including when the discriminator says "custom" or when JSON parsing fails.
-func AsPredefined(role OrganizationRoleAssignment) (PredefinedOrgRole, bool) {
-	d, err := role.Discriminator()
-	if err != nil || d != string(RoleAssignmentTypePredefined) {
-		return PredefinedOrgRole{}, false
-	}
-	pre, err := role.AsOrganizationPredefinedRoleAssignment()
-	if err != nil {
-		return PredefinedOrgRole{}, false
-	}
-	return pre, true
-}
-
-// AsCustom returns the role's custom assignment and true if the role's
-// discriminator is "custom". Returns the zero value and false otherwise.
-func AsCustom(role OrganizationRoleAssignment) (CustomOrgRole, bool) {
-	d, err := role.Discriminator()
-	if err != nil || d != string(RoleAssignmentTypeCustom) {
-		return CustomOrgRole{}, false
-	}
-	custom, err := role.AsOrganizationCustomRoleAssignment()
-	if err != nil {
-		return CustomOrgRole{}, false
-	}
-	return custom, true
-}
-
 // GetRequest selects a single organization.
 type GetRequest struct {
 	// Organization accepts either an organization name or ID.

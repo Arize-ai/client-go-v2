@@ -99,13 +99,9 @@ func addOrganizationUser(ctx context.Context, client *arize.Client, orgID, userI
 	}
 	fmt.Printf("added user %s to organization %s (membership %s)\n", m.UserId, m.OrganizationId, m.Id)
 
-	// The server returns the role as a discriminated union. Two ways to unwrap:
-	//
-	// 1. Per-branch comma-ok helpers (best for single-arm checks):
-	//      if pre, ok := organizations.AsPredefined(m.Role); ok { ... }
-	//
-	// 2. Type switch via the generated ValueByDiscriminator (best when you
-	//    handle every variant):
+	// The server returns the role as a discriminated union. ValueByDiscriminator
+	// reads the discriminator and returns the matching variant; type-switch to
+	// handle every variant.
 	role, err := m.Role.ValueByDiscriminator()
 	if err != nil {
 		log.Printf("decode role: %v", err)

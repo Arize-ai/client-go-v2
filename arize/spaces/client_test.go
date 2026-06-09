@@ -542,7 +542,11 @@ func TestSpaces(t *testing.T) {
 				if m.Id != "membership-1" {
 					t.Errorf("unexpected membership id: %s", m.Id)
 				}
-				pre, ok := spaces.AsPredefined(m.Role)
+				role, err := m.Role.ValueByDiscriminator()
+				if err != nil {
+					t.Fatalf("decode role: %v", err)
+				}
+				pre, ok := role.(spaces.PredefinedSpaceRole)
 				if !ok {
 					t.Fatalf("expected predefined role, got discriminator mismatch")
 				}
@@ -584,7 +588,11 @@ func TestSpaces(t *testing.T) {
 					t.Fatalf("unexpected error: %v", err)
 				}
 				m := got.(*spaces.SpaceMembership)
-				custom, ok := spaces.AsCustom(m.Role)
+				role, err := m.Role.ValueByDiscriminator()
+				if err != nil {
+					t.Fatalf("decode role: %v", err)
+				}
+				custom, ok := role.(spaces.CustomSpaceRole)
 				if !ok {
 					t.Fatalf("expected custom role, got discriminator mismatch")
 				}
@@ -745,19 +753,20 @@ func TestRoleAccessors(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			pre, ok := spaces.AsPredefined(tt.role)
-			if ok != tt.wantPre {
-				t.Errorf("AsPredefined ok: got %v, want %v", ok, tt.wantPre)
+			v, _ := tt.role.ValueByDiscriminator()
+			pre, isPre := v.(spaces.PredefinedSpaceRole)
+			if isPre != tt.wantPre {
+				t.Errorf("predefined: got %v, want %v", isPre, tt.wantPre)
 			}
 			if tt.wantPre && pre.Name != tt.preName {
-				t.Errorf("AsPredefined name: got %q, want %q", pre.Name, tt.preName)
+				t.Errorf("predefined name: got %q, want %q", pre.Name, tt.preName)
 			}
-			c, ok := spaces.AsCustom(tt.role)
-			if ok != tt.wantCustom {
-				t.Errorf("AsCustom ok: got %v, want %v", ok, tt.wantCustom)
+			c, isCustom := v.(spaces.CustomSpaceRole)
+			if isCustom != tt.wantCustom {
+				t.Errorf("custom: got %v, want %v", isCustom, tt.wantCustom)
 			}
 			if tt.wantCustom && c.Id != tt.customID {
-				t.Errorf("AsCustom id: got %q, want %q", c.Id, tt.customID)
+				t.Errorf("custom id: got %q, want %q", c.Id, tt.customID)
 			}
 		})
 	}
@@ -789,19 +798,20 @@ func TestRoleConstructors(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			pre, ok := spaces.AsPredefined(tt.role)
-			if ok != tt.wantPre {
-				t.Errorf("AsPredefined ok: got %v, want %v", ok, tt.wantPre)
+			v, _ := tt.role.ValueByDiscriminator()
+			pre, isPre := v.(spaces.PredefinedSpaceRole)
+			if isPre != tt.wantPre {
+				t.Errorf("predefined: got %v, want %v", isPre, tt.wantPre)
 			}
 			if tt.wantPre && pre.Name != tt.preName {
-				t.Errorf("AsPredefined name: got %q, want %q", pre.Name, tt.preName)
+				t.Errorf("predefined name: got %q, want %q", pre.Name, tt.preName)
 			}
-			c, ok := spaces.AsCustom(tt.role)
-			if ok != tt.wantCustom {
-				t.Errorf("AsCustom ok: got %v, want %v", ok, tt.wantCustom)
+			c, isCustom := v.(spaces.CustomSpaceRole)
+			if isCustom != tt.wantCustom {
+				t.Errorf("custom: got %v, want %v", isCustom, tt.wantCustom)
 			}
 			if tt.wantCustom && c.Id != tt.customID {
-				t.Errorf("AsCustom id: got %q, want %q", c.Id, tt.customID)
+				t.Errorf("custom id: got %q, want %q", c.Id, tt.customID)
 			}
 		})
 	}

@@ -32,6 +32,7 @@ func main() {
 
 	exp := createExperiment(ctx, client, experimentName, datasetName, space)
 	getExperiment(ctx, client, experimentName, datasetName, space)
+	appendRuns(ctx, client, exp.Id)
 	listRuns(ctx, client, experimentName, datasetName, space)
 	deleteExperiment(ctx, client, exp.Id)
 }
@@ -115,6 +116,21 @@ func getExperiment(ctx context.Context, client *arize.Client, experiment, datase
 		log.Fatalf("get experiment: %v", err)
 	}
 	fmt.Printf("found experiment %s (%s)\n", exp.Name, exp.Id)
+}
+
+// appendRuns appends new runs to an existing experiment by ID.
+func appendRuns(ctx context.Context, client *arize.Client, experimentID string) {
+	result, err := client.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
+		ExperimentID: experimentID,
+		ExperimentRuns: []experiments.ExperimentRunCreate{
+			{ExampleId: "example-1", Output: "An AI observability platform."},
+			{ExampleId: "example-2", Output: "A unit of work in a trace."},
+		},
+	})
+	if err != nil {
+		log.Fatalf("append runs: %v", err)
+	}
+	fmt.Printf("appended %d run(s) to experiment %s\n", len(result.RunIds), result.Id)
 }
 
 // listRuns lists the runs recorded for an experiment.

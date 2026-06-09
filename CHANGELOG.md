@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.11.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.10.0...arize-go-sdk-v2/v0.11.0) (2026-06-09)
+
+
+### 🎁 New Features
+
+* **experiments:** SDK support for appending experiment runs ([#72134](https://github.com/Arize-ai/arize/issues/72134)) ([f761a25](https://github.com/Arize-ai/arize/commit/f761a259acb04dd40ea489f1e8e1f09143d01ecb))
+* **tasks:** add Tasks subclient with full CRUD and asynchronous run management ([#73875](https://github.com/Arize-ai/arize/issues/73875)) ([5b656c6](https://github.com/Arize-ai/arize/commit/5b656c6177bc5c3505a4ee0d194c938900233297))
+
+
+### 💫 Code Refactoring
+
+* **discriminated-unions:** unify handling via ValueByDiscriminator and remove AsXxx helpers ([#73729](https://github.com/Arize-ai/arize/issues/73729)) ([683b01d](https://github.com/Arize-ai/arize/commit/683b01d1e7e03f1ed6ff6b431245b77e441012db))
+
 ## [0.10.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.9.0...arize-go-sdk-v2/v0.10.0) (2026-06-02)
 
 

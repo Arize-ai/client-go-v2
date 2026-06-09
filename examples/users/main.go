@@ -89,8 +89,14 @@ func getUser(ctx context.Context, client *arize.Client, userOrEmail string) {
 	}
 	fmt.Printf("found user %s (%s)\n", user.Name, user.Id)
 
-	// The user's account role is a discriminated union; read the predefined arm.
-	if pre, ok := users.AsPredefined(user.Role); ok {
+	// The user's account role is a discriminated union; ValueByDiscriminator
+	// returns the matching variant — read the predefined arm.
+	role, err := user.Role.ValueByDiscriminator()
+	if err != nil {
+		log.Fatalf("decode role: %v", err)
+	}
+	switch pre := role.(type) {
+	case users.PredefinedUserRole:
 		fmt.Printf("  role: predefined %s\n", pre.Name)
 	}
 }
