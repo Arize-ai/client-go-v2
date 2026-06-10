@@ -230,7 +230,7 @@ func (e ApiKeySpaceRole) Valid() bool {
 // Defines values for ApiKeyStatus.
 const (
 	ApiKeyStatusActive  ApiKeyStatus = "active"
-	ApiKeyStatusDeleted ApiKeyStatus = "deleted"
+	ApiKeyStatusRevoked ApiKeyStatus = "revoked"
 )
 
 // Valid indicates whether the value is a known member of the ApiKeyStatus enum.
@@ -238,7 +238,7 @@ func (e ApiKeyStatus) Valid() bool {
 	switch e {
 	case ApiKeyStatusActive:
 		return true
-	case ApiKeyStatusDeleted:
+	case ApiKeyStatusRevoked:
 		return true
 	default:
 		return false
@@ -1826,7 +1826,7 @@ type ApiKey struct {
 
 	// Status Current status of the API key.
 	// - active - The key is valid for use.
-	// - deleted - The key has been deleted by a user.
+	// - revoked - The key has been revoked and is no longer valid.
 	Status ApiKeyStatus `json:"status"`
 }
 
@@ -1900,7 +1900,7 @@ type ApiKeyCreated struct {
 
 	// Status Current status of the API key.
 	// - active - The key is valid for use.
-	// - deleted - The key has been deleted by a user.
+	// - revoked - The key has been revoked and is no longer valid.
 	Status ApiKeyStatus `json:"status"`
 }
 
@@ -1958,7 +1958,7 @@ type ApiKeySpaceRole string
 
 // ApiKeyStatus Current status of the API key.
 // - active - The key is valid for use.
-// - deleted - The key has been deleted by a user.
+// - revoked - The key has been revoked and is no longer valid.
 type ApiKeyStatus string
 
 // ApiKeyType Type of the API key.
@@ -4414,7 +4414,7 @@ type ApiKeyIdPathParam = Id
 
 // ApiKeyStatusQueryParam Current status of the API key.
 // - active - The key is valid for use.
-// - deleted - The key has been deleted by a user.
+// - revoked - The key has been revoked and is no longer valid.
 type ApiKeyStatusQueryParam = ApiKeyStatus
 
 // ApiKeyTypeQueryParam Type of the API key.
@@ -8350,6 +8350,9 @@ type ClientInterface interface {
 
 	ApiKeysRefresh(ctx context.Context, apiKeyId ApiKeyIdPathParam, body ApiKeysRefreshJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ApiKeysRevoke request
+	ApiKeysRevoke(ctx context.Context, apiKeyId ApiKeyIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DatasetsList request
 	DatasetsList(ctx context.Context, params *DatasetsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9076,6 +9079,18 @@ func (c *Client) ApiKeysRefreshWithBody(ctx context.Context, apiKeyId ApiKeyIdPa
 
 func (c *Client) ApiKeysRefresh(ctx context.Context, apiKeyId ApiKeyIdPathParam, body ApiKeysRefreshJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewApiKeysRefreshRequest(c.Server, apiKeyId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ApiKeysRevoke(ctx context.Context, apiKeyId ApiKeyIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewApiKeysRevokeRequest(c.Server, apiKeyId)
 	if err != nil {
 		return nil, err
 	}
@@ -11815,6 +11830,40 @@ func NewApiKeysRefreshRequestWithBody(server string, apiKeyId ApiKeyIdPathParam,
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewApiKeysRevokeRequest generates requests for ApiKeysRevoke
+func NewApiKeysRevokeRequest(server string, apiKeyId ApiKeyIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "api_key_id", apiKeyId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/api-keys/%s/revoke", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -16351,6 +16400,9 @@ type ClientWithResponsesInterface interface {
 
 	ApiKeysRefreshWithResponse(ctx context.Context, apiKeyId ApiKeyIdPathParam, body ApiKeysRefreshJSONRequestBody, reqEditors ...RequestEditorFn) (*ApiKeysRefreshResponse, error)
 
+	// ApiKeysRevokeWithResponse request
+	ApiKeysRevokeWithResponse(ctx context.Context, apiKeyId ApiKeyIdPathParam, reqEditors ...RequestEditorFn) (*ApiKeysRevokeResponse, error)
+
 	// DatasetsListWithResponse request
 	DatasetsListWithResponse(ctx context.Context, params *DatasetsListParams, reqEditors ...RequestEditorFn) (*DatasetsListResponse, error)
 
@@ -17300,6 +17352,32 @@ func (r ApiKeysRefreshResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ApiKeysRefreshResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ApiKeysRevokeResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ApiKeysRevokeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ApiKeysRevokeResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -19901,6 +19979,15 @@ func (c *ClientWithResponses) ApiKeysRefreshWithResponse(ctx context.Context, ap
 	return ParseApiKeysRefreshResponse(rsp)
 }
 
+// ApiKeysRevokeWithResponse request returning *ApiKeysRevokeResponse
+func (c *ClientWithResponses) ApiKeysRevokeWithResponse(ctx context.Context, apiKeyId ApiKeyIdPathParam, reqEditors ...RequestEditorFn) (*ApiKeysRevokeResponse, error) {
+	rsp, err := c.ApiKeysRevoke(ctx, apiKeyId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseApiKeysRevokeResponse(rsp)
+}
+
 // DatasetsListWithResponse request returning *DatasetsListResponse
 func (c *ClientWithResponses) DatasetsListWithResponse(ctx context.Context, params *DatasetsListParams, reqEditors ...RequestEditorFn) (*DatasetsListResponse, error) {
 	rsp, err := c.DatasetsList(ctx, params, reqEditors...)
@@ -22386,6 +22473,60 @@ func ParseApiKeysRefreshResponse(rsp *http.Response) (*ApiKeysRefreshResponse, e
 			return nil, err
 		}
 		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseApiKeysRevokeResponse parses an HTTP response from a ApiKeysRevokeWithResponse call
+func ParseApiKeysRevokeResponse(rsp *http.Response) (*ApiKeysRevokeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ApiKeysRevokeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded

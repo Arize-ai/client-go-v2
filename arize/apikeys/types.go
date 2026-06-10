@@ -108,7 +108,7 @@ const (
 	APIKeyTypeUser    APIKeyType = generated.ApiKeyTypeUser
 
 	APIKeyStatusActive  APIKeyStatus = generated.ApiKeyStatusActive
-	APIKeyStatusDeleted APIKeyStatus = generated.ApiKeyStatusDeleted
+	APIKeyStatusRevoked APIKeyStatus = generated.ApiKeyStatusRevoked
 
 	APIKeyAccountRoleAdmin  APIKeyAccountRole = generated.ApiKeyAccountRoleAdmin
 	APIKeyAccountRoleMember APIKeyAccountRole = generated.ApiKeyAccountRoleMember

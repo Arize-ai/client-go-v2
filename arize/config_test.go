@@ -194,7 +194,7 @@ func TestConfig_Headers(t *testing.T) {
 		want         string // exact value; empty means "must be non-empty"
 		mustNotExist string // if non-empty: assert this key does NOT exist
 	}{
-		{"authorization is raw key", arize.Config{APIKey: "my-key"}, "authorization", "my-key", ""},
+		{"authorization is Bearer-prefixed key", arize.Config{APIKey: "my-key"}, "authorization", "Bearer my-key", ""},
 		{"no canonical Authorization key", arize.Config{APIKey: "my-key"}, "", "", "Authorization"},
 		{"sdk-language", arize.Config{APIKey: "k"}, "sdk-language", "go", ""},
 		{"language-version", arize.Config{APIKey: "k"}, "language-version", runtime.Version(), ""},

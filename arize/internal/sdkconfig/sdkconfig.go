@@ -406,11 +406,12 @@ func (c Config) APIURL() string {
 }
 
 // Headers returns HTTP headers to attach to every request. The authorization
-// header carries the raw API key without a "Bearer " prefix, as expected by
-// the Arize API.
+// header carries the API key with a "Bearer " prefix, as required by the Arize
+// API gateway (apiproxy AuthMiddleware), which rejects any authorization header
+// lacking the prefix.
 func (c Config) Headers() map[string]string {
 	return map[string]string{
-		"authorization":    c.APIKey,
+		"authorization":    "Bearer " + c.APIKey,
 		"sdk-language":     "go",
 		"language-version": runtime.Version(),
 		"sdk-version":      SDKVersion,

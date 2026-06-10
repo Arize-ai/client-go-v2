@@ -81,7 +81,7 @@ func TestAPIKeys(t *testing.T) {
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.APIKeys.List(ctx, apikeys.ListRequest{
 					KeyType: apikeys.APIKeyTypeService,
-					Status:  apikeys.APIKeyStatusDeleted,
+					Status:  apikeys.APIKeyStatusRevoked,
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -91,8 +91,8 @@ func TestAPIKeys(t *testing.T) {
 				if seenKeyType != "service" {
 					t.Errorf("key_type query: want service, got %q", seenKeyType)
 				}
-				if seenStatus != "deleted" {
-					t.Errorf("status query: want deleted, got %q", seenStatus)
+				if seenStatus != "revoked" {
+					t.Errorf("status query: want revoked, got %q", seenStatus)
 				}
 			},
 		},

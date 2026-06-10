@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.12.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.11.0...arize-go-sdk-v2/v0.12.0) (2026-06-10)
+
+
+### 🐛 Bug Fixes
+
+* **config:** prefix authorization header with Bearer ([#74619](https://github.com/Arize-ai/arize/issues/74619)) ([2998b8f](https://github.com/Arize-ai/arize/commit/2998b8f28fb111a52e894cd33a7559404d1ceb50))
+
+
+### 💫 Code Refactoring
+
+* rename API key status 'deleted' to 'revoked' across all layers ([#74367](https://github.com/Arize-ai/arize/issues/74367)) ([a1ef2c3](https://github.com/Arize-ai/arize/commit/a1ef2c3da703455c6e24c16525f58e146f018456))
+
 ## [0.11.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.10.0...arize-go-sdk-v2/v0.11.0) (2026-06-09)
 
 
