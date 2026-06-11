@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.13.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.12.0...arize-go-sdk-v2/v0.13.0) (2026-06-11)
+
+
+### 🎁 New Features
+
+* **api-keys:** add revoke support ([#74111](https://github.com/Arize-ai/arize/issues/74111)) ([c9ae02d](https://github.com/Arize-ai/arize/commit/c9ae02dc28114f35002e1c5494ff65ba7b4c3f3d))
+
+### 💫 Code Refactoring
+
+* **api-keys:** remove delete method ([#74111](https://github.com/Arize-ai/arize/issues/74111)) ([c9ae02d](https://github.com/Arize-ai/arize/commit/c9ae02dc28114f35002e1c5494ff65ba7b4c3f3d))
+
 ## [0.12.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.11.0...arize-go-sdk-v2/v0.12.0) (2026-06-10)
 
 

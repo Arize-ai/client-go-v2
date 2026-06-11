@@ -112,13 +112,14 @@ func (c *Client) CreateServiceKey(
 	return resp.JSON201, nil
 }
 
-// Delete removes an API key by ID.
-func (c *Client) Delete(
+// Revoke sets an API key's status to revoked by ID. The key stops working
+// immediately; revoking an already-revoked key is a no-op and still succeeds.
+func (c *Client) Revoke(
 	ctx context.Context,
-	req DeleteRequest,
+	req RevokeRequest,
 ) error {
-	prerelease.Warn("apikeys.delete", prerelease.Alpha)
-	resp, err := c.gen.ApiKeysDeleteWithResponse(ctx, req.APIKeyID)
+	prerelease.Warn("apikeys.revoke", prerelease.Alpha)
+	resp, err := c.gen.ApiKeysRevokeWithResponse(ctx, req.APIKeyID)
 	if err != nil {
 		return err
 	}

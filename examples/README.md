@@ -9,7 +9,7 @@ examples/
 ├── aiintegrations/       client.AIIntegrations.{List, Get, Create, Update, Delete}
 ├── annotationconfigs/    client.AnnotationConfigs.{List, Get, Create, Delete}
 ├── annotationqueues/     client.AnnotationQueues.{List, Get, Create, Update, Delete, ListRecords, AddRecords, DeleteRecords, Annotate, Assign}
-├── apikeys/              client.APIKeys.{List, Create, CreateServiceKey, Refresh, Delete}
+├── apikeys/              client.APIKeys.{List, Create, CreateServiceKey, Refresh, Revoke}
 ├── datasets/             client.Datasets.{List, Get, Create, Update, Delete, ListExamples, AppendExamples, AnnotateExamples}
 ├── evaluators/           client.Evaluators.{List, Get, Create, Update, Delete, ListVersions, CreateVersion, GetVersion}
 ├── experiments/          client.Experiments.{List, Get, Create, ListRuns, Delete}
@@ -58,7 +58,7 @@ client.Projects.Get(ctx, projects.GetRequest{Project: "my-project", Space: "demo
 client.Organizations.Get(ctx, organizations.GetRequest{Organization: "my-org"})
 
 // Get / Delete — strict ID
-client.APIKeys.Delete(ctx, apikeys.DeleteRequest{ApiKeyID: keyID})
+client.RoleBindings.Delete(ctx, rolebindings.DeleteRequest{RoleBindingID: bindingID})
 client.RoleBindings.Get(ctx, rolebindings.GetRequest{RoleBindingID: bindingID})
 
 // Create

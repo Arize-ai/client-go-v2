@@ -64,9 +64,9 @@ type ListRequest struct {
 	Cursor string
 }
 
-// DeleteRequest is the request shape for Client.Delete.
-type DeleteRequest struct {
-	// APIKeyID is the strict ID of the API key to delete.
+// RevokeRequest is the request shape for Client.Revoke.
+type RevokeRequest struct {
+	// APIKeyID is the strict ID of the API key to revoke.
 	APIKeyID string
 }
 

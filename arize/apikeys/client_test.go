@@ -132,19 +132,36 @@ func TestAPIKeys(t *testing.T) {
 			},
 		},
 		{
-			name: "Delete success",
+			name: "Revoke success",
 			handler: func(w http.ResponseWriter, r *http.Request) {
-				if r.Method != http.MethodDelete {
-					t.Errorf("expected DELETE, got %s", r.Method)
+				if r.Method != http.MethodPut {
+					t.Errorf("expected PUT, got %s", r.Method)
 				}
 				w.WriteHeader(204)
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
-				return nil, c.APIKeys.Delete(ctx, apikeys.DeleteRequest{APIKeyID: "key-1"})
+				return nil, c.APIKeys.Revoke(ctx, apikeys.RevokeRequest{APIKeyID: "key-1"})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "Revoke not found",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusNotFound)
+				json.NewEncoder(w).Encode(map[string]any{"title": "not found", "status": 404})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return nil, c.APIKeys.Revoke(ctx, apikeys.RevokeRequest{APIKeyID: "nonexistent"})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var nfe *arize.NotFoundError
+				if !errors.As(err, &nfe) {
+					t.Errorf("expected *NotFoundError, got %T: %v", err, err)
 				}
 			},
 		},

@@ -117,7 +117,7 @@
     - [Create an API Key](#create-an-api-key)
     - [Create a Service Key](#create-a-service-key)
     - [Refresh an API Key](#refresh-an-api-key)
-    - [Delete an API Key](#delete-an-api-key)
+    - [Revoke an API Key](#revoke-an-api-key)
   - [Operations on Resource Restrictions](#operations-on-resource-restrictions)
     - [Restrict a Resource](#restrict-a-resource)
     - [Unrestrict a Resource](#unrestrict-a-resource)
@@ -191,7 +191,7 @@ The Go SDK v2 currently exposes the following surface area:
   - **AI Integrations** — list, get, create, update, delete.
   - **Organizations** — list, get, create, update, delete, and manage memberships.
   - **Roles** & **Role Bindings** — manage RBAC roles and their bindings.
-  - **API Keys** — list, create, create service keys, refresh, delete.
+  - **API Keys** — list, create, create service keys, refresh, revoke.
   - **Resource Restrictions** — restrict and unrestrict access to Arize resources.
   - **Annotation Queues** — list, get, create, update, delete, add records, and annotate.
   - **Users** — list, get, create, update, delete, bulk delete, resend invitations, and reset passwords.
@@ -1133,10 +1133,13 @@ newKey, err := client.APIKeys.Refresh(ctx, apikeys.RefreshRequest{
 
 ```
 
-### Delete an API Key
+### Revoke an API Key
+
+Revoke sets the key's status to `revoked`, deactivating it immediately. Revoking is
+irreversible; revoking an already-revoked key is a no-op and still succeeds.
 
 ```go
-err := client.APIKeys.Delete(ctx, apikeys.DeleteRequest{APIKeyID: "<key-id>"})
+err := client.APIKeys.Revoke(ctx, apikeys.RevokeRequest{APIKeyID: "<key-id>"})
 ```
 
 ## Operations on Resource Restrictions

@@ -24,7 +24,9 @@ func main() {
 
 	created := createAPIKey(ctx, client, "example-key")
 	refreshAPIKey(ctx, client, created.Id)
-	deleteAPIKey(ctx, client, created.Id)
+
+	toRevoke := createAPIKey(ctx, client, "example-key-to-revoke")
+	revokeAPIKey(ctx, client, toRevoke.Id)
 }
 
 // listAPIKeys shows filtering the list by key_type and status.
@@ -76,8 +78,10 @@ func refreshAPIKey(ctx context.Context, client *arize.Client, keyID string) {
 	fmt.Printf("rotated api key %s — new secret: %s\n", rotated.Id, rotated.Key)
 }
 
-func deleteAPIKey(ctx context.Context, client *arize.Client, keyID string) {
-	if err := client.APIKeys.Delete(ctx, apikeys.DeleteRequest{APIKeyID: keyID}); err != nil {
-		log.Fatalf("delete api key: %v", err)
+// revokeAPIKey sets the key's status to revoked, deactivating it immediately.
+// Revoking is irreversible; revoking an already-revoked key is a no-op.
+func revokeAPIKey(ctx context.Context, client *arize.Client, keyID string) {
+	if err := client.APIKeys.Revoke(ctx, apikeys.RevokeRequest{APIKeyID: keyID}); err != nil {
+		log.Fatalf("revoke api key: %v", err)
 	}
 }
