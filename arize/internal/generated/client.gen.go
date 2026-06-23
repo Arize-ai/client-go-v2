@@ -167,6 +167,21 @@ func (e AnnotationQueueSpanRecordInputRecordType) Valid() bool {
 	}
 }
 
+// Defines values for AnnotationQueueTraceRecordInputRecordType.
+const (
+	AnnotationQueueTraceRecordInputRecordTypeTrace AnnotationQueueTraceRecordInputRecordType = "trace"
+)
+
+// Valid indicates whether the value is a known member of the AnnotationQueueTraceRecordInputRecordType enum.
+func (e AnnotationQueueTraceRecordInputRecordType) Valid() bool {
+	switch e {
+	case AnnotationQueueTraceRecordInputRecordTypeTrace:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ApiKeyAccountRole.
 const (
 	ApiKeyAccountRoleAdmin  ApiKeyAccountRole = "admin"
@@ -1121,6 +1136,24 @@ func (e Permission) Valid() bool {
 	}
 }
 
+// Defines values for RecordGranularity.
+const (
+	RecordGranularitySpan  RecordGranularity = "span"
+	RecordGranularityTrace RecordGranularity = "trace"
+)
+
+// Valid indicates whether the value is a known member of the RecordGranularity enum.
+func (e RecordGranularity) Valid() bool {
+	switch e {
+	case RecordGranularitySpan:
+		return true
+	case RecordGranularityTrace:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ResourceRestrictionType.
 const (
 	ResourceRestrictionTypePROJECT ResourceRestrictionType = "PROJECT"
@@ -1485,7 +1518,7 @@ type AiIntegrationScoping struct {
 
 // AnnotateAnnotationQueueRecordRequestBody Annotations to submit for an annotation queue record. Annotations are upserted by annotation config name; omitted configs are left unchanged.
 type AnnotateAnnotationQueueRecordRequestBody struct {
-	// Annotations Annotations to upsert on this record, keyed by annotation config name. There is no maximum limit — you may submit one annotation per annotation config associated with the queue.
+	// Annotations Annotations to upsert on this record, keyed by annotation config name. At most 500 annotations may be submitted per request — one per annotation config associated with the queue.
 	Annotations []AnnotationInput `json:"annotations"`
 }
 
@@ -1694,6 +1727,9 @@ type AnnotationQueueRecord struct {
 	// Evaluations Evaluation results on this record
 	Evaluations []Evaluation `json:"evaluations"`
 
+	// Granularity The granularity of the record, if applicable.
+	Granularity *RecordGranularity `json:"granularity,omitempty"`
+
 	// Id The unique identifier for the record
 	Id string `json:"id"`
 
@@ -1711,6 +1747,9 @@ type AnnotationQueueRecordAnnotateResult struct {
 	// Annotations The annotations that were submitted in this request
 	Annotations []Annotation `json:"annotations"`
 
+	// Granularity The granularity of the record, if applicable.
+	Granularity *RecordGranularity `json:"granularity,omitempty"`
+
 	// Id The unique identifier for the record
 	Id string `json:"id"`
 
@@ -1727,6 +1766,9 @@ type AnnotationQueueRecordAssignResult struct {
 
 	// AssignedUsers The users now assigned to this record after this operation
 	AssignedUsers []AnnotationQueueAssignedUser `json:"assigned_users"`
+
+	// Granularity The granularity of the record, if applicable.
+	Granularity *RecordGranularity `json:"granularity,omitempty"`
 
 	// Id The unique identifier for the record
 	Id string `json:"id"`
@@ -1783,6 +1825,27 @@ type AnnotationQueueSpanRecordInput struct {
 
 // AnnotationQueueSpanRecordInputRecordType Discriminator identifying this record source as project spans. Must be `span` for span records.
 type AnnotationQueueSpanRecordInputRecordType string
+
+// AnnotationQueueTraceRecordInput defines model for AnnotationQueueTraceRecordInput.
+type AnnotationQueueTraceRecordInput struct {
+	// EndTime End of the time range. Must be after start_time.
+	EndTime time.Time `json:"end_time"`
+
+	// ProjectId The project ID these traces belong to.
+	ProjectId string `json:"project_id"`
+
+	// RecordType Discriminator identifying this record as a trace record.
+	RecordType AnnotationQueueTraceRecordInputRecordType `json:"record_type"`
+
+	// StartTime Start of the time range used to resolve each trace's root span. The range (end_time - start_time) must not exceed 7 days.
+	StartTime time.Time `json:"start_time"`
+
+	// TraceIds List of trace IDs to add to the queue.
+	TraceIds []string `json:"trace_ids"`
+}
+
+// AnnotationQueueTraceRecordInputRecordType Discriminator identifying this record as a trace record.
+type AnnotationQueueTraceRecordInputRecordType string
 
 // AnnotatorUser A user assigned as an annotator, identified by ID and email.
 type AnnotatorUser struct {
@@ -3249,7 +3312,7 @@ type PaginationMetadata struct {
 	HasMore bool `json:"has_more"`
 
 	// NextCursor Opaque cursor for fetching the next page. Treat as an unreadable token.
-	// Present when `has_more` is true; omitted when `hasMore` is false.
+	// Present when `has_more` is true; omitted when `has_more` is false.
 	NextCursor *string `json:"next_cursor,omitempty"`
 }
 
@@ -3521,6 +3584,11 @@ type ProviderParams struct {
 	Region               *string                `json:"region,omitempty"`
 	AdditionalProperties map[string]interface{} `json:"-"`
 }
+
+// RecordGranularity Granularity of an annotation queue record.
+// - span: The record represents a span.
+// - trace: The record represents a trace.
+type RecordGranularity string
 
 // ResourceRestriction defines model for ResourceRestriction.
 type ResourceRestriction struct {
@@ -5287,6 +5355,11 @@ type DatasetsExamplesListParams struct {
 
 	// Limit Maximum items to return
 	Limit *LimitQueryParamMax500 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
 }
 
 // DatasetsExamplesUpdateJSONBody defines parameters for DatasetsExamplesUpdate.
@@ -6916,6 +6989,34 @@ func (t *AnnotationQueueRecordInput) MergeAnnotationQueueSpanRecordInput(v Annot
 	return err
 }
 
+// AsAnnotationQueueTraceRecordInput returns the union data inside the AnnotationQueueRecordInput as a AnnotationQueueTraceRecordInput
+func (t AnnotationQueueRecordInput) AsAnnotationQueueTraceRecordInput() (AnnotationQueueTraceRecordInput, error) {
+	var body AnnotationQueueTraceRecordInput
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAnnotationQueueTraceRecordInput overwrites any union data inside the AnnotationQueueRecordInput as the provided AnnotationQueueTraceRecordInput
+func (t *AnnotationQueueRecordInput) FromAnnotationQueueTraceRecordInput(v AnnotationQueueTraceRecordInput) error {
+	v.RecordType = "trace"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAnnotationQueueTraceRecordInput performs a merge with any union data inside the AnnotationQueueRecordInput, using the provided AnnotationQueueTraceRecordInput
+func (t *AnnotationQueueRecordInput) MergeAnnotationQueueTraceRecordInput(v AnnotationQueueTraceRecordInput) error {
+	v.RecordType = "trace"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t AnnotationQueueRecordInput) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"record_type"`
@@ -6934,6 +7035,8 @@ func (t AnnotationQueueRecordInput) ValueByDiscriminator() (interface{}, error) 
 		return t.AsAnnotationQueueExampleRecordInput()
 	case "span":
 		return t.AsAnnotationQueueSpanRecordInput()
+	case "trace":
+		return t.AsAnnotationQueueTraceRecordInput()
 	default:
 		return nil, errors.New("unknown discriminator value: " + discriminator)
 	}
@@ -8342,9 +8445,6 @@ type ClientInterface interface {
 
 	ApiKeysCreate(ctx context.Context, body ApiKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ApiKeysDelete request
-	ApiKeysDelete(ctx context.Context, apiKeyId ApiKeyIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ApiKeysRefreshWithBody request with any body
 	ApiKeysRefreshWithBody(ctx context.Context, apiKeyId ApiKeyIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9043,18 +9143,6 @@ func (c *Client) ApiKeysCreateWithBody(ctx context.Context, contentType string, 
 
 func (c *Client) ApiKeysCreate(ctx context.Context, body ApiKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewApiKeysCreateRequest(c.Server, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ApiKeysDelete(ctx context.Context, apiKeyId ApiKeyIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewApiKeysDeleteRequest(c.Server, apiKeyId)
 	if err != nil {
 		return nil, err
 	}
@@ -11753,40 +11841,6 @@ func NewApiKeysCreateRequestWithBody(server string, contentType string, body io.
 	return req, nil
 }
 
-// NewApiKeysDeleteRequest generates requests for ApiKeysDelete
-func NewApiKeysDeleteRequest(server string, apiKeyId ApiKeyIdPathParam) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "api_key_id", apiKeyId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/v2/api-keys/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewApiKeysRefreshRequest calls the generic ApiKeysRefresh builder with application/json body
 func NewApiKeysRefreshRequest(server string, apiKeyId ApiKeyIdPathParam, body ApiKeysRefreshJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -12184,6 +12238,22 @@ func NewDatasetsExamplesListRequest(server string, datasetId DatasetIdPathParam,
 		if params.Limit != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -16392,9 +16462,6 @@ type ClientWithResponsesInterface interface {
 
 	ApiKeysCreateWithResponse(ctx context.Context, body ApiKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*ApiKeysCreateResponse, error)
 
-	// ApiKeysDeleteWithResponse request
-	ApiKeysDeleteWithResponse(ctx context.Context, apiKeyId ApiKeyIdPathParam, reqEditors ...RequestEditorFn) (*ApiKeysDeleteResponse, error)
-
 	// ApiKeysRefreshWithBodyWithResponse request with any body
 	ApiKeysRefreshWithBodyWithResponse(ctx context.Context, apiKeyId ApiKeyIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ApiKeysRefreshResponse, error)
 
@@ -17298,32 +17365,6 @@ func (r ApiKeysCreateResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ApiKeysCreateResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ApiKeysDeleteResponse struct {
-	Body                      []byte
-	HTTPResponse              *http.Response
-	ApplicationproblemJSON400 *BadRequest
-	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
-	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON429 *RateLimitExceeded
-}
-
-// Status returns HTTPResponse.Status
-func (r ApiKeysDeleteResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ApiKeysDeleteResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -19953,15 +19994,6 @@ func (c *ClientWithResponses) ApiKeysCreateWithResponse(ctx context.Context, bod
 	return ParseApiKeysCreateResponse(rsp)
 }
 
-// ApiKeysDeleteWithResponse request returning *ApiKeysDeleteResponse
-func (c *ClientWithResponses) ApiKeysDeleteWithResponse(ctx context.Context, apiKeyId ApiKeyIdPathParam, reqEditors ...RequestEditorFn) (*ApiKeysDeleteResponse, error) {
-	rsp, err := c.ApiKeysDelete(ctx, apiKeyId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseApiKeysDeleteResponse(rsp)
-}
-
 // ApiKeysRefreshWithBodyWithResponse request with arbitrary body returning *ApiKeysRefreshResponse
 func (c *ClientWithResponses) ApiKeysRefreshWithBodyWithResponse(ctx context.Context, apiKeyId ApiKeyIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ApiKeysRefreshResponse, error) {
 	rsp, err := c.ApiKeysRefreshWithBody(ctx, apiKeyId, contentType, body, reqEditors...)
@@ -22351,60 +22383,6 @@ func ParseApiKeysCreateResponse(rsp *http.Response) (*ApiKeysCreateResponse, err
 			return nil, err
 		}
 		response.ApplicationproblemJSON422 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
-		var dest RateLimitExceeded
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON429 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseApiKeysDeleteResponse parses an HTTP response from a ApiKeysDeleteWithResponse call
-func ParseApiKeysDeleteResponse(rsp *http.Response) (*ApiKeysDeleteResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ApiKeysDeleteResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest Unauthorized
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest NotFound
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded

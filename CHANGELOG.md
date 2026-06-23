@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.13.0...arize-go-sdk-v2/v0.14.0) (2026-06-23)
+
+
+### 🎁 New Features
+
+* promote annotation /annotate endpoints to beta + cap queue annotate array ([#75836](https://github.com/Arize-ai/arize/issues/75836)) ([d1bf960](https://github.com/Arize-ai/arize/commit/d1bf960076ff425d4f4cfd979ba2fa2976ab75b1))
+
 ## [0.13.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.12.0...arize-go-sdk-v2/v0.13.0) (2026-06-11)
 
 

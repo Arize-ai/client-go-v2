@@ -108,7 +108,7 @@ func (c *Client) Annotate(
 	ctx context.Context,
 	req AnnotateRequest,
 ) error {
-	prerelease.Warn("spans.annotate", prerelease.Alpha)
+	prerelease.Warn("spans.annotate", prerelease.Beta)
 	projectID, err := resolve.FindProjectID(ctx, c.gen, req.Project, req.Space)
 	if err != nil {
 		return err

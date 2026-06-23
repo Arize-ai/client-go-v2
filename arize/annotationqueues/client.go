@@ -191,7 +191,7 @@ func (c *Client) DeleteRecords(ctx context.Context, req DeleteRecordsRequest) er
 // Annotate submits annotations for a record in an annotation queue, resolving
 // the queue by name or ID. RecordID is a pure ID with no name resolution.
 func (c *Client) Annotate(ctx context.Context, req AnnotateRequest) (*AnnotationQueueRecordAnnotateResult, error) {
-	prerelease.Warn("annotationqueues.annotate", prerelease.Alpha)
+	prerelease.Warn("annotationqueues.annotate", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {
 		return nil, err

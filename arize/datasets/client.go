@@ -205,7 +205,7 @@ func (c *Client) AnnotateExamples(
 	ctx context.Context,
 	req AnnotateExamplesRequest,
 ) error {
-	prerelease.Warn("datasets.annotate_examples", prerelease.Alpha)
+	prerelease.Warn("datasets.annotate_examples", prerelease.Beta)
 	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {
 		return err
