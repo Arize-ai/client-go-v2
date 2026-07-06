@@ -156,6 +156,7 @@ func (c *Client) ListExamples(
 	params := generated.DatasetsExamplesListParams{
 		Limit:            optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		DatasetVersionId: optfields.PtrIfSet(req.DatasetVersionID),
+		Cursor:           optfields.PtrIfSet(req.Cursor),
 	}
 	resp, err := c.gen.DatasetsExamplesListWithResponse(ctx, id, &params)
 	if err != nil {

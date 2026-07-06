@@ -130,6 +130,10 @@ type ListRunsRequest struct {
 	// Limit is the optional maximum number of runs to return (max 500). When
 	// zero, the server applies its default page size.
 	Limit int
+	// Cursor is the optional opaque pagination cursor from a previous
+	// response's pagination.next_cursor. When empty, results start from the
+	// first page.
+	Cursor string
 }
 
 // AppendRunsRequest is the request shape for Client.AppendRuns.

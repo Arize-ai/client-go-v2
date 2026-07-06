@@ -152,7 +152,12 @@ func TestSpans(t *testing.T) {
 				if len(body.SpanIds) != 1 || body.SpanIds[0] != "span-1" {
 					t.Errorf("body span_ids: %v", body.SpanIds)
 				}
-				w.WriteHeader(204)
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(spans.SpanDeleteResult{
+					Completed:         true,
+					DeletedSpanIds:    []string{"span-1"},
+					NotDeletedSpanIds: []string{},
+				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Spans.Delete(ctx, spans.DeleteRequest{
@@ -164,18 +169,29 @@ func TestSpans(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				partial, _ := got.(*spans.SpanDeletePartial)
-				if partial != nil {
-					t.Errorf("expected nil partial on 204, got %v", partial)
+				result, ok := got.(*spans.SpanDeleteResult)
+				if !ok || result == nil {
+					t.Fatalf("expected *SpanDeleteResult, got %T", got)
+				}
+				if !result.Completed {
+					t.Errorf("expected Completed=true on full success, got false")
+				}
+				if len(result.DeletedSpanIds) != 1 || result.DeletedSpanIds[0] != "span-1" {
+					t.Errorf("unexpected DeletedSpanIds: %v", result.DeletedSpanIds)
+				}
+				if len(result.NotDeletedSpanIds) != 0 {
+					t.Errorf("expected empty NotDeletedSpanIds, got %v", result.NotDeletedSpanIds)
 				}
 			},
 		},
 		{
-			name: "Delete_Partial",
+			name: "Delete_Incomplete",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(spans.SpanDeletePartial{
-					DeletedSpanIds: []string{"span-1"},
+				json.NewEncoder(w).Encode(spans.SpanDeleteResult{
+					Completed:         false,
+					DeletedSpanIds:    []string{"span-1"},
+					NotDeletedSpanIds: []string{"span-2"},
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
@@ -188,12 +204,18 @@ func TestSpans(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				partial, ok := got.(*spans.SpanDeletePartial)
-				if !ok || partial == nil {
-					t.Fatalf("expected *SpanDeletePartial, got %T", got)
+				result, ok := got.(*spans.SpanDeleteResult)
+				if !ok || result == nil {
+					t.Fatalf("expected *SpanDeleteResult, got %T", got)
 				}
-				if len(partial.DeletedSpanIds) != 1 || partial.DeletedSpanIds[0] != "span-1" {
-					t.Errorf("unexpected DeletedSpanIds: %v", partial.DeletedSpanIds)
+				if result.Completed {
+					t.Errorf("expected Completed=false on incomplete, got true")
+				}
+				if len(result.DeletedSpanIds) != 1 || result.DeletedSpanIds[0] != "span-1" {
+					t.Errorf("unexpected DeletedSpanIds: %v", result.DeletedSpanIds)
+				}
+				if len(result.NotDeletedSpanIds) != 1 || result.NotDeletedSpanIds[0] != "span-2" {
+					t.Errorf("unexpected NotDeletedSpanIds: %v", result.NotDeletedSpanIds)
 				}
 			},
 		},

@@ -16,7 +16,7 @@ type (
 	// EvaluatorVersion is a versioned snapshot of an evaluator's
 	// configuration. It is a oneOf: read the active variant with
 	// ValueByDiscriminator and a type switch over EvaluatorVersionTemplate /
-	// EvaluatorVersionCode.
+	// EvaluatorVersionCode / EvaluatorVersionHarness / EvaluatorVersionRemote.
 	EvaluatorVersion = generated.EvaluatorVersion
 
 	// EvaluatorVersionList is the cursor-paginated version list response shape.
@@ -30,7 +30,19 @@ type (
 	// EvaluatorVersion, returned by EvaluatorVersion.AsEvaluatorVersionCode.
 	EvaluatorVersionCode = generated.EvaluatorVersionCode
 
-	// EvaluatorType is the evaluator kind: template or code.
+	// EvaluatorVersionHarness is the harness variant of an EvaluatorVersion,
+	// returned by EvaluatorVersion.AsEvaluatorVersionHarness. Only common
+	// version metadata is exposed — the harness configuration is not yet
+	// accessible via the REST API.
+	EvaluatorVersionHarness = generated.EvaluatorVersionHarness
+
+	// EvaluatorVersionRemote is the remote variant of an EvaluatorVersion,
+	// returned by EvaluatorVersion.AsEvaluatorVersionRemote. Only common
+	// version metadata is exposed — the remote configuration is not yet
+	// accessible via the REST API.
+	EvaluatorVersionRemote = generated.EvaluatorVersionRemote
+
+	// EvaluatorType is the evaluator kind: template, code, harness, or remote.
 	EvaluatorType = generated.EvaluatorType
 
 	// TemplateConfig is the configuration for a template (LLM-based)
@@ -75,6 +87,10 @@ const (
 	EvaluatorTypeTemplate EvaluatorType = generated.EvaluatorTypeTemplate
 	// EvaluatorTypeCode is a code (managed built-in or custom Python) evaluator.
 	EvaluatorTypeCode EvaluatorType = generated.EvaluatorTypeCode
+	// EvaluatorTypeHarness is a harness evaluator.
+	EvaluatorTypeHarness EvaluatorType = generated.EvaluatorTypeHarness
+	// EvaluatorTypeRemote is a remote evaluator.
+	EvaluatorTypeRemote EvaluatorType = generated.EvaluatorTypeRemote
 )
 
 // VersionConfig is the configuration payload for a new evaluator version,

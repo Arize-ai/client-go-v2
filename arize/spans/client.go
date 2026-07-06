@@ -58,18 +58,21 @@ func (c *Client) List(
 	return resp.JSON200, nil
 }
 
-// Delete removes spans matching the given criteria. A nil return means all
-// spans were fully deleted (HTTP 204). A non-nil SpanDeletePartial means the
-// server returned HTTP 200: the request was partially processed and only the
-// IDs listed in SpanDeletePartial.DeletedSpanIds were confirmed deleted —
-// the caller should retry for the remainder.
+// Delete removes spans by their IDs. The response always includes Completed
+// (whether a retry is needed), DeletedSpanIds (confirmed deleted), and
+// NotDeletedSpanIds (IDs not deleted — either not found within the supported
+// lookback window, or not reached when Completed is false).
+//
+// When Completed is false, the operation could not fully complete. The caller
+// should retry the original full request. The delete operation is idempotent,
+// so re-submitting already-deleted IDs is safe.
 //
 // req.Project accepts a name or ID; req.Space is required when req.Project is
 // a name.
 func (c *Client) Delete(
 	ctx context.Context,
 	req DeleteRequest,
-) (*SpanDeletePartial, error) {
+) (*SpanDeleteResult, error) {
 	prerelease.Warn("spans.delete", prerelease.Alpha)
 	projectID, err := resolve.FindProjectID(ctx, c.gen, req.Project, req.Space)
 	if err != nil {

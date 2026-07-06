@@ -9,9 +9,9 @@ import (
 // Response, list, and nested types remain aliases to generated wire shapes so
 // callers can construct/assert on them without importing internal/generated.
 type (
-	Span              = generated.Span
-	SpanList          = generated.SpanList
-	SpanDeletePartial = generated.SpanDeletePartial
+	Span             = generated.Span
+	SpanList         = generated.SpanList
+	SpanDeleteResult = generated.SpanDeleteResponse
 
 	// SpanStatusCode is the status code of a span.
 	SpanStatusCode = generated.SpanStatusCode

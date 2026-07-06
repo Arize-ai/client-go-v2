@@ -99,6 +99,10 @@ type ListExamplesRequest struct {
 	// DatasetVersionID is the optional version to list examples from. When
 	// empty, the server uses the dataset's latest version.
 	DatasetVersionID string
+	// Cursor is the optional opaque pagination cursor from a previous
+	// response's pagination.next_cursor. When empty, results start from the
+	// first page.
+	Cursor string
 }
 
 // AppendExamplesRequest identifies the dataset and the examples to append.

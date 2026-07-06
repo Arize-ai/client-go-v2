@@ -53,11 +53,12 @@ func listSpans(ctx context.Context, client *arize.Client, project, space string)
 	}
 }
 
-// deleteSpans removes a batch of spans by ID. The server may return a partial
-// success (HTTP 200 with a SpanDeletePartial listing the IDs actually
-// deleted); a fully-successful delete returns HTTP 204 and a nil partial.
+// deleteSpans removes a batch of spans by ID. The response always contains
+// Completed, DeletedSpanIds, and NotDeletedSpanIds. When Completed is false,
+// the server could not fully process all data — retry the original full
+// request (the delete is idempotent).
 func deleteSpans(ctx context.Context, client *arize.Client, project, space string, spanIDs []string) {
-	partial, err := client.Spans.Delete(ctx, spans.DeleteRequest{
+	result, err := client.Spans.Delete(ctx, spans.DeleteRequest{
 		Project: project,
 		Space:   space,
 		SpanIDs: spanIDs,
@@ -65,10 +66,11 @@ func deleteSpans(ctx context.Context, client *arize.Client, project, space strin
 	if err != nil {
 		log.Fatalf("delete spans: %v", err)
 	}
-	if partial != nil {
-		fmt.Printf("partial delete — server deleted %d of %d spans: %v\n",
-			len(partial.DeletedSpanIds), len(spanIDs), partial.DeletedSpanIds)
-		return
+	fmt.Printf("deleted %d span(s): %v\n", len(result.DeletedSpanIds), result.DeletedSpanIds)
+	if len(result.NotDeletedSpanIds) > 0 {
+		fmt.Printf("not deleted %d span(s): %v\n", len(result.NotDeletedSpanIds), result.NotDeletedSpanIds)
 	}
-	fmt.Printf("deleted all %d spans\n", len(spanIDs))
+	if !result.Completed {
+		fmt.Println("server could not fully process all data — retry the original full request")
+	}
 }

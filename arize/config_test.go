@@ -266,7 +266,7 @@ func TestConfig_Resolve_RequestVerifyEnv(t *testing.T) {
 }
 
 // G. TestConfig_Resolve_Hosts merges DefaultsApplied, Resolve_BaseDomain,
-// Resolve_SingleHost, Resolve_SinglePort_OnlyAffectsFlight, Resolve_FlightDefaults,
+// Resolve_SingleHost, Resolve_SinglePort, Resolve_FlightDefaults,
 // and the 4 Resolve_Region subtests.
 func TestConfig_Resolve_Hosts(t *testing.T) {
 	tests := []struct {
@@ -276,6 +276,8 @@ func TestConfig_Resolve_Hosts(t *testing.T) {
 		wantOTLPHost     string
 		wantFlightHost   string
 		wantFlightPort   int
+		wantAPIPort      int
+		wantOTLPPort     int
 		wantFlightScheme string
 		wantAPIURL       string
 		wantAPIScheme    string
@@ -313,12 +315,29 @@ func TestConfig_Resolve_Hosts(t *testing.T) {
 			wantAPIURL:     "https://single.host.example.com",
 		},
 		{
-			name:           "SinglePort only affects FlightPort",
+			name:           "SinglePort overrides all ports",
 			cfg:            arize.Config{APIKey: "key", SingleHost: "single.host.example.com", SinglePort: 8443},
 			wantAPIHost:    "single.host.example.com",
 			wantOTLPHost:   "single.host.example.com",
 			wantFlightPort: 8443,
-			wantAPIURL:     "https://single.host.example.com",
+			wantAPIPort:    8443,
+			wantOTLPPort:   8443,
+			wantAPIURL:     "https://single.host.example.com:8443",
+		},
+		{
+			name:        "SinglePort with http scheme produces correct APIURL",
+			cfg:         arize.Config{APIKey: "key", SingleHost: "localhost", SinglePort: 4040, APIScheme: "http", OTLPScheme: "http"},
+			wantAPIHost: "localhost",
+			wantAPIPort: 4040,
+			wantOTLPPort: 4040,
+			wantAPIURL:  "http://localhost:4040",
+		},
+		{
+			name:        "APIPort alone without SinglePort",
+			cfg:         arize.Config{APIKey: "key", APIPort: 8080},
+			wantAPIHost: "api.arize.com",
+			wantAPIPort: 8080,
+			wantAPIURL:  "https://api.arize.com:8080",
 		},
 		{
 			name:           "Region us-central",
@@ -368,6 +387,12 @@ func TestConfig_Resolve_Hosts(t *testing.T) {
 			}
 			if tt.wantFlightPort != 0 && cfg.FlightPort != tt.wantFlightPort {
 				t.Errorf("FlightPort: want %d, got %d", tt.wantFlightPort, cfg.FlightPort)
+			}
+			if tt.wantAPIPort != 0 && cfg.APIPort != tt.wantAPIPort {
+				t.Errorf("APIPort: want %d, got %d", tt.wantAPIPort, cfg.APIPort)
+			}
+			if tt.wantOTLPPort != 0 && cfg.OTLPPort != tt.wantOTLPPort {
+				t.Errorf("OTLPPort: want %d, got %d", tt.wantOTLPPort, cfg.OTLPPort)
 			}
 			if tt.wantFlightScheme != "" && cfg.FlightScheme != tt.wantFlightScheme {
 				t.Errorf("FlightScheme: want %q, got %q", tt.wantFlightScheme, cfg.FlightScheme)
@@ -433,10 +458,172 @@ func TestConfig_Resolve_EnvOverridesForNewFields(t *testing.T) {
 	}
 }
 
-// J. TestConfig_APIURL — kept as-is (single-case, no merge target).
+// J. TestConfig_APIURL covers no-port (default) and with-port cases.
 func TestConfig_APIURL(t *testing.T) {
-	cfg := arize.Config{APIKey: "key", APIHost: "api.arize.com", APIScheme: "https"}
-	if url := cfg.APIURL(); url != "https://api.arize.com" {
-		t.Errorf("unexpected APIURL: %s", url)
+	tests := []struct {
+		name    string
+		cfg     arize.Config
+		wantURL string
+	}{
+		{
+			name:    "no port — scheme default applies",
+			cfg:     arize.Config{APIKey: "key", APIHost: "api.arize.com", APIScheme: "https"},
+			wantURL: "https://api.arize.com",
+		},
+		{
+			name:    "with APIPort — port included in URL",
+			cfg:     arize.Config{APIKey: "key", APIHost: "localhost", APIScheme: "http", APIPort: 4040},
+			wantURL: "http://localhost:4040",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if url := tt.cfg.APIURL(); url != tt.wantURL {
+				t.Errorf("APIURL: want %q, got %q", tt.wantURL, url)
+			}
+		})
+	}
+}
+
+// K. TestConfig_Resolve_APIPortEnv checks ARIZE_API_PORT env var is picked up.
+func TestConfig_Resolve_APIPortEnv(t *testing.T) {
+	t.Setenv("ARIZE_API_PORT", "8080")
+	cfg := mustResolve(t, arize.Config{APIKey: "key"})
+	if cfg.APIPort != 8080 {
+		t.Errorf("APIPort: want 8080, got %d", cfg.APIPort)
+	}
+	if url := cfg.APIURL(); url != "https://api.arize.com:8080" {
+		t.Errorf("APIURL: want %q, got %q", "https://api.arize.com:8080", url)
+	}
+}
+
+func TestConfig_SSLCACert(t *testing.T) {
+	tests := []struct {
+		name        string
+		cfg         arize.Config
+		envVars     map[string]string
+		wantCACert  string
+		wantErrIs   error
+		wantErrText string
+	}{
+		{
+			name:       "default empty",
+			cfg:        arize.Config{APIKey: "k"},
+			wantCACert: "",
+		},
+		{
+			name:       "explicit field",
+			cfg:        arize.Config{APIKey: "k", SSLCACert: "/path/to/ca.crt"},
+			wantCACert: "/path/to/ca.crt",
+		},
+		{
+			name:       "ARIZE_SSL_CA_CERT env",
+			cfg:        arize.Config{APIKey: "k"},
+			envVars:    map[string]string{"ARIZE_SSL_CA_CERT": "/arize/ca.crt"},
+			wantCACert: "/arize/ca.crt",
+		},
+		{
+			name:       "SSL_CERT_FILE fallback",
+			cfg:        arize.Config{APIKey: "k"},
+			envVars:    map[string]string{"SSL_CERT_FILE": "/etc/ssl/cert.pem"},
+			wantCACert: "/etc/ssl/cert.pem",
+		},
+		{
+			name:       "ARIZE_SSL_CA_CERT takes priority over SSL_CERT_FILE",
+			cfg:        arize.Config{APIKey: "k"},
+			envVars:    map[string]string{"ARIZE_SSL_CA_CERT": "/arize/ca.crt", "SSL_CERT_FILE": "/etc/ssl/cert.pem"},
+			wantCACert: "/arize/ca.crt",
+		},
+		{
+			name:        "SSLCACert + InsecureSkipVerify mutually exclusive",
+			cfg:         arize.Config{APIKey: "k", SSLCACert: "/path/ca.crt", InsecureSkipVerify: true},
+			wantErrText: "mutually exclusive",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Clear CA-cert env vars so the case starts hermetic — the Bazel
+			// test sandbox sets SSL_CERT_FILE, which the resolution falls back
+			// to and would otherwise leak into the "default empty" case.
+			t.Setenv("ARIZE_SSL_CA_CERT", "")
+			t.Setenv("SSL_CERT_FILE", "")
+			for k, v := range tt.envVars {
+				t.Setenv(k, v)
+			}
+			resolved := mustResolve(t, tt.cfg)
+			err := resolved.Validate()
+			if tt.wantErrText != "" {
+				if err == nil || !strings.Contains(err.Error(), tt.wantErrText) {
+					t.Errorf("Validate: want error containing %q, got %v", tt.wantErrText, err)
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("Validate: unexpected error: %v", err)
+			}
+			if resolved.SSLCACert != tt.wantCACert {
+				t.Errorf("SSLCACert: want %q, got %q", tt.wantCACert, resolved.SSLCACert)
+			}
+		})
+	}
+}
+
+func TestConfig_ProxyURL(t *testing.T) {
+	tests := []struct {
+		name         string
+		cfg          arize.Config
+		envVars      map[string]string
+		wantProxyURL string
+	}{
+		{
+			name:         "default empty",
+			cfg:          arize.Config{APIKey: "k"},
+			wantProxyURL: "",
+		},
+		{
+			name:         "explicit field",
+			cfg:          arize.Config{APIKey: "k", ProxyURL: "http://proxy.corp:8080"},
+			wantProxyURL: "http://proxy.corp:8080",
+		},
+		{
+			name:         "ARIZE_PROXY_URL env",
+			cfg:          arize.Config{APIKey: "k"},
+			envVars:      map[string]string{"ARIZE_PROXY_URL": "http://arize-proxy:3128"},
+			wantProxyURL: "http://arize-proxy:3128",
+		},
+		{
+			// HTTPS_PROXY and HTTP_PROXY are intentionally NOT read into ProxyURL.
+			// They are honoured natively by http.DefaultTransport (which respects
+			// NO_PROXY), so baking them into the struct would silently break NO_PROXY.
+			name:         "HTTPS_PROXY does not set ProxyURL",
+			cfg:          arize.Config{APIKey: "k"},
+			envVars:      map[string]string{"HTTPS_PROXY": "http://system-proxy:8080"},
+			wantProxyURL: "",
+		},
+		{
+			name:         "HTTP_PROXY does not set ProxyURL",
+			cfg:          arize.Config{APIKey: "k"},
+			envVars:      map[string]string{"HTTP_PROXY": "http://fallback-proxy:8080"},
+			wantProxyURL: "",
+		},
+		{
+			name:         "ARIZE_PROXY_URL takes priority over HTTPS_PROXY",
+			cfg:          arize.Config{APIKey: "k"},
+			envVars:      map[string]string{"ARIZE_PROXY_URL": "http://arize-proxy:3128", "HTTPS_PROXY": "http://system-proxy:8080"},
+			wantProxyURL: "http://arize-proxy:3128",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			for k, v := range tt.envVars {
+				t.Setenv(k, v)
+			}
+			resolved := mustResolve(t, tt.cfg)
+			if resolved.ProxyURL != tt.wantProxyURL {
+				t.Errorf("ProxyURL: want %q, got %q", tt.wantProxyURL, resolved.ProxyURL)
+			}
+		})
 	}
 }

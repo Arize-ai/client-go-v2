@@ -393,6 +393,42 @@ func TestDatasets(t *testing.T) {
 			},
 		},
 		{
+			name: "ListExamples_Cursor",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if got := r.URL.Query().Get("cursor"); got != "tok-123" {
+					t.Errorf("cursor query: want tok-123, got %s", got)
+				}
+				exampleID := "ex-2"
+				nextCursor := "tok-456"
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(datasets.DatasetExampleList{
+					Examples: []datasets.DatasetExample{{Id: &exampleID}},
+					Pagination: arize.PaginationMetadata{
+						HasMore:    true,
+						NextCursor: &nextCursor,
+					},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Datasets.ListExamples(ctx, datasets.ListExamplesRequest{
+					Dataset: dsID,
+					Cursor:  "tok-123",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				resp := got.(*datasets.DatasetExampleList)
+				if !resp.Pagination.HasMore {
+					t.Errorf("expected HasMore true")
+				}
+				if resp.Pagination.NextCursor == nil || *resp.Pagination.NextCursor != "tok-456" {
+					t.Errorf("expected NextCursor tok-456, got %v", resp.Pagination.NextCursor)
+				}
+			},
+		},
+		{
 			name: "Update",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				if r.Method != http.MethodPatch {

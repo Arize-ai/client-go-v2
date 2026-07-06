@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.15.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.14.0...arize-go-sdk-v2/v0.15.0) (2026-07-02)
+
+
+### 🎁 New Features
+
+* **audit-logs:** Paginated audit log retrieval for enterprise accounts ([#72292](https://github.com/Arize-ai/arize/issues/72292)) ([3a0a4d2](https://github.com/Arize-ai/arize/commit/3a0a4d28d8ee789ed72e1c6ce515c330d02782b1))
+* **experiments:** pagination for experiment runs ([#76009](https://github.com/Arize-ai/arize/issues/76009)) ([fdafcb4](https://github.com/Arize-ai/arize/commit/fdafcb462ea9e95f45838e6f411b7199e3804bd6)), closes [#71230](https://github.com/Arize-ai/arize/issues/71230)
+
+
+### 🐛 Bug Fixes
+
+* add harness/remote evaluator support ([#77172](https://github.com/Arize-ai/arize/issues/77172)) ([743115c](https://github.com/Arize-ai/arize/commit/743115cc8c24227f6148371e34f4967ccafcb93c)), closes [#77058](https://github.com/Arize-ai/arize/issues/77058)
+
 ## [0.14.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.13.0...arize-go-sdk-v2/v0.14.0) (2026-06-23)
 
 

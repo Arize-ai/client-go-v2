@@ -9,6 +9,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net"
+	"net/url"
 	"os"
 	"runtime"
 	"slices"
@@ -63,6 +65,19 @@ func envInt(name string, def int) (int, error) {
 		return 0, fmt.Errorf("%s is not a valid integer: %q", name, v)
 	}
 	return n, nil
+}
+
+// envStrFallback returns the value of the first env var in names that is set
+// and non-empty, falling back to def if none are set. Used to honour familiar
+// standard env vars alongside Arize-specific overrides
+// (e.g. ARIZE_SSL_CA_CERT → SSL_CERT_FILE).
+func envStrFallback(def string, names ...string) string {
+	for _, name := range names {
+		if v := strings.TrimSpace(os.Getenv(name)); v != "" {
+			return v
+		}
+	}
+	return def
 }
 
 // envFloat returns the env value parsed as float64 if set, otherwise def.
@@ -169,9 +184,15 @@ type Config struct {
 	APIKey    string
 	APIHost   string
 	APIScheme string
+	// APIPort is the REST API port. 0 means use the scheme default (omit from
+	// URL). Env: ARIZE_API_PORT. Set by SinglePort when that override is active.
+	APIPort int
 
 	OTLPHost   string
 	OTLPScheme string
+	// OTLPPort is the OTLP port. 0 means use the scheme default (omit from
+	// URL). Env: ARIZE_OTLP_PORT. Set by SinglePort when that override is active.
+	OTLPPort int
 
 	FlightHost   string
 	FlightPort   int
@@ -183,7 +204,22 @@ type Config struct {
 	BaseDomain string
 
 	InsecureSkipVerify bool // default: false (TLS verified); env: ARIZE_REQUEST_VERIFY=false
-	HTTPTimeout        time.Duration
+
+	// SSLCACert is the path to a CA bundle file used to verify TLS certificates.
+	// Useful when connecting through a reverse proxy or on-prem gateway that
+	// presents its own certificate. Mutually exclusive with InsecureSkipVerify.
+	// Resolution order: ARIZE_SSL_CA_CERT → SSL_CERT_FILE → "" (system CAs).
+	SSLCACert string
+
+	// ProxyURL is an HTTP(S) egress proxy URL for REST API calls
+	// (e.g. "http://proxy.corp:8080"). When empty, Go's default transport
+	// honours HTTPS_PROXY / HTTP_PROXY / NO_PROXY env vars natively.
+	// Only ARIZE_PROXY_URL is read here; setting HTTPS_PROXY / HTTP_PROXY in
+	// the environment is the recommended way to proxy without losing NO_PROXY
+	// support. Env: ARIZE_PROXY_URL.
+	ProxyURL string
+
+	HTTPTimeout time.Duration
 
 	// MaxHTTPPayloadSizeMB caps outbound HTTP payload size in megabytes.
 	// Default 8 MB; env: ARIZE_MAX_HTTP_PAYLOAD_SIZE_MB.
@@ -208,9 +244,8 @@ type Config struct {
 // set, and endpoint overrides (Region/SingleHost/SinglePort/BaseDomain) applied.
 // Returns an error if a port-valued env var cannot be parsed as an integer.
 //
-// SinglePort only rewrites FlightPort, never APIHost. For an on-prem REST-only
-// deployment served on a non-default port, set ARIZE_API_HOST to "host:port"
-// or set Config.APIHost directly.
+// SinglePort rewrites FlightPort, APIPort, and OTLPPort. APIURL() and any
+// future OTLP URL helpers include the port when non-zero.
 func (c Config) Resolve() (Config, error) {
 	var err error
 	if c.APIKey == "" {
@@ -222,11 +257,21 @@ func (c Config) Resolve() (Config, error) {
 	if c.APIScheme == "" {
 		c.APIScheme = envStr("ARIZE_API_SCHEME", defaultAPIScheme)
 	}
+	if c.APIPort == 0 {
+		if c.APIPort, err = envInt("ARIZE_API_PORT", 0); err != nil {
+			return Config{}, err
+		}
+	}
 	if c.OTLPHost == "" {
 		c.OTLPHost = envStr("ARIZE_OTLP_HOST", defaultOTLPHost)
 	}
 	if c.OTLPScheme == "" {
 		c.OTLPScheme = envStr("ARIZE_OTLP_SCHEME", defaultOTLPScheme)
+	}
+	if c.OTLPPort == 0 {
+		if c.OTLPPort, err = envInt("ARIZE_OTLP_PORT", 0); err != nil {
+			return Config{}, err
+		}
 	}
 	if c.FlightHost == "" {
 		c.FlightHost = envStr("ARIZE_FLIGHT_HOST", defaultFlightHost)
@@ -259,6 +304,12 @@ func (c Config) Resolve() (Config, error) {
 		if verify, ok := parseBoolEnv("ARIZE_REQUEST_VERIFY"); ok {
 			c.InsecureSkipVerify = !verify
 		}
+	}
+	if c.SSLCACert == "" {
+		c.SSLCACert = envStrFallback("", "ARIZE_SSL_CA_CERT", "SSL_CERT_FILE")
+	}
+	if c.ProxyURL == "" {
+		c.ProxyURL = envStr("ARIZE_PROXY_URL", "")
 	}
 	if c.HTTPTimeout == 0 {
 		c.HTTPTimeout = 30 * time.Second
@@ -303,6 +354,12 @@ func (c Config) Resolve() (Config, error) {
 	}
 	if c.SinglePort != 0 {
 		c.FlightPort = c.SinglePort
+		if c.APIPort == 0 {
+			c.APIPort = c.SinglePort
+		}
+		if c.OTLPPort == 0 {
+			c.OTLPPort = c.SinglePort
+		}
 	}
 	if c.Region != "" {
 		if endpoints, ok := defaultRegionEndpoints[c.Region]; ok {
@@ -353,6 +410,12 @@ func (c Config) Validate() error {
 	if c.FlightPort < 1 || c.FlightPort > 65535 {
 		return fmt.Errorf("flight_port must be 1-65535, got %d", c.FlightPort)
 	}
+	if c.APIPort != 0 && (c.APIPort < 1 || c.APIPort > 65535) {
+		return fmt.Errorf("api_port must be 1-65535, got %d", c.APIPort)
+	}
+	if c.OTLPPort != 0 && (c.OTLPPort < 1 || c.OTLPPort > 65535) {
+		return fmt.Errorf("otlp_port must be 1-65535, got %d", c.OTLPPort)
+	}
 	if _, ok := allowedHTTPSchemes[strings.ToLower(c.APIScheme)]; !ok {
 		return fmt.Errorf("api_scheme must be one of [http https], got %q", c.APIScheme)
 	}
@@ -362,6 +425,9 @@ func (c Config) Validate() error {
 	if c.Region != "" && !IsValidRegion(c.Region) {
 		return fmt.Errorf("region %q is not a known region", c.Region)
 	}
+	if c.SSLCACert != "" && c.InsecureSkipVerify {
+		return fmt.Errorf("ssl_ca_cert and insecure_skip_verify are mutually exclusive: set one or the other, not both")
+	}
 	if c.MaxHTTPPayloadSizeMB < 1 {
 		return fmt.Errorf("max_http_payload_size_mb must be >= 1, got %v", c.MaxHTTPPayloadSizeMB)
 	}
@@ -369,6 +435,23 @@ func (c Config) Validate() error {
 		return fmt.Errorf("max_past_years must be >= 1, got %d", c.MaxPastYears)
 	}
 	return nil
+}
+
+// maskURL redacts the password component of a URL (e.g. proxy credentials)
+// while preserving the rest. Returns u unchanged if it is not a valid URL or
+// contains no credentials.
+func maskURL(u string) string {
+	if u == "" {
+		return ""
+	}
+	parsed, err := url.Parse(u)
+	if err != nil || parsed.User == nil {
+		return u
+	}
+	if _, hasPassword := parsed.User.Password(); hasPassword {
+		parsed.User = url.UserPassword(parsed.User.Username(), "***")
+	}
+	return parsed.String()
 }
 
 // maskSecret returns the first 6 chars of s followed by "***", "***" if the
@@ -387,22 +470,33 @@ func maskSecret(s string) string {
 // fmt.Println / %v / %+v / log lines do not leak the API key.
 func (c Config) String() string {
 	return fmt.Sprintf(
-		"Config{APIKey:%s, APIHost:%q, APIScheme:%q, OTLPHost:%q, OTLPScheme:%q, "+
+		"Config{APIKey:%s, APIHost:%q, APIScheme:%q, APIPort:%d, OTLPHost:%q, OTLPScheme:%q, OTLPPort:%d, "+
 			"FlightHost:%q, FlightPort:%d, FlightScheme:%q, "+
 			"Region:%q, SingleHost:%q, SinglePort:%d, BaseDomain:%q, "+
-			"InsecureSkipVerify:%t, HTTPTimeout:%s, "+
+			"InsecureSkipVerify:%t, SSLCACert:%q, ProxyURL:%q, HTTPTimeout:%s, "+
 			"MaxHTTPPayloadSizeMB:%v, ArizeDirectory:%q, DisableCaching:%t, MaxPastYears:%d}",
-		maskSecret(c.APIKey), c.APIHost, c.APIScheme, c.OTLPHost, c.OTLPScheme,
+		maskSecret(c.APIKey), c.APIHost, c.APIScheme, c.APIPort, c.OTLPHost, c.OTLPScheme, c.OTLPPort,
 		c.FlightHost, c.FlightPort, c.FlightScheme,
 		c.Region, c.SingleHost, c.SinglePort, c.BaseDomain,
-		c.InsecureSkipVerify, c.HTTPTimeout,
+		c.InsecureSkipVerify, c.SSLCACert, maskURL(c.ProxyURL), c.HTTPTimeout,
 		c.MaxHTTPPayloadSizeMB, c.ArizeDirectory, c.DisableCaching, c.MaxPastYears,
 	)
 }
 
-// APIURL returns the base URL for REST API calls.
+// APIURL returns the base URL for REST API calls. When APIPort is non-zero the
+// URL includes the port (e.g. "http://localhost:4040"); otherwise the scheme's
+// standard port applies and no port is appended. Any port already embedded in
+// APIHost (e.g. from ARIZE_API_HOST=host:8080) is stripped when APIPort is set
+// to avoid producing a double-port URL.
 func (c Config) APIURL() string {
-	return fmt.Sprintf("%s://%s", c.APIScheme, c.APIHost)
+	host := c.APIHost
+	if c.APIPort != 0 {
+		if h, _, err := net.SplitHostPort(host); err == nil {
+			host = h
+		}
+		return fmt.Sprintf("%s://%s:%d", c.APIScheme, host, c.APIPort)
+	}
+	return fmt.Sprintf("%s://%s", c.APIScheme, host)
 }
 
 // Headers returns HTTP headers to attach to every request. The authorization

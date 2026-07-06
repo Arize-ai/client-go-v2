@@ -296,6 +296,27 @@ func (e AssignmentMethod) Valid() bool {
 	}
 }
 
+// Defines values for AuditLogOperationType.
+const (
+	AuditLogOperationTypeMUTATION     AuditLogOperationType = "MUTATION"
+	AuditLogOperationTypeQUERY        AuditLogOperationType = "QUERY"
+	AuditLogOperationTypeSUBSCRIPTION AuditLogOperationType = "SUBSCRIPTION"
+)
+
+// Valid indicates whether the value is a known member of the AuditLogOperationType enum.
+func (e AuditLogOperationType) Valid() bool {
+	switch e {
+	case AuditLogOperationTypeMUTATION:
+		return true
+	case AuditLogOperationTypeQUERY:
+		return true
+	case AuditLogOperationTypeSUBSCRIPTION:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AwsProviderMetadataKind.
 const (
 	AwsProviderMetadataKindAws AwsProviderMetadataKind = "aws"
@@ -341,6 +362,21 @@ func (e CategoricalAnnotationConfigCreateAnnotationConfigType) Valid() bool {
 	}
 }
 
+// Defines values for CategoricalAnnotationConfigUpdateAnnotationConfigType.
+const (
+	CategoricalAnnotationConfigUpdateAnnotationConfigTypeCategorical CategoricalAnnotationConfigUpdateAnnotationConfigType = "categorical"
+)
+
+// Valid indicates whether the value is a known member of the CategoricalAnnotationConfigUpdateAnnotationConfigType enum.
+func (e CategoricalAnnotationConfigUpdateAnnotationConfigType) Valid() bool {
+	switch e {
+	case CategoricalAnnotationConfigUpdateAnnotationConfigTypeCategorical:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ContinuousAnnotationConfigType.
 const (
 	ContinuousAnnotationConfigTypeContinuous ContinuousAnnotationConfigType = "continuous"
@@ -371,6 +407,21 @@ func (e ContinuousAnnotationConfigCreateAnnotationConfigType) Valid() bool {
 	}
 }
 
+// Defines values for ContinuousAnnotationConfigUpdateAnnotationConfigType.
+const (
+	ContinuousAnnotationConfigUpdateAnnotationConfigTypeContinuous ContinuousAnnotationConfigUpdateAnnotationConfigType = "continuous"
+)
+
+// Valid indicates whether the value is a known member of the ContinuousAnnotationConfigUpdateAnnotationConfigType enum.
+func (e ContinuousAnnotationConfigUpdateAnnotationConfigType) Valid() bool {
+	switch e {
+	case ContinuousAnnotationConfigUpdateAnnotationConfigTypeContinuous:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for CreateCodeEvaluationTaskRequestType.
 const (
 	CreateCodeEvaluationTaskRequestTypeCodeEvaluation CreateCodeEvaluationTaskRequestType = "code_evaluation"
@@ -380,6 +431,36 @@ const (
 func (e CreateCodeEvaluationTaskRequestType) Valid() bool {
 	switch e {
 	case CreateCodeEvaluationTaskRequestTypeCodeEvaluation:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateLlmIntegrationRequestType.
+const (
+	CreateLlmIntegrationRequestTypeLlm CreateLlmIntegrationRequestType = "llm"
+)
+
+// Valid indicates whether the value is a known member of the CreateLlmIntegrationRequestType enum.
+func (e CreateLlmIntegrationRequestType) Valid() bool {
+	switch e {
+	case CreateLlmIntegrationRequestTypeLlm:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateOpenAiConfigProvider.
+const (
+	CreateOpenAiConfigProviderOpenAI CreateOpenAiConfigProvider = "openAI"
+)
+
+// Valid indicates whether the value is a known member of the CreateOpenAiConfigProvider enum.
+func (e CreateOpenAiConfigProvider) Valid() bool {
+	switch e {
+	case CreateOpenAiConfigProviderOpenAI:
 		return true
 	default:
 		return false
@@ -455,6 +536,8 @@ func (e DataGranularity) Valid() bool {
 // Defines values for EvaluatorType.
 const (
 	EvaluatorTypeCode     EvaluatorType = "code"
+	EvaluatorTypeHarness  EvaluatorType = "harness"
+	EvaluatorTypeRemote   EvaluatorType = "remote"
 	EvaluatorTypeTemplate EvaluatorType = "template"
 )
 
@@ -462,6 +545,10 @@ const (
 func (e EvaluatorType) Valid() bool {
 	switch e {
 	case EvaluatorTypeCode:
+		return true
+	case EvaluatorTypeHarness:
+		return true
+	case EvaluatorTypeRemote:
 		return true
 	case EvaluatorTypeTemplate:
 		return true
@@ -479,6 +566,36 @@ const (
 func (e EvaluatorVersionCodeType) Valid() bool {
 	switch e {
 	case EvaluatorVersionCodeTypeCode:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for EvaluatorVersionHarnessType.
+const (
+	EvaluatorVersionHarnessTypeHarness EvaluatorVersionHarnessType = "harness"
+)
+
+// Valid indicates whether the value is a known member of the EvaluatorVersionHarnessType enum.
+func (e EvaluatorVersionHarnessType) Valid() bool {
+	switch e {
+	case EvaluatorVersionHarnessTypeHarness:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for EvaluatorVersionRemoteType.
+const (
+	EvaluatorVersionRemoteTypeRemote EvaluatorVersionRemoteType = "remote"
+)
+
+// Valid indicates whether the value is a known member of the EvaluatorVersionRemoteType enum.
+func (e EvaluatorVersionRemoteType) Valid() bool {
+	switch e {
+	case EvaluatorVersionRemoteTypeRemote:
 		return true
 	default:
 		return false
@@ -530,6 +647,21 @@ func (e FreeformAnnotationConfigCreateAnnotationConfigType) Valid() bool {
 	}
 }
 
+// Defines values for FreeformAnnotationConfigUpdateAnnotationConfigType.
+const (
+	FreeformAnnotationConfigUpdateAnnotationConfigTypeFreeform FreeformAnnotationConfigUpdateAnnotationConfigType = "freeform"
+)
+
+// Valid indicates whether the value is a known member of the FreeformAnnotationConfigUpdateAnnotationConfigType enum.
+func (e FreeformAnnotationConfigUpdateAnnotationConfigType) Valid() bool {
+	switch e {
+	case FreeformAnnotationConfigUpdateAnnotationConfigTypeFreeform:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for GcpProviderMetadataKind.
 const (
 	GcpProviderMetadataKindGcp GcpProviderMetadataKind = "gcp"
@@ -566,6 +698,21 @@ func (e InputVariableFormat) Valid() bool {
 	}
 }
 
+// Defines values for IntegrationType.
+const (
+	IntegrationTypeLlm IntegrationType = "llm"
+)
+
+// Valid indicates whether the value is a known member of the IntegrationType enum.
+func (e IntegrationType) Valid() bool {
+	switch e {
+	case IntegrationTypeLlm:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for InviteMode.
 const (
 	InviteModeEmailLink         InviteMode = "email_link"
@@ -596,6 +743,36 @@ const (
 func (e LlmGenerationRunConfigExperimentType) Valid() bool {
 	switch e {
 	case LlmGenerationRunConfigExperimentTypeLlmGeneration:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for LlmIntegrationType.
+const (
+	LlmIntegrationTypeLlm LlmIntegrationType = "llm"
+)
+
+// Valid indicates whether the value is a known member of the LlmIntegrationType enum.
+func (e LlmIntegrationType) Valid() bool {
+	switch e {
+	case LlmIntegrationTypeLlm:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for LlmIntegrationProvider.
+const (
+	LlmIntegrationProviderOpenAI LlmIntegrationProvider = "openAI"
+)
+
+// Valid indicates whether the value is a known member of the LlmIntegrationProvider enum.
+func (e LlmIntegrationProvider) Valid() bool {
+	switch e {
+	case LlmIntegrationProviderOpenAI:
 		return true
 	default:
 		return false
@@ -692,6 +869,21 @@ func (e MessageRole) Valid() bool {
 	case MessageRoleTool:
 		return true
 	case MessageRoleUser:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OpenAiConfigProvider.
+const (
+	OpenAiConfigProviderOpenAI OpenAiConfigProvider = "openAI"
+)
+
+// Valid indicates whether the value is a known member of the OpenAiConfigProvider enum.
+func (e OpenAiConfigProvider) Valid() bool {
+	switch e {
+	case OpenAiConfigProviderOpenAI:
 		return true
 	default:
 		return false
@@ -1346,6 +1538,21 @@ func (e ToolCallType) Valid() bool {
 	}
 }
 
+// Defines values for UpdateLlmIntegrationRequestType.
+const (
+	UpdateLlmIntegrationRequestTypeLlm UpdateLlmIntegrationRequestType = "llm"
+)
+
+// Valid indicates whether the value is a known member of the UpdateLlmIntegrationRequestType enum.
+func (e UpdateLlmIntegrationRequestType) Valid() bool {
+	switch e {
+	case UpdateLlmIntegrationRequestTypeLlm:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for UserRole.
 const (
 	UserRoleAdmin     UserRole = "admin"
@@ -1581,7 +1788,8 @@ type Annotation struct {
 
 // AnnotationConfig defines model for AnnotationConfig.
 type AnnotationConfig struct {
-	union json.RawMessage
+	AdditionalProperties map[string]interface{} `json:"-"`
+	union                json.RawMessage
 }
 
 // AnnotationConfigBase defines model for AnnotationConfigBase.
@@ -1623,6 +1831,12 @@ type AnnotationConfigListResponse struct {
 // - categorical: a set of labeled values each with an optional score
 // - freeform: free-text annotation with no structured scoring
 type AnnotationConfigType string
+
+// AnnotationConfigUpdateBase The base annotation config update parameters
+type AnnotationConfigUpdateBase struct {
+	// Name New name for the annotation config. Must be unique within the space.
+	Name *string `json:"name,omitempty"`
+}
 
 // AnnotationInput An annotation value to set on a record, identified by its annotation config name. Omitting a field leaves the existing value unchanged.
 type AnnotationInput struct {
@@ -2040,6 +2254,36 @@ type AssignAnnotationQueueRecordRequestBody struct {
 // - `random`: Each record is randomly assigned to one annotator.
 type AssignmentMethod string
 
+// AuditLog A single audit log entry recording an authenticated user action.
+type AuditLog struct {
+	// CreatedAt ISO 8601 timestamp when the action was recorded.
+	CreatedAt time.Time `json:"created_at"`
+
+	// Id A universally unique identifier (base64-encoded opaque string).
+	Id Id `json:"id"`
+
+	// Ip The IP address from which the request originated.
+	Ip string `json:"ip"`
+
+	// OperationName The name of the GraphQL operation or REST endpoint.
+	OperationName *string `json:"operation_name,omitempty"`
+
+	// OperationText The full text of the operation (query or mutation body, or REST request body).
+	OperationText *string `json:"operation_text,omitempty"`
+
+	// OperationType The type of operation that was audited.
+	OperationType AuditLogOperationType `json:"operation_type"`
+
+	// UserId A universally unique identifier (base64-encoded opaque string).
+	UserId Id `json:"user_id"`
+
+	// Variables JSON-serialized variables passed with the operation.
+	Variables *string `json:"variables,omitempty"`
+}
+
+// AuditLogOperationType The type of operation that was audited.
+type AuditLogOperationType string
+
 // AwsProviderMetadata AWS Bedrock provider metadata
 type AwsProviderMetadata struct {
 	// ExternalId External ID for the assume-role policy
@@ -2147,6 +2391,26 @@ type CategoricalAnnotationConfigCreate struct {
 // CategoricalAnnotationConfigCreateAnnotationConfigType Discriminator value identifying a categorical annotation config.
 type CategoricalAnnotationConfigCreateAnnotationConfigType string
 
+// CategoricalAnnotationConfigUpdate defines model for CategoricalAnnotationConfigUpdate.
+type CategoricalAnnotationConfigUpdate struct {
+	// AnnotationConfigType Discriminator value identifying a categorical annotation config. The config
+	// `type` is immutable and must match the stored config's type.
+	AnnotationConfigType CategoricalAnnotationConfigUpdateAnnotationConfigType `json:"annotation_config_type"`
+
+	// Name New name for the annotation config. Must be unique within the space.
+	Name *string `json:"name,omitempty"`
+
+	// OptimizationDirection New optimization direction.
+	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
+
+	// Values The full replacement set of categorical annotation values (2–100 items).
+	Values *[]CategoricalAnnotationValue `json:"values,omitempty"`
+}
+
+// CategoricalAnnotationConfigUpdateAnnotationConfigType Discriminator value identifying a categorical annotation config. The config
+// `type` is immutable and must match the stored config's type.
+type CategoricalAnnotationConfigUpdateAnnotationConfigType string
+
 // CategoricalAnnotationValue defines model for CategoricalAnnotationValue.
 type CategoricalAnnotationValue struct {
 	// Label The label value
@@ -2229,6 +2493,29 @@ type ContinuousAnnotationConfigCreate struct {
 // ContinuousAnnotationConfigCreateAnnotationConfigType Discriminator value identifying a continuous annotation config.
 type ContinuousAnnotationConfigCreateAnnotationConfigType string
 
+// ContinuousAnnotationConfigUpdate defines model for ContinuousAnnotationConfigUpdate.
+type ContinuousAnnotationConfigUpdate struct {
+	// AnnotationConfigType Discriminator value identifying a continuous annotation config. The config
+	// `type` is immutable and must match the stored config's type.
+	AnnotationConfigType ContinuousAnnotationConfigUpdateAnnotationConfigType `json:"annotation_config_type"`
+
+	// MaximumScore New maximum score value.
+	MaximumScore *float64 `json:"maximum_score,omitempty"`
+
+	// MinimumScore New minimum score value.
+	MinimumScore *float64 `json:"minimum_score,omitempty"`
+
+	// Name New name for the annotation config. Must be unique within the space.
+	Name *string `json:"name,omitempty"`
+
+	// OptimizationDirection New optimization direction.
+	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
+}
+
+// ContinuousAnnotationConfigUpdateAnnotationConfigType Discriminator value identifying a continuous annotation config. The config
+// `type` is immutable and must match the stored config's type.
+type ContinuousAnnotationConfigUpdateAnnotationConfigType string
+
 // CreateAnnotationConfigRequestBody defines model for CreateAnnotationConfigRequestBody.
 type CreateAnnotationConfigRequestBody struct {
 	// AnnotationConfigType The type of annotation config:
@@ -2308,6 +2595,56 @@ type CreateCodeEvaluationTaskRequest struct {
 
 // CreateCodeEvaluationTaskRequestType Task type discriminator. Must be `"code_evaluation"`.
 type CreateCodeEvaluationTaskRequestType string
+
+// CreateIntegrationRequest defines model for CreateIntegrationRequest.
+type CreateIntegrationRequest struct {
+	union json.RawMessage
+}
+
+// CreateLlmConfig defines model for CreateLlmConfig.
+type CreateLlmConfig struct {
+	union json.RawMessage
+}
+
+// CreateLlmConfigBase defines model for CreateLlmConfigBase.
+type CreateLlmConfigBase struct {
+	// IsDefaultModelsEnabled Enable the provider's default model list. Defaults to false.
+	IsDefaultModelsEnabled *bool `json:"is_default_models_enabled,omitempty"`
+
+	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
+	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
+}
+
+// CreateLlmIntegrationRequest defines model for CreateLlmIntegrationRequest.
+type CreateLlmIntegrationRequest struct {
+	Config CreateLlmConfig `json:"config"`
+
+	// Name Integration name. Unique per (account, type).
+	Name string `json:"name"`
+
+	// Scopings Visibility scoping rules. Defaults to account-wide.
+	Scopings *[]IntegrationScoping           `json:"scopings,omitempty"`
+	Type     CreateLlmIntegrationRequestType `json:"type"`
+}
+
+// CreateLlmIntegrationRequestType defines model for CreateLlmIntegrationRequest.Type.
+type CreateLlmIntegrationRequestType string
+
+// CreateOpenAiConfig defines model for CreateOpenAiConfig.
+type CreateOpenAiConfig struct {
+	// ApiKey API key for the provider (write-only, never returned).
+	ApiKey string `json:"api_key"`
+
+	// IsDefaultModelsEnabled Enable the provider's default model list. Defaults to false.
+	IsDefaultModelsEnabled *bool `json:"is_default_models_enabled,omitempty"`
+
+	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
+	IsFunctionCallingEnabled *bool                      `json:"is_function_calling_enabled,omitempty"`
+	Provider                 CreateOpenAiConfigProvider `json:"provider"`
+}
+
+// CreateOpenAiConfigProvider defines model for CreateOpenAiConfig.Provider.
+type CreateOpenAiConfigProvider string
 
 // CreateRunExperimentTaskRequest Request body for creating a `run_experiment` task. Requires `dataset_id` and
 // `run_configuration`. Does not support continuous execution — runs are triggered
@@ -2638,9 +2975,15 @@ type Evaluator struct {
 	// SpaceId The unique identifier for the space the evaluator belongs to
 	SpaceId string `json:"space_id"`
 
-	// Type The evaluator type: `template` (LLM-based) or `code` (managed built-in
-	// evaluators or custom Python code — both are subtypes of `code`,
-	// discriminated by the nested `CodeConfig.type` = `managed` | `custom`).
+	// Type The evaluator type:
+	//
+	// - `template` — LLM-based evaluator.
+	// - `code` — managed built-in evaluators or custom Python code (both are
+	//   subtypes of `code`, discriminated by the nested `CodeConfig.type` =
+	//   `managed` | `custom`).
+	// - `harness` — test harness evaluator.
+	// - `remote` — remote evaluator.
+	//
 	// Applies to both the parent `Evaluator.type` field and every version's `type`
 	// discriminator — a version's `type` must always match its parent evaluator's `type`.
 	Type EvaluatorType `json:"type"`
@@ -2674,16 +3017,21 @@ type EvaluatorLlmConfig struct {
 	ProviderParameters ProviderParams `json:"provider_parameters"`
 }
 
-// EvaluatorType The evaluator type: `template` (LLM-based) or `code` (managed built-in
-// evaluators or custom Python code — both are subtypes of `code`,
-// discriminated by the nested `CodeConfig.type` = `managed` | `custom`).
+// EvaluatorType The evaluator type:
+//
+//   - `template` — LLM-based evaluator.
+//   - `code` — managed built-in evaluators or custom Python code (both are
+//     subtypes of `code`, discriminated by the nested `CodeConfig.type` =
+//     `managed` | `custom`).
+//   - `harness` — test harness evaluator.
+//   - `remote` — remote evaluator.
+//
 // Applies to both the parent `Evaluator.type` field and every version's `type`
 // discriminator — a version's `type` must always match its parent evaluator's `type`.
 type EvaluatorType string
 
-// EvaluatorVersion A versioned snapshot of an evaluator's configuration. Exactly one of
-// `template_config` or `code_config` is present. The `type` field discriminates
-// the branch and matches the parent evaluator's `type`.
+// EvaluatorVersion A versioned snapshot of an evaluator's configuration. The `type` field
+// discriminates the branch and matches the parent evaluator's `type`.
 type EvaluatorVersion struct {
 	union json.RawMessage
 }
@@ -2753,9 +3101,15 @@ type EvaluatorVersionCommon struct {
 	// Id The unique identifier for this version
 	Id string `json:"id"`
 
-	// Type The evaluator type: `template` (LLM-based) or `code` (managed built-in
-	// evaluators or custom Python code — both are subtypes of `code`,
-	// discriminated by the nested `CodeConfig.type` = `managed` | `custom`).
+	// Type The evaluator type:
+	//
+	// - `template` — LLM-based evaluator.
+	// - `code` — managed built-in evaluators or custom Python code (both are
+	//   subtypes of `code`, discriminated by the nested `CodeConfig.type` =
+	//   `managed` | `custom`).
+	// - `harness` — test harness evaluator.
+	// - `remote` — remote evaluator.
+	//
 	// Applies to both the parent `Evaluator.type` field and every version's `type`
 	// discriminator — a version's `type` must always match its parent evaluator's `type`.
 	Type EvaluatorType `json:"type"`
@@ -2767,6 +3121,33 @@ type EvaluatorVersionCreate struct {
 	union json.RawMessage
 }
 
+// EvaluatorVersionHarness defines model for EvaluatorVersionHarness.
+type EvaluatorVersionHarness struct {
+	// CommitHash A unique hash identifying this version
+	CommitHash string `json:"commit_hash"`
+
+	// CommitMessage A message describing the changes in this version
+	CommitMessage *string `json:"commit_message"`
+
+	// CreatedAt When this version was created
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId The unique identifier for the user who created this version
+	CreatedByUserId *string `json:"created_by_user_id"`
+
+	// EvaluatorId The parent evaluator ID
+	EvaluatorId string `json:"evaluator_id"`
+
+	// Id The unique identifier for this version
+	Id string `json:"id"`
+
+	// Type Discriminator identifying this as a harness evaluator version.
+	Type EvaluatorVersionHarnessType `json:"type"`
+}
+
+// EvaluatorVersionHarnessType Discriminator identifying this as a harness evaluator version.
+type EvaluatorVersionHarnessType string
+
 // EvaluatorVersionListResponse defines model for EvaluatorVersionListResponse.
 type EvaluatorVersionListResponse struct {
 	// EvaluatorVersions A list of evaluator versions
@@ -2776,6 +3157,33 @@ type EvaluatorVersionListResponse struct {
 	// request's `cursor` query parameter.
 	Pagination PaginationMetadata `json:"pagination"`
 }
+
+// EvaluatorVersionRemote defines model for EvaluatorVersionRemote.
+type EvaluatorVersionRemote struct {
+	// CommitHash A unique hash identifying this version
+	CommitHash string `json:"commit_hash"`
+
+	// CommitMessage A message describing the changes in this version
+	CommitMessage *string `json:"commit_message"`
+
+	// CreatedAt When this version was created
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId The unique identifier for the user who created this version
+	CreatedByUserId *string `json:"created_by_user_id"`
+
+	// EvaluatorId The parent evaluator ID
+	EvaluatorId string `json:"evaluator_id"`
+
+	// Id The unique identifier for this version
+	Id string `json:"id"`
+
+	// Type Discriminator identifying this as a remote evaluator version.
+	Type EvaluatorVersionRemoteType `json:"type"`
+}
+
+// EvaluatorVersionRemoteType Discriminator identifying this as a remote evaluator version.
+type EvaluatorVersionRemoteType string
 
 // EvaluatorVersionTemplate defines model for EvaluatorVersionTemplate.
 type EvaluatorVersionTemplate struct {
@@ -2832,9 +3240,15 @@ type EvaluatorWithVersion struct {
 	// SpaceId The unique identifier for the space the evaluator belongs to
 	SpaceId string `json:"space_id"`
 
-	// Type The evaluator type: `template` (LLM-based) or `code` (managed built-in
-	// evaluators or custom Python code — both are subtypes of `code`,
-	// discriminated by the nested `CodeConfig.type` = `managed` | `custom`).
+	// Type The evaluator type:
+	//
+	// - `template` — LLM-based evaluator.
+	// - `code` — managed built-in evaluators or custom Python code (both are
+	//   subtypes of `code`, discriminated by the nested `CodeConfig.type` =
+	//   `managed` | `custom`).
+	// - `harness` — test harness evaluator.
+	// - `remote` — remote evaluator.
+	//
 	// Applies to both the parent `Evaluator.type` field and every version's `type`
 	// discriminator — a version's `type` must always match its parent evaluator's `type`.
 	Type EvaluatorType `json:"type"`
@@ -2842,9 +3256,8 @@ type EvaluatorWithVersion struct {
 	// UpdatedAt When the evaluator was last updated
 	UpdatedAt time.Time `json:"updated_at"`
 
-	// Version A versioned snapshot of an evaluator's configuration. Exactly one of
-	// `template_config` or `code_config` is present. The `type` field discriminates
-	// the branch and matches the parent evaluator's `type`.
+	// Version A versioned snapshot of an evaluator's configuration. The `type` field
+	// discriminates the branch and matches the parent evaluator's `type`.
 	Version EvaluatorVersion `json:"version"`
 }
 
@@ -2991,6 +3404,20 @@ type FreeformAnnotationConfigCreate struct {
 // FreeformAnnotationConfigCreateAnnotationConfigType Discriminator value identifying a freeform annotation config.
 type FreeformAnnotationConfigCreateAnnotationConfigType string
 
+// FreeformAnnotationConfigUpdate defines model for FreeformAnnotationConfigUpdate.
+type FreeformAnnotationConfigUpdate struct {
+	// AnnotationConfigType Discriminator value identifying a freeform annotation config. The config
+	// `type` is immutable and must match the stored config's type.
+	AnnotationConfigType FreeformAnnotationConfigUpdateAnnotationConfigType `json:"annotation_config_type"`
+
+	// Name New name for the annotation config. Must be unique within the space.
+	Name *string `json:"name,omitempty"`
+}
+
+// FreeformAnnotationConfigUpdateAnnotationConfigType Discriminator value identifying a freeform annotation config. The config
+// `type` is immutable and must match the stored config's type.
+type FreeformAnnotationConfigUpdateAnnotationConfigType string
+
 // GcpProviderMetadata Vertex AI (GCP) provider metadata
 type GcpProviderMetadata struct {
 	// Kind Discriminator value identifying Vertex AI (GCP) provider metadata.
@@ -3023,6 +3450,57 @@ type InsertExperimentRunsBody struct {
 	// ExperimentRuns Array of experiment run data to append to the experiment. Between 1 and 1000 runs per request.
 	ExperimentRuns []ExperimentRunCreate `json:"experiment_runs"`
 }
+
+// Integration A polymorphic integration resource. The `type` field selects the `config` shape; for `llm`, `config.provider` selects the per-provider config.
+type Integration struct {
+	union json.RawMessage
+}
+
+// IntegrationBase Fields shared by every integration, regardless of `type`.
+type IntegrationBase struct {
+	// CreatedAt When the integration was created.
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId Global ID of the user who created the integration.
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// Id The integration ID (base64 global ID).
+	Id string `json:"id"`
+
+	// Name The integration name. Unique per (account, type).
+	Name string `json:"name"`
+
+	// Scopings Visibility scoping rules. Account-wide when empty.
+	Scopings []IntegrationScoping `json:"scopings"`
+
+	// Type The integration category. Selects the shape of `config`. Currently only `llm` is implemented; additional types (agent, alerting, webhook) are added non-breakingly.
+	Type IntegrationType `json:"type"`
+
+	// UpdatedAt When the integration was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// IntegrationListResponse defines model for IntegrationListResponse.
+type IntegrationListResponse struct {
+	// Integrations A polymorphic, type-tagged list of integrations.
+	Integrations []Integration `json:"integrations"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
+// IntegrationScoping Visibility scoping for the integration.
+type IntegrationScoping struct {
+	// OrganizationId Organization identifier (base64). Null means account-wide.
+	OrganizationId *string `json:"organization_id,omitempty"`
+
+	// SpaceId Space identifier (base64). Null means organization-wide (or account-wide when organization_id is also null).
+	SpaceId *string `json:"space_id,omitempty"`
+}
+
+// IntegrationType The integration category. Selects the shape of `config`. Currently only `llm` is implemented; additional types (agent, alerting, webhook) are added non-breakingly.
+type IntegrationType string
 
 // InviteMode Controls how the user is invited to the account.
 // - `none` — add the user directly with no invitation email (for SSO-only accounts).
@@ -3109,6 +3587,20 @@ type ListSpansRequest struct {
 	StartTime *time.Time `json:"start_time,omitempty"`
 }
 
+// LlmConfig Per-provider LLM config, discriminated by `provider`.
+type LlmConfig struct {
+	union json.RawMessage
+}
+
+// LlmConfigBase LLM config fields common across providers.
+type LlmConfigBase struct {
+	// IsDefaultModelsEnabled Whether the provider's default model list is enabled.
+	IsDefaultModelsEnabled bool `json:"is_default_models_enabled"`
+
+	// IsFunctionCallingEnabled Whether function/tool calling is enabled.
+	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
+}
+
 // LlmGenerationRunConfig Configuration for running an LLM prompt against each dataset example.
 type LlmGenerationRunConfig struct {
 	// AiIntegrationId AI integration identifier (base64).
@@ -3144,6 +3636,39 @@ type LlmGenerationRunConfig struct {
 
 // LlmGenerationRunConfigExperimentType Discriminator. Must be `"llm_generation"`.
 type LlmGenerationRunConfigExperimentType string
+
+// LlmIntegration defines model for LlmIntegration.
+type LlmIntegration struct {
+	// Config Per-provider LLM config, discriminated by `provider`.
+	Config LlmConfig `json:"config"`
+
+	// CreatedAt When the integration was created.
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId Global ID of the user who created the integration.
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// Id The integration ID (base64 global ID).
+	Id string `json:"id"`
+
+	// Name The integration name. Unique per (account, type).
+	Name string `json:"name"`
+
+	// Scopings Visibility scoping rules. Account-wide when empty.
+	Scopings []IntegrationScoping `json:"scopings"`
+
+	// Type Discriminator identifying an LLM integration.
+	Type LlmIntegrationType `json:"type"`
+
+	// UpdatedAt When the integration was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// LlmIntegrationType Discriminator identifying an LLM integration.
+type LlmIntegrationType string
+
+// LlmIntegrationProvider The LLM vendor for an `llm` integration. Selects the per-provider `config` member. Currently only `openAI` is implemented; additional providers are added non-breakingly.
+type LlmIntegrationProvider string
 
 // LlmProvider The LLM provider to use
 type LlmProvider string
@@ -3186,6 +3711,24 @@ type ManagedCodeEvaluator string
 
 // MessageRole The role of the message author
 type MessageRole string
+
+// OpenAiConfig defines model for OpenAiConfig.
+type OpenAiConfig struct {
+	// HasApiKey Whether an API key is configured (the key itself is never returned).
+	HasApiKey bool `json:"has_api_key"`
+
+	// IsDefaultModelsEnabled Whether the provider's default model list is enabled.
+	IsDefaultModelsEnabled bool `json:"is_default_models_enabled"`
+
+	// IsFunctionCallingEnabled Whether function/tool calling is enabled.
+	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
+
+	// Provider Discriminator identifying the OpenAI provider.
+	Provider OpenAiConfigProvider `json:"provider"`
+}
+
+// OpenAiConfigProvider Discriminator identifying the OpenAI provider.
+type OpenAiConfigProvider string
 
 // OptimizationDirection The direction for optimization. Defaults to `none` when omitted.
 // - maximize: higher scores are better
@@ -3609,6 +4152,16 @@ type ResourceRestrictionCreate struct {
 	ResourceId Id `json:"resource_id"`
 }
 
+// ResourceRestrictionListResponse defines model for ResourceRestrictionListResponse.
+type ResourceRestrictionListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// ResourceRestrictions A list of resource restriction records.
+	ResourceRestrictions []ResourceRestriction `json:"resource_restrictions"`
+}
+
 // ResourceRestrictionResponseBody defines model for ResourceRestrictionResponseBody.
 type ResourceRestrictionResponseBody struct {
 	ResourceRestriction ResourceRestriction `json:"resource_restriction"`
@@ -3885,9 +4438,10 @@ type SpanContext struct {
 	TraceId string `json:"trace_id"`
 }
 
-// SpanDeleteErrorResponse defines model for SpanDeleteErrorResponse.
-type SpanDeleteErrorResponse struct {
-	// DeletedSpanIds Span IDs confirmed deleted before the fatal error occurred.
+// SpanDeleteProblem defines model for SpanDeleteProblem.
+type SpanDeleteProblem struct {
+	// DeletedSpanIds Span IDs confirmed deleted before the failure occurred. Safe to include
+	// or omit on retry, as the delete operation is idempotent.
 	DeletedSpanIds *[]string `json:"deleted_span_ids,omitempty"`
 
 	// Detail A human-readable explanation specific to this occurrence of the problem
@@ -3895,6 +4449,10 @@ type SpanDeleteErrorResponse struct {
 
 	// Instance A URI reference that identifies the specific occurrence of the problem
 	Instance *string `json:"instance,omitempty"`
+
+	// NotDeletedSpanIds Span IDs that were not deleted before the failure occurred. Retry the
+	// original request to attempt deletion of these IDs.
+	NotDeletedSpanIds *[]string `json:"not_deleted_span_ids,omitempty"`
 
 	// Status The HTTP status code generated by the origin server for this occurrence of the problem
 	Status int `json:"status"`
@@ -3906,10 +4464,37 @@ type SpanDeleteErrorResponse struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// SpanDeletePartialResponse defines model for SpanDeletePartialResponse.
-type SpanDeletePartialResponse struct {
-	// DeletedSpanIds Span IDs confirmed deleted across all successfully processed intervals.
+// SpanDeleteResponse Result of a DELETE /v2/spans request.
+//
+// `deleted_span_ids` lists every span ID confirmed deleted. `not_deleted_span_ids`
+// lists every requested span ID that was **not** deleted.
+//
+// `completed` indicates whether the server fully processed all data for the
+// request — **not** whether all spans were found and deleted. A span may appear
+// in `not_deleted_span_ids` even when `completed` is `true` if it was not found
+// in the system (never ingested or already deleted).
+//
+// When `completed` is `true`, every requested ID appears in exactly one of
+// `deleted_span_ids` or `not_deleted_span_ids`. No retry is needed.
+//
+// When `completed` is `false`, the server could not fully process all data.
+// Some IDs in `not_deleted_span_ids` may still be deletable — retry the
+// original full request to resolve them. The delete is idempotent.
+type SpanDeleteResponse struct {
+	// Completed `true` when the server fully processed all data for the request — both
+	// lists are complete and no retry is needed. `false` when processing could
+	// not fully complete; retry the original request. Note: `completed` reflects
+	// whether all data was processed, not whether all requested spans existed.
+	Completed bool `json:"completed"`
+
+	// DeletedSpanIds Span IDs confirmed deleted in this request.
 	DeletedSpanIds []string `json:"deleted_span_ids"`
+
+	// NotDeletedSpanIds Requested span IDs that were not deleted. When `completed` is `true`,
+	// these were not found in the system (never ingested or already deleted).
+	// When `completed` is `false`, some IDs may not have been reached — retry
+	// to resolve them.
+	NotDeletedSpanIds []string `json:"not_deleted_span_ids"`
 }
 
 // SpanEvent defines model for SpanEvent.
@@ -4279,6 +4864,16 @@ type TriggerRunExperimentTaskRunRequest struct {
 	TracingMetadata *map[string]string `json:"tracing_metadata,omitempty"`
 }
 
+// UpdateAnnotationConfigRequestBody defines model for UpdateAnnotationConfigRequestBody.
+type UpdateAnnotationConfigRequestBody struct {
+	// AnnotationConfigType The type of annotation config:
+	// - continuous: a numeric score within a defined range
+	// - categorical: a set of labeled values each with an optional score
+	// - freeform: free-text annotation with no structured scoring
+	AnnotationConfigType AnnotationConfigType `json:"annotation_config_type"`
+	union                json.RawMessage
+}
+
 // UpdateAnnotationQueueRequestBody defines model for UpdateAnnotationQueueRequestBody.
 type UpdateAnnotationQueueRequestBody struct {
 	// AnnotationConfigIds The full list of annotation config IDs to associate with this queue.
@@ -4327,6 +4922,40 @@ type UpdateEvaluationTaskRequest struct {
 	// SamplingRate Sampling rate between 0 and 1. Only applicable for project-based tasks.
 	SamplingRate *float32 `json:"sampling_rate,omitempty"`
 }
+
+// UpdateIntegrationRequest Partial update of an integration, discriminated by `type` (immutable). The `type` field selects the per-type PATCH shape. Provide at least one updatable field in addition to `type`.
+type UpdateIntegrationRequest struct {
+	union json.RawMessage
+}
+
+// UpdateLlmConfig Partial LLM config for PATCH. `provider` is immutable; if present it must match the stored value.
+type UpdateLlmConfig struct {
+	// ApiKey Rotate the API key. Pass null to clear it. Omit to keep unchanged.
+	ApiKey                   *string `json:"api_key,omitempty"`
+	IsDefaultModelsEnabled   *bool   `json:"is_default_models_enabled,omitempty"`
+	IsFunctionCallingEnabled *bool   `json:"is_function_calling_enabled,omitempty"`
+
+	// Provider The LLM vendor for an `llm` integration. Selects the per-provider `config` member. Currently only `openAI` is implemented; additional providers are added non-breakingly.
+	Provider *LlmIntegrationProvider `json:"provider,omitempty"`
+}
+
+// UpdateLlmIntegrationRequest PATCH body for an `llm` integration. `type` is required (it selects the union member) and immutable. Provide at least one updatable field (`name`, `scopings`, or `config`) in addition to `type`. `scopings` replaces on provide.
+type UpdateLlmIntegrationRequest struct {
+	// Config Partial LLM config for PATCH. `provider` is immutable; if present it must match the stored value.
+	Config *UpdateLlmConfig `json:"config,omitempty"`
+
+	// Name New integration name.
+	Name *string `json:"name,omitempty"`
+
+	// Scopings Replaces the existing scoping rules.
+	Scopings *[]IntegrationScoping `json:"scopings,omitempty"`
+
+	// Type Discriminator. Immutable; must match the integration's type.
+	Type UpdateLlmIntegrationRequestType `json:"type"`
+}
+
+// UpdateLlmIntegrationRequestType Discriminator. Immutable; must match the integration's type.
+type UpdateLlmIntegrationRequestType string
 
 // UpdateRunExperimentTaskRequest PATCH body for `run_experiment` tasks. The server derives the task type
 // from the URL's task record. At least one of `name` or `run_configuration`
@@ -4505,6 +5134,9 @@ type DatasetVersionIdQueryParam = Id
 // EmailSearchQueryParam defines model for EmailSearchQueryParam.
 type EmailSearchQueryParam = string
 
+// EndTimeQueryParam defines model for EndTimeQueryParam.
+type EndTimeQueryParam = time.Time
+
 // EvaluatorIdPathParam A universally unique identifier (base64-encoded opaque string).
 type EvaluatorIdPathParam = Id
 
@@ -4514,8 +5146,17 @@ type EvaluatorVersionIdPathParam = Id
 // EvaluatorVersionIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type EvaluatorVersionIdQueryParam = Id
 
+// ExampleIdPathParam defines model for ExampleIdPathParam.
+type ExampleIdPathParam = string
+
 // ExperimentIdPathParam A universally unique identifier (base64-encoded opaque string).
 type ExperimentIdPathParam = Id
+
+// IntegrationIdPathParam A universally unique identifier (base64-encoded opaque string).
+type IntegrationIdPathParam = Id
+
+// IntegrationTypeQueryParam The integration category. Selects the shape of `config`. Currently only `llm` is implemented; additional types (agent, alerting, webhook) are added non-breakingly.
+type IntegrationTypeQueryParam = IntegrationType
 
 // LabelNamePathParam defines model for LabelNamePathParam.
 type LabelNamePathParam = string
@@ -4531,6 +5172,9 @@ type LimitQueryParamMax500 = int
 
 // NameSearchQueryParam defines model for NameSearchQueryParam.
 type NameSearchQueryParam = string
+
+// OperationTypeQueryParam The type of operation that was audited.
+type OperationTypeQueryParam = AuditLogOperationType
 
 // OrgIdPathParam A universally unique identifier (base64-encoded opaque string).
 type OrgIdPathParam = Id
@@ -4552,6 +5196,10 @@ type PromptVersionIdPathParam = Id
 
 // ResourceIdPathParam A universally unique identifier (base64-encoded opaque string).
 type ResourceIdPathParam = Id
+
+// ResourceRestrictionTypeQueryParam Type of the restricted resource.
+// - PROJECT - A project within a space.
+type ResourceRestrictionTypeQueryParam = ResourceRestrictionType
 
 // RoleBindingIdPathParam A universally unique identifier (base64-encoded opaque string).
 type RoleBindingIdPathParam = Id
@@ -4577,6 +5225,9 @@ type SpaceIdQueryParam = Id
 
 // SpaceNameQueryParam defines model for SpaceNameQueryParam.
 type SpaceNameQueryParam = string
+
+// StartTimeQueryParam defines model for StartTimeQueryParam.
+type StartTimeQueryParam = time.Time
 
 // TaskIdPathParam A universally unique identifier (base64-encoded opaque string).
 type TaskIdPathParam = Id
@@ -4640,6 +5291,16 @@ type AnnotationQueueUpdated = AnnotationQueue
 // ApiKeyList defines model for ApiKeyList.
 type ApiKeyList = ApiKeyListResponse
 
+// AuditLogList defines model for AuditLogList.
+type AuditLogList struct {
+	// Logs A list of audit log entries, newest first.
+	Logs []AuditLog `json:"logs"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
 // BadRequest RFC 9457 Problem Details
 type BadRequest = Problem
 
@@ -4670,9 +5331,8 @@ type EvaluatorList = EvaluatorListResponse
 // template (LLM-based template evaluation) or code (custom code evaluation).
 type EvaluatorUpdated = Evaluator
 
-// EvaluatorVersionCreated A versioned snapshot of an evaluator's configuration. Exactly one of
-// `template_config` or `code_config` is present. The `type` field discriminates
-// the branch and matches the parent evaluator's `type`.
+// EvaluatorVersionCreated A versioned snapshot of an evaluator's configuration. The `type` field
+// discriminates the branch and matches the parent evaluator's `type`.
 type EvaluatorVersionCreated = EvaluatorVersion
 
 // EvaluatorVersionList defines model for EvaluatorVersionList.
@@ -4689,6 +5349,9 @@ type ExperimentRunsList = ExperimentRunsListResponse
 
 // Forbidden RFC 9457 Problem Details
 type Forbidden = Problem
+
+// IntegrationList defines model for IntegrationList.
+type IntegrationList = IntegrationListResponse
 
 // NotFound RFC 9457 Problem Details
 type NotFound = Problem
@@ -4718,6 +5381,9 @@ type PromptVersionList = PromptVersionListResponse
 // RateLimitExceeded RFC 9457 Problem Details
 type RateLimitExceeded = Problem
 
+// ResourceRestrictionList defines model for ResourceRestrictionList.
+type ResourceRestrictionList = ResourceRestrictionListResponse
+
 // ResourceRestrictionResponse defines model for ResourceRestrictionResponse.
 type ResourceRestrictionResponse = ResourceRestrictionResponseBody
 
@@ -4745,11 +5411,29 @@ type SpaceList = SpaceListResponse
 // SpaceUserAdded A space membership record.
 type SpaceUserAdded = SpaceMembership
 
-// SpanDeleteError defines model for SpanDeleteError.
-type SpanDeleteError = SpanDeleteErrorResponse
+// SpanDeleteError RFC 9457 Problem Details extended with span delete context. Returned when the
+// request fails after partially completing, so the caller knows which IDs were
+// already deleted and which still need to be retried. The delete operation is
+// idempotent — retrying the original full request is safe.
+type SpanDeleteError = SpanDeleteProblem
 
-// SpanDeletePartial defines model for SpanDeletePartial.
-type SpanDeletePartial = SpanDeletePartialResponse
+// SpanDeleteSuccess Result of a DELETE /v2/spans request.
+//
+// `deleted_span_ids` lists every span ID confirmed deleted. `not_deleted_span_ids`
+// lists every requested span ID that was **not** deleted.
+//
+// `completed` indicates whether the server fully processed all data for the
+// request — **not** whether all spans were found and deleted. A span may appear
+// in `not_deleted_span_ids` even when `completed` is `true` if it was not found
+// in the system (never ingested or already deleted).
+//
+// When `completed` is `true`, every requested ID appears in exactly one of
+// `deleted_span_ids` or `not_deleted_span_ids`. No retry is needed.
+//
+// When `completed` is `false`, the server could not fully process all data.
+// Some IDs in `not_deleted_span_ids` may still be deletable — retry the
+// original full request to resolve them. The delete is idempotent.
+type SpanDeleteSuccess = SpanDeleteResponse
 
 // SpanList defines model for SpanList.
 type SpanList = SpanListResponse
@@ -4868,9 +5552,15 @@ type CreateEvaluatorRequestBody struct {
 	// SpaceId Space identifier (base64)
 	SpaceId string `json:"space_id"`
 
-	// Type The evaluator type: `template` (LLM-based) or `code` (managed built-in
-	// evaluators or custom Python code — both are subtypes of `code`,
-	// discriminated by the nested `CodeConfig.type` = `managed` | `custom`).
+	// Type The evaluator type:
+	//
+	// - `template` — LLM-based evaluator.
+	// - `code` — managed built-in evaluators or custom Python code (both are
+	//   subtypes of `code`, discriminated by the nested `CodeConfig.type` =
+	//   `managed` | `custom`).
+	// - `harness` — test harness evaluator.
+	// - `remote` — remote evaluator.
+	//
 	// Applies to both the parent `Evaluator.type` field and every version's `type`
 	// discriminator — a version's `type` must always match its parent evaluator's `type`.
 	Type EvaluatorType `json:"type"`
@@ -4895,6 +5585,9 @@ type CreateExperimentRequestBody struct {
 	// Name Name of the experiment
 	Name string `json:"name"`
 }
+
+// CreateIntegrationRequestBody defines model for CreateIntegrationRequestBody.
+type CreateIntegrationRequestBody = CreateIntegrationRequest
 
 // CreateOrganizationRequestBody defines model for CreateOrganizationRequestBody.
 type CreateOrganizationRequestBody = OrganizationCreate
@@ -5069,6 +5762,9 @@ type UpdateEvaluatorRequestBody struct {
 	// Name New evaluator name
 	Name *string `json:"name,omitempty"`
 }
+
+// UpdateIntegrationRequestBody Partial update of an integration, discriminated by `type` (immutable). The `type` field selects the per-type PATCH shape. Provide at least one updatable field in addition to `type`.
+type UpdateIntegrationRequestBody = UpdateIntegrationRequest
 
 // UpdateOrganizationRequestBody defines model for UpdateOrganizationRequestBody.
 type UpdateOrganizationRequestBody = OrganizationUpdate
@@ -5290,11 +5986,37 @@ type ApiKeysListParams struct {
 	// SpaceId Filter search results to a particular space ID
 	SpaceId *SpaceIdQueryParam `form:"space_id,omitempty" json:"space_id,omitempty"`
 
-	// UserId Filter API keys by the user who created them (base64 identifier (base64)).
-	// When used with `space_id`, filters service keys by creator — available to any user with space access.
-	// When used without `space_id`, filters user keys by creator — account admins only (non-admins receive `403`).
-	// Can be combined with `key_type` to further narrow results by key type.
+	// UserId Filter results by user (base64 global user ID). When provided, only records
+	// associated with this user are returned. Access requirements vary by endpoint —
+	// some endpoints restrict this filter to account admins.
 	UserId *UserIdQueryParam `form:"user_id,omitempty" json:"user_id,omitempty"`
+
+	// Limit Maximum items to return
+	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
+}
+
+// AuditLogsListParams defines parameters for AuditLogsList.
+type AuditLogsListParams struct {
+	// StartTime Inclusive lower bound on `created_at` (ISO 8601 datetime).
+	// Defaults to 30 days before `end_time` when omitted.
+	StartTime *StartTimeQueryParam `form:"start_time,omitempty" json:"start_time,omitempty"`
+
+	// EndTime Inclusive upper bound on `created_at` (ISO 8601 datetime).
+	// Defaults to the current time when omitted.
+	EndTime *EndTimeQueryParam `form:"end_time,omitempty" json:"end_time,omitempty"`
+
+	// UserId Filter results by user (base64 global user ID). When provided, only records
+	// associated with this user are returned. Access requirements vary by endpoint —
+	// some endpoints restrict this filter to account admins.
+	UserId *UserIdQueryParam `form:"user_id,omitempty" json:"user_id,omitempty"`
+
+	// OperationType Filter results to a specific operation type.
+	OperationType *OperationTypeQueryParam `form:"operation_type,omitempty" json:"operation_type,omitempty"`
 
 	// Limit Maximum items to return
 	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
@@ -5392,6 +6114,12 @@ type DatasetsExamplesInsertParams struct {
 	DatasetVersionId *DatasetVersionIdQueryParam `form:"dataset_version_id,omitempty" json:"dataset_version_id,omitempty"`
 }
 
+// DatasetsExampleDeleteParams defines parameters for DatasetsExampleDelete.
+type DatasetsExampleDeleteParams struct {
+	// DatasetVersionId The unique identifier of the dataset version
+	DatasetVersionId *DatasetVersionIdQueryParam `form:"dataset_version_id,omitempty" json:"dataset_version_id,omitempty"`
+}
+
 // EvaluatorsListParams defines parameters for EvaluatorsList.
 type EvaluatorsListParams struct {
 	// SpaceId Filter search results to a particular space ID
@@ -5428,9 +6156,15 @@ type EvaluatorsCreateJSONBody struct {
 	// SpaceId Space identifier (base64)
 	SpaceId string `json:"space_id"`
 
-	// Type The evaluator type: `template` (LLM-based) or `code` (managed built-in
-	// evaluators or custom Python code — both are subtypes of `code`,
-	// discriminated by the nested `CodeConfig.type` = `managed` | `custom`).
+	// Type The evaluator type:
+	//
+	// - `template` — LLM-based evaluator.
+	// - `code` — managed built-in evaluators or custom Python code (both are
+	//   subtypes of `code`, discriminated by the nested `CodeConfig.type` =
+	//   `managed` | `custom`).
+	// - `harness` — test harness evaluator.
+	// - `remote` — remote evaluator.
+	//
 	// Applies to both the parent `Evaluator.type` field and every version's `type`
 	// discriminator — a version's `type` must always match its parent evaluator's `type`.
 	Type EvaluatorType `json:"type"`
@@ -5502,6 +6236,39 @@ type ExperimentsCreateJSONBody struct {
 type ExperimentsRunsListParams struct {
 	// Limit Maximum items to return
 	Limit *LimitQueryParamMax500 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
+}
+
+// IntegrationsListParams defines parameters for IntegrationsList.
+type IntegrationsListParams struct {
+	// Type Filter the list to a single integration type. Omit to list all types.
+	Type *IntegrationTypeQueryParam `form:"type,omitempty" json:"type,omitempty"`
+
+	// SpaceId Filter search results to a particular space ID
+	SpaceId *SpaceIdQueryParam `form:"space_id,omitempty" json:"space_id,omitempty"`
+
+	// SpaceName Case-insensitive substring filter on the space name. Narrows results
+	// to resources in spaces whose name contains the given string. If omitted,
+	// no space name filtering is applied and all resources are returned.
+	SpaceName *SpaceNameQueryParam `form:"space_name,omitempty" json:"space_name,omitempty"`
+
+	// Name Case-insensitive substring filter on the resource name. Returns only
+	// resources whose name contains the given string. For example,
+	// `name=prod` matches "production", "my-prod-dataset", etc. If omitted,
+	// no name filtering is applied and all resources are returned.
+	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
+
+	// Limit Maximum items to return
+	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
 }
 
 // OrganizationsListParams defines parameters for OrganizationsList.
@@ -5643,6 +6410,24 @@ type PromptVersionsCreateJSONBody struct {
 
 	// ProviderParams Provider-specific parameters
 	ProviderParams *ProviderParams `json:"provider_params,omitempty"`
+}
+
+// ResourceRestrictionsListParams defines parameters for ResourceRestrictionsList.
+type ResourceRestrictionsListParams struct {
+	// ResourceType Filter restrictions to a single resource type.
+	// - `PROJECT` — Return only restricted projects.
+	//
+	// When not specified, restrictions of all supported resource types are
+	// returned (currently only `PROJECT`).
+	ResourceType *ResourceRestrictionTypeQueryParam `form:"resource_type,omitempty" json:"resource_type,omitempty"`
+
+	// Limit Maximum items to return
+	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
 }
 
 // RoleBindingsListParams defines parameters for RoleBindingsList.
@@ -5826,6 +6611,9 @@ type AiIntegrationsUpdateJSONRequestBody AiIntegrationsUpdateJSONBody
 // AnnotationConfigsCreateJSONRequestBody defines body for AnnotationConfigsCreate for application/json ContentType.
 type AnnotationConfigsCreateJSONRequestBody = CreateAnnotationConfigRequestBody
 
+// AnnotationConfigsUpdateJSONRequestBody defines body for AnnotationConfigsUpdate for application/json ContentType.
+type AnnotationConfigsUpdateJSONRequestBody = UpdateAnnotationConfigRequestBody
+
 // AnnotationQueuesCreateJSONRequestBody defines body for AnnotationQueuesCreate for application/json ContentType.
 type AnnotationQueuesCreateJSONRequestBody = CreateAnnotationQueueRequestBody
 
@@ -5882,6 +6670,12 @@ type ExperimentsRunsInsertJSONRequestBody = InsertExperimentRunsBody
 
 // ExperimentsRunsAnnotateJSONRequestBody defines body for ExperimentsRunsAnnotate for application/json ContentType.
 type ExperimentsRunsAnnotateJSONRequestBody = AnnotateExperimentRunsRequestBody
+
+// IntegrationsCreateJSONRequestBody defines body for IntegrationsCreate for application/json ContentType.
+type IntegrationsCreateJSONRequestBody = CreateIntegrationRequest
+
+// IntegrationsUpdateJSONRequestBody defines body for IntegrationsUpdate for application/json ContentType.
+type IntegrationsUpdateJSONRequestBody = UpdateIntegrationRequest
 
 // OrganizationsCreateJSONRequestBody defines body for OrganizationsCreate for application/json ContentType.
 type OrganizationsCreateJSONRequestBody = OrganizationCreate
@@ -5957,6 +6751,23 @@ type UsersCreateJSONRequestBody = CreateUserRequest
 
 // UsersUpdateJSONRequestBody defines body for UsersUpdate for application/json ContentType.
 type UsersUpdateJSONRequestBody = UserUpdate
+
+// Getter for additional properties for AnnotationConfig. Returns the specified
+// element and whether it was found
+func (a AnnotationConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for AnnotationConfig
+func (a *AnnotationConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
 
 // Getter for additional properties for DatasetExample. Returns the specified
 // element and whether it was found
@@ -6923,16 +7734,6 @@ func (t AnnotationConfig) ValueByDiscriminator() (interface{}, error) {
 	}
 }
 
-func (t AnnotationConfig) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *AnnotationConfig) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
-}
-
 // AsAnnotationQueueExampleRecordInput returns the union data inside the AnnotationQueueRecordInput as a AnnotationQueueExampleRecordInput
 func (t AnnotationQueueRecordInput) AsAnnotationQueueExampleRecordInput() (AnnotationQueueExampleRecordInput, error) {
 	var body AnnotationQueueExampleRecordInput
@@ -7299,6 +8100,124 @@ func (t *CreateAnnotationConfigRequestBody) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsCreateLlmIntegrationRequest returns the union data inside the CreateIntegrationRequest as a CreateLlmIntegrationRequest
+func (t CreateIntegrationRequest) AsCreateLlmIntegrationRequest() (CreateLlmIntegrationRequest, error) {
+	var body CreateLlmIntegrationRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateLlmIntegrationRequest overwrites any union data inside the CreateIntegrationRequest as the provided CreateLlmIntegrationRequest
+func (t *CreateIntegrationRequest) FromCreateLlmIntegrationRequest(v CreateLlmIntegrationRequest) error {
+	v.Type = "llm"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateLlmIntegrationRequest performs a merge with any union data inside the CreateIntegrationRequest, using the provided CreateLlmIntegrationRequest
+func (t *CreateIntegrationRequest) MergeCreateLlmIntegrationRequest(v CreateLlmIntegrationRequest) error {
+	v.Type = "llm"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t CreateIntegrationRequest) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t CreateIntegrationRequest) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "llm":
+		return t.AsCreateLlmIntegrationRequest()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t CreateIntegrationRequest) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *CreateIntegrationRequest) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsCreateOpenAiConfig returns the union data inside the CreateLlmConfig as a CreateOpenAiConfig
+func (t CreateLlmConfig) AsCreateOpenAiConfig() (CreateOpenAiConfig, error) {
+	var body CreateOpenAiConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateOpenAiConfig overwrites any union data inside the CreateLlmConfig as the provided CreateOpenAiConfig
+func (t *CreateLlmConfig) FromCreateOpenAiConfig(v CreateOpenAiConfig) error {
+	v.Provider = "openAI"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateOpenAiConfig performs a merge with any union data inside the CreateLlmConfig, using the provided CreateOpenAiConfig
+func (t *CreateLlmConfig) MergeCreateOpenAiConfig(v CreateOpenAiConfig) error {
+	v.Provider = "openAI"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t CreateLlmConfig) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"provider"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t CreateLlmConfig) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "openAI":
+		return t.AsCreateOpenAiConfig()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t CreateLlmConfig) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *CreateLlmConfig) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsEvaluatorVersionTemplate returns the union data inside the EvaluatorVersion as a EvaluatorVersionTemplate
 func (t EvaluatorVersion) AsEvaluatorVersionTemplate() (EvaluatorVersionTemplate, error) {
 	var body EvaluatorVersionTemplate
@@ -7355,6 +8274,62 @@ func (t *EvaluatorVersion) MergeEvaluatorVersionCode(v EvaluatorVersionCode) err
 	return err
 }
 
+// AsEvaluatorVersionHarness returns the union data inside the EvaluatorVersion as a EvaluatorVersionHarness
+func (t EvaluatorVersion) AsEvaluatorVersionHarness() (EvaluatorVersionHarness, error) {
+	var body EvaluatorVersionHarness
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEvaluatorVersionHarness overwrites any union data inside the EvaluatorVersion as the provided EvaluatorVersionHarness
+func (t *EvaluatorVersion) FromEvaluatorVersionHarness(v EvaluatorVersionHarness) error {
+	v.Type = "harness"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEvaluatorVersionHarness performs a merge with any union data inside the EvaluatorVersion, using the provided EvaluatorVersionHarness
+func (t *EvaluatorVersion) MergeEvaluatorVersionHarness(v EvaluatorVersionHarness) error {
+	v.Type = "harness"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsEvaluatorVersionRemote returns the union data inside the EvaluatorVersion as a EvaluatorVersionRemote
+func (t EvaluatorVersion) AsEvaluatorVersionRemote() (EvaluatorVersionRemote, error) {
+	var body EvaluatorVersionRemote
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEvaluatorVersionRemote overwrites any union data inside the EvaluatorVersion as the provided EvaluatorVersionRemote
+func (t *EvaluatorVersion) FromEvaluatorVersionRemote(v EvaluatorVersionRemote) error {
+	v.Type = "remote"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEvaluatorVersionRemote performs a merge with any union data inside the EvaluatorVersion, using the provided EvaluatorVersionRemote
+func (t *EvaluatorVersion) MergeEvaluatorVersionRemote(v EvaluatorVersionRemote) error {
+	v.Type = "remote"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t EvaluatorVersion) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"type"`
@@ -7371,6 +8346,10 @@ func (t EvaluatorVersion) ValueByDiscriminator() (interface{}, error) {
 	switch discriminator {
 	case "code":
 		return t.AsEvaluatorVersionCode()
+	case "harness":
+		return t.AsEvaluatorVersionHarness()
+	case "remote":
+		return t.AsEvaluatorVersionRemote()
 	case "template":
 		return t.AsEvaluatorVersionTemplate()
 	default:
@@ -7446,6 +8425,124 @@ func (t EvaluatorVersionCreate) MarshalJSON() ([]byte, error) {
 }
 
 func (t *EvaluatorVersionCreate) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsLlmIntegration returns the union data inside the Integration as a LlmIntegration
+func (t Integration) AsLlmIntegration() (LlmIntegration, error) {
+	var body LlmIntegration
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromLlmIntegration overwrites any union data inside the Integration as the provided LlmIntegration
+func (t *Integration) FromLlmIntegration(v LlmIntegration) error {
+	v.Type = "llm"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeLlmIntegration performs a merge with any union data inside the Integration, using the provided LlmIntegration
+func (t *Integration) MergeLlmIntegration(v LlmIntegration) error {
+	v.Type = "llm"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t Integration) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t Integration) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "llm":
+		return t.AsLlmIntegration()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t Integration) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *Integration) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsOpenAiConfig returns the union data inside the LlmConfig as a OpenAiConfig
+func (t LlmConfig) AsOpenAiConfig() (OpenAiConfig, error) {
+	var body OpenAiConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOpenAiConfig overwrites any union data inside the LlmConfig as the provided OpenAiConfig
+func (t *LlmConfig) FromOpenAiConfig(v OpenAiConfig) error {
+	v.Provider = "openAI"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOpenAiConfig performs a merge with any union data inside the LlmConfig, using the provided OpenAiConfig
+func (t *LlmConfig) MergeOpenAiConfig(v OpenAiConfig) error {
+	v.Provider = "openAI"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t LlmConfig) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"provider"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t LlmConfig) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "openAI":
+		return t.AsOpenAiConfig()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t LlmConfig) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *LlmConfig) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -7775,6 +8872,223 @@ func (t StaticParam_DefaultValue) MarshalJSON() ([]byte, error) {
 }
 
 func (t *StaticParam_DefaultValue) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsContinuousAnnotationConfigUpdate returns the union data inside the UpdateAnnotationConfigRequestBody as a ContinuousAnnotationConfigUpdate
+func (t UpdateAnnotationConfigRequestBody) AsContinuousAnnotationConfigUpdate() (ContinuousAnnotationConfigUpdate, error) {
+	var body ContinuousAnnotationConfigUpdate
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromContinuousAnnotationConfigUpdate overwrites any union data inside the UpdateAnnotationConfigRequestBody as the provided ContinuousAnnotationConfigUpdate
+func (t *UpdateAnnotationConfigRequestBody) FromContinuousAnnotationConfigUpdate(v ContinuousAnnotationConfigUpdate) error {
+	t.AnnotationConfigType = "continuous"
+
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeContinuousAnnotationConfigUpdate performs a merge with any union data inside the UpdateAnnotationConfigRequestBody, using the provided ContinuousAnnotationConfigUpdate
+func (t *UpdateAnnotationConfigRequestBody) MergeContinuousAnnotationConfigUpdate(v ContinuousAnnotationConfigUpdate) error {
+	t.AnnotationConfigType = "continuous"
+
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCategoricalAnnotationConfigUpdate returns the union data inside the UpdateAnnotationConfigRequestBody as a CategoricalAnnotationConfigUpdate
+func (t UpdateAnnotationConfigRequestBody) AsCategoricalAnnotationConfigUpdate() (CategoricalAnnotationConfigUpdate, error) {
+	var body CategoricalAnnotationConfigUpdate
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCategoricalAnnotationConfigUpdate overwrites any union data inside the UpdateAnnotationConfigRequestBody as the provided CategoricalAnnotationConfigUpdate
+func (t *UpdateAnnotationConfigRequestBody) FromCategoricalAnnotationConfigUpdate(v CategoricalAnnotationConfigUpdate) error {
+	t.AnnotationConfigType = "categorical"
+
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCategoricalAnnotationConfigUpdate performs a merge with any union data inside the UpdateAnnotationConfigRequestBody, using the provided CategoricalAnnotationConfigUpdate
+func (t *UpdateAnnotationConfigRequestBody) MergeCategoricalAnnotationConfigUpdate(v CategoricalAnnotationConfigUpdate) error {
+	t.AnnotationConfigType = "categorical"
+
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsFreeformAnnotationConfigUpdate returns the union data inside the UpdateAnnotationConfigRequestBody as a FreeformAnnotationConfigUpdate
+func (t UpdateAnnotationConfigRequestBody) AsFreeformAnnotationConfigUpdate() (FreeformAnnotationConfigUpdate, error) {
+	var body FreeformAnnotationConfigUpdate
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromFreeformAnnotationConfigUpdate overwrites any union data inside the UpdateAnnotationConfigRequestBody as the provided FreeformAnnotationConfigUpdate
+func (t *UpdateAnnotationConfigRequestBody) FromFreeformAnnotationConfigUpdate(v FreeformAnnotationConfigUpdate) error {
+	t.AnnotationConfigType = "freeform"
+
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeFreeformAnnotationConfigUpdate performs a merge with any union data inside the UpdateAnnotationConfigRequestBody, using the provided FreeformAnnotationConfigUpdate
+func (t *UpdateAnnotationConfigRequestBody) MergeFreeformAnnotationConfigUpdate(v FreeformAnnotationConfigUpdate) error {
+	t.AnnotationConfigType = "freeform"
+
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t UpdateAnnotationConfigRequestBody) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"annotation_config_type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t UpdateAnnotationConfigRequestBody) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "categorical":
+		return t.AsCategoricalAnnotationConfigUpdate()
+	case "continuous":
+		return t.AsContinuousAnnotationConfigUpdate()
+	case "freeform":
+		return t.AsFreeformAnnotationConfigUpdate()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t UpdateAnnotationConfigRequestBody) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	object := make(map[string]json.RawMessage)
+	if t.union != nil {
+		err = json.Unmarshal(b, &object)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	object["annotation_config_type"], err = json.Marshal(t.AnnotationConfigType)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'annotation_config_type': %w", err)
+	}
+
+	b, err = json.Marshal(object)
+	return b, err
+}
+
+func (t *UpdateAnnotationConfigRequestBody) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	if err != nil {
+		return err
+	}
+	object := make(map[string]json.RawMessage)
+	err = json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["annotation_config_type"]; found {
+		err = json.Unmarshal(raw, &t.AnnotationConfigType)
+		if err != nil {
+			return fmt.Errorf("error reading 'annotation_config_type': %w", err)
+		}
+	}
+
+	return err
+}
+
+// AsUpdateLlmIntegrationRequest returns the union data inside the UpdateIntegrationRequest as a UpdateLlmIntegrationRequest
+func (t UpdateIntegrationRequest) AsUpdateLlmIntegrationRequest() (UpdateLlmIntegrationRequest, error) {
+	var body UpdateLlmIntegrationRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromUpdateLlmIntegrationRequest overwrites any union data inside the UpdateIntegrationRequest as the provided UpdateLlmIntegrationRequest
+func (t *UpdateIntegrationRequest) FromUpdateLlmIntegrationRequest(v UpdateLlmIntegrationRequest) error {
+	v.Type = "llm"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeUpdateLlmIntegrationRequest performs a merge with any union data inside the UpdateIntegrationRequest, using the provided UpdateLlmIntegrationRequest
+func (t *UpdateIntegrationRequest) MergeUpdateLlmIntegrationRequest(v UpdateLlmIntegrationRequest) error {
+	v.Type = "llm"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t UpdateIntegrationRequest) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t UpdateIntegrationRequest) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "llm":
+		return t.AsUpdateLlmIntegrationRequest()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t UpdateIntegrationRequest) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *UpdateIntegrationRequest) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -8289,6 +9603,56 @@ func (t *UpdateTaskRequestBody) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// Override default JSON handling for AnnotationConfig to handle AdditionalProperties and union
+func (a *AnnotationConfig) UnmarshalJSON(b []byte) error {
+	err := a.union.UnmarshalJSON(b)
+	if err != nil {
+		return err
+	}
+	object := make(map[string]json.RawMessage)
+	err = json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for AnnotationConfig to handle AdditionalProperties and union
+func (a AnnotationConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	b, err := a.union.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	object := make(map[string]json.RawMessage)
+	if a.union != nil {
+		err = json.Unmarshal(b, &object)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
@@ -8395,6 +9759,11 @@ type ClientInterface interface {
 	// AnnotationConfigsGet request
 	AnnotationConfigsGet(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// AnnotationConfigsUpdateWithBody request with any body
+	AnnotationConfigsUpdateWithBody(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AnnotationConfigsUpdate(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body AnnotationConfigsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// AnnotationQueuesList request
 	AnnotationQueuesList(ctx context.Context, params *AnnotationQueuesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -8453,6 +9822,9 @@ type ClientInterface interface {
 	// ApiKeysRevoke request
 	ApiKeysRevoke(ctx context.Context, apiKeyId ApiKeyIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// AuditLogsList request
+	AuditLogsList(ctx context.Context, params *AuditLogsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DatasetsList request
 	DatasetsList(ctx context.Context, params *DatasetsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -8489,6 +9861,9 @@ type ClientInterface interface {
 	DatasetsExamplesAnnotateWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	DatasetsExamplesAnnotate(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsExamplesAnnotateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DatasetsExampleDelete request
+	DatasetsExampleDelete(ctx context.Context, datasetId DatasetIdPathParam, exampleId ExampleIdPathParam, params *DatasetsExampleDeleteParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// EvaluatorVersionsGet request
 	EvaluatorVersionsGet(ctx context.Context, versionId EvaluatorVersionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -8546,6 +9921,25 @@ type ClientInterface interface {
 	ExperimentsRunsAnnotateWithBody(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	ExperimentsRunsAnnotate(ctx context.Context, experimentId ExperimentIdPathParam, body ExperimentsRunsAnnotateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// IntegrationsList request
+	IntegrationsList(ctx context.Context, params *IntegrationsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// IntegrationsCreateWithBody request with any body
+	IntegrationsCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	IntegrationsCreate(ctx context.Context, body IntegrationsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// IntegrationsDelete request
+	IntegrationsDelete(ctx context.Context, integrationId IntegrationIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// IntegrationsGet request
+	IntegrationsGet(ctx context.Context, integrationId IntegrationIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// IntegrationsUpdateWithBody request with any body
+	IntegrationsUpdateWithBody(ctx context.Context, integrationId IntegrationIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	IntegrationsUpdate(ctx context.Context, integrationId IntegrationIdPathParam, body IntegrationsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// OrganizationsList request
 	OrganizationsList(ctx context.Context, params *OrganizationsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -8633,6 +10027,9 @@ type ClientInterface interface {
 	PromptVersionsCreateWithBody(ctx context.Context, promptId PromptIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PromptVersionsCreate(ctx context.Context, promptId PromptIdPathParam, body PromptVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ResourceRestrictionsList request
+	ResourceRestrictionsList(ctx context.Context, params *ResourceRestrictionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ResourceRestrictionsCreateWithBody request with any body
 	ResourceRestrictionsCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -8925,6 +10322,30 @@ func (c *Client) AnnotationConfigsGet(ctx context.Context, annotationConfigId An
 	return c.Client.Do(req)
 }
 
+func (c *Client) AnnotationConfigsUpdateWithBody(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAnnotationConfigsUpdateRequestWithBody(c.Server, annotationConfigId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AnnotationConfigsUpdate(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body AnnotationConfigsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAnnotationConfigsUpdateRequest(c.Server, annotationConfigId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) AnnotationQueuesList(ctx context.Context, params *AnnotationQueuesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAnnotationQueuesListRequest(c.Server, params)
 	if err != nil {
@@ -9189,6 +10610,18 @@ func (c *Client) ApiKeysRevoke(ctx context.Context, apiKeyId ApiKeyIdPathParam, 
 	return c.Client.Do(req)
 }
 
+func (c *Client) AuditLogsList(ctx context.Context, params *AuditLogsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAuditLogsListRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) DatasetsList(ctx context.Context, params *DatasetsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDatasetsListRequest(c.Server, params)
 	if err != nil {
@@ -9347,6 +10780,18 @@ func (c *Client) DatasetsExamplesAnnotateWithBody(ctx context.Context, datasetId
 
 func (c *Client) DatasetsExamplesAnnotate(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsExamplesAnnotateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDatasetsExamplesAnnotateRequest(c.Server, datasetId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DatasetsExampleDelete(ctx context.Context, datasetId DatasetIdPathParam, exampleId ExampleIdPathParam, params *DatasetsExampleDeleteParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDatasetsExampleDeleteRequest(c.Server, datasetId, exampleId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -9599,6 +11044,90 @@ func (c *Client) ExperimentsRunsAnnotateWithBody(ctx context.Context, experiment
 
 func (c *Client) ExperimentsRunsAnnotate(ctx context.Context, experimentId ExperimentIdPathParam, body ExperimentsRunsAnnotateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewExperimentsRunsAnnotateRequest(c.Server, experimentId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) IntegrationsList(ctx context.Context, params *IntegrationsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewIntegrationsListRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) IntegrationsCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewIntegrationsCreateRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) IntegrationsCreate(ctx context.Context, body IntegrationsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewIntegrationsCreateRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) IntegrationsDelete(ctx context.Context, integrationId IntegrationIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewIntegrationsDeleteRequest(c.Server, integrationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) IntegrationsGet(ctx context.Context, integrationId IntegrationIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewIntegrationsGetRequest(c.Server, integrationId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) IntegrationsUpdateWithBody(ctx context.Context, integrationId IntegrationIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewIntegrationsUpdateRequestWithBody(c.Server, integrationId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) IntegrationsUpdate(ctx context.Context, integrationId IntegrationIdPathParam, body IntegrationsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewIntegrationsUpdateRequest(c.Server, integrationId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -9983,6 +11512,18 @@ func (c *Client) PromptVersionsCreateWithBody(ctx context.Context, promptId Prom
 
 func (c *Client) PromptVersionsCreate(ctx context.Context, promptId PromptIdPathParam, body PromptVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPromptVersionsCreateRequest(c.Server, promptId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ResourceRestrictionsList(ctx context.Context, params *ResourceRestrictionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewResourceRestrictionsListRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -11130,6 +12671,53 @@ func NewAnnotationConfigsGetRequest(server string, annotationConfigId Annotation
 	return req, nil
 }
 
+// NewAnnotationConfigsUpdateRequest calls the generic AnnotationConfigsUpdate builder with application/json body
+func NewAnnotationConfigsUpdateRequest(server string, annotationConfigId AnnotationConfigIdPathParam, body AnnotationConfigsUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAnnotationConfigsUpdateRequestWithBody(server, annotationConfigId, "application/json", bodyReader)
+}
+
+// NewAnnotationConfigsUpdateRequestWithBody generates requests for AnnotationConfigsUpdate with any type of body
+func NewAnnotationConfigsUpdateRequestWithBody(server string, annotationConfigId AnnotationConfigIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "annotation_config_id", annotationConfigId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/annotation-configs/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewAnnotationQueuesListRequest generates requests for AnnotationQueuesList
 func NewAnnotationQueuesListRequest(server string, params *AnnotationQueuesListParams) (*http.Request, error) {
 	var err error
@@ -11922,6 +13510,135 @@ func NewApiKeysRevokeRequest(server string, apiKeyId ApiKeyIdPathParam) (*http.R
 	return req, nil
 }
 
+// NewAuditLogsListRequest generates requests for AuditLogsList
+func NewAuditLogsListRequest(server string, params *AuditLogsListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/audit-logs")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.StartTime != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "start_time", *params.StartTime, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.EndTime != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "end_time", *params.EndTime, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.UserId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "user_id", *params.UserId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OperationType != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "operation_type", *params.OperationType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewDatasetsListRequest generates requests for DatasetsList
 func NewDatasetsListRequest(server string, params *DatasetsListParams) (*http.Request, error) {
 	var err error
@@ -12459,6 +14176,69 @@ func NewDatasetsExamplesAnnotateRequestWithBody(server string, datasetId Dataset
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDatasetsExampleDeleteRequest generates requests for DatasetsExampleDelete
+func NewDatasetsExampleDeleteRequest(server string, datasetId DatasetIdPathParam, exampleId ExampleIdPathParam, params *DatasetsExampleDeleteParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "dataset_id", datasetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "example_id", exampleId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/datasets/%s/examples/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.DatasetVersionId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "dataset_version_id", *params.DatasetVersionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -13156,6 +14936,22 @@ func NewExperimentsRunsListRequest(server string, experimentId ExperimentIdPathP
 
 		}
 
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		queryURL.RawQuery = queryValues.Encode()
 	}
 
@@ -13252,6 +15048,290 @@ func NewExperimentsRunsAnnotateRequestWithBody(server string, experimentId Exper
 	}
 
 	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewIntegrationsListRequest generates requests for IntegrationsList
+func NewIntegrationsListRequest(server string, params *IntegrationsListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/integrations")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Type != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "type", *params.Type, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.SpaceId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "space_id", *params.SpaceId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.SpaceName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "space_name", *params.SpaceName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Name != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "name", *params.Name, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewIntegrationsCreateRequest calls the generic IntegrationsCreate builder with application/json body
+func NewIntegrationsCreateRequest(server string, body IntegrationsCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewIntegrationsCreateRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewIntegrationsCreateRequestWithBody generates requests for IntegrationsCreate with any type of body
+func NewIntegrationsCreateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/integrations")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewIntegrationsDeleteRequest generates requests for IntegrationsDelete
+func NewIntegrationsDeleteRequest(server string, integrationId IntegrationIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "integration_id", integrationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/integrations/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewIntegrationsGetRequest generates requests for IntegrationsGet
+func NewIntegrationsGetRequest(server string, integrationId IntegrationIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "integration_id", integrationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/integrations/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewIntegrationsUpdateRequest calls the generic IntegrationsUpdate builder with application/json body
+func NewIntegrationsUpdateRequest(server string, integrationId IntegrationIdPathParam, body IntegrationsUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewIntegrationsUpdateRequestWithBody(server, integrationId, "application/json", bodyReader)
+}
+
+// NewIntegrationsUpdateRequestWithBody generates requests for IntegrationsUpdate with any type of body
+func NewIntegrationsUpdateRequestWithBody(server string, integrationId IntegrationIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "integration_id", integrationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/integrations/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -14437,6 +16517,87 @@ func NewPromptVersionsCreateRequestWithBody(server string, promptId PromptIdPath
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewResourceRestrictionsListRequest generates requests for ResourceRestrictionsList
+func NewResourceRestrictionsListRequest(server string, params *ResourceRestrictionsListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/resource-restrictions")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.ResourceType != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "resource_type", *params.ResourceType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -16412,6 +18573,11 @@ type ClientWithResponsesInterface interface {
 	// AnnotationConfigsGetWithResponse request
 	AnnotationConfigsGetWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, reqEditors ...RequestEditorFn) (*AnnotationConfigsGetResponse, error)
 
+	// AnnotationConfigsUpdateWithBodyWithResponse request with any body
+	AnnotationConfigsUpdateWithBodyWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AnnotationConfigsUpdateResponse, error)
+
+	AnnotationConfigsUpdateWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body AnnotationConfigsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AnnotationConfigsUpdateResponse, error)
+
 	// AnnotationQueuesListWithResponse request
 	AnnotationQueuesListWithResponse(ctx context.Context, params *AnnotationQueuesListParams, reqEditors ...RequestEditorFn) (*AnnotationQueuesListResponse, error)
 
@@ -16470,6 +18636,9 @@ type ClientWithResponsesInterface interface {
 	// ApiKeysRevokeWithResponse request
 	ApiKeysRevokeWithResponse(ctx context.Context, apiKeyId ApiKeyIdPathParam, reqEditors ...RequestEditorFn) (*ApiKeysRevokeResponse, error)
 
+	// AuditLogsListWithResponse request
+	AuditLogsListWithResponse(ctx context.Context, params *AuditLogsListParams, reqEditors ...RequestEditorFn) (*AuditLogsListResponse, error)
+
 	// DatasetsListWithResponse request
 	DatasetsListWithResponse(ctx context.Context, params *DatasetsListParams, reqEditors ...RequestEditorFn) (*DatasetsListResponse, error)
 
@@ -16506,6 +18675,9 @@ type ClientWithResponsesInterface interface {
 	DatasetsExamplesAnnotateWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DatasetsExamplesAnnotateResponse, error)
 
 	DatasetsExamplesAnnotateWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsExamplesAnnotateJSONRequestBody, reqEditors ...RequestEditorFn) (*DatasetsExamplesAnnotateResponse, error)
+
+	// DatasetsExampleDeleteWithResponse request
+	DatasetsExampleDeleteWithResponse(ctx context.Context, datasetId DatasetIdPathParam, exampleId ExampleIdPathParam, params *DatasetsExampleDeleteParams, reqEditors ...RequestEditorFn) (*DatasetsExampleDeleteResponse, error)
 
 	// EvaluatorVersionsGetWithResponse request
 	EvaluatorVersionsGetWithResponse(ctx context.Context, versionId EvaluatorVersionIdPathParam, reqEditors ...RequestEditorFn) (*EvaluatorVersionsGetResponse, error)
@@ -16563,6 +18735,25 @@ type ClientWithResponsesInterface interface {
 	ExperimentsRunsAnnotateWithBodyWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ExperimentsRunsAnnotateResponse, error)
 
 	ExperimentsRunsAnnotateWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, body ExperimentsRunsAnnotateJSONRequestBody, reqEditors ...RequestEditorFn) (*ExperimentsRunsAnnotateResponse, error)
+
+	// IntegrationsListWithResponse request
+	IntegrationsListWithResponse(ctx context.Context, params *IntegrationsListParams, reqEditors ...RequestEditorFn) (*IntegrationsListResponse, error)
+
+	// IntegrationsCreateWithBodyWithResponse request with any body
+	IntegrationsCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*IntegrationsCreateResponse, error)
+
+	IntegrationsCreateWithResponse(ctx context.Context, body IntegrationsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*IntegrationsCreateResponse, error)
+
+	// IntegrationsDeleteWithResponse request
+	IntegrationsDeleteWithResponse(ctx context.Context, integrationId IntegrationIdPathParam, reqEditors ...RequestEditorFn) (*IntegrationsDeleteResponse, error)
+
+	// IntegrationsGetWithResponse request
+	IntegrationsGetWithResponse(ctx context.Context, integrationId IntegrationIdPathParam, reqEditors ...RequestEditorFn) (*IntegrationsGetResponse, error)
+
+	// IntegrationsUpdateWithBodyWithResponse request with any body
+	IntegrationsUpdateWithBodyWithResponse(ctx context.Context, integrationId IntegrationIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*IntegrationsUpdateResponse, error)
+
+	IntegrationsUpdateWithResponse(ctx context.Context, integrationId IntegrationIdPathParam, body IntegrationsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*IntegrationsUpdateResponse, error)
 
 	// OrganizationsListWithResponse request
 	OrganizationsListWithResponse(ctx context.Context, params *OrganizationsListParams, reqEditors ...RequestEditorFn) (*OrganizationsListResponse, error)
@@ -16650,6 +18841,9 @@ type ClientWithResponsesInterface interface {
 	PromptVersionsCreateWithBodyWithResponse(ctx context.Context, promptId PromptIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PromptVersionsCreateResponse, error)
 
 	PromptVersionsCreateWithResponse(ctx context.Context, promptId PromptIdPathParam, body PromptVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*PromptVersionsCreateResponse, error)
+
+	// ResourceRestrictionsListWithResponse request
+	ResourceRestrictionsListWithResponse(ctx context.Context, params *ResourceRestrictionsListParams, reqEditors ...RequestEditorFn) (*ResourceRestrictionsListResponse, error)
 
 	// ResourceRestrictionsCreateWithBodyWithResponse request with any body
 	ResourceRestrictionsCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ResourceRestrictionsCreateResponse, error)
@@ -17041,6 +19235,35 @@ func (r AnnotationConfigsGetResponse) StatusCode() int {
 	return 0
 }
 
+type AnnotationConfigsUpdateResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AnnotationConfig
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r AnnotationConfigsUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AnnotationConfigsUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type AnnotationQueuesListResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -17425,6 +19648,32 @@ func (r ApiKeysRevokeResponse) StatusCode() int {
 	return 0
 }
 
+type AuditLogsListResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *AuditLogList
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r AuditLogsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AuditLogsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type DatasetsListResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -17665,6 +19914,32 @@ func (r DatasetsExamplesAnnotateResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r DatasetsExamplesAnnotateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DatasetsExampleDeleteResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r DatasetsExampleDeleteResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DatasetsExampleDeleteResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -18071,6 +20346,142 @@ func (r ExperimentsRunsAnnotateResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ExperimentsRunsAnnotateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type IntegrationsListResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *IntegrationList
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r IntegrationsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r IntegrationsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type IntegrationsCreateResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON201                   *Integration
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r IntegrationsCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r IntegrationsCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type IntegrationsDeleteResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r IntegrationsDeleteResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r IntegrationsDeleteResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type IntegrationsGetResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Integration
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r IntegrationsGetResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r IntegrationsGetResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type IntegrationsUpdateResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Integration
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r IntegrationsUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r IntegrationsUpdateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -18696,6 +21107,31 @@ func (r PromptVersionsCreateResponse) StatusCode() int {
 	return 0
 }
 
+type ResourceRestrictionsListResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ResourceRestrictionList
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ResourceRestrictionsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ResourceRestrictionsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ResourceRestrictionsCreateResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -19212,14 +21648,14 @@ func (r SpacesRemoveUserResponse) StatusCode() int {
 type SpansDeleteResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *SpanDeletePartial
+	JSON200                   *SpanDeleteSuccess
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
-	ApplicationproblemJSON500 *SpanDeleteError
+	ApplicationproblemJSON503 *SpanDeleteError
 }
 
 // Status returns HTTPResponse.Status
@@ -19830,6 +22266,23 @@ func (c *ClientWithResponses) AnnotationConfigsGetWithResponse(ctx context.Conte
 	return ParseAnnotationConfigsGetResponse(rsp)
 }
 
+// AnnotationConfigsUpdateWithBodyWithResponse request with arbitrary body returning *AnnotationConfigsUpdateResponse
+func (c *ClientWithResponses) AnnotationConfigsUpdateWithBodyWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AnnotationConfigsUpdateResponse, error) {
+	rsp, err := c.AnnotationConfigsUpdateWithBody(ctx, annotationConfigId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAnnotationConfigsUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) AnnotationConfigsUpdateWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body AnnotationConfigsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AnnotationConfigsUpdateResponse, error) {
+	rsp, err := c.AnnotationConfigsUpdate(ctx, annotationConfigId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAnnotationConfigsUpdateResponse(rsp)
+}
+
 // AnnotationQueuesListWithResponse request returning *AnnotationQueuesListResponse
 func (c *ClientWithResponses) AnnotationQueuesListWithResponse(ctx context.Context, params *AnnotationQueuesListParams, reqEditors ...RequestEditorFn) (*AnnotationQueuesListResponse, error) {
 	rsp, err := c.AnnotationQueuesList(ctx, params, reqEditors...)
@@ -20020,6 +22473,15 @@ func (c *ClientWithResponses) ApiKeysRevokeWithResponse(ctx context.Context, api
 	return ParseApiKeysRevokeResponse(rsp)
 }
 
+// AuditLogsListWithResponse request returning *AuditLogsListResponse
+func (c *ClientWithResponses) AuditLogsListWithResponse(ctx context.Context, params *AuditLogsListParams, reqEditors ...RequestEditorFn) (*AuditLogsListResponse, error) {
+	rsp, err := c.AuditLogsList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAuditLogsListResponse(rsp)
+}
+
 // DatasetsListWithResponse request returning *DatasetsListResponse
 func (c *ClientWithResponses) DatasetsListWithResponse(ctx context.Context, params *DatasetsListParams, reqEditors ...RequestEditorFn) (*DatasetsListResponse, error) {
 	rsp, err := c.DatasetsList(ctx, params, reqEditors...)
@@ -20139,6 +22601,15 @@ func (c *ClientWithResponses) DatasetsExamplesAnnotateWithResponse(ctx context.C
 		return nil, err
 	}
 	return ParseDatasetsExamplesAnnotateResponse(rsp)
+}
+
+// DatasetsExampleDeleteWithResponse request returning *DatasetsExampleDeleteResponse
+func (c *ClientWithResponses) DatasetsExampleDeleteWithResponse(ctx context.Context, datasetId DatasetIdPathParam, exampleId ExampleIdPathParam, params *DatasetsExampleDeleteParams, reqEditors ...RequestEditorFn) (*DatasetsExampleDeleteResponse, error) {
+	rsp, err := c.DatasetsExampleDelete(ctx, datasetId, exampleId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDatasetsExampleDeleteResponse(rsp)
 }
 
 // EvaluatorVersionsGetWithResponse request returning *EvaluatorVersionsGetResponse
@@ -20322,6 +22793,67 @@ func (c *ClientWithResponses) ExperimentsRunsAnnotateWithResponse(ctx context.Co
 		return nil, err
 	}
 	return ParseExperimentsRunsAnnotateResponse(rsp)
+}
+
+// IntegrationsListWithResponse request returning *IntegrationsListResponse
+func (c *ClientWithResponses) IntegrationsListWithResponse(ctx context.Context, params *IntegrationsListParams, reqEditors ...RequestEditorFn) (*IntegrationsListResponse, error) {
+	rsp, err := c.IntegrationsList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseIntegrationsListResponse(rsp)
+}
+
+// IntegrationsCreateWithBodyWithResponse request with arbitrary body returning *IntegrationsCreateResponse
+func (c *ClientWithResponses) IntegrationsCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*IntegrationsCreateResponse, error) {
+	rsp, err := c.IntegrationsCreateWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseIntegrationsCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) IntegrationsCreateWithResponse(ctx context.Context, body IntegrationsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*IntegrationsCreateResponse, error) {
+	rsp, err := c.IntegrationsCreate(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseIntegrationsCreateResponse(rsp)
+}
+
+// IntegrationsDeleteWithResponse request returning *IntegrationsDeleteResponse
+func (c *ClientWithResponses) IntegrationsDeleteWithResponse(ctx context.Context, integrationId IntegrationIdPathParam, reqEditors ...RequestEditorFn) (*IntegrationsDeleteResponse, error) {
+	rsp, err := c.IntegrationsDelete(ctx, integrationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseIntegrationsDeleteResponse(rsp)
+}
+
+// IntegrationsGetWithResponse request returning *IntegrationsGetResponse
+func (c *ClientWithResponses) IntegrationsGetWithResponse(ctx context.Context, integrationId IntegrationIdPathParam, reqEditors ...RequestEditorFn) (*IntegrationsGetResponse, error) {
+	rsp, err := c.IntegrationsGet(ctx, integrationId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseIntegrationsGetResponse(rsp)
+}
+
+// IntegrationsUpdateWithBodyWithResponse request with arbitrary body returning *IntegrationsUpdateResponse
+func (c *ClientWithResponses) IntegrationsUpdateWithBodyWithResponse(ctx context.Context, integrationId IntegrationIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*IntegrationsUpdateResponse, error) {
+	rsp, err := c.IntegrationsUpdateWithBody(ctx, integrationId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseIntegrationsUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) IntegrationsUpdateWithResponse(ctx context.Context, integrationId IntegrationIdPathParam, body IntegrationsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*IntegrationsUpdateResponse, error) {
+	rsp, err := c.IntegrationsUpdate(ctx, integrationId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseIntegrationsUpdateResponse(rsp)
 }
 
 // OrganizationsListWithResponse request returning *OrganizationsListResponse
@@ -20601,6 +23133,15 @@ func (c *ClientWithResponses) PromptVersionsCreateWithResponse(ctx context.Conte
 		return nil, err
 	}
 	return ParsePromptVersionsCreateResponse(rsp)
+}
+
+// ResourceRestrictionsListWithResponse request returning *ResourceRestrictionsListResponse
+func (c *ClientWithResponses) ResourceRestrictionsListWithResponse(ctx context.Context, params *ResourceRestrictionsListParams, reqEditors ...RequestEditorFn) (*ResourceRestrictionsListResponse, error) {
+	rsp, err := c.ResourceRestrictionsList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseResourceRestrictionsListResponse(rsp)
 }
 
 // ResourceRestrictionsCreateWithBodyWithResponse request with arbitrary body returning *ResourceRestrictionsCreateResponse
@@ -21622,6 +24163,81 @@ func ParseAnnotationConfigsGetResponse(rsp *http.Response) (*AnnotationConfigsGe
 	return response, nil
 }
 
+// ParseAnnotationConfigsUpdateResponse parses an HTTP response from a AnnotationConfigsUpdateWithResponse call
+func ParseAnnotationConfigsUpdateResponse(rsp *http.Response) (*AnnotationConfigsUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AnnotationConfigsUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AnnotationConfig
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseAnnotationQueuesListResponse parses an HTTP response from a AnnotationQueuesListWithResponse call
 func ParseAnnotationQueuesListResponse(rsp *http.Response) (*AnnotationQueuesListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -22518,6 +25134,60 @@ func ParseApiKeysRevokeResponse(rsp *http.Response) (*ApiKeysRevokeResponse, err
 	return response, nil
 }
 
+// ParseAuditLogsListResponse parses an HTTP response from a AuditLogsListWithResponse call
+func ParseAuditLogsListResponse(rsp *http.Response) (*AuditLogsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AuditLogsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AuditLogList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseDatasetsListResponse parses an HTTP response from a DatasetsListWithResponse call
 func ParseDatasetsListResponse(rsp *http.Response) (*DatasetsListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -23075,6 +25745,60 @@ func ParseDatasetsExamplesAnnotateResponse(rsp *http.Response) (*DatasetsExample
 			return nil, err
 		}
 		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDatasetsExampleDeleteResponse parses an HTTP response from a DatasetsExampleDeleteWithResponse call
+func ParseDatasetsExampleDeleteResponse(rsp *http.Response) (*DatasetsExampleDeleteResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DatasetsExampleDeleteResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -23990,6 +26714,318 @@ func ParseExperimentsRunsAnnotateResponse(rsp *http.Response) (*ExperimentsRunsA
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseIntegrationsListResponse parses an HTTP response from a IntegrationsListWithResponse call
+func ParseIntegrationsListResponse(rsp *http.Response) (*IntegrationsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &IntegrationsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest IntegrationList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseIntegrationsCreateResponse parses an HTTP response from a IntegrationsCreateWithResponse call
+func ParseIntegrationsCreateResponse(rsp *http.Response) (*IntegrationsCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &IntegrationsCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Integration
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseIntegrationsDeleteResponse parses an HTTP response from a IntegrationsDeleteWithResponse call
+func ParseIntegrationsDeleteResponse(rsp *http.Response) (*IntegrationsDeleteResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &IntegrationsDeleteResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseIntegrationsGetResponse parses an HTTP response from a IntegrationsGetWithResponse call
+func ParseIntegrationsGetResponse(rsp *http.Response) (*IntegrationsGetResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &IntegrationsGetResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Integration
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseIntegrationsUpdateResponse parses an HTTP response from a IntegrationsUpdateWithResponse call
+func ParseIntegrationsUpdateResponse(rsp *http.Response) (*IntegrationsUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &IntegrationsUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Integration
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest UnprocessableEntity
@@ -25399,6 +28435,53 @@ func ParsePromptVersionsCreateResponse(rsp *http.Response) (*PromptVersionsCreat
 	return response, nil
 }
 
+// ParseResourceRestrictionsListResponse parses an HTTP response from a ResourceRestrictionsListWithResponse call
+func ParseResourceRestrictionsListResponse(rsp *http.Response) (*ResourceRestrictionsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ResourceRestrictionsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ResourceRestrictionList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseResourceRestrictionsCreateResponse parses an HTTP response from a ResourceRestrictionsCreateWithResponse call
 func ParseResourceRestrictionsCreateResponse(rsp *http.Response) (*ResourceRestrictionsCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -26573,7 +29656,7 @@ func ParseSpansDeleteResponse(rsp *http.Response) (*SpansDeleteResponse, error) 
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest SpanDeletePartial
+		var dest SpanDeleteSuccess
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -26621,12 +29704,12 @@ func ParseSpansDeleteResponse(rsp *http.Response) (*SpansDeleteResponse, error) 
 		}
 		response.ApplicationproblemJSON429 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
 		var dest SpanDeleteError
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.ApplicationproblemJSON500 = &dest
+		response.ApplicationproblemJSON503 = &dest
 
 	}
 

@@ -240,7 +240,8 @@ func (c *Client) ListRuns(ctx context.Context, req ListRunsRequest) (*Experiment
 		return nil, err
 	}
 	params := generated.ExperimentsRunsListParams{
-		Limit: optfields.PtrIfSet(req.Limit),
+		Limit:  optfields.PtrIfSet(req.Limit),
+		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	resp, err := c.gen.ExperimentsRunsListWithResponse(ctx, id, &params)
 	if err != nil {
