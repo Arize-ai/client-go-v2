@@ -23,7 +23,31 @@ func main() {
 	const projectID = "UHJvamVjdDoxOmV4YW1wbGU"
 
 	restrictResource(ctx, client, projectID)
+	listRestrictions(ctx, client)
 	unrestrictResource(ctx, client, projectID)
+}
+
+// listRestrictions prints all resource restrictions in the account, paging
+// through results with the cursor returned in each response.
+func listRestrictions(ctx context.Context, client *arize.Client) {
+	cursor := ""
+	for {
+		page, err := client.ResourceRestrictions.List(ctx, resourcerestrictions.ListRequest{
+			ResourceType: resourcerestrictions.ResourceRestrictionTypePROJECT,
+			Limit:        50,
+			Cursor:       cursor,
+		})
+		if err != nil {
+			log.Fatalf("list restrictions: %v", err)
+		}
+		for _, rr := range page.ResourceRestrictions {
+			fmt.Printf("restricted %s (type=%s, created=%s)\n", rr.ResourceId, rr.ResourceType, rr.CreatedAt)
+		}
+		if !page.Pagination.HasMore || page.Pagination.NextCursor == nil {
+			break
+		}
+		cursor = *page.Pagination.NextCursor
+	}
 }
 
 // restrictResource marks the given resource (here a project) as restricted.

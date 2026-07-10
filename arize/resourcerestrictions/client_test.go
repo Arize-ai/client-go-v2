@@ -31,6 +31,17 @@ type wireResourceRestriction struct {
 	CreatedAt    time.Time `json:"created_at"`
 }
 
+// wireResourceRestrictionList mirrors the API JSON list response envelope.
+type wireResourceRestrictionList struct {
+	ResourceRestrictions []wireResourceRestriction `json:"resource_restrictions"`
+	Pagination           wirePagination            `json:"pagination"`
+}
+
+type wirePagination struct {
+	HasMore    bool    `json:"has_more"`
+	NextCursor *string `json:"next_cursor,omitempty"`
+}
+
 func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *arize.Client) {
 	t.Helper()
 	srv := httptest.NewServer(handler)
@@ -53,6 +64,64 @@ func TestResourceRestrictions(t *testing.T) {
 		invoke  func(ctx context.Context, c *arize.Client) (any, error)
 		check   func(t *testing.T, got any, err error)
 	}{
+		{
+			name: "List success",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodGet {
+					t.Errorf("expected GET, got %s", r.Method)
+				}
+				if got := r.URL.Query().Get("resource_type"); got != "PROJECT" {
+					t.Errorf("query resource_type: want PROJECT, got %q", got)
+				}
+				if got := r.URL.Query().Get("limit"); got != "10" {
+					t.Errorf("query limit: want 10, got %q", got)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(200)
+				json.NewEncoder(w).Encode(wireResourceRestrictionList{
+					ResourceRestrictions: []wireResourceRestriction{
+						{ResourceID: "proj-1", ResourceType: "PROJECT", CreatedAt: time.Now()},
+						{ResourceID: "proj-2", ResourceType: "PROJECT", CreatedAt: time.Now()},
+					},
+					Pagination: wirePagination{HasMore: false},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.ResourceRestrictions.List(ctx, resourcerestrictions.ListRequest{
+					ResourceType: resourcerestrictions.ResourceRestrictionTypePROJECT,
+					Limit:        10,
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				list := got.(*resourcerestrictions.ResourceRestrictionList)
+				if len(list.ResourceRestrictions) != 2 {
+					t.Fatalf("want 2 restrictions, got %d", len(list.ResourceRestrictions))
+				}
+				if list.ResourceRestrictions[0].ResourceId != "proj-1" {
+					t.Errorf("unexpected resource_id: %s", list.ResourceRestrictions[0].ResourceId)
+				}
+			},
+		},
+		{
+			name: "List unauthorized",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(401)
+				json.NewEncoder(w).Encode(map[string]any{"title": "unauthorized", "status": 401})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.ResourceRestrictions.List(ctx, resourcerestrictions.ListRequest{})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var ue *arize.UnauthorizedError
+				if !errors.As(err, &ue) {
+					t.Errorf("expected *UnauthorizedError, got %T: %v", err, err)
+				}
+			},
+		},
 		{
 			name: "Restrict success",
 			handler: func(w http.ResponseWriter, r *http.Request) {

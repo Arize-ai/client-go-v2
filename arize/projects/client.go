@@ -112,7 +112,7 @@ func (c *Client) Update(
 	ctx context.Context,
 	req UpdateRequest,
 ) (*Project, error) {
-	prerelease.Warn("projects.update", prerelease.Alpha)
+	prerelease.Warn("projects.update", prerelease.Beta)
 	projectID, err := resolve.FindProjectID(ctx, c.gen, req.Project, req.Space)
 	if err != nil {
 		return nil, err

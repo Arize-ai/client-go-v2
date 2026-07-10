@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.16.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.15.0...arize-go-sdk-v2/v0.16.0) (2026-07-10)
+
+
+### 🎁 New Features
+
+* **resource-restrictions:** add list functionality ([#77881](https://github.com/Arize-ai/arize/issues/77881)) ([191e331](https://github.com/Arize-ai/arize/commit/191e331db36a25a8f6d15741aac961a7e3763d20))
+* **annotation-configs:** add update functionality ([#77839](https://github.com/Arize-ai/arize/issues/77839)) ([0fd2bf7](https://github.com/Arize-ai/arize/commit/0fd2bf78c9e11432b30bb106f202333f01d0ab8a))
+* **annotation-configs:** splitting create function into functions per type ([#78082](https://github.com/Arize-ai/arize/issues/78082)) ([c7ec542](https://github.com/Arize-ai/arize/commit/c7ec542450d3c34a1a6724176e3705db4a7b1eee))
+* **datasets:** add batched `delete_examples` ([#77136](https://github.com/Arize-ai/arize/issues/77136)) ([a430747](https://github.com/Arize-ai/arize/commit/a430747317a58f8fe6c8650856ebd5fb9ef25a56))
+
+### 💫 Code Refactoring
+
+* promote 5 endpoints from alpha to beta ([#77386](https://github.com/Arize-ai/arize/issues/77386)) ([64fd321](https://github.com/Arize-ai/arize/commit/64fd321a7be190ed1e91d4b0133122644e11d441))
+
 ## [0.15.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.14.0...arize-go-sdk-v2/v0.15.0) (2026-07-02)
 
 

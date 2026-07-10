@@ -33,6 +33,10 @@ func main() {
 
 	getAnnotationConfig(ctx, client, "example-quality", space)
 
+	updateCategorical(ctx, client, idOf(categorical))
+	updateContinuous(ctx, client, idOf(continuous))
+	updateFreeform(ctx, client, idOf(freeform))
+
 	deleteAnnotationConfig(ctx, client, idOf(categorical))
 	deleteAnnotationConfig(ctx, client, idOf(continuous))
 	deleteAnnotationConfig(ctx, client, idOf(freeform))
@@ -82,10 +86,9 @@ func getAnnotationConfig(ctx context.Context, client *arize.Client, config, spac
 // is "better"; leave it zero to use the server default.
 func createCategorical(ctx context.Context, client *arize.Client, space, name string) *annotationconfigs.AnnotationConfig {
 	score1, score0 := 1.0, 0.0
-	ac, err := client.AnnotationConfigs.Create(ctx, annotationconfigs.CreateRequest{
+	ac, err := client.AnnotationConfigs.CreateCategorical(ctx, annotationconfigs.CreateCategoricalRequest{
 		Space:                 space,
 		Name:                  name,
-		Type:                  annotationconfigs.AnnotationConfigTypeCategorical,
 		OptimizationDirection: annotationconfigs.OptimizationDirectionMaximize,
 		Values: []annotationconfigs.CategoricalAnnotationValue{
 			{Label: "good", Score: &score1},
@@ -103,10 +106,9 @@ func createCategorical(ctx context.Context, client *arize.Client, space, name st
 // createContinuous creates a continuous annotation config bounded by
 // MinimumScore and MaximumScore. Both are required for continuous configs.
 func createContinuous(ctx context.Context, client *arize.Client, space, name string) *annotationconfigs.AnnotationConfig {
-	ac, err := client.AnnotationConfigs.Create(ctx, annotationconfigs.CreateRequest{
+	ac, err := client.AnnotationConfigs.CreateContinuous(ctx, annotationconfigs.CreateContinuousRequest{
 		Space:                 space,
 		Name:                  name,
-		Type:                  annotationconfigs.AnnotationConfigTypeContinuous,
 		OptimizationDirection: annotationconfigs.OptimizationDirectionMaximize,
 		MinimumScore:          0.0,
 		MaximumScore:          1.0,
@@ -122,10 +124,9 @@ func createContinuous(ctx context.Context, client *arize.Client, space, name str
 // createFreeform creates a freeform annotation config. Freeform configs take
 // no extra fields beyond Name and Space.
 func createFreeform(ctx context.Context, client *arize.Client, space, name string) *annotationconfigs.AnnotationConfig {
-	ac, err := client.AnnotationConfigs.Create(ctx, annotationconfigs.CreateRequest{
+	ac, err := client.AnnotationConfigs.CreateFreeform(ctx, annotationconfigs.CreateFreeformRequest{
 		Space: space,
 		Name:  name,
-		Type:  annotationconfigs.AnnotationConfigTypeFreeform,
 	})
 	if err != nil {
 		log.Fatalf("create freeform annotation config: %v", err)
@@ -133,6 +134,58 @@ func createFreeform(ctx context.Context, client *arize.Client, space, name strin
 	id := idOf(ac)
 	fmt.Printf("created freeform annotation config %s (%s)\n", name, id)
 	return ac
+}
+
+// updateCategorical patches an existing categorical annotation config.
+// Leave a patch field nil to preserve its current value. Here we rename the
+// config and replace its label set.
+func updateCategorical(ctx context.Context, client *arize.Client, configID string) {
+	name := "example-quality-v2"
+	score1, score0 := 1.0, 0.0
+	ac, err := client.AnnotationConfigs.UpdateCategorical(ctx, annotationconfigs.UpdateCategoricalRequest{
+		AnnotationConfig: configID,
+		Name:             &name,
+		Values: &[]annotationconfigs.CategoricalAnnotationValue{
+			{Label: "great", Score: &score1},
+			{Label: "poor", Score: &score0},
+		},
+	})
+	if err != nil {
+		log.Fatalf("update annotation config: %v", err)
+	}
+	id, _, updatedName := identify(ac)
+	fmt.Printf("updated categorical annotation config %s (%s)\n", updatedName, id)
+}
+
+// updateContinuous patches an existing continuous annotation config. Leave a
+// patch field nil to preserve its current value. Here we widen the score
+// range's upper bound.
+func updateContinuous(ctx context.Context, client *arize.Client, configID string) {
+	maxScore := 10.0
+	ac, err := client.AnnotationConfigs.UpdateContinuous(ctx, annotationconfigs.UpdateContinuousRequest{
+		AnnotationConfig: configID,
+		MaximumScore:     &maxScore,
+	})
+	if err != nil {
+		log.Fatalf("update continuous annotation config: %v", err)
+	}
+	id, _, updatedName := identify(ac)
+	fmt.Printf("updated continuous annotation config %s (%s)\n", updatedName, id)
+}
+
+// updateFreeform patches an existing freeform annotation config. Freeform
+// configs only support renaming; leave Name nil to preserve the current value.
+func updateFreeform(ctx context.Context, client *arize.Client, configID string) {
+	name := "example-notes-v2"
+	ac, err := client.AnnotationConfigs.UpdateFreeform(ctx, annotationconfigs.UpdateFreeformRequest{
+		AnnotationConfig: configID,
+		Name:             &name,
+	})
+	if err != nil {
+		log.Fatalf("update freeform annotation config: %v", err)
+	}
+	id, _, updatedName := identify(ac)
+	fmt.Printf("updated freeform annotation config %s (%s)\n", updatedName, id)
 }
 
 func deleteAnnotationConfig(ctx context.Context, client *arize.Client, configID string) {

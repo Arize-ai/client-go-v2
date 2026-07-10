@@ -118,7 +118,7 @@ func (c *Client) Revoke(
 	ctx context.Context,
 	req RevokeRequest,
 ) error {
-	prerelease.Warn("apikeys.revoke", prerelease.Alpha)
+	prerelease.Warn("apikeys.revoke", prerelease.Beta)
 	resp, err := c.gen.ApiKeysRevokeWithResponse(ctx, req.APIKeyID)
 	if err != nil {
 		return err

@@ -105,7 +105,7 @@ func (c *Client) Update(
 	ctx context.Context,
 	req UpdateRequest,
 ) (*Dataset, error) {
-	prerelease.Warn("datasets.update", prerelease.Alpha)
+	prerelease.Warn("datasets.update", prerelease.Beta)
 	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {
 		return nil, err
@@ -195,6 +195,34 @@ func (c *Client) AppendExamples(
 		return nil, err
 	}
 	return resp.JSON201, nil
+}
+
+// DeleteExamples removes a batch of examples from a specific dataset version.
+// The result reports which IDs were deleted and which were not; when Completed
+// is false the delete did not fully complete and the full request should be
+// retried, which is safe because the operation is idempotent. req.Dataset
+// accepts a name or ID; req.Space is required when req.Dataset is a name.
+func (c *Client) DeleteExamples(
+	ctx context.Context,
+	req DeleteExamplesRequest,
+) (*DatasetExamplesDeleteResult, error) {
+	prerelease.Warn("datasets.delete_examples", prerelease.Alpha)
+	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
+	if err != nil {
+		return nil, err
+	}
+	body := generated.DatasetsExamplesDeleteJSONRequestBody{
+		DatasetVersionId: req.DatasetVersionID,
+		ExampleIds:       req.ExampleIDs,
+	}
+	resp, err := c.gen.DatasetsExamplesDeleteWithResponse(ctx, id, body)
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON200, nil
 }
 
 // AnnotateExamples writes human annotations to a batch of examples in a

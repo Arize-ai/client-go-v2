@@ -14,6 +14,7 @@ import (
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
+	"github.com/Arize-ai/client-go-v2/arize/internal/optfields"
 	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
 )
 
@@ -25,6 +26,32 @@ type Client struct {
 // New constructs a Client from a generated ClientWithResponses.
 func New(gen *generated.ClientWithResponses) *Client {
 	return &Client{gen: gen}
+}
+
+// List returns a paginated list of resource restrictions. Defaults to a page
+// size of 50.
+//
+// Currently only PROJECT resources are supported. Set ResourceType to filter to
+// a single resource type; leave it empty to return restrictions of all
+// supported types.
+func (c *Client) List(
+	ctx context.Context,
+	req ListRequest,
+) (*ResourceRestrictionList, error) {
+	prerelease.Warn("resourcerestrictions.list", prerelease.Alpha)
+	params := &generated.ResourceRestrictionsListParams{
+		ResourceType: optfields.PtrIfSet(req.ResourceType),
+		Limit:        optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
+		Cursor:       optfields.PtrIfSet(req.Cursor),
+	}
+	resp, err := c.gen.ResourceRestrictionsListWithResponse(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON200, nil
 }
 
 // Restrict marks a resource as restricted.

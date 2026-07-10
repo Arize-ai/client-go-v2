@@ -53,6 +53,7 @@
     - [Delete a Dataset](#delete-a-dataset)
     - [List Examples](#list-examples)
     - [Append Examples](#append-examples)
+    - [Delete Examples](#delete-examples)
     - [Annotate Examples](#annotate-examples)
   - [Operations on Experiments](#operations-on-experiments)
     - [List Experiments](#list-experiments)
@@ -86,6 +87,7 @@
     - [List Annotation Configs](#list-annotation-configs)
     - [Get an Annotation Config](#get-an-annotation-config)
     - [Create an Annotation Config](#create-an-annotation-config)
+    - [Update an Annotation Config](#update-an-annotation-config)
     - [Delete an Annotation Config](#delete-an-annotation-config)
   - [Operations on AI Integrations](#operations-on-ai-integrations)
     - [List AI Integrations](#list-ai-integrations)
@@ -119,12 +121,13 @@
     - [Refresh an API Key](#refresh-an-api-key)
     - [Revoke an API Key](#revoke-an-api-key)
   - [Operations on Resource Restrictions](#operations-on-resource-restrictions)
+    - [List Resource Restrictions](#list-resource-restrictions)
     - [Restrict a Resource](#restrict-a-resource)
     - [Unrestrict a Resource](#unrestrict-a-resource)
   - [Operations on Annotation Queues](#operations-on-annotation-queues)
     - [List Annotation Queues](#list-annotation-queues)
-    - [Create an Annotation Queue](#create-an-annotation-queue)
     - [Get an Annotation Queue](#get-an-annotation-queue)
+    - [Create an Annotation Queue](#create-an-annotation-queue)
     - [Add Records to a Queue](#add-records-to-a-queue)
     - [Annotate a Record](#annotate-a-record)
     - [Update an Annotation Queue](#update-an-annotation-queue)
@@ -134,10 +137,10 @@
     - [Get a User](#get-a-user)
     - [Create a User](#create-a-user)
     - [Update a User](#update-a-user)
-    - [Resend an Invitation](#resend-an-invitation)
-    - [Reset a Password](#reset-a-password)
     - [Delete a User](#delete-a-user)
     - [Bulk Delete Users](#bulk-delete-users)
+    - [Resend an Invitation](#resend-an-invitation)
+    - [Reset a Password](#reset-a-password)
   - [Operations on Tasks](#operations-on-tasks)
     - [List Tasks](#list-tasks)
     - [Get a Task](#get-a-task)
@@ -192,7 +195,7 @@ The Go SDK v2 currently exposes the following surface area:
   - **Organizations** — list, get, create, update, delete, and manage memberships.
   - **Roles** & **Role Bindings** — manage RBAC roles and their bindings.
   - **API Keys** — list, create, create service keys, refresh, revoke.
-  - **Resource Restrictions** — restrict and unrestrict access to Arize resources.
+  - **Resource Restrictions** — list, restrict, and unrestrict access to Arize resources.
   - **Annotation Queues** — list, get, create, update, delete, add records, and annotate.
   - **Users** — list, get, create, update, delete, bulk delete, resend invitations, and reset passwords.
   - **Tasks** — list, get, create, update, delete, and trigger, list, poll, and cancel their runs.
@@ -558,6 +561,20 @@ ins, err := client.Datasets.AppendExamples(ctx, datasets.AppendExamplesRequest{
 })
 ```
 
+### Delete Examples
+
+Removes examples from a specific dataset version. The delete is partial-tolerant:
+the result reports `DeletedExampleIds` and `NotDeletedExampleIds`, and a false
+`Completed` means the full request should be retried (the operation is idempotent).
+
+```go
+resp, err := client.Datasets.DeleteExamples(ctx, datasets.DeleteExamplesRequest{
+    Dataset: "<dataset-id-or-name>", Space: "<space-id-or-name>",
+    DatasetVersionID: "<dataset-version-id>",
+    ExampleIDs:       []string{"<example-id>"},
+})
+```
+
 ### Annotate Examples
 
 ```go
@@ -859,18 +876,66 @@ if v, err := ac.ValueByDiscriminator(); err == nil {
 
 ### Create an Annotation Config
 
-Categorical (`Values` required), continuous (`Min`/`MaxScore` required), or freeform (no extra fields).
+Use the type-specific method matching the config you want: `CreateCategorical` (`Values` required), `CreateContinuous` (`MinimumScore`/`MaximumScore` required), or `CreateFreeform` (no extra fields).
 
 ```go
 score1, score0 := 1.0, 0.0
-ac, err := client.AnnotationConfigs.Create(ctx, annotationconfigs.CreateRequest{
+categorical, err := client.AnnotationConfigs.CreateCategorical(ctx, annotationconfigs.CreateCategoricalRequest{
     Space: "<space-id-or-name>",
     Name:  "quality",
-    Type:  annotationconfigs.AnnotationConfigTypeCategorical,
     Values: []annotationconfigs.CategoricalAnnotationValue{
         {Label: "good", Score: &score1},
         {Label: "bad", Score: &score0},
     },
+})
+
+continuous, err := client.AnnotationConfigs.CreateContinuous(ctx, annotationconfigs.CreateContinuousRequest{
+    Space:        "<space-id-or-name>",
+    Name:         "score",
+    MinimumScore: 0.0,
+    MaximumScore: 1.0,
+})
+
+freeform, err := client.AnnotationConfigs.CreateFreeform(ctx, annotationconfigs.CreateFreeformRequest{
+    Space: "<space-id-or-name>",
+    Name:  "notes",
+})
+```
+
+### Update an Annotation Config
+
+There is a distinct `Update*` method per annotation config type — `UpdateCategorical`,
+`UpdateContinuous`, and `UpdateFreeform`. Leave a patch field nil to preserve its
+current value.
+
+```go
+name := "quality-v2"
+ac, err := client.AnnotationConfigs.UpdateCategorical(ctx, annotationconfigs.UpdateCategoricalRequest{
+    AnnotationConfig: "<config-id-or-name>",
+    Space:            "<space-id-or-name>",
+    Name:             &name,
+    Values: &[]annotationconfigs.CategoricalAnnotationValue{
+        {Label: "good"},
+        {Label: "bad"},
+    },
+})
+```
+
+```go
+maxScore := 10.0
+ac, err := client.AnnotationConfigs.UpdateContinuous(ctx, annotationconfigs.UpdateContinuousRequest{
+    AnnotationConfig: "<config-id-or-name>",
+    Space:            "<space-id-or-name>",
+    MaximumScore:     &maxScore,
+})
+```
+
+```go
+name := "notes-v2"
+ac, err := client.AnnotationConfigs.UpdateFreeform(ctx, annotationconfigs.UpdateFreeformRequest{
+    AnnotationConfig: "<config-id-or-name>",
+    Space:            "<space-id-or-name>",
+    Name:             &name,
 })
 ```
 
@@ -1145,11 +1210,33 @@ err := client.APIKeys.Revoke(ctx, apikeys.RevokeRequest{APIKeyID: "<key-id>"})
 ## Operations on Resource Restrictions
 
 Use `client.ResourceRestrictions` to restrict a resource (e.g. a project), preventing
-roles bound at higher levels (space, org, account) from granting access. Both
-calls take the restricted **resource** ID (e.g. a project ID), not a
-restriction-record ID. Only `PROJECT` resources are supported today.
+roles bound at higher levels (space, org, account) from granting access. The
+restrict/unrestrict calls take the restricted **resource** ID (e.g. a project
+ID), not a restriction-record ID. Only `PROJECT` resources are supported today.
 
 A full runnable example lives in [`examples/resourcerestrictions`](./examples/resourcerestrictions).
+
+### List Resource Restrictions
+
+`List` returns a cursor-paginated set of restrictions. Leave `Limit` at zero to
+use the default page size (50), and leave `ResourceType` empty to return every
+supported type. Advance pages by passing `Pagination.NextCursor` back as `Cursor`.
+
+```go
+page, err := client.ResourceRestrictions.List(ctx, resourcerestrictions.ListRequest{
+    ResourceType: resourcerestrictions.ResourceRestrictionTypePROJECT, // optional filter
+    Limit:        50,
+})
+if err != nil {
+    // handle error
+}
+for _, rr := range page.ResourceRestrictions {
+    fmt.Printf("%s (type=%s)\n", rr.ResourceId, rr.ResourceType)
+}
+if page.Pagination.HasMore && page.Pagination.NextCursor != nil {
+    // fetch the next page with Cursor: *page.Pagination.NextCursor
+}
+```
 
 ### Restrict a Resource
 

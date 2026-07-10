@@ -56,6 +56,12 @@ type wireUpdate struct {
 	Name string `json:"name"`
 }
 
+// wireDeleteExamples mirrors the JSON shape of the DeleteExamples request body.
+type wireDeleteExamples struct {
+	DatasetVersionId string   `json:"dataset_version_id"`
+	ExampleIds       []string `json:"example_ids"`
+}
+
 // wireAnnotate mirrors the JSON shape of the AnnotateExamples request body.
 type wireAnnotate struct {
 	Annotations []struct {
@@ -523,6 +529,107 @@ func TestDatasets(t *testing.T) {
 				return c.Datasets.AppendExamples(ctx, datasets.AppendExamplesRequest{
 					Dataset:  datasetID("ds-1"),
 					Examples: []datasets.DatasetExampleCreate{{"input": "x"}},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var bre *arize.BadRequestError
+				if !errors.As(err, &bre) {
+					t.Fatalf("expected *BadRequestError, got %T: %v", err, err)
+				}
+			},
+		},
+		{
+			name: "DeleteExamples",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodDelete {
+					t.Errorf("expected DELETE, got %s", r.Method)
+				}
+				if r.URL.Path != "/v2/datasets/"+dsID+"/examples" {
+					t.Errorf("unexpected path: %s", r.URL.Path)
+				}
+				var body wireDeleteExamples
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if body.DatasetVersionId != "v-1" {
+					t.Errorf("body dataset_version_id: want v-1, got %q", body.DatasetVersionId)
+				}
+				if len(body.ExampleIds) != 2 || body.ExampleIds[0] != "ex-1" || body.ExampleIds[1] != "ex-2" {
+					t.Errorf("unexpected example_ids: %v", body.ExampleIds)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(datasets.DatasetExamplesDeleteResult{
+					Completed:            true,
+					DeletedExampleIds:    []string{"ex-1", "ex-2"},
+					NotDeletedExampleIds: []string{},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Datasets.DeleteExamples(ctx, datasets.DeleteExamplesRequest{
+					Dataset:          dsID,
+					DatasetVersionID: "v-1",
+					ExampleIDs:       []string{"ex-1", "ex-2"},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				resp := got.(*datasets.DatasetExamplesDeleteResult)
+				if !resp.Completed {
+					t.Errorf("expected Completed=true on full success, got false")
+				}
+				if len(resp.DeletedExampleIds) != 2 {
+					t.Errorf("expected 2 deleted ids, got %v", resp.DeletedExampleIds)
+				}
+				if len(resp.NotDeletedExampleIds) != 0 {
+					t.Errorf("expected empty NotDeletedExampleIds, got %v", resp.NotDeletedExampleIds)
+				}
+			},
+		},
+		{
+			// A 200 with Completed=false reports a partial delete that the
+			// caller should retry; not-deleted IDs are surfaced back.
+			name: "DeleteExamples_Incomplete",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(datasets.DatasetExamplesDeleteResult{
+					Completed:            false,
+					DeletedExampleIds:    []string{"ex-1"},
+					NotDeletedExampleIds: []string{"ex-2"},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Datasets.DeleteExamples(ctx, datasets.DeleteExamplesRequest{
+					Dataset:          dsID,
+					DatasetVersionID: "v-1",
+					ExampleIDs:       []string{"ex-1", "ex-2"},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				resp := got.(*datasets.DatasetExamplesDeleteResult)
+				if resp.Completed {
+					t.Errorf("expected Completed=false on incomplete, got true")
+				}
+				if len(resp.NotDeletedExampleIds) != 1 || resp.NotDeletedExampleIds[0] != "ex-2" {
+					t.Errorf("unexpected NotDeletedExampleIds: %v", resp.NotDeletedExampleIds)
+				}
+			},
+		},
+		{
+			name: "DeleteExamples_ServerError",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(400)
+				_, _ = w.Write([]byte(`{"title":"invalid version"}`))
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Datasets.DeleteExamples(ctx, datasets.DeleteExamplesRequest{
+					Dataset:          datasetID("ds-1"),
+					DatasetVersionID: "v-1",
+					ExampleIDs:       []string{"ex-1"},
 				})
 			},
 			check: func(t *testing.T, got any, err error) {

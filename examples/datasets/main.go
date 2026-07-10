@@ -34,6 +34,7 @@ func main() {
 	listExamples(ctx, client, datasetName, space)
 	appendExamples(ctx, client, datasetName, space)
 	annotateExamples(ctx, client, datasetName, space)
+	deleteExamples(ctx, client, datasetName, space, "<dataset-version-id>", []string{"<example-id>"})
 	renameDataset(ctx, client, datasetName, space)
 	deleteDataset(ctx, client, ds.Id)
 }
@@ -114,6 +115,24 @@ func appendExamples(ctx context.Context, client *arize.Client, dataset, space st
 	}
 	fmt.Printf("appended %d example(s) to dataset %q (version %s)\n",
 		len(resp.ExampleIds), dataset, resp.DatasetVersionId)
+}
+
+// deleteExamples removes a batch of examples from a specific dataset version.
+// The delete is partial-tolerant: the result reports which IDs were deleted and
+// which were not, and a false Completed means the full request should be
+// retried (the operation is idempotent).
+func deleteExamples(ctx context.Context, client *arize.Client, dataset, space, datasetVersionID string, exampleIDs []string) {
+	resp, err := client.Datasets.DeleteExamples(ctx, datasets.DeleteExamplesRequest{
+		Dataset:          dataset,
+		Space:            space,
+		DatasetVersionID: datasetVersionID,
+		ExampleIDs:       exampleIDs,
+	})
+	if err != nil {
+		log.Fatalf("delete examples: %v", err)
+	}
+	fmt.Printf("deleted %d example(s) from dataset %q (completed=%t, not deleted: %d)\n",
+		len(resp.DeletedExampleIds), dataset, resp.Completed, len(resp.NotDeletedExampleIds))
 }
 
 // annotateExamples writes a human annotation to the dataset's first example.

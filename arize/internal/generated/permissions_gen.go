@@ -30,6 +30,10 @@ var Permissions = struct {
 	DatasetExampleUpdate            Permission
 	DatasetRead                     Permission
 	DatasetUpdate                   Permission
+	DatasetViewCreate               Permission
+	DatasetViewDelete               Permission
+	DatasetViewRead                 Permission
+	DatasetViewUpdate               Permission
 	DataFabricConnectorCreate       Permission
 	DataFabricConnectorDelete       Permission
 	DataFabricConnectorRead         Permission
@@ -152,6 +156,10 @@ var Permissions = struct {
 	DatasetExampleUpdate:            PermissionDATASETEXAMPLEUPDATE,
 	DatasetRead:                     PermissionDATASETREAD,
 	DatasetUpdate:                   PermissionDATASETUPDATE,
+	DatasetViewCreate:               PermissionDATASETVIEWCREATE,
+	DatasetViewDelete:               PermissionDATASETVIEWDELETE,
+	DatasetViewRead:                 PermissionDATASETVIEWREAD,
+	DatasetViewUpdate:               PermissionDATASETVIEWUPDATE,
 	DataFabricConnectorCreate:       PermissionDATAFABRICCONNECTORCREATE,
 	DataFabricConnectorDelete:       PermissionDATAFABRICCONNECTORDELETE,
 	DataFabricConnectorRead:         PermissionDATAFABRICCONNECTORREAD,

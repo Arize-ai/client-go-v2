@@ -18,6 +18,13 @@ type (
 	// written to and the server-assigned IDs of the inserted examples.
 	DatasetExamplesInserted = generated.DatasetExamplesInserted
 
+	// DatasetExamplesDeleteResult reports the outcome of a batch example
+	// delete. Completed indicates whether a retry is needed; DeletedExampleIds
+	// are the IDs confirmed deleted; NotDeletedExampleIds are requested IDs
+	// that were not deleted (not found in the selected version, or not reached
+	// when Completed is false).
+	DatasetExamplesDeleteResult = generated.DatasetExampleDeleteResponse
+
 	// AnnotateRecordInput is a single dataset example to annotate, identified
 	// by its example ID (RecordId) plus the annotation Values to set.
 	AnnotateRecordInput = generated.AnnotateRecordInput
@@ -117,6 +124,22 @@ type AppendExamplesRequest struct {
 	DatasetVersionID string
 	// Examples are the examples to append.
 	Examples []DatasetExampleCreate
+}
+
+// DeleteExamplesRequest identifies the dataset and the examples to delete.
+type DeleteExamplesRequest struct {
+	// Dataset accepts either a dataset name or ID.
+	Dataset string
+	// Space accepts either a space name or ID. Required when Dataset is a
+	// name; ignored when Dataset is an ID.
+	Space string
+	// DatasetVersionID is the version to delete the examples from. Required;
+	// examples are removed in place from this version and no new version is
+	// created.
+	DatasetVersionID string
+	// ExampleIDs are the IDs of the examples to delete (up to 1000 per
+	// request).
+	ExampleIDs []string
 }
 
 // AnnotateExamplesRequest identifies the dataset and the example annotations

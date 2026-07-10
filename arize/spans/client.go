@@ -73,7 +73,7 @@ func (c *Client) Delete(
 	ctx context.Context,
 	req DeleteRequest,
 ) (*SpanDeleteResult, error) {
-	prerelease.Warn("spans.delete", prerelease.Alpha)
+	prerelease.Warn("spans.delete", prerelease.Beta)
 	projectID, err := resolve.FindProjectID(ctx, c.gen, req.Project, req.Space)
 	if err != nil {
 		return nil, err

@@ -25,7 +25,7 @@ func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
 ) (*RoleBindingList, error) {
-	prerelease.Warn("rolebindings.list", prerelease.Alpha)
+	prerelease.Warn("rolebindings.list", prerelease.Beta)
 	params := &generated.RoleBindingsListParams{
 		ResourceType: req.ResourceType,
 		UserId:       optfields.PtrIfSet(req.UserID),

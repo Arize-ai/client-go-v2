@@ -182,6 +182,21 @@ func (e AnnotationQueueTraceRecordInputRecordType) Valid() bool {
 	}
 }
 
+// Defines values for AnthropicConfigProvider.
+const (
+	AnthropicConfigProviderAnthropic AnthropicConfigProvider = "anthropic"
+)
+
+// Valid indicates whether the value is a known member of the AnthropicConfigProvider enum.
+func (e AnthropicConfigProvider) Valid() bool {
+	switch e {
+	case AnthropicConfigProviderAnthropic:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ApiKeyAccountRole.
 const (
 	ApiKeyAccountRoleAdmin  ApiKeyAccountRole = "admin"
@@ -416,6 +431,21 @@ const (
 func (e ContinuousAnnotationConfigUpdateAnnotationConfigType) Valid() bool {
 	switch e {
 	case ContinuousAnnotationConfigUpdateAnnotationConfigTypeContinuous:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateAnthropicConfigProvider.
+const (
+	CreateAnthropicConfigProviderAnthropic CreateAnthropicConfigProvider = "anthropic"
+)
+
+// Valid indicates whether the value is a known member of the CreateAnthropicConfigProvider enum.
+func (e CreateAnthropicConfigProvider) Valid() bool {
+	switch e {
+	case CreateAnthropicConfigProviderAnthropic:
 		return true
 	default:
 		return false
@@ -766,12 +796,15 @@ func (e LlmIntegrationType) Valid() bool {
 
 // Defines values for LlmIntegrationProvider.
 const (
-	LlmIntegrationProviderOpenAI LlmIntegrationProvider = "openAI"
+	LlmIntegrationProviderAnthropic LlmIntegrationProvider = "anthropic"
+	LlmIntegrationProviderOpenAI    LlmIntegrationProvider = "openAI"
 )
 
 // Valid indicates whether the value is a known member of the LlmIntegrationProvider enum.
 func (e LlmIntegrationProvider) Valid() bool {
 	switch e {
+	case LlmIntegrationProviderAnthropic:
+		return true
 	case LlmIntegrationProviderOpenAI:
 		return true
 	default:
@@ -982,6 +1015,10 @@ const (
 	PermissionDATASETEXAMPLEUPDATE            Permission = "DATASET_EXAMPLE_UPDATE"
 	PermissionDATASETREAD                     Permission = "DATASET_READ"
 	PermissionDATASETUPDATE                   Permission = "DATASET_UPDATE"
+	PermissionDATASETVIEWCREATE               Permission = "DATASET_VIEW_CREATE"
+	PermissionDATASETVIEWDELETE               Permission = "DATASET_VIEW_DELETE"
+	PermissionDATASETVIEWREAD                 Permission = "DATASET_VIEW_READ"
+	PermissionDATASETVIEWUPDATE               Permission = "DATASET_VIEW_UPDATE"
 	PermissionEVALUATORCREATE                 Permission = "EVALUATOR_CREATE"
 	PermissionEVALUATORDELETE                 Permission = "EVALUATOR_DELETE"
 	PermissionEVALUATORREAD                   Permission = "EVALUATOR_READ"
@@ -1134,6 +1171,14 @@ func (e Permission) Valid() bool {
 	case PermissionDATASETREAD:
 		return true
 	case PermissionDATASETUPDATE:
+		return true
+	case PermissionDATASETVIEWCREATE:
+		return true
+	case PermissionDATASETVIEWDELETE:
+		return true
+	case PermissionDATASETVIEWREAD:
+		return true
+	case PermissionDATASETVIEWUPDATE:
 		return true
 	case PermissionEVALUATORCREATE:
 		return true
@@ -2070,6 +2115,21 @@ type AnnotatorUser struct {
 	Id string `json:"id"`
 }
 
+// AnthropicConfig defines model for AnthropicConfig.
+type AnthropicConfig struct {
+	// HasApiKey Whether an API key is configured (the key itself is never returned).
+	HasApiKey bool `json:"has_api_key"`
+
+	// IsFunctionCallingEnabled Whether function/tool calling is enabled.
+	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
+
+	// Provider Discriminator identifying the Anthropic provider.
+	Provider AnthropicConfigProvider `json:"provider"`
+}
+
+// AnthropicConfigProvider Discriminator identifying the Anthropic provider.
+type AnthropicConfigProvider string
+
 // ApiKey defines model for ApiKey.
 type ApiKey struct {
 	// CreatedAt Timestamp when the key was created.
@@ -2199,8 +2259,14 @@ type ApiKeyOrganizationRole string
 
 // ApiKeyRefresh defines model for ApiKeyRefresh.
 type ApiKeyRefresh struct {
-	// ExpiresAt Expiration timestamp for the refreshed key. If omitted, the refreshed key
-	// has no expiration (infinite lifetime).
+	// ExpiresAt Expiration timestamp for the refreshed key. Required when the existing key
+	// has an expiry — omitting it would extend the key's lifetime to unbounded,
+	// which is rejected with 422. For an unbounded existing key, `expires_at` may
+	// be omitted (the refreshed key is also unbounded) or provided to add a
+	// specific expiry. The value must be no later than the old key's expiry — a
+	// request that would extend the key's lifetime is rejected with 422. To create
+	// a key with a longer lifetime, use `POST /v2/api-keys` to issue a new key
+	// rather than refreshing.
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`
 
 	// GracePeriodSeconds Grace period in seconds during which the old key remains valid after the
@@ -2550,6 +2616,19 @@ type CreateAnnotationQueueRequestBody struct {
 	SpaceId string `json:"space_id"`
 }
 
+// CreateAnthropicConfig defines model for CreateAnthropicConfig.
+type CreateAnthropicConfig struct {
+	// ApiKey API key for the provider (write-only, never returned).
+	ApiKey string `json:"api_key"`
+
+	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
+	IsFunctionCallingEnabled *bool                         `json:"is_function_calling_enabled,omitempty"`
+	Provider                 CreateAnthropicConfigProvider `json:"provider"`
+}
+
+// CreateAnthropicConfigProvider defines model for CreateAnthropicConfig.Provider.
+type CreateAnthropicConfigProvider string
+
 // CreateCodeEvaluationTaskRequest defines model for CreateCodeEvaluationTaskRequest.
 type CreateCodeEvaluationTaskRequest struct {
 	// DatasetId Dataset identifier (base64). Required when `project_id` is not provided.
@@ -2608,9 +2687,6 @@ type CreateLlmConfig struct {
 
 // CreateLlmConfigBase defines model for CreateLlmConfigBase.
 type CreateLlmConfigBase struct {
-	// IsDefaultModelsEnabled Enable the provider's default model list. Defaults to false.
-	IsDefaultModelsEnabled *bool `json:"is_default_models_enabled,omitempty"`
-
 	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
 	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
 }
@@ -2634,9 +2710,6 @@ type CreateLlmIntegrationRequestType string
 type CreateOpenAiConfig struct {
 	// ApiKey API key for the provider (write-only, never returned).
 	ApiKey string `json:"api_key"`
-
-	// IsDefaultModelsEnabled Enable the provider's default model list. Defaults to false.
-	IsDefaultModelsEnabled *bool `json:"is_default_models_enabled,omitempty"`
 
 	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
 	IsFunctionCallingEnabled *bool                      `json:"is_function_calling_enabled,omitempty"`
@@ -2844,6 +2917,70 @@ type DatasetExample struct {
 // DatasetExampleCreate A dataset example with arbitrary user-defined fields. System-managed
 // fields are excluded for creation requests.
 type DatasetExampleCreate map[string]interface{}
+
+// DatasetExampleDeleteProblem defines model for DatasetExampleDeleteProblem.
+type DatasetExampleDeleteProblem struct {
+	// DeletedExampleIds Example IDs confirmed deleted before the failure occurred. Safe to
+	// include or omit on retry, as the delete operation is idempotent.
+	DeletedExampleIds *[]string `json:"deleted_example_ids,omitempty"`
+
+	// Detail A human-readable explanation specific to this occurrence of the problem
+	Detail *string `json:"detail,omitempty"`
+
+	// Instance A URI reference that identifies the specific occurrence of the problem
+	Instance *string `json:"instance,omitempty"`
+
+	// NotDeletedExampleIds Requested example IDs that were not deleted before the failure
+	// occurred. Retry the original request to attempt deletion of these IDs.
+	NotDeletedExampleIds *[]string `json:"not_deleted_example_ids,omitempty"`
+
+	// Status The HTTP status code generated by the origin server for this occurrence of the problem
+	Status int `json:"status"`
+
+	// Title A short, human-readable summary of the problem type
+	Title string `json:"title"`
+
+	// Type A URI reference that identifies the problem type
+	Type *string `json:"type,omitempty"`
+}
+
+// DatasetExampleDeleteRequest Body containing the IDs of dataset examples to delete
+type DatasetExampleDeleteRequest struct {
+	// DatasetVersionId Version to delete the examples from. Required. Examples are
+	// removed in place from this version; no new version is created.
+	DatasetVersionId string `json:"dataset_version_id"`
+
+	// ExampleIds IDs of the examples to delete. Up to 1000 per request.
+	ExampleIds []string `json:"example_ids"`
+}
+
+// DatasetExampleDeleteResponse Result of a DELETE dataset examples request.
+//
+// The delete is partial-tolerant: examples that exist in the selected version
+// are deleted, and every requested ID that was not deleted is reported in
+// `not_deleted_example_ids` so the caller can act on it.
+//
+// A `200 OK` response always includes:
+//   - `completed` — `true` if the operation finished and no retry is needed;
+//     `false` if it could not fully complete (retry the full request).
+//   - `deleted_example_ids` — example IDs confirmed deleted in this request.
+//   - `not_deleted_example_ids` — requested IDs not deleted: either not found in
+//     the selected version (never added, or already deleted), or whose deletion
+//     did not complete when `completed` is `false`.
+type DatasetExampleDeleteResponse struct {
+	// Completed `true` when the operation finished and no retry is needed. `false` when
+	// the operation could not fully complete — retry the original full request
+	// (the delete is idempotent).
+	Completed bool `json:"completed"`
+
+	// DeletedExampleIds Example IDs confirmed deleted in this request.
+	DeletedExampleIds []string `json:"deleted_example_ids"`
+
+	// NotDeletedExampleIds Requested example IDs that were not deleted: either not found in the
+	// selected version (never added, or already deleted), or whose deletion did
+	// not complete when `completed` is `false`.
+	NotDeletedExampleIds []string `json:"not_deleted_example_ids"`
+}
 
 // DatasetExampleListResponse defines model for DatasetExampleListResponse.
 type DatasetExampleListResponse struct {
@@ -3577,12 +3714,36 @@ type ListSpansRequest struct {
 
 	// Filter Filter expression to apply to the query. Supports SQL-like syntax
 	// for filtering spans by attributes (e.g., `status_code = 'ERROR'`).
+	// Optional; omit it to apply no filter. If provided, it must not be
+	// empty or whitespace-only.
 	Filter *string `json:"filter,omitempty"`
 
 	// ProjectId The project ID to list spans for
 	ProjectId string `json:"project_id"`
 
 	// StartTime Filter to spans starting at or after this timestamp (inclusive).
+	// ISO 8601 format (e.g., `2024-01-01T00:00:00Z`). Defaults to 1 week ago.
+	StartTime *time.Time `json:"start_time,omitempty"`
+}
+
+// ListTracesRequest defines model for ListTracesRequest.
+type ListTracesRequest struct {
+	// EndTime Return traces whose spans start before this timestamp (exclusive).
+	// ISO 8601 format (e.g., `2024-01-02T00:00:00Z`). Defaults to the current time.
+	EndTime *time.Time `json:"end_time,omitempty"`
+
+	// Filter Filter expression to apply to the query. Supports SQL-like syntax for
+	// filtering spans by attributes (e.g., `status_code = 'ERROR'` or
+	// `span_kind = 'LLM'`). A trace is returned when **any** of its spans
+	// matches the filter — the matching span is usually a child, not the root.
+	// Optional; omit it to apply no filter. If provided, it must not be empty
+	// or whitespace-only.
+	Filter *string `json:"filter,omitempty"`
+
+	// ProjectId The project ID to list traces for
+	ProjectId string `json:"project_id"`
+
+	// StartTime Return traces whose spans start at or after this timestamp (inclusive).
 	// ISO 8601 format (e.g., `2024-01-01T00:00:00Z`). Defaults to 1 week ago.
 	StartTime *time.Time `json:"start_time,omitempty"`
 }
@@ -3594,9 +3755,6 @@ type LlmConfig struct {
 
 // LlmConfigBase LLM config fields common across providers.
 type LlmConfigBase struct {
-	// IsDefaultModelsEnabled Whether the provider's default model list is enabled.
-	IsDefaultModelsEnabled bool `json:"is_default_models_enabled"`
-
 	// IsFunctionCallingEnabled Whether function/tool calling is enabled.
 	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
 }
@@ -3667,7 +3825,7 @@ type LlmIntegration struct {
 // LlmIntegrationType Discriminator identifying an LLM integration.
 type LlmIntegrationType string
 
-// LlmIntegrationProvider The LLM vendor for an `llm` integration. Selects the per-provider `config` member. Currently only `openAI` is implemented; additional providers are added non-breakingly.
+// LlmIntegrationProvider The LLM vendor for an `llm` integration. Selects the per-provider `config` member. `openAI` and `anthropic` are implemented; additional providers are added non-breakingly.
 type LlmIntegrationProvider string
 
 // LlmProvider The LLM provider to use
@@ -3716,9 +3874,6 @@ type MessageRole string
 type OpenAiConfig struct {
 	// HasApiKey Whether an API key is configured (the key itself is never returned).
 	HasApiKey bool `json:"has_api_key"`
-
-	// IsDefaultModelsEnabled Whether the provider's default model list is enabled.
-	IsDefaultModelsEnabled bool `json:"is_default_models_enabled"`
 
 	// IsFunctionCallingEnabled Whether function/tool calling is enabled.
 	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
@@ -4810,6 +4965,53 @@ type ToolConfig struct {
 	Tools *[]map[string]interface{} `json:"tools,omitempty"`
 }
 
+// Trace A Trace is the collection of spans sharing a `trace_id`, anchored on a root
+// span (a span with no parent). It captures a single end-to-end request
+// through an LLM application, with lightweight roll-up metadata plus the full
+// flat list of its spans.
+type Trace struct {
+	// EndTime Latest span end time across the returned spans.
+	EndTime *time.Time `json:"end_time,omitempty"`
+
+	// RootSpanId Span ID of the root span (the span with no parent) that anchors this
+	// trace entry. A trace with more than one root span is returned as
+	// multiple entries sharing the same `trace_id`, distinguished by
+	// `root_span_id`.
+	RootSpanId string `json:"root_span_id"`
+
+	// Spans Flat list of spans belonging to this trace. Each span has the same shape
+	// and enrichment as spans returned by `POST /v2/spans`. Reconstruct the
+	// trace tree client-side using each span's `parent_id`.
+	Spans []Span `json:"spans"`
+
+	// SpansTruncated `true` when this trace contained more spans than the per-trace limit and
+	// its returned span list is incomplete. `false` otherwise.
+	//
+	// Note: each page also has an overall cap on the total number of spans
+	// returned across all of its traces. On pages that include unusually large
+	// traces, an individual trace may return fewer spans than it actually has
+	// even when `spans_truncated` is `false`. To retrieve a trace's spans in
+	// full, narrow the time window or fetch them directly with
+	// `POST /v2/spans` filtered to that `trace_id`.
+	SpansTruncated bool `json:"spans_truncated"`
+
+	// StartTime Earliest span start time across the returned spans.
+	StartTime *time.Time `json:"start_time,omitempty"`
+
+	// TraceId Unique identifier for the trace.
+	TraceId string `json:"trace_id"`
+}
+
+// TraceListResponse defines model for TraceListResponse.
+type TraceListResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Traces A list of traces, ordered newest-first.
+	Traces []Trace `json:"traces"`
+}
+
 // TriggerEvaluationTaskRunRequest Trigger request for `template_evaluation` or `code_evaluation` tasks.
 // `data_start_time` and `data_end_time` together must span no more than 30 days.
 // `data_start_time` must be before `data_end_time`.
@@ -4932,10 +5134,9 @@ type UpdateIntegrationRequest struct {
 type UpdateLlmConfig struct {
 	// ApiKey Rotate the API key. Pass null to clear it. Omit to keep unchanged.
 	ApiKey                   *string `json:"api_key,omitempty"`
-	IsDefaultModelsEnabled   *bool   `json:"is_default_models_enabled,omitempty"`
 	IsFunctionCallingEnabled *bool   `json:"is_function_calling_enabled,omitempty"`
 
-	// Provider The LLM vendor for an `llm` integration. Selects the per-provider `config` member. Currently only `openAI` is implemented; additional providers are added non-breakingly.
+	// Provider The LLM vendor for an `llm` integration. Selects the per-provider `config` member. `openAI` and `anthropic` are implemented; additional providers are added non-breakingly.
 	Provider *LlmIntegrationProvider `json:"provider,omitempty"`
 }
 
@@ -5146,9 +5347,6 @@ type EvaluatorVersionIdPathParam = Id
 // EvaluatorVersionIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type EvaluatorVersionIdQueryParam = Id
 
-// ExampleIdPathParam defines model for ExampleIdPathParam.
-type ExampleIdPathParam = string
-
 // ExperimentIdPathParam A universally unique identifier (base64-encoded opaque string).
 type ExperimentIdPathParam = Id
 
@@ -5166,6 +5364,9 @@ type LabelQueryParam = string
 
 // LimitQueryParamMax100 defines model for LimitQueryParamMax100.
 type LimitQueryParamMax100 = int
+
+// LimitQueryParamMax50 defines model for LimitQueryParamMax50.
+type LimitQueryParamMax50 = int
 
 // LimitQueryParamMax500 defines model for LimitQueryParamMax500.
 type LimitQueryParamMax500 = int
@@ -5309,6 +5510,27 @@ type Conflict = Problem
 
 // DatasetExampleList defines model for DatasetExampleList.
 type DatasetExampleList = DatasetExampleListResponse
+
+// DatasetExamplesDeleteError RFC 9457 Problem Details extended with dataset example delete context.
+// Returned as `503` when the request fails after partially completing, so the
+// caller knows which IDs were already deleted and which still need to be retried.
+// The delete operation is idempotent — retrying the original full request is safe.
+type DatasetExamplesDeleteError = DatasetExampleDeleteProblem
+
+// DatasetExamplesDeleteSuccess Result of a DELETE dataset examples request.
+//
+// The delete is partial-tolerant: examples that exist in the selected version
+// are deleted, and every requested ID that was not deleted is reported in
+// `not_deleted_example_ids` so the caller can act on it.
+//
+// A `200 OK` response always includes:
+//   - `completed` — `true` if the operation finished and no retry is needed;
+//     `false` if it could not fully complete (retry the full request).
+//   - `deleted_example_ids` — example IDs confirmed deleted in this request.
+//   - `not_deleted_example_ids` — requested IDs not deleted: either not found in
+//     the selected version (never added, or already deleted), or whose deletion
+//     did not complete when `completed` is `false`.
+type DatasetExamplesDeleteSuccess = DatasetExampleDeleteResponse
 
 // DatasetExamplesInserted A dataset with the IDs of examples that were inserted or updated.
 // Includes the version the examples were written to and the list of
@@ -5462,6 +5684,9 @@ type TaskRunList = TaskRunListResponse
 // carry a `run_configuration` that defines the LLM or evaluator settings for
 // each triggered run.
 type TaskUpdated = Task
+
+// TraceList defines model for TraceList.
+type TraceList = TraceListResponse
 
 // Unauthorized RFC 9457 Problem Details
 type Unauthorized = Problem
@@ -5666,6 +5891,9 @@ type CreateTaskRequestBody struct {
 // CreateUserRequestBody defines model for CreateUserRequestBody.
 type CreateUserRequestBody = CreateUserRequest
 
+// DeleteDatasetExamplesRequestBody Body containing the IDs of dataset examples to delete
+type DeleteDatasetExamplesRequestBody = DatasetExampleDeleteRequest
+
 // DeleteSpansRequestBody defines model for DeleteSpansRequestBody.
 type DeleteSpansRequestBody = DeleteSpansRequest
 
@@ -5680,6 +5908,9 @@ type InsertExperimentRunsRequestBody = InsertExperimentRunsBody
 
 // ListSpansRequestBody defines model for ListSpansRequestBody.
 type ListSpansRequestBody = ListSpansRequest
+
+// ListTracesRequestBody defines model for ListTracesRequestBody.
+type ListTracesRequestBody = ListTracesRequest
 
 // RefreshApiKeyRequestBody defines model for RefreshApiKeyRequestBody.
 type RefreshApiKeyRequestBody = ApiKeyRefresh
@@ -6110,12 +6341,6 @@ type DatasetsExamplesInsertJSONBody struct {
 
 // DatasetsExamplesInsertParams defines parameters for DatasetsExamplesInsert.
 type DatasetsExamplesInsertParams struct {
-	// DatasetVersionId The unique identifier of the dataset version
-	DatasetVersionId *DatasetVersionIdQueryParam `form:"dataset_version_id,omitempty" json:"dataset_version_id,omitempty"`
-}
-
-// DatasetsExampleDeleteParams defines parameters for DatasetsExampleDelete.
-type DatasetsExampleDeleteParams struct {
 	// DatasetVersionId The unique identifier of the dataset version
 	DatasetVersionId *DatasetVersionIdQueryParam `form:"dataset_version_id,omitempty" json:"dataset_version_id,omitempty"`
 }
@@ -6583,6 +6808,17 @@ type TasksTriggerRunJSONBody struct {
 	union json.RawMessage
 }
 
+// TracesListParams defines parameters for TracesList.
+type TracesListParams struct {
+	// Limit Maximum items to return
+	Limit *LimitQueryParamMax50 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
+}
+
 // UsersListParams defines parameters for UsersList.
 type UsersListParams struct {
 	// Limit Maximum items to return
@@ -6643,6 +6879,9 @@ type DatasetsCreateJSONRequestBody DatasetsCreateJSONBody
 
 // DatasetsUpdateJSONRequestBody defines body for DatasetsUpdate for application/json ContentType.
 type DatasetsUpdateJSONRequestBody DatasetsUpdateJSONBody
+
+// DatasetsExamplesDeleteJSONRequestBody defines body for DatasetsExamplesDelete for application/json ContentType.
+type DatasetsExamplesDeleteJSONRequestBody = DatasetExampleDeleteRequest
 
 // DatasetsExamplesUpdateJSONRequestBody defines body for DatasetsExamplesUpdate for application/json ContentType.
 type DatasetsExamplesUpdateJSONRequestBody DatasetsExamplesUpdateJSONBody
@@ -6745,6 +6984,9 @@ type TasksUpdateJSONRequestBody TasksUpdateJSONBody
 
 // TasksTriggerRunJSONRequestBody defines body for TasksTriggerRun for application/json ContentType.
 type TasksTriggerRunJSONRequestBody TasksTriggerRunJSONBody
+
+// TracesListJSONRequestBody defines body for TracesList for application/json ContentType.
+type TracesListJSONRequestBody = ListTracesRequest
 
 // UsersCreateJSONRequestBody defines body for UsersCreate for application/json ContentType.
 type UsersCreateJSONRequestBody = CreateUserRequest
@@ -8187,6 +8429,34 @@ func (t *CreateLlmConfig) MergeCreateOpenAiConfig(v CreateOpenAiConfig) error {
 	return err
 }
 
+// AsCreateAnthropicConfig returns the union data inside the CreateLlmConfig as a CreateAnthropicConfig
+func (t CreateLlmConfig) AsCreateAnthropicConfig() (CreateAnthropicConfig, error) {
+	var body CreateAnthropicConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateAnthropicConfig overwrites any union data inside the CreateLlmConfig as the provided CreateAnthropicConfig
+func (t *CreateLlmConfig) FromCreateAnthropicConfig(v CreateAnthropicConfig) error {
+	v.Provider = "anthropic"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateAnthropicConfig performs a merge with any union data inside the CreateLlmConfig, using the provided CreateAnthropicConfig
+func (t *CreateLlmConfig) MergeCreateAnthropicConfig(v CreateAnthropicConfig) error {
+	v.Provider = "anthropic"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t CreateLlmConfig) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"provider"`
@@ -8201,6 +8471,8 @@ func (t CreateLlmConfig) ValueByDiscriminator() (interface{}, error) {
 		return nil, err
 	}
 	switch discriminator {
+	case "anthropic":
+		return t.AsCreateAnthropicConfig()
 	case "openAI":
 		return t.AsCreateOpenAiConfig()
 	default:
@@ -8516,6 +8788,34 @@ func (t *LlmConfig) MergeOpenAiConfig(v OpenAiConfig) error {
 	return err
 }
 
+// AsAnthropicConfig returns the union data inside the LlmConfig as a AnthropicConfig
+func (t LlmConfig) AsAnthropicConfig() (AnthropicConfig, error) {
+	var body AnthropicConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAnthropicConfig overwrites any union data inside the LlmConfig as the provided AnthropicConfig
+func (t *LlmConfig) FromAnthropicConfig(v AnthropicConfig) error {
+	v.Provider = "anthropic"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAnthropicConfig performs a merge with any union data inside the LlmConfig, using the provided AnthropicConfig
+func (t *LlmConfig) MergeAnthropicConfig(v AnthropicConfig) error {
+	v.Provider = "anthropic"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t LlmConfig) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"provider"`
@@ -8530,6 +8830,8 @@ func (t LlmConfig) ValueByDiscriminator() (interface{}, error) {
 		return nil, err
 	}
 	switch discriminator {
+	case "anthropic":
+		return t.AsAnthropicConfig()
 	case "openAI":
 		return t.AsOpenAiConfig()
 	default:
@@ -9844,6 +10146,11 @@ type ClientInterface interface {
 
 	DatasetsUpdate(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DatasetsExamplesDeleteWithBody request with any body
+	DatasetsExamplesDeleteWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DatasetsExamplesDelete(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsExamplesDeleteJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DatasetsExamplesList request
 	DatasetsExamplesList(ctx context.Context, datasetId DatasetIdPathParam, params *DatasetsExamplesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9861,9 +10168,6 @@ type ClientInterface interface {
 	DatasetsExamplesAnnotateWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	DatasetsExamplesAnnotate(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsExamplesAnnotateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DatasetsExampleDelete request
-	DatasetsExampleDelete(ctx context.Context, datasetId DatasetIdPathParam, exampleId ExampleIdPathParam, params *DatasetsExampleDeleteParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// EvaluatorVersionsGet request
 	EvaluatorVersionsGet(ctx context.Context, versionId EvaluatorVersionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -10151,6 +10455,11 @@ type ClientInterface interface {
 	TasksTriggerRunWithBody(ctx context.Context, taskId TaskIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	TasksTriggerRun(ctx context.Context, taskId TaskIdPathParam, body TasksTriggerRunJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TracesListWithBody request with any body
+	TracesListWithBody(ctx context.Context, params *TracesListParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	TracesList(ctx context.Context, params *TracesListParams, body TracesListJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UsersList request
 	UsersList(ctx context.Context, params *UsersListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -10706,6 +11015,30 @@ func (c *Client) DatasetsUpdate(ctx context.Context, datasetId DatasetIdPathPara
 	return c.Client.Do(req)
 }
 
+func (c *Client) DatasetsExamplesDeleteWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDatasetsExamplesDeleteRequestWithBody(c.Server, datasetId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DatasetsExamplesDelete(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsExamplesDeleteJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDatasetsExamplesDeleteRequest(c.Server, datasetId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) DatasetsExamplesList(ctx context.Context, datasetId DatasetIdPathParam, params *DatasetsExamplesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDatasetsExamplesListRequest(c.Server, datasetId, params)
 	if err != nil {
@@ -10780,18 +11113,6 @@ func (c *Client) DatasetsExamplesAnnotateWithBody(ctx context.Context, datasetId
 
 func (c *Client) DatasetsExamplesAnnotate(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsExamplesAnnotateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDatasetsExamplesAnnotateRequest(c.Server, datasetId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DatasetsExampleDelete(ctx context.Context, datasetId DatasetIdPathParam, exampleId ExampleIdPathParam, params *DatasetsExampleDeleteParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDatasetsExampleDeleteRequest(c.Server, datasetId, exampleId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -12064,6 +12385,30 @@ func (c *Client) TasksTriggerRunWithBody(ctx context.Context, taskId TaskIdPathP
 
 func (c *Client) TasksTriggerRun(ctx context.Context, taskId TaskIdPathParam, body TasksTriggerRunJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTasksTriggerRunRequest(c.Server, taskId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TracesListWithBody(ctx context.Context, params *TracesListParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTracesListRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TracesList(ctx context.Context, params *TracesListParams, body TracesListJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTracesListRequest(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -13907,6 +14252,53 @@ func NewDatasetsUpdateRequestWithBody(server string, datasetId DatasetIdPathPara
 	return req, nil
 }
 
+// NewDatasetsExamplesDeleteRequest calls the generic DatasetsExamplesDelete builder with application/json body
+func NewDatasetsExamplesDeleteRequest(server string, datasetId DatasetIdPathParam, body DatasetsExamplesDeleteJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDatasetsExamplesDeleteRequestWithBody(server, datasetId, "application/json", bodyReader)
+}
+
+// NewDatasetsExamplesDeleteRequestWithBody generates requests for DatasetsExamplesDelete with any type of body
+func NewDatasetsExamplesDeleteRequestWithBody(server string, datasetId DatasetIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "dataset_id", datasetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/datasets/%s/examples", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewDatasetsExamplesListRequest generates requests for DatasetsExamplesList
 func NewDatasetsExamplesListRequest(server string, datasetId DatasetIdPathParam, params *DatasetsExamplesListParams) (*http.Request, error) {
 	var err error
@@ -14176,69 +14568,6 @@ func NewDatasetsExamplesAnnotateRequestWithBody(server string, datasetId Dataset
 	}
 
 	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewDatasetsExampleDeleteRequest generates requests for DatasetsExampleDelete
-func NewDatasetsExampleDeleteRequest(server string, datasetId DatasetIdPathParam, exampleId ExampleIdPathParam, params *DatasetsExampleDeleteParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "dataset_id", datasetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "example_id", exampleId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/v2/datasets/%s/examples/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.DatasetVersionId != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "dataset_version_id", *params.DatasetVersionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
 
 	return req, nil
 }
@@ -18177,6 +18506,84 @@ func NewTasksTriggerRunRequestWithBody(server string, taskId TaskIdPathParam, co
 	return req, nil
 }
 
+// NewTracesListRequest calls the generic TracesList builder with application/json body
+func NewTracesListRequest(server string, params *TracesListParams, body TracesListJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewTracesListRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewTracesListRequestWithBody generates requests for TracesList with any type of body
+func NewTracesListRequestWithBody(server string, params *TracesListParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/traces")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewUsersListRequest generates requests for UsersList
 func NewUsersListRequest(server string, params *UsersListParams) (*http.Request, error) {
 	var err error
@@ -18658,6 +19065,11 @@ type ClientWithResponsesInterface interface {
 
 	DatasetsUpdateWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DatasetsUpdateResponse, error)
 
+	// DatasetsExamplesDeleteWithBodyWithResponse request with any body
+	DatasetsExamplesDeleteWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DatasetsExamplesDeleteResponse, error)
+
+	DatasetsExamplesDeleteWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsExamplesDeleteJSONRequestBody, reqEditors ...RequestEditorFn) (*DatasetsExamplesDeleteResponse, error)
+
 	// DatasetsExamplesListWithResponse request
 	DatasetsExamplesListWithResponse(ctx context.Context, datasetId DatasetIdPathParam, params *DatasetsExamplesListParams, reqEditors ...RequestEditorFn) (*DatasetsExamplesListResponse, error)
 
@@ -18675,9 +19087,6 @@ type ClientWithResponsesInterface interface {
 	DatasetsExamplesAnnotateWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DatasetsExamplesAnnotateResponse, error)
 
 	DatasetsExamplesAnnotateWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsExamplesAnnotateJSONRequestBody, reqEditors ...RequestEditorFn) (*DatasetsExamplesAnnotateResponse, error)
-
-	// DatasetsExampleDeleteWithResponse request
-	DatasetsExampleDeleteWithResponse(ctx context.Context, datasetId DatasetIdPathParam, exampleId ExampleIdPathParam, params *DatasetsExampleDeleteParams, reqEditors ...RequestEditorFn) (*DatasetsExampleDeleteResponse, error)
 
 	// EvaluatorVersionsGetWithResponse request
 	EvaluatorVersionsGetWithResponse(ctx context.Context, versionId EvaluatorVersionIdPathParam, reqEditors ...RequestEditorFn) (*EvaluatorVersionsGetResponse, error)
@@ -18965,6 +19374,11 @@ type ClientWithResponsesInterface interface {
 	TasksTriggerRunWithBodyWithResponse(ctx context.Context, taskId TaskIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TasksTriggerRunResponse, error)
 
 	TasksTriggerRunWithResponse(ctx context.Context, taskId TaskIdPathParam, body TasksTriggerRunJSONRequestBody, reqEditors ...RequestEditorFn) (*TasksTriggerRunResponse, error)
+
+	// TracesListWithBodyWithResponse request with any body
+	TracesListWithBodyWithResponse(ctx context.Context, params *TracesListParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesListResponse, error)
+
+	TracesListWithResponse(ctx context.Context, params *TracesListParams, body TracesListJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesListResponse, error)
 
 	// UsersListWithResponse request
 	UsersListWithResponse(ctx context.Context, params *UsersListParams, reqEditors ...RequestEditorFn) (*UsersListResponse, error)
@@ -19809,6 +20223,35 @@ func (r DatasetsUpdateResponse) StatusCode() int {
 	return 0
 }
 
+type DatasetsExamplesDeleteResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *DatasetExamplesDeleteSuccess
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+	ApplicationproblemJSON503 *DatasetExamplesDeleteError
+}
+
+// Status returns HTTPResponse.Status
+func (r DatasetsExamplesDeleteResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DatasetsExamplesDeleteResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type DatasetsExamplesListResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -19914,32 +20357,6 @@ func (r DatasetsExamplesAnnotateResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r DatasetsExamplesAnnotateResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DatasetsExampleDeleteResponse struct {
-	Body                      []byte
-	HTTPResponse              *http.Response
-	ApplicationproblemJSON400 *BadRequest
-	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
-	ApplicationproblemJSON404 *NotFound
-	ApplicationproblemJSON429 *RateLimitExceeded
-}
-
-// Status returns HTTPResponse.Status
-func (r DatasetsExampleDeleteResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DatasetsExampleDeleteResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -21973,6 +22390,34 @@ func (r TasksTriggerRunResponse) StatusCode() int {
 	return 0
 }
 
+type TracesListResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TraceList
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r TracesListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TracesListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type UsersListResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -22543,6 +22988,23 @@ func (c *ClientWithResponses) DatasetsUpdateWithResponse(ctx context.Context, da
 	return ParseDatasetsUpdateResponse(rsp)
 }
 
+// DatasetsExamplesDeleteWithBodyWithResponse request with arbitrary body returning *DatasetsExamplesDeleteResponse
+func (c *ClientWithResponses) DatasetsExamplesDeleteWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DatasetsExamplesDeleteResponse, error) {
+	rsp, err := c.DatasetsExamplesDeleteWithBody(ctx, datasetId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDatasetsExamplesDeleteResponse(rsp)
+}
+
+func (c *ClientWithResponses) DatasetsExamplesDeleteWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body DatasetsExamplesDeleteJSONRequestBody, reqEditors ...RequestEditorFn) (*DatasetsExamplesDeleteResponse, error) {
+	rsp, err := c.DatasetsExamplesDelete(ctx, datasetId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDatasetsExamplesDeleteResponse(rsp)
+}
+
 // DatasetsExamplesListWithResponse request returning *DatasetsExamplesListResponse
 func (c *ClientWithResponses) DatasetsExamplesListWithResponse(ctx context.Context, datasetId DatasetIdPathParam, params *DatasetsExamplesListParams, reqEditors ...RequestEditorFn) (*DatasetsExamplesListResponse, error) {
 	rsp, err := c.DatasetsExamplesList(ctx, datasetId, params, reqEditors...)
@@ -22601,15 +23063,6 @@ func (c *ClientWithResponses) DatasetsExamplesAnnotateWithResponse(ctx context.C
 		return nil, err
 	}
 	return ParseDatasetsExamplesAnnotateResponse(rsp)
-}
-
-// DatasetsExampleDeleteWithResponse request returning *DatasetsExampleDeleteResponse
-func (c *ClientWithResponses) DatasetsExampleDeleteWithResponse(ctx context.Context, datasetId DatasetIdPathParam, exampleId ExampleIdPathParam, params *DatasetsExampleDeleteParams, reqEditors ...RequestEditorFn) (*DatasetsExampleDeleteResponse, error) {
-	rsp, err := c.DatasetsExampleDelete(ctx, datasetId, exampleId, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDatasetsExampleDeleteResponse(rsp)
 }
 
 // EvaluatorVersionsGetWithResponse request returning *EvaluatorVersionsGetResponse
@@ -23533,6 +23986,23 @@ func (c *ClientWithResponses) TasksTriggerRunWithResponse(ctx context.Context, t
 		return nil, err
 	}
 	return ParseTasksTriggerRunResponse(rsp)
+}
+
+// TracesListWithBodyWithResponse request with arbitrary body returning *TracesListResponse
+func (c *ClientWithResponses) TracesListWithBodyWithResponse(ctx context.Context, params *TracesListParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesListResponse, error) {
+	rsp, err := c.TracesListWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTracesListResponse(rsp)
+}
+
+func (c *ClientWithResponses) TracesListWithResponse(ctx context.Context, params *TracesListParams, body TracesListJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesListResponse, error) {
+	rsp, err := c.TracesList(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTracesListResponse(rsp)
 }
 
 // UsersListWithResponse request returning *UsersListResponse
@@ -25493,6 +25963,81 @@ func ParseDatasetsUpdateResponse(rsp *http.Response) (*DatasetsUpdateResponse, e
 	return response, nil
 }
 
+// ParseDatasetsExamplesDeleteResponse parses an HTTP response from a DatasetsExamplesDeleteWithResponse call
+func ParseDatasetsExamplesDeleteResponse(rsp *http.Response) (*DatasetsExamplesDeleteResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DatasetsExamplesDeleteResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetExamplesDeleteSuccess
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest DatasetExamplesDeleteError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseDatasetsExamplesListResponse parses an HTTP response from a DatasetsExamplesListWithResponse call
 func ParseDatasetsExamplesListResponse(rsp *http.Response) (*DatasetsExamplesListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -25745,60 +26290,6 @@ func ParseDatasetsExamplesAnnotateResponse(rsp *http.Response) (*DatasetsExample
 			return nil, err
 		}
 		response.ApplicationproblemJSON422 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
-		var dest RateLimitExceeded
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON429 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDatasetsExampleDeleteResponse parses an HTTP response from a DatasetsExampleDeleteWithResponse call
-func ParseDatasetsExampleDeleteResponse(rsp *http.Response) (*DatasetsExampleDeleteResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DatasetsExampleDeleteResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest BadRequest
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest Unauthorized
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest NotFound
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -30381,6 +30872,74 @@ func ParseTasksTriggerRunResponse(rsp *http.Response) (*TasksTriggerRunResponse,
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTracesListResponse parses an HTTP response from a TracesListWithResponse call
+func ParseTracesListResponse(rsp *http.Response) (*TracesListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TracesListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TraceList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest UnprocessableEntity
