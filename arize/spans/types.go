@@ -10,8 +10,8 @@ import (
 // callers can construct/assert on them without importing internal/generated.
 type (
 	Span             = generated.Span
-	SpanList         = generated.SpanList
-	SpanDeleteResult = generated.SpanDeleteResponse
+	SpanList         = generated.ListSpansResponse
+	SpanDeleteResult = generated.DeleteSpansResponse
 
 	// SpanStatusCode is the status code of a span.
 	SpanStatusCode = generated.SpanStatusCode

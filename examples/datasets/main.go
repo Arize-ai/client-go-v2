@@ -74,7 +74,7 @@ func createDataset(ctx context.Context, client *arize.Client, name, space string
 	ds, err := client.Datasets.Create(ctx, datasets.CreateRequest{
 		Name:  name,
 		Space: space,
-		Examples: []datasets.DatasetExampleCreate{
+		Examples: []datasets.CreateDatasetExampleInput{
 			{"input": "What is Arize?", "output": "An AI observability platform."},
 			{"input": "What is a span?", "output": "A unit of work in a trace."},
 		},
@@ -106,7 +106,7 @@ func appendExamples(ctx context.Context, client *arize.Client, dataset, space st
 	resp, err := client.Datasets.AppendExamples(ctx, datasets.AppendExamplesRequest{
 		Dataset: dataset,
 		Space:   space,
-		Examples: []datasets.DatasetExampleCreate{
+		Examples: []datasets.CreateDatasetExampleInput{
 			{"input": "What is an evaluator?", "output": "A function that scores spans."},
 		},
 	})

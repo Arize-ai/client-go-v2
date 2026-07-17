@@ -26,12 +26,12 @@ func (c *Client) List(
 	req ListRequest,
 ) (*RoleList, error) {
 	prerelease.Warn("roles.list", prerelease.Beta)
-	params := &generated.RolesListParams{
+	params := &generated.ListRolesParams{
 		IsPredefined: req.IsPredefined,
 		Limit:        optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor:       optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.RolesListWithResponse(ctx, params)
+	resp, err := c.gen.ListRolesWithResponse(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *Client) Get(
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.RolesGetWithResponse(ctx, id)
+	resp, err := c.gen.GetRoleWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -67,12 +67,12 @@ func (c *Client) Create(
 	req CreateRequest,
 ) (*Role, error) {
 	prerelease.Warn("roles.create", prerelease.Beta)
-	body := generated.RoleCreate{
+	body := generated.CreateRoleRequest{
 		Name:        req.Name,
 		Permissions: req.Permissions,
 		Description: optfields.PtrIfSet(req.Description),
 	}
-	resp, err := c.gen.RolesCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateRoleWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -93,12 +93,12 @@ func (c *Client) Update(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.RoleUpdate{
+	body := generated.UpdateRoleRequest{
 		Name:        req.Name,
 		Description: req.Description,
 		Permissions: req.Permissions,
 	}
-	resp, err := c.gen.RolesUpdateWithResponse(ctx, id, body)
+	resp, err := c.gen.UpdateRoleWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +119,7 @@ func (c *Client) Delete(
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.RolesDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteRoleWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}

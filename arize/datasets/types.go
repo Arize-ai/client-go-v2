@@ -7,23 +7,23 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // internal/generated.
 type (
 	Dataset            = generated.Dataset
-	DatasetList        = generated.DatasetList
+	DatasetList        = generated.ListDatasetsResponse
 	DatasetExample     = generated.DatasetExample
-	DatasetExampleList = generated.DatasetExampleList
+	DatasetExampleList = generated.ListDatasetExamplesResponse
 
-	// DatasetExampleCreate is a new example's arbitrary user-defined fields.
-	DatasetExampleCreate = generated.DatasetExampleCreate
+	// CreateDatasetExampleInput is a new example's arbitrary user-defined fields.
+	CreateDatasetExampleInput = generated.CreateDatasetExampleInput
 
 	// DatasetExamplesInserted reports the dataset version the examples were
 	// written to and the server-assigned IDs of the inserted examples.
-	DatasetExamplesInserted = generated.DatasetExamplesInserted
+	DatasetExamplesInserted = generated.InsertDatasetExamplesResponse
 
 	// DatasetExamplesDeleteResult reports the outcome of a batch example
 	// delete. Completed indicates whether a retry is needed; DeletedExampleIds
 	// are the IDs confirmed deleted; NotDeletedExampleIds are requested IDs
 	// that were not deleted (not found in the selected version, or not reached
 	// when Completed is false).
-	DatasetExamplesDeleteResult = generated.DatasetExampleDeleteResponse
+	DatasetExamplesDeleteResult = generated.DeleteDatasetExamplesResponse
 
 	// AnnotateRecordInput is a single dataset example to annotate, identified
 	// by its example ID (RecordId) plus the annotation Values to set.
@@ -69,7 +69,7 @@ type CreateRequest struct {
 	Name string
 	// Examples are the initial examples for the dataset. At least one example
 	// is required; creating an empty dataset returns ErrNoExamples.
-	Examples []DatasetExampleCreate
+	Examples []CreateDatasetExampleInput
 }
 
 // UpdateRequest renames a dataset.
@@ -123,7 +123,7 @@ type AppendExamplesRequest struct {
 	// server uses the dataset's latest version.
 	DatasetVersionID string
 	// Examples are the examples to append.
-	Examples []DatasetExampleCreate
+	Examples []CreateDatasetExampleInput
 }
 
 // DeleteExamplesRequest identifies the dataset and the examples to delete.

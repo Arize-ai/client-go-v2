@@ -5,7 +5,7 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // Response and list types remain aliases to the generated wire shapes.
 type (
 	Project     = generated.Project
-	ProjectList = generated.ProjectList
+	ProjectList = generated.ListProjectsResponse
 )
 
 // GetRequest selects a single project.

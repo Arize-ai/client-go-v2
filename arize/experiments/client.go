@@ -36,10 +36,10 @@ func New(gen *generated.ClientWithResponses) *Client {
 // generated IDs for the inserted runs in input order.
 func (c *Client) AppendRuns(ctx context.Context, req AppendRunsRequest) (*ExperimentWithRunIds, error) {
 	prerelease.Warn("experiments.append_runs", prerelease.Beta)
-	body := generated.InsertExperimentRunsBody{
+	body := generated.InsertExperimentRunsRequest{
 		ExperimentRuns: req.ExperimentRuns,
 	}
-	resp, err := c.gen.ExperimentsRunsInsertWithResponse(ctx, req.ExperimentID, body)
+	resp, err := c.gen.InsertExperimentRunsWithResponse(ctx, req.ExperimentID, body)
 	if err != nil {
 		return nil, err
 	}
@@ -52,8 +52,8 @@ func (c *Client) AppendRuns(ctx context.Context, req AppendRunsRequest) (*Experi
 // List returns a paginated list of experiments. req.Dataset, when non-empty,
 // accepts a dataset name or ID and restricts results to that dataset.
 func (c *Client) List(ctx context.Context, req ListRequest) (*ExperimentList, error) {
-	prerelease.Warn("experiments.list", prerelease.Alpha)
-	params := generated.ExperimentsListParams{
+	prerelease.Warn("experiments.list", prerelease.Beta)
+	params := generated.ListExperimentsParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrIfSet(req.Limit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
@@ -65,7 +65,7 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*ExperimentList, er
 		}
 		params.DatasetId = &datasetID
 	}
-	resp, err := c.gen.ExperimentsListWithResponse(ctx, &params)
+	resp, err := c.gen.ListExperimentsWithResponse(ctx, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -79,12 +79,12 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*ExperimentList, er
 // required when Experiment is a name; Space is required when Dataset is also
 // passed as a name.
 func (c *Client) Get(ctx context.Context, req GetRequest) (*Experiment, error) {
-	prerelease.Warn("experiments.get", prerelease.Alpha)
+	prerelease.Warn("experiments.get", prerelease.Beta)
 	id, err := resolve.FindExperimentID(ctx, c.gen, req.Experiment, req.Dataset, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.ExperimentsGetWithResponse(ctx, id)
+	resp, err := c.gen.GetExperimentWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func (c *Client) Get(ctx context.Context, req GetRequest) (*Experiment, error) {
 // EvaluatorColumns) into the wire format the API expects. An empty req.Runs
 // returns ErrNoRuns.
 func (c *Client) Create(ctx context.Context, req CreateRequest) (*Experiment, error) {
-	prerelease.Warn("experiments.create", prerelease.Alpha)
+	prerelease.Warn("experiments.create", prerelease.Beta)
 	if len(req.Runs) == 0 {
 		return nil, ErrNoRuns
 	}
@@ -111,7 +111,7 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*Experiment, er
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.ExperimentsCreateWithResponse(ctx, generated.ExperimentsCreateJSONRequestBody{
+	resp, err := c.gen.CreateExperimentWithResponse(ctx, generated.CreateExperimentJSONRequestBody{
 		DatasetId:      datasetID,
 		Name:           req.Name,
 		ExperimentRuns: runs,
@@ -128,7 +128,7 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*Experiment, er
 // buildExperimentRuns transforms user-shaped run records into the wire format.
 // It validates required columns, encodes non-string outputs as JSON, and
 // renames evaluator result columns to the `eval.<name>.<field>` schema.
-func buildExperimentRuns(runs []map[string]any, tf TaskFields, evals map[string]EvaluatorFields) ([]ExperimentRunCreate, error) {
+func buildExperimentRuns(runs []map[string]any, tf TaskFields, evals map[string]EvaluatorFields) ([]ExperimentRunInput, error) {
 	if tf.ExampleID == "" {
 		return nil, fmt.Errorf("experiments: TaskFields.ExampleID is required")
 	}
@@ -140,7 +140,7 @@ func buildExperimentRuns(runs []map[string]any, tf TaskFields, evals map[string]
 			return nil, fmt.Errorf("experiments: evaluator %q: at least Score or Label must be set", name)
 		}
 	}
-	out := make([]ExperimentRunCreate, 0, len(runs))
+	out := make([]ExperimentRunInput, 0, len(runs))
 	for i, run := range runs {
 		rec := make(map[string]any, len(run))
 		maps.Copy(rec, run)
@@ -167,7 +167,7 @@ func buildExperimentRuns(runs []map[string]any, tf TaskFields, evals map[string]
 				return nil, err
 			}
 		}
-		out = append(out, ExperimentRunCreate{
+		out = append(out, ExperimentRunInput{
 			ExampleId:            idStr,
 			Output:               outStr,
 			AdditionalProperties: rec,
@@ -219,12 +219,12 @@ func encodeOutput(v any) (string, error) {
 // when Experiment is a name; Space is required when Dataset is also passed
 // as a name.
 func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
-	prerelease.Warn("experiments.delete", prerelease.Alpha)
+	prerelease.Warn("experiments.delete", prerelease.Beta)
 	id, err := resolve.FindExperimentID(ctx, c.gen, req.Experiment, req.Dataset, req.Space)
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.ExperimentsDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteExperimentWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -234,16 +234,16 @@ func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
 // ListRuns returns a paginated list of runs for an experiment, resolving the
 // experiment by name or ID.
 func (c *Client) ListRuns(ctx context.Context, req ListRunsRequest) (*ExperimentRunsList, error) {
-	prerelease.Warn("experiments.list_runs", prerelease.Alpha)
+	prerelease.Warn("experiments.list_runs", prerelease.Beta)
 	id, err := resolve.FindExperimentID(ctx, c.gen, req.Experiment, req.Dataset, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	params := generated.ExperimentsRunsListParams{
+	params := generated.ListExperimentRunsParams{
 		Limit:  optfields.PtrIfSet(req.Limit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.ExperimentsRunsListWithResponse(ctx, id, &params)
+	resp, err := c.gen.ListExperimentRunsWithResponse(ctx, id, &params)
 	if err != nil {
 		return nil, err
 	}

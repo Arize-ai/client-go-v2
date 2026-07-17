@@ -28,13 +28,13 @@ func (c *Client) List(
 	req ListRequest,
 ) (*PromptList, error) {
 	prerelease.Warn("prompts.list", prerelease.Beta)
-	params := generated.PromptsListParams{
+	params := generated.ListPromptsParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
-	resp, err := c.gen.PromptsListWithResponse(ctx, &params)
+	resp, err := c.gen.ListPromptsWithResponse(ctx, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -56,11 +56,11 @@ func (c *Client) Get(
 	if err != nil {
 		return nil, err
 	}
-	params := generated.PromptsGetParams{
+	params := generated.GetPromptParams{
 		VersionId: optfields.PtrIfSet(req.VersionID),
 		Label:     optfields.PtrIfSet(req.Label),
 	}
-	resp, err := c.gen.PromptsGetWithResponse(ctx, id, &params)
+	resp, err := c.gen.GetPromptWithResponse(ctx, id, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -81,13 +81,13 @@ func (c *Client) Create(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.PromptsCreateJSONRequestBody{
+	body := generated.CreatePromptJSONRequestBody{
 		Name:        req.Name,
 		Description: optfields.PtrIfSet(req.Description),
 		SpaceId:     spaceID,
 		Version:     req.Version,
 	}
-	resp, err := c.gen.PromptsCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreatePromptWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -108,10 +108,10 @@ func (c *Client) Update(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.PromptsUpdateJSONRequestBody{
+	body := generated.UpdatePromptJSONRequestBody{
 		Description: req.Description,
 	}
-	resp, err := c.gen.PromptsUpdateWithResponse(ctx, id, body)
+	resp, err := c.gen.UpdatePromptWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func (c *Client) Delete(
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.PromptsDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeletePromptWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -149,11 +149,11 @@ func (c *Client) ListVersions(
 	if err != nil {
 		return nil, err
 	}
-	params := generated.PromptVersionsListParams{
+	params := generated.ListPromptVersionsParams{
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.PromptVersionsListWithResponse(ctx, id, &params)
+	resp, err := c.gen.ListPromptVersionsWithResponse(ctx, id, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -174,7 +174,7 @@ func (c *Client) CreateVersion(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.PromptVersionsCreateJSONRequestBody{
+	body := generated.CreatePromptVersionJSONRequestBody{
 		CommitMessage:       req.CommitMessage,
 		Provider:            req.Provider,
 		Messages:            req.Messages,
@@ -183,7 +183,7 @@ func (c *Client) CreateVersion(
 		InvocationParams:    req.InvocationParams,
 		ProviderParams:      req.ProviderParams,
 	}
-	resp, err := c.gen.PromptVersionsCreateWithResponse(ctx, id, body)
+	resp, err := c.gen.CreatePromptVersionWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -200,7 +200,7 @@ func (c *Client) GetVersion(
 	req GetVersionRequest,
 ) (*PromptVersion, error) {
 	prerelease.Warn("prompts.get_version", prerelease.Beta)
-	resp, err := c.gen.PromptVersionsGetWithResponse(ctx, req.VersionID)
+	resp, err := c.gen.GetPromptVersionWithResponse(ctx, req.VersionID)
 	if err != nil {
 		return nil, err
 	}
@@ -221,7 +221,7 @@ func (c *Client) GetVersionByLabel(
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.PromptLabelsGetWithResponse(ctx, id, req.LabelName)
+	resp, err := c.gen.GetPromptLabelWithResponse(ctx, id, req.LabelName)
 	if err != nil {
 		return nil, err
 	}
@@ -232,17 +232,17 @@ func (c *Client) GetVersionByLabel(
 }
 
 // SetVersionLabels assigns one or more labels to a specific prompt version,
-// replacing all existing labels, and returns the version's updated label set.
+// replacing all existing labels, and returns the updated prompt version.
 // Version IDs are pure IDs with no name resolution.
 func (c *Client) SetVersionLabels(
 	ctx context.Context,
 	req SetVersionLabelsRequest,
-) (*PromptVersionLabels, error) {
+) (*PromptVersion, error) {
 	prerelease.Warn("prompts.set_version_labels", prerelease.Beta)
-	body := generated.PromptVersionLabelsSetJSONRequestBody{
+	body := generated.SetPromptVersionLabelJSONRequestBody{
 		Labels: req.Labels,
 	}
-	resp, err := c.gen.PromptVersionLabelsSetWithResponse(ctx, req.VersionID, body)
+	resp, err := c.gen.SetPromptVersionLabelWithResponse(ctx, req.VersionID, body)
 	if err != nil {
 		return nil, err
 	}
@@ -259,7 +259,7 @@ func (c *Client) DeleteVersionLabel(
 	req DeleteVersionLabelRequest,
 ) error {
 	prerelease.Warn("prompts.delete_version_label", prerelease.Beta)
-	resp, err := c.gen.PromptVersionLabelsDeleteWithResponse(ctx, req.VersionID, req.LabelName)
+	resp, err := c.gen.DeletePromptVersionLabelWithResponse(ctx, req.VersionID, req.LabelName)
 	if err != nil {
 		return err
 	}

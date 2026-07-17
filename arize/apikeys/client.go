@@ -26,8 +26,8 @@ func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
 ) (*APIKeyList, error) {
-	prerelease.Warn("apikeys.list", prerelease.Alpha)
-	params := &generated.ApiKeysListParams{
+	prerelease.Warn("apikeys.list", prerelease.Beta)
+	params := &generated.ListApiKeysParams{
 		KeyType: optfields.PtrIfSet(req.KeyType),
 		Status:  optfields.PtrIfSet(req.Status),
 		UserId:  optfields.PtrIfSet(req.UserID),
@@ -41,7 +41,7 @@ func (c *Client) List(
 		}
 		params.SpaceId = &spaceID
 	}
-	resp, err := c.gen.ApiKeysListWithResponse(ctx, params)
+	resp, err := c.gen.ListApiKeysWithResponse(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -55,16 +55,16 @@ func (c *Client) List(
 func (c *Client) Create(
 	ctx context.Context,
 	req CreateRequest,
-) (*APIKeyCreated, error) {
-	prerelease.Warn("apikeys.create", prerelease.Alpha)
+) (*APIKey, error) {
+	prerelease.Warn("apikeys.create", prerelease.Beta)
 	keyType := APIKeyTypeUser
-	body := generated.ApiKeyCreate{
+	body := generated.CreateApiKeyRequest{
 		Name:        req.Name,
 		Description: optfields.PtrIfSet(req.Description),
 		KeyType:     &keyType,
 		ExpiresAt:   optfields.PtrIfSet(req.ExpiresAt),
 	}
-	resp, err := c.gen.ApiKeysCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateApiKeyWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -78,8 +78,8 @@ func (c *Client) Create(
 func (c *Client) CreateServiceKey(
 	ctx context.Context,
 	req CreateServiceKeyRequest,
-) (*APIKeyCreated, error) {
-	prerelease.Warn("apikeys.create_service_key", prerelease.Alpha)
+) (*APIKey, error) {
+	prerelease.Warn("apikeys.create_service_key", prerelease.Beta)
 	if req.Space == "" {
 		return nil, fmt.Errorf("apikeys: space is required for service keys")
 	}
@@ -88,7 +88,7 @@ func (c *Client) CreateServiceKey(
 		return nil, err
 	}
 	keyType := APIKeyTypeService
-	body := generated.ApiKeyCreate{
+	body := generated.CreateApiKeyRequest{
 		Name:        req.Name,
 		Description: optfields.PtrIfSet(req.Description),
 		KeyType:     &keyType,
@@ -102,7 +102,7 @@ func (c *Client) CreateServiceKey(
 			AccountRole: optfields.PtrIfSet(req.AccountRole),
 		}
 	}
-	resp, err := c.gen.ApiKeysCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateApiKeyWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +119,7 @@ func (c *Client) Revoke(
 	req RevokeRequest,
 ) error {
 	prerelease.Warn("apikeys.revoke", prerelease.Beta)
-	resp, err := c.gen.ApiKeysRevokeWithResponse(ctx, req.APIKeyID)
+	resp, err := c.gen.RevokeApiKeyWithResponse(ctx, req.APIKeyID)
 	if err != nil {
 		return err
 	}
@@ -130,13 +130,13 @@ func (c *Client) Revoke(
 func (c *Client) Refresh(
 	ctx context.Context,
 	req RefreshRequest,
-) (*APIKeyCreated, error) {
-	prerelease.Warn("apikeys.refresh", prerelease.Alpha)
-	body := generated.RefreshApiKeyRequestBody{
+) (*APIKey, error) {
+	prerelease.Warn("apikeys.refresh", prerelease.Beta)
+	body := generated.RefreshApiKeyRequest{
 		ExpiresAt:          optfields.PtrIfSet(req.ExpiresAt),
 		GracePeriodSeconds: optfields.PtrIfSet(req.GracePeriodSeconds),
 	}
-	resp, err := c.gen.ApiKeysRefreshWithResponse(ctx, req.APIKeyID, body)
+	resp, err := c.gen.RefreshApiKeyWithResponse(ctx, req.APIKeyID, body)
 	if err != nil {
 		return nil, err
 	}

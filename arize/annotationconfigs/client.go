@@ -23,8 +23,8 @@ func New(gen *generated.ClientWithResponses) *Client {
 
 // List returns a paginated list of annotation configs.
 func (c *Client) List(ctx context.Context, req ListRequest) (*AnnotationConfigList, error) {
-	prerelease.Warn("annotationconfigs.list", prerelease.Alpha)
-	params := &generated.AnnotationConfigsListParams{
+	prerelease.Warn("annotationconfigs.list", prerelease.Beta)
+	params := &generated.ListAnnotationConfigsParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
@@ -36,7 +36,7 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*AnnotationConfigLi
 		}
 		params.SpaceId = &spaceID
 	}
-	resp, err := c.gen.AnnotationConfigsListWithResponse(ctx, params)
+	resp, err := c.gen.ListAnnotationConfigsWithResponse(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -48,12 +48,12 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*AnnotationConfigLi
 
 // Get returns a single annotation config, resolving by name or ID.
 func (c *Client) Get(ctx context.Context, req GetRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.get", prerelease.Alpha)
+	prerelease.Warn("annotationconfigs.get", prerelease.Beta)
 	id, err := resolve.FindAnnotationConfigID(ctx, c.gen, req.AnnotationConfig, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.AnnotationConfigsGetWithResponse(ctx, id)
+	resp, err := c.gen.GetAnnotationConfigWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -66,16 +66,16 @@ func (c *Client) Get(ctx context.Context, req GetRequest) (*AnnotationConfig, er
 // CreateContinuous creates a new continuous annotation config, resolving the
 // parent space by name or ID.
 func (c *Client) CreateContinuous(ctx context.Context, req CreateContinuousRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.create", prerelease.Alpha)
+	prerelease.Warn("annotationconfigs.create", prerelease.Beta)
 	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	body := generated.AnnotationConfigsCreateJSONRequestBody{
-		AnnotationConfigType: generated.AnnotationConfigTypeContinuous,
+	body := generated.CreateAnnotationConfigJSONRequestBody{
+		AnnotationConfigType: generated.AnnotationConfigTypeCONTINUOUS,
 	}
-	if err := body.FromContinuousAnnotationConfigCreate(generated.ContinuousAnnotationConfigCreate{
-		AnnotationConfigType:  generated.ContinuousAnnotationConfigCreateAnnotationConfigTypeContinuous,
+	if err := body.FromCreateContinuousAnnotationConfigRequest(generated.CreateContinuousAnnotationConfigRequest{
+		AnnotationConfigType:  generated.CreateContinuousAnnotationConfigRequestAnnotationConfigTypeCONTINUOUS,
 		Name:                  req.Name,
 		SpaceId:               spaceID,
 		MinimumScore:          req.MinimumScore,
@@ -84,7 +84,7 @@ func (c *Client) CreateContinuous(ctx context.Context, req CreateContinuousReque
 	}); err != nil {
 		return nil, fmt.Errorf("annotationconfigs: build continuous body: %w", err)
 	}
-	resp, err := c.gen.AnnotationConfigsCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateAnnotationConfigWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -97,16 +97,16 @@ func (c *Client) CreateContinuous(ctx context.Context, req CreateContinuousReque
 // CreateCategorical creates a new categorical annotation config, resolving
 // the parent space by name or ID.
 func (c *Client) CreateCategorical(ctx context.Context, req CreateCategoricalRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.create", prerelease.Alpha)
+	prerelease.Warn("annotationconfigs.create", prerelease.Beta)
 	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	body := generated.AnnotationConfigsCreateJSONRequestBody{
-		AnnotationConfigType: generated.AnnotationConfigTypeCategorical,
+	body := generated.CreateAnnotationConfigJSONRequestBody{
+		AnnotationConfigType: generated.AnnotationConfigTypeCATEGORICAL,
 	}
-	if err := body.FromCategoricalAnnotationConfigCreate(generated.CategoricalAnnotationConfigCreate{
-		AnnotationConfigType:  generated.CategoricalAnnotationConfigCreateAnnotationConfigTypeCategorical,
+	if err := body.FromCreateCategoricalAnnotationConfigRequest(generated.CreateCategoricalAnnotationConfigRequest{
+		AnnotationConfigType:  generated.CreateCategoricalAnnotationConfigRequestAnnotationConfigTypeCATEGORICAL,
 		Name:                  req.Name,
 		SpaceId:               spaceID,
 		Values:                req.Values,
@@ -114,7 +114,7 @@ func (c *Client) CreateCategorical(ctx context.Context, req CreateCategoricalReq
 	}); err != nil {
 		return nil, fmt.Errorf("annotationconfigs: build categorical body: %w", err)
 	}
-	resp, err := c.gen.AnnotationConfigsCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateAnnotationConfigWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -127,22 +127,22 @@ func (c *Client) CreateCategorical(ctx context.Context, req CreateCategoricalReq
 // CreateFreeform creates a new freeform annotation config, resolving the
 // parent space by name or ID.
 func (c *Client) CreateFreeform(ctx context.Context, req CreateFreeformRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.create", prerelease.Alpha)
+	prerelease.Warn("annotationconfigs.create", prerelease.Beta)
 	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	body := generated.AnnotationConfigsCreateJSONRequestBody{
-		AnnotationConfigType: generated.AnnotationConfigTypeFreeform,
+	body := generated.CreateAnnotationConfigJSONRequestBody{
+		AnnotationConfigType: generated.AnnotationConfigTypeFREEFORM,
 	}
-	if err := body.FromFreeformAnnotationConfigCreate(generated.FreeformAnnotationConfigCreate{
-		AnnotationConfigType: generated.FreeformAnnotationConfigCreateAnnotationConfigTypeFreeform,
+	if err := body.FromCreateFreeformAnnotationConfigRequest(generated.CreateFreeformAnnotationConfigRequest{
+		AnnotationConfigType: generated.CreateFreeformAnnotationConfigRequestAnnotationConfigTypeFREEFORM,
 		Name:                 req.Name,
 		SpaceId:              spaceID,
 	}); err != nil {
 		return nil, fmt.Errorf("annotationconfigs: build freeform body: %w", err)
 	}
-	resp, err := c.gen.AnnotationConfigsCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateAnnotationConfigWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -156,23 +156,23 @@ func (c *Client) CreateFreeform(ctx context.Context, req CreateFreeformRequest) 
 // resolving by name or ID. Fields left nil preserve their current
 // values.
 func (c *Client) UpdateCategorical(ctx context.Context, req UpdateCategoricalRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.update_categorical", prerelease.Alpha)
+	prerelease.Warn("annotationconfigs.update_categorical", prerelease.Beta)
 	id, err := resolve.FindAnnotationConfigID(ctx, c.gen, req.AnnotationConfig, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	body := generated.AnnotationConfigsUpdateJSONRequestBody{
-		AnnotationConfigType: generated.AnnotationConfigTypeCategorical,
+	body := generated.UpdateAnnotationConfigJSONRequestBody{
+		AnnotationConfigType: generated.AnnotationConfigTypeCATEGORICAL,
 	}
-	if err := body.FromCategoricalAnnotationConfigUpdate(generated.CategoricalAnnotationConfigUpdate{
-		AnnotationConfigType:  generated.CategoricalAnnotationConfigUpdateAnnotationConfigTypeCategorical,
+	if err := body.FromUpdateCategoricalAnnotationConfigRequest(generated.UpdateCategoricalAnnotationConfigRequest{
+		AnnotationConfigType:  generated.UpdateCategoricalAnnotationConfigRequestAnnotationConfigTypeCATEGORICAL,
 		Name:                  req.Name,
 		OptimizationDirection: req.OptimizationDirection,
 		Values:                req.Values,
 	}); err != nil {
 		return nil, fmt.Errorf("annotationconfigs: build categorical body: %w", err)
 	}
-	resp, err := c.gen.AnnotationConfigsUpdateWithResponse(ctx, id, body)
+	resp, err := c.gen.UpdateAnnotationConfigWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -186,16 +186,16 @@ func (c *Client) UpdateCategorical(ctx context.Context, req UpdateCategoricalReq
 // resolving by name or ID. Fields left nil preserve their current
 // values.
 func (c *Client) UpdateContinuous(ctx context.Context, req UpdateContinuousRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.update_continuous", prerelease.Alpha)
+	prerelease.Warn("annotationconfigs.update_continuous", prerelease.Beta)
 	id, err := resolve.FindAnnotationConfigID(ctx, c.gen, req.AnnotationConfig, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	body := generated.AnnotationConfigsUpdateJSONRequestBody{
-		AnnotationConfigType: generated.AnnotationConfigTypeContinuous,
+	body := generated.UpdateAnnotationConfigJSONRequestBody{
+		AnnotationConfigType: generated.AnnotationConfigTypeCONTINUOUS,
 	}
-	if err := body.FromContinuousAnnotationConfigUpdate(generated.ContinuousAnnotationConfigUpdate{
-		AnnotationConfigType:  generated.ContinuousAnnotationConfigUpdateAnnotationConfigTypeContinuous,
+	if err := body.FromUpdateContinuousAnnotationConfigRequest(generated.UpdateContinuousAnnotationConfigRequest{
+		AnnotationConfigType:  generated.UpdateContinuousAnnotationConfigRequestAnnotationConfigTypeCONTINUOUS,
 		Name:                  req.Name,
 		MinimumScore:          req.MinimumScore,
 		MaximumScore:          req.MaximumScore,
@@ -203,7 +203,7 @@ func (c *Client) UpdateContinuous(ctx context.Context, req UpdateContinuousReque
 	}); err != nil {
 		return nil, fmt.Errorf("annotationconfigs: build continuous body: %w", err)
 	}
-	resp, err := c.gen.AnnotationConfigsUpdateWithResponse(ctx, id, body)
+	resp, err := c.gen.UpdateAnnotationConfigWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -216,21 +216,21 @@ func (c *Client) UpdateContinuous(ctx context.Context, req UpdateContinuousReque
 // UpdateFreeform modifies an existing freeform annotation config, resolving
 // by name or ID. Fields left nil preserve their current values.
 func (c *Client) UpdateFreeform(ctx context.Context, req UpdateFreeformRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.update_freeform", prerelease.Alpha)
+	prerelease.Warn("annotationconfigs.update_freeform", prerelease.Beta)
 	id, err := resolve.FindAnnotationConfigID(ctx, c.gen, req.AnnotationConfig, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	body := generated.AnnotationConfigsUpdateJSONRequestBody{
-		AnnotationConfigType: generated.AnnotationConfigTypeFreeform,
+	body := generated.UpdateAnnotationConfigJSONRequestBody{
+		AnnotationConfigType: generated.AnnotationConfigTypeFREEFORM,
 	}
-	if err := body.FromFreeformAnnotationConfigUpdate(generated.FreeformAnnotationConfigUpdate{
-		AnnotationConfigType: generated.FreeformAnnotationConfigUpdateAnnotationConfigTypeFreeform,
+	if err := body.FromUpdateFreeformAnnotationConfigRequest(generated.UpdateFreeformAnnotationConfigRequest{
+		AnnotationConfigType: generated.UpdateFreeformAnnotationConfigRequestAnnotationConfigTypeFREEFORM,
 		Name:                 req.Name,
 	}); err != nil {
 		return nil, fmt.Errorf("annotationconfigs: build freeform body: %w", err)
 	}
-	resp, err := c.gen.AnnotationConfigsUpdateWithResponse(ctx, id, body)
+	resp, err := c.gen.UpdateAnnotationConfigWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -242,12 +242,12 @@ func (c *Client) UpdateFreeform(ctx context.Context, req UpdateFreeformRequest) 
 
 // Delete removes an annotation config, resolving by name or ID.
 func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
-	prerelease.Warn("annotationconfigs.delete", prerelease.Alpha)
+	prerelease.Warn("annotationconfigs.delete", prerelease.Beta)
 	id, err := resolve.FindAnnotationConfigID(ctx, c.gen, req.AnnotationConfig, req.Space)
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.AnnotationConfigsDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteAnnotationConfigWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}

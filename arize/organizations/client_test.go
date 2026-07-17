@@ -287,10 +287,10 @@ func TestOrganizations(t *testing.T) {
 				if body.UserId != "user-1" {
 					t.Errorf("body user_id: want user-1, got %q", body.UserId)
 				}
-				if got, want := body.Role["type"], "predefined"; got != want {
+				if got, want := body.Role["type"], "PREDEFINED"; got != want {
 					t.Errorf("body role.type: want %q, got %v", want, got)
 				}
-				if got, want := body.Role["name"], "admin"; got != want {
+				if got, want := body.Role["name"], "ADMIN"; got != want {
 					t.Errorf("body role.name: want %q, got %v", want, got)
 				}
 				w.Header().Set("Content-Type", "application/json")
@@ -298,7 +298,7 @@ func TestOrganizations(t *testing.T) {
 					"id":              "membership-1",
 					"user_id":         "user-1",
 					"organization_id": testID("org-1"),
-					"role":            map[string]any{"type": "predefined", "name": "admin"},
+					"role":            map[string]any{"type": "PREDEFINED", "name": "ADMIN"},
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
@@ -324,7 +324,7 @@ func TestOrganizations(t *testing.T) {
 					t.Fatalf("decode role: %v", err)
 				}
 				if role.Name != organizations.OrganizationRoleAdmin {
-					t.Errorf("role name: want admin, got %s", role.Name)
+					t.Errorf("role name: want ADMIN, got %s", role.Name)
 				}
 			},
 		},

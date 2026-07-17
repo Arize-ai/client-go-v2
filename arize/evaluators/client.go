@@ -23,14 +23,14 @@ func New(gen *generated.ClientWithResponses) *Client {
 
 // List returns a paginated list of evaluators. Defaults to a page size of 50.
 func (c *Client) List(ctx context.Context, req ListRequest) (*EvaluatorList, error) {
-	prerelease.Warn("evaluators.list", prerelease.Alpha)
-	params := &generated.EvaluatorsListParams{
+	prerelease.Warn("evaluators.list", prerelease.Beta)
+	params := &generated.ListEvaluatorsParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
-	resp, err := c.gen.EvaluatorsListWithResponse(ctx, params)
+	resp, err := c.gen.ListEvaluatorsWithResponse(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -44,12 +44,12 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*EvaluatorList, err
 // req.VersionID is set it returns that specific version; otherwise it returns
 // the latest version.
 func (c *Client) Get(ctx context.Context, req GetRequest) (*EvaluatorWithVersion, error) {
-	prerelease.Warn("evaluators.get", prerelease.Alpha)
+	prerelease.Warn("evaluators.get", prerelease.Beta)
 	id, err := resolve.FindEvaluatorID(ctx, c.gen, req.Evaluator, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.EvaluatorsGetWithResponse(ctx, id, &generated.EvaluatorsGetParams{
+	resp, err := c.gen.GetEvaluatorWithResponse(ctx, id, &generated.GetEvaluatorParams{
 		VersionId: optfields.PtrIfSet(req.VersionID),
 	})
 	if err != nil {
@@ -65,7 +65,7 @@ func (c *Client) Get(ctx context.Context, req GetRequest) (*EvaluatorWithVersion
 // parent space by name or ID. The evaluator's type is derived from
 // req.Version (Template -> template, Code -> code).
 func (c *Client) Create(ctx context.Context, req CreateRequest) (*EvaluatorWithVersion, error) {
-	prerelease.Warn("evaluators.create", prerelease.Alpha)
+	prerelease.Warn("evaluators.create", prerelease.Beta)
 	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*EvaluatorWithV
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.EvaluatorsCreateWithResponse(ctx, generated.EvaluatorsCreateJSONRequestBody{
+	resp, err := c.gen.CreateEvaluatorWithResponse(ctx, generated.CreateEvaluatorJSONRequestBody{
 		Name:        req.Name,
 		Description: optfields.PtrIfSet(req.Description),
 		SpaceId:     spaceID,
@@ -94,7 +94,7 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*EvaluatorWithV
 // Only non-nil patch fields are sent; nil fields are left unchanged. Returns
 // ErrNoUpdateFields without contacting the server when no patch field is set.
 func (c *Client) Update(ctx context.Context, req UpdateRequest) (*Evaluator, error) {
-	prerelease.Warn("evaluators.update", prerelease.Alpha)
+	prerelease.Warn("evaluators.update", prerelease.Beta)
 	if req.Name == nil && req.Description == nil {
 		return nil, ErrNoUpdateFields
 	}
@@ -102,7 +102,7 @@ func (c *Client) Update(ctx context.Context, req UpdateRequest) (*Evaluator, err
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.EvaluatorsUpdateWithResponse(ctx, id, generated.EvaluatorsUpdateJSONRequestBody{
+	resp, err := c.gen.UpdateEvaluatorWithResponse(ctx, id, generated.UpdateEvaluatorJSONRequestBody{
 		Name:        req.Name,
 		Description: req.Description,
 	})
@@ -117,12 +117,12 @@ func (c *Client) Update(ctx context.Context, req UpdateRequest) (*Evaluator, err
 
 // Delete removes an evaluator, resolving by name or ID.
 func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
-	prerelease.Warn("evaluators.delete", prerelease.Alpha)
+	prerelease.Warn("evaluators.delete", prerelease.Beta)
 	id, err := resolve.FindEvaluatorID(ctx, c.gen, req.Evaluator, req.Space)
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.EvaluatorsDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteEvaluatorWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -132,12 +132,12 @@ func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
 // ListVersions returns a paginated list of versions for an evaluator,
 // resolving the evaluator by name or ID. Defaults to a page size of 50.
 func (c *Client) ListVersions(ctx context.Context, req ListVersionsRequest) (*EvaluatorVersionList, error) {
-	prerelease.Warn("evaluators.list_versions", prerelease.Alpha)
+	prerelease.Warn("evaluators.list_versions", prerelease.Beta)
 	id, err := resolve.FindEvaluatorID(ctx, c.gen, req.Evaluator, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.EvaluatorVersionsListWithResponse(ctx, id, &generated.EvaluatorVersionsListParams{
+	resp, err := c.gen.ListEvaluatorVersionsWithResponse(ctx, id, &generated.ListEvaluatorVersionsParams{
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	})
@@ -154,7 +154,7 @@ func (c *Client) ListVersions(ctx context.Context, req ListVersionsRequest) (*Ev
 // evaluator by name or ID. The version's kind (set via req.Version) must match
 // the parent evaluator's type.
 func (c *Client) CreateVersion(ctx context.Context, req CreateVersionRequest) (*EvaluatorVersion, error) {
-	prerelease.Warn("evaluators.create_version", prerelease.Alpha)
+	prerelease.Warn("evaluators.create_version", prerelease.Beta)
 	id, err := resolve.FindEvaluatorID(ctx, c.gen, req.Evaluator, req.Space)
 	if err != nil {
 		return nil, err
@@ -163,7 +163,7 @@ func (c *Client) CreateVersion(ctx context.Context, req CreateVersionRequest) (*
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.EvaluatorVersionsCreateWithResponse(ctx, id, version)
+	resp, err := c.gen.CreateEvaluatorVersionWithResponse(ctx, id, version)
 	if err != nil {
 		return nil, err
 	}
@@ -176,8 +176,8 @@ func (c *Client) CreateVersion(ctx context.Context, req CreateVersionRequest) (*
 // GetVersion returns a single evaluator version by its ID. Version IDs are
 // pure IDs with no name resolution.
 func (c *Client) GetVersion(ctx context.Context, req GetVersionRequest) (*EvaluatorVersion, error) {
-	prerelease.Warn("evaluators.get_version", prerelease.Alpha)
-	resp, err := c.gen.EvaluatorVersionsGetWithResponse(ctx, req.VersionID)
+	prerelease.Warn("evaluators.get_version", prerelease.Beta)
+	resp, err := c.gen.GetEvaluatorVersionWithResponse(ctx, req.VersionID)
 	if err != nil {
 		return nil, err
 	}
@@ -190,27 +190,27 @@ func (c *Client) GetVersion(ctx context.Context, req GetVersionRequest) (*Evalua
 // buildVersionCreate translates a public VersionConfig into the generated
 // version-create union and reports the derived evaluator type. Exactly one of
 // Template or Code must be set.
-func buildVersionCreate(v VersionConfig) (generated.EvaluatorVersionCreate, generated.EvaluatorType, error) {
-	var out generated.EvaluatorVersionCreate
+func buildVersionCreate(v VersionConfig) (generated.CreateEvaluatorVersionRequest, generated.EvaluatorType, error) {
+	var out generated.CreateEvaluatorVersionRequest
 	switch {
 	case v.Template != nil && v.Code != nil:
 		return out, "", ErrConflictingVersionConfig
 	case v.Template != nil:
-		err := out.FromEvaluatorVersionTemplateCreate(generated.EvaluatorVersionTemplateCreate{
+		err := out.FromCreateTemplateEvaluatorVersionRequest(generated.CreateTemplateEvaluatorVersionRequest{
 			CommitMessage:  v.CommitMessage,
 			TemplateConfig: *v.Template,
 		})
-		return out, generated.EvaluatorTypeTemplate, err
+		return out, generated.EvaluatorTypeTEMPLATE, err
 	case v.Code != nil:
 		code, err := buildCodeConfig(*v.Code)
 		if err != nil {
 			return out, "", err
 		}
-		err = out.FromEvaluatorVersionCodeCreate(generated.EvaluatorVersionCodeCreate{
+		err = out.FromCreateCodeEvaluatorVersionRequest(generated.CreateCodeEvaluatorVersionRequest{
 			CommitMessage: v.CommitMessage,
 			CodeConfig:    code,
 		})
-		return out, generated.EvaluatorTypeCode, err
+		return out, generated.EvaluatorTypeCODE, err
 	default:
 		return out, "", fmt.Errorf("evaluators: VersionConfig requires exactly one of Template or Code")
 	}
@@ -226,11 +226,11 @@ func buildCodeConfig(c CodeConfig) (generated.CodeConfig, error) {
 		return out, ErrConflictingCodeConfig
 	case c.Managed != nil:
 		managed := *c.Managed
-		managed.Type = generated.ManagedCodeConfigTypeManaged
+		managed.Type = generated.ManagedCodeConfigTypeMANAGED
 		return out, out.FromManagedCodeConfig(managed)
 	case c.Custom != nil:
 		custom := *c.Custom
-		custom.Type = generated.CustomCodeConfigTypeCustom
+		custom.Type = generated.CustomCodeConfigTypeCUSTOM
 		return out, out.FromCustomCodeConfig(custom)
 	default:
 		return out, fmt.Errorf("evaluators: CodeConfig requires exactly one of Managed or Custom")

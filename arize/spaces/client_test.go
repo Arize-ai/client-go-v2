@@ -513,10 +513,10 @@ func TestSpaces(t *testing.T) {
 				if body.UserId != userID("user-1") {
 					t.Errorf("body user_id: want %q, got %q", userID("user-1"), body.UserId)
 				}
-				if got, want := body.Role["type"], "predefined"; got != want {
+				if got, want := body.Role["type"], "PREDEFINED"; got != want {
 					t.Errorf("body role.type: want %q, got %v", want, got)
 				}
-				if got, want := body.Role["name"], "admin"; got != want {
+				if got, want := body.Role["name"], "ADMIN"; got != want {
 					t.Errorf("body role.name: want %q, got %v", want, got)
 				}
 				w.Header().Set("Content-Type", "application/json")
@@ -524,7 +524,7 @@ func TestSpaces(t *testing.T) {
 					"id":       "membership-1",
 					"user_id":  userID("user-1"),
 					"space_id": spaceID("space-1"),
-					"role":     map[string]any{"type": "predefined", "name": "admin"},
+					"role":     map[string]any{"type": "PREDEFINED", "name": "ADMIN"},
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
@@ -551,7 +551,7 @@ func TestSpaces(t *testing.T) {
 					t.Fatalf("expected predefined role, got discriminator mismatch")
 				}
 				if pre.Name != spaces.UserSpaceRoleAdmin {
-					t.Errorf("role name: want admin, got %s", pre.Name)
+					t.Errorf("role name: want ADMIN, got %s", pre.Name)
 				}
 			},
 		},
@@ -562,7 +562,7 @@ func TestSpaces(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				if got, want := body.Role["type"], "custom"; got != want {
+				if got, want := body.Role["type"], "CUSTOM"; got != want {
 					t.Errorf("body role.type: want %q, got %v", want, got)
 				}
 				if got, want := body.Role["id"], "custom-role-1"; got != want {
@@ -573,7 +573,7 @@ func TestSpaces(t *testing.T) {
 					"id":       "membership-2",
 					"user_id":  userID("user-1"),
 					"space_id": spaceID("space-1"),
-					"role":     map[string]any{"type": "custom", "id": "custom-role-1"},
+					"role":     map[string]any{"type": "CUSTOM", "id": "custom-role-1"},
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
@@ -619,7 +619,7 @@ func TestSpaces(t *testing.T) {
 						"id":       "membership-1",
 						"user_id":  userID("user-1"),
 						"space_id": spaceID("space-1"),
-						"role":     map[string]any{"type": "predefined", "name": "admin"},
+						"role":     map[string]any{"type": "PREDEFINED", "name": "ADMIN"},
 					})
 				default:
 					t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)

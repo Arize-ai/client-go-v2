@@ -135,7 +135,7 @@ func TestAnnotationQueues(t *testing.T) {
 				if createBody.Instructions == nil || *createBody.Instructions != "be thorough" {
 					t.Errorf("instructions: %v", createBody.Instructions)
 				}
-				if createBody.AssignmentMethod == nil || *createBody.AssignmentMethod != "random" {
+				if createBody.AssignmentMethod == nil || *createBody.AssignmentMethod != "RANDOM" {
 					t.Errorf("assignment_method: %v", createBody.AssignmentMethod)
 				}
 				if len(createBody.AnnotatorEmails) != 1 || createBody.AnnotatorEmails[0] != "annotator@example.com" {

@@ -135,7 +135,7 @@ func TestEvaluators(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				if body.Type != "template" {
+				if body.Type != "TEMPLATE" {
 					t.Errorf("body type: want template, got %q", body.Type)
 				}
 				w.Header().Set("Content-Type", "application/json")
@@ -168,10 +168,10 @@ func TestEvaluators(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				if body.Type != "code" {
+				if body.Type != "CODE" {
 					t.Errorf("body type: want code, got %q", body.Type)
 				}
-				if body.Version.CodeConfig.Type != "managed" {
+				if body.Version.CodeConfig.Type != "MANAGED" {
 					t.Errorf("code_config type: want managed, got %q", body.Version.CodeConfig.Type)
 				}
 				w.Header().Set("Content-Type", "application/json")
@@ -207,10 +207,10 @@ func TestEvaluators(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				if body.Type != "code" {
+				if body.Type != "CODE" {
 					t.Errorf("body type: want code, got %q", body.Type)
 				}
-				if body.Version.CodeConfig.Type != "custom" {
+				if body.Version.CodeConfig.Type != "CUSTOM" {
 					t.Errorf("code_config type: want custom, got %q", body.Version.CodeConfig.Type)
 				}
 				w.Header().Set("Content-Type", "application/json")
@@ -358,7 +358,7 @@ func TestEvaluators(t *testing.T) {
 			name: "ListVersions",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				_, _ = w.Write([]byte(`{"evaluator_versions":[{"id":"ver-1","type":"template"}],"pagination":{"has_more":false}}`))
+				_, _ = w.Write([]byte(`{"evaluator_versions":[{"id":"ver-1","type":"TEMPLATE"}],"pagination":{"has_more":false}}`))
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Evaluators.ListVersions(ctx, evaluators.ListVersionsRequest{Evaluator: testID("ev-1")})
@@ -377,7 +377,7 @@ func TestEvaluators(t *testing.T) {
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusCreated)
-				_, _ = w.Write([]byte(`{"id":"ver-2","evaluator_id":"ev-1","type":"template"}`))
+				_, _ = w.Write([]byte(`{"id":"ver-2","evaluator_id":"ev-1","type":"TEMPLATE"}`))
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Evaluators.CreateVersion(ctx, evaluators.CreateVersionRequest{
@@ -410,7 +410,7 @@ func TestEvaluators(t *testing.T) {
 			name: "GetVersion",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				_, _ = w.Write([]byte(`{"id":"ver-1","evaluator_id":"ev-1","type":"template"}`))
+				_, _ = w.Write([]byte(`{"id":"ver-1","evaluator_id":"ev-1","type":"TEMPLATE"}`))
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Evaluators.GetVersion(ctx, evaluators.GetVersionRequest{VersionID: "ver-1"})

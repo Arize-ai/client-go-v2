@@ -117,7 +117,7 @@ func TestAnnotationConfigs(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				if body.AnnotationConfigType != "categorical" {
+				if body.AnnotationConfigType != "CATEGORICAL" {
 					t.Errorf("body annotation_config_type: want categorical, got %v", body.AnnotationConfigType)
 				}
 				if body.Name != "thumbs" {
@@ -156,7 +156,7 @@ func TestAnnotationConfigs(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				if body.AnnotationConfigType != "continuous" {
+				if body.AnnotationConfigType != "CONTINUOUS" {
 					t.Errorf("body annotation_config_type: want continuous, got %v", body.AnnotationConfigType)
 				}
 				if body.Name != "score" {
@@ -196,7 +196,7 @@ func TestAnnotationConfigs(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				if body.AnnotationConfigType != "freeform" {
+				if body.AnnotationConfigType != "FREEFORM" {
 					t.Errorf("body annotation_config_type: want freeform, got %v", body.AnnotationConfigType)
 				}
 				if body.Name != "notes" {
@@ -249,7 +249,7 @@ func TestAnnotationConfigs(t *testing.T) {
 				}
 				var body map[string]any
 				_ = json.NewDecoder(r.Body).Decode(&body)
-				if body["annotation_config_type"] != "categorical" {
+				if body["annotation_config_type"] != "CATEGORICAL" {
 					t.Errorf("body annotation_config_type: want categorical, got %v", body["annotation_config_type"])
 				}
 				if body["name"] != "renamed" {
@@ -290,7 +290,7 @@ func TestAnnotationConfigs(t *testing.T) {
 				}
 				var body map[string]any
 				_ = json.NewDecoder(r.Body).Decode(&body)
-				if body["annotation_config_type"] != "continuous" {
+				if body["annotation_config_type"] != "CONTINUOUS" {
 					t.Errorf("body annotation_config_type: want continuous, got %v", body["annotation_config_type"])
 				}
 				if body["maximum_score"] != float64(10) {
@@ -323,7 +323,7 @@ func TestAnnotationConfigs(t *testing.T) {
 				}
 				var body map[string]any
 				_ = json.NewDecoder(r.Body).Decode(&body)
-				if body["annotation_config_type"] != "freeform" {
+				if body["annotation_config_type"] != "FREEFORM" {
 					t.Errorf("body annotation_config_type: want freeform, got %v", body["annotation_config_type"])
 				}
 				if body["name"] != "renamed" {

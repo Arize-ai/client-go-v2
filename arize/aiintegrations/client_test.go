@@ -802,8 +802,8 @@ func TestAIIntegrations(t *testing.T) {
 				if !ok {
 					t.Fatalf("provider_metadata: got %v (%T), want object", updateRawMap["provider_metadata"], updateRawMap["provider_metadata"])
 				}
-				if pm["kind"] != "aws" {
-					t.Errorf("provider_metadata.kind: got %v, want %q", pm["kind"], "aws")
+				if pm["kind"] != "AWS" {
+					t.Errorf("provider_metadata.kind: got %v, want %q", pm["kind"], "AWS")
 				}
 				if pm["role_arn"] != "arn:aws:iam::123456789012:role/MyRole" {
 					t.Errorf("provider_metadata.role_arn: got %v", pm["role_arn"])
@@ -849,8 +849,8 @@ func TestAIIntegrations(t *testing.T) {
 				if !ok {
 					t.Fatalf("provider_metadata: got %v (%T), want object", updateRawMap["provider_metadata"], updateRawMap["provider_metadata"])
 				}
-				if pm["kind"] != "gcp" {
-					t.Errorf("provider_metadata.kind: got %v, want %q", pm["kind"], "gcp")
+				if pm["kind"] != "GCP" {
+					t.Errorf("provider_metadata.kind: got %v, want %q", pm["kind"], "GCP")
 				}
 				if pm["project_id"] != "my-project" {
 					t.Errorf("provider_metadata.project_id: got %v", pm["project_id"])

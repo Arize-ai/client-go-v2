@@ -44,8 +44,8 @@ func TestUsersList(t *testing.T) {
 				if got := q.Get("limit"); got != "10" {
 					t.Errorf("limit = %q, want 10", got)
 				}
-				if got := q["status"]; len(got) != 1 || got[0] != "active" {
-					t.Errorf("status = %v, want [active]", got)
+				if got := q["status"]; len(got) != 1 || got[0] != "ACTIVE" {
+					t.Errorf("status = %v, want [ACTIVE]", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
 				_ = json.NewEncoder(w).Encode(users.UserList{
@@ -216,15 +216,15 @@ func TestUsersCreate(t *testing.T) {
 				if body.Name != "Carol" || body.Email != "carol@example.com" {
 					t.Errorf("unexpected name/email: %+v", body)
 				}
-				if body.Role.Type != "predefined" || body.Role.Name != "member" {
+				if body.Role.Type != "PREDEFINED" || body.Role.Name != "MEMBER" {
 					t.Errorf("unexpected role: %+v", body.Role)
 				}
-				if body.InviteMode != "email_link" {
-					t.Errorf("invite_mode = %q, want email_link", body.InviteMode)
+				if body.InviteMode != "EMAIL_LINK" {
+					t.Errorf("invite_mode = %q, want EMAIL_LINK", body.InviteMode)
 				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusCreated)
-				_, _ = w.Write([]byte(`{"id":"usr-3","name":"Carol","email":"carol@example.com","created_at":"2026-01-01T00:00:00Z","status":"invited","is_developer":true,"invite_mode":"email_link","role":{"type":"predefined","name":"member"}}`))
+				_, _ = w.Write([]byte(`{"id":"usr-3","name":"Carol","email":"carol@example.com","created_at":"2026-01-01T00:00:00Z","status":"INVITED","is_developer":true,"invite_mode":"EMAIL_LINK","role":{"type":"PREDEFINED","name":"MEMBER"}}`))
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Users.Create(ctx, users.CreateRequest{
@@ -249,7 +249,7 @@ func TestUsersCreate(t *testing.T) {
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusOK)
-				_, _ = w.Write([]byte(`{"id":"usr-existing","name":"Carol","email":"carol@example.com","created_at":"2026-01-01T00:00:00Z","status":"invited","is_developer":true,"role":{"type":"predefined","name":"member"}}`))
+				_, _ = w.Write([]byte(`{"id":"usr-existing","name":"Carol","email":"carol@example.com","created_at":"2026-01-01T00:00:00Z","status":"INVITED","is_developer":true,"role":{"type":"PREDEFINED","name":"MEMBER"}}`))
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Users.Create(ctx, users.CreateRequest{

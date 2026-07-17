@@ -6,10 +6,10 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // can construct/assert on them without importing internal/generated.
 type (
 	Experiment          = generated.Experiment
-	ExperimentList      = generated.ExperimentList
+	ExperimentList      = generated.ListExperimentsResponse
 	ExperimentRun       = generated.ExperimentRun
-	ExperimentRunCreate = generated.ExperimentRunCreate
-	ExperimentRunsList  = generated.ExperimentRunsList
+	ExperimentRunInput = generated.ExperimentRunInput
+	ExperimentRunsList  = generated.ListExperimentRunsResponse
 	ExperimentWithRunIds = generated.ExperimentWithRunIds
 )
 
@@ -143,5 +143,5 @@ type AppendRunsRequest struct {
 
 	// ExperimentRuns is the list of runs to append. Between 1 and 1000 runs
 	// per request. Each run must include ExampleId and Output.
-	ExperimentRuns []ExperimentRunCreate
+	ExperimentRuns []ExperimentRunInput
 }

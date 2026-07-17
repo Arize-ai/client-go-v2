@@ -46,8 +46,8 @@ func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
 ) (*TaskList, error) {
-	prerelease.Warn("tasks.list", prerelease.Alpha)
-	params := generated.TasksListParams{
+	prerelease.Warn("tasks.list", prerelease.Beta)
+	params := generated.ListTasksParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Type:   optfields.PtrIfSet(req.Type),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
@@ -68,7 +68,7 @@ func (c *Client) List(
 		}
 		params.DatasetId = &datasetID
 	}
-	resp, err := c.gen.TasksListWithResponse(ctx, &params)
+	resp, err := c.gen.ListTasksWithResponse(ctx, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func (c *Client) Get(
 	ctx context.Context,
 	req GetRequest,
 ) (*Task, error) {
-	prerelease.Warn("tasks.get", prerelease.Alpha)
+	prerelease.Warn("tasks.get", prerelease.Beta)
 	id, err := resolve.FindTaskID(ctx, c.gen, req.Task, req.Space)
 	if err != nil {
 		return nil, err
@@ -102,7 +102,7 @@ func (c *Client) CreateEvaluationTask(
 	ctx context.Context,
 	req CreateEvaluationTaskRequest,
 ) (*Task, error) {
-	prerelease.Warn("tasks.create_evaluation_task", prerelease.Alpha)
+	prerelease.Warn("tasks.create_evaluation_task", prerelease.Beta)
 	if req.Name == "" {
 		return nil, errors.New("tasks: Name is required")
 	}
@@ -151,7 +151,7 @@ func (c *Client) CreateEvaluationTask(
 	switch req.Type {
 	case TaskTypeTemplateEvaluation:
 		if err := body.FromCreateTemplateEvaluationTaskRequest(generated.CreateTemplateEvaluationTaskRequest{
-			Type:          generated.CreateTemplateEvaluationTaskRequestTypeTemplateEvaluation,
+			Type:          generated.CreateTemplateEvaluationTaskRequestTypeTEMPLATEEVALUATION,
 			Name:          req.Name,
 			ProjectId:     projectID,
 			DatasetId:     datasetID,
@@ -165,7 +165,7 @@ func (c *Client) CreateEvaluationTask(
 		}
 	case TaskTypeCodeEvaluation:
 		if err := body.FromCreateCodeEvaluationTaskRequest(generated.CreateCodeEvaluationTaskRequest{
-			Type:          generated.CreateCodeEvaluationTaskRequestTypeCodeEvaluation,
+			Type:          generated.CreateCodeEvaluationTaskRequestTypeCODEEVALUATION,
 			Name:          req.Name,
 			ProjectId:     projectID,
 			DatasetId:     datasetID,
@@ -189,7 +189,7 @@ func (c *Client) CreateRunExperimentTask(
 	ctx context.Context,
 	req CreateRunExperimentTaskRequest,
 ) (*Task, error) {
-	prerelease.Warn("tasks.create_run_experiment_task", prerelease.Alpha)
+	prerelease.Warn("tasks.create_run_experiment_task", prerelease.Beta)
 	if req.Name == "" {
 		return nil, errors.New("tasks: Name is required")
 	}
@@ -202,7 +202,7 @@ func (c *Client) CreateRunExperimentTask(
 	}
 	var body generated.CreateTaskRequestBody
 	if err := body.FromCreateRunExperimentTaskRequest(generated.CreateRunExperimentTaskRequest{
-		Type:             generated.CreateRunExperimentTaskRequestTypeRunExperiment,
+		Type:             generated.CreateRunExperimentTaskRequestTypeRUNEXPERIMENT,
 		Name:             req.Name,
 		DatasetId:        datasetID,
 		RunConfiguration: req.RunConfiguration,
@@ -223,7 +223,7 @@ func (c *Client) Update(
 	ctx context.Context,
 	req UpdateRequest,
 ) (*Task, error) {
-	prerelease.Warn("tasks.update", prerelease.Alpha)
+	prerelease.Warn("tasks.update", prerelease.Beta)
 	if req.Name == nil && req.SamplingRate == nil && req.IsContinuous == nil &&
 		req.QueryFilter == nil && len(req.Evaluators) == 0 && req.RunConfiguration == nil {
 		return nil, ErrNoUpdateFields
@@ -272,14 +272,14 @@ func (c *Client) Update(
 		return nil, fmt.Errorf("tasks: unknown task type %q", task.Type)
 	}
 
-	// Marshal the union by hand: the generated TasksUpdateJSONRequestBody
+	// Marshal the union by hand: the generated UpdateTaskJSONRequestBody
 	// named type does not carry the union's MarshalJSON method and would
 	// serialize as {}.
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, fmt.Errorf("tasks: marshal update body: %w", err)
 	}
-	resp, err := c.gen.TasksUpdateWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(buf))
+	resp, err := c.gen.UpdateTaskWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(buf))
 	if err != nil {
 		return nil, err
 	}
@@ -296,12 +296,12 @@ func (c *Client) Delete(
 	ctx context.Context,
 	req DeleteRequest,
 ) error {
-	prerelease.Warn("tasks.delete", prerelease.Alpha)
+	prerelease.Warn("tasks.delete", prerelease.Beta)
 	id, err := resolve.FindTaskID(ctx, c.gen, req.Task, req.Space)
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.TasksDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteTaskWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -319,7 +319,7 @@ func (c *Client) TriggerRun(
 	ctx context.Context,
 	req TriggerRunRequest,
 ) (*TaskRun, error) {
-	prerelease.Warn("tasks.trigger_run", prerelease.Alpha)
+	prerelease.Warn("tasks.trigger_run", prerelease.Beta)
 	id, err := resolve.FindTaskID(ctx, c.gen, req.Task, req.Space)
 	if err != nil {
 		return nil, err
@@ -388,14 +388,14 @@ func (c *Client) TriggerRun(
 		return nil, fmt.Errorf("tasks: unknown task type %q", task.Type)
 	}
 
-	// Marshal the union by hand: the generated TasksTriggerRunJSONRequestBody
+	// Marshal the union by hand: the generated TriggerTaskRunJSONRequestBody
 	// named type does not carry the union's MarshalJSON method and would
 	// serialize as {}.
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, fmt.Errorf("tasks: marshal trigger body: %w", err)
 	}
-	resp, err := c.gen.TasksTriggerRunWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(buf))
+	resp, err := c.gen.TriggerTaskRunWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(buf))
 	if err != nil {
 		return nil, err
 	}
@@ -412,17 +412,17 @@ func (c *Client) ListRuns(
 	ctx context.Context,
 	req ListRunsRequest,
 ) (*TaskRunList, error) {
-	prerelease.Warn("tasks.list_runs", prerelease.Alpha)
+	prerelease.Warn("tasks.list_runs", prerelease.Beta)
 	id, err := resolve.FindTaskID(ctx, c.gen, req.Task, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	params := generated.TaskRunsListParams{
+	params := generated.ListTaskRunsParams{
 		Status: optfields.PtrIfSet(req.Status),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.TaskRunsListWithResponse(ctx, id, &params)
+	resp, err := c.gen.ListTaskRunsWithResponse(ctx, id, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -438,7 +438,7 @@ func (c *Client) GetRun(
 	ctx context.Context,
 	req GetRunRequest,
 ) (*TaskRun, error) {
-	prerelease.Warn("tasks.get_run", prerelease.Alpha)
+	prerelease.Warn("tasks.get_run", prerelease.Beta)
 	return c.getRunByID(ctx, req.RunID)
 }
 
@@ -447,8 +447,8 @@ func (c *Client) CancelRun(
 	ctx context.Context,
 	req CancelRunRequest,
 ) (*TaskRun, error) {
-	prerelease.Warn("tasks.cancel_run", prerelease.Alpha)
-	resp, err := c.gen.TaskRunsCancelWithResponse(ctx, req.RunID)
+	prerelease.Warn("tasks.cancel_run", prerelease.Beta)
+	resp, err := c.gen.CancelTaskRunWithResponse(ctx, req.RunID)
 	if err != nil {
 		return nil, err
 	}
@@ -467,7 +467,7 @@ func (c *Client) WaitForRun(
 	ctx context.Context,
 	req WaitForRunRequest,
 ) (*TaskRun, error) {
-	prerelease.Warn("tasks.wait_for_run", prerelease.Alpha)
+	prerelease.Warn("tasks.wait_for_run", prerelease.Beta)
 	interval := req.PollInterval
 	if interval == 0 {
 		interval = defaultPollInterval
@@ -510,7 +510,7 @@ func (c *Client) WaitForRun(
 // getByID fetches a task by its resolved ID. Used by Get, and by Update and
 // TriggerRun to determine the task type before dispatching on it.
 func (c *Client) getByID(ctx context.Context, id string) (*Task, error) {
-	resp, err := c.gen.TasksGetWithResponse(ctx, id)
+	resp, err := c.gen.GetTaskWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -523,7 +523,7 @@ func (c *Client) getByID(ctx context.Context, id string) (*Task, error) {
 // getRunByID fetches a task run by ID. Shared by GetRun and WaitForRun so
 // polling doesn't depend on the public method.
 func (c *Client) getRunByID(ctx context.Context, runID string) (*TaskRun, error) {
-	resp, err := c.gen.TaskRunsGetWithResponse(ctx, runID)
+	resp, err := c.gen.GetTaskRunWithResponse(ctx, runID)
 	if err != nil {
 		return nil, err
 	}
@@ -535,14 +535,14 @@ func (c *Client) getRunByID(ctx context.Context, runID string) (*TaskRun, error)
 
 // create posts an assembled CreateTaskRequestBody union and returns the
 // created task. The union is marshaled by hand because the generated
-// TasksCreateJSONRequestBody named type does not carry the union's
+// CreateTaskJSONRequestBody named type does not carry the union's
 // MarshalJSON method and would serialize as {}.
 func (c *Client) create(ctx context.Context, body generated.CreateTaskRequestBody) (*Task, error) {
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, fmt.Errorf("tasks: marshal create body: %w", err)
 	}
-	resp, err := c.gen.TasksCreateWithBodyWithResponse(ctx, "application/json", bytes.NewReader(buf))
+	resp, err := c.gen.CreateTaskWithBodyWithResponse(ctx, "application/json", bytes.NewReader(buf))
 	if err != nil {
 		return nil, err
 	}
@@ -552,30 +552,18 @@ func (c *Client) create(ctx context.Context, body generated.CreateTaskRequestBod
 	return resp.JSON201, nil
 }
 
-// evaluatorInput is the generated bodies' inline evaluator shape, shared by
-// the create and update evaluation-task requests.
-type evaluatorInput = struct {
-	// ColumnMappings Maps evaluator template variable names to data source column names.
-	ColumnMappings *map[string]string `json:"column_mappings,omitempty"`
-
-	// EvaluatorId Evaluator identifier (base64). Duplicates are not allowed.
-	EvaluatorId string `json:"evaluator_id"`
-
-	// QueryFilter Per-evaluator query filter. Combined with the task-level filter (AND).
-	QueryFilter *string `json:"query_filter,omitempty"`
-}
-
 // evaluatorInputs translates the public EvaluatorInput slice into the
-// generated bodies' inline evaluator shape.
-func evaluatorInputs(in []EvaluatorInput) []evaluatorInput {
-	out := make([]evaluatorInput, 0, len(in))
+// generated TaskEvaluatorInput shape shared by the create and update
+// evaluation-task requests.
+func evaluatorInputs(in []EvaluatorInput) []generated.TaskEvaluatorInput {
+	out := make([]generated.TaskEvaluatorInput, 0, len(in))
 	for _, e := range in {
 		var columnMappings *map[string]string
 		if e.ColumnMappings != nil {
 			m := e.ColumnMappings
 			columnMappings = &m
 		}
-		out = append(out, evaluatorInput{
+		out = append(out, generated.TaskEvaluatorInput{
 			EvaluatorId:    e.EvaluatorID,
 			QueryFilter:    optfields.PtrIfSet(e.QueryFilter),
 			ColumnMappings: columnMappings,

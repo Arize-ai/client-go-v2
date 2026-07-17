@@ -38,13 +38,13 @@ func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
 ) (*ResourceRestrictionList, error) {
-	prerelease.Warn("resourcerestrictions.list", prerelease.Alpha)
-	params := &generated.ResourceRestrictionsListParams{
+	prerelease.Warn("resourcerestrictions.list", prerelease.Beta)
+	params := &generated.ListResourceRestrictionsParams{
 		ResourceType: optfields.PtrIfSet(req.ResourceType),
 		Limit:        optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor:       optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.ResourceRestrictionsListWithResponse(ctx, params)
+	resp, err := c.gen.ListResourceRestrictionsWithResponse(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -68,8 +68,8 @@ func (c *Client) Restrict(
 	ctx context.Context,
 	req RestrictRequest,
 ) (*ResourceRestriction, error) {
-	prerelease.Warn("resourcerestrictions.restrict", prerelease.Alpha)
-	resp, err := c.gen.ResourceRestrictionsCreateWithResponse(ctx, generated.ResourceRestrictionCreate{
+	prerelease.Warn("resourcerestrictions.restrict", prerelease.Beta)
+	resp, err := c.gen.CreateResourceRestrictionWithResponse(ctx, generated.CreateResourceRestrictionRequest{
 		ResourceId: req.ResourceID,
 	})
 	if err != nil {
@@ -78,7 +78,7 @@ func (c *Client) Restrict(
 	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
 		return nil, err
 	}
-	return &resp.JSON200.ResourceRestriction, nil
+	return resp.JSON200, nil
 }
 
 // Unrestrict removes a restriction from a resource.
@@ -93,8 +93,8 @@ func (c *Client) Unrestrict(
 	ctx context.Context,
 	req UnrestrictRequest,
 ) error {
-	prerelease.Warn("resourcerestrictions.unrestrict", prerelease.Alpha)
-	resp, err := c.gen.ResourceRestrictionsDeleteWithResponse(ctx, req.ResourceID)
+	prerelease.Warn("resourcerestrictions.unrestrict", prerelease.Beta)
+	resp, err := c.gen.DeleteResourceRestrictionWithResponse(ctx, req.ResourceID)
 	if err != nil {
 		return err
 	}

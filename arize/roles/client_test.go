@@ -14,7 +14,7 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/roles"
 )
 
-// wireRoleUpdate mirrors the JSON shape of generated.RoleUpdate so tests can
+// wireRoleUpdate mirrors the JSON shape of generated.UpdateRoleRequest so tests can
 // decode PATCH bodies without importing internal/generated. All fields are
 // pointers so a missing field decodes to nil and an explicit `null` or zero
 // value can be distinguished from "absent".
@@ -24,7 +24,7 @@ type wireRoleUpdate struct {
 	Permissions *[]roles.Permission `json:"permissions,omitempty"`
 }
 
-// wireRoleCreate mirrors the JSON shape of generated.RoleCreate.
+// wireRoleCreate mirrors the JSON shape of generated.CreateRoleRequest.
 type wireRoleCreate struct {
 	Name        string             `json:"name,omitempty"`
 	Description *string            `json:"description,omitempty"`

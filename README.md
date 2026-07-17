@@ -526,7 +526,7 @@ At least one example is required (empty returns `datasets.ErrNoExamples`).
 ds, err := client.Datasets.Create(ctx, datasets.CreateRequest{
     Name:  "my-dataset",
     Space: "<space-id-or-name>",
-    Examples: []datasets.DatasetExampleCreate{
+    Examples: []datasets.CreateDatasetExampleInput{
         {"input": "What is Arize?", "output": "An AI observability platform."},
     },
 })
@@ -557,7 +557,7 @@ Appends to the latest dataset version.
 ```go
 ins, err := client.Datasets.AppendExamples(ctx, datasets.AppendExamplesRequest{
     Dataset: "<dataset-id-or-name>", Space: "<space-id-or-name>",
-    Examples: []datasets.DatasetExampleCreate{{"input": "q", "output": "a"}},
+    Examples: []datasets.CreateDatasetExampleInput{{"input": "q", "output": "a"}},
 })
 ```
 
@@ -658,7 +658,7 @@ Append between 1 and 1000 new runs to an existing experiment. Each run must incl
 ```go
 result, err := client.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
     ExperimentID: "<experiment-id>",
-    ExperimentRuns: []experiments.ExperimentRunCreate{
+    ExperimentRuns: []experiments.ExperimentRunInput{
         {ExampleId: "example-1", Output: "An AI observability platform."},
         {ExampleId: "example-2", Output: "A unit of work in a trace."},
     },
@@ -1265,7 +1265,7 @@ if err := client.ResourceRestrictions.Unrestrict(ctx, resourcerestrictions.Unres
 Use `client.AnnotationQueues` to manage annotation queues — collections of records
 (spans or dataset examples) routed to annotators for human labeling.
 
-> **Alpha:** annotation queues are a pre-release feature. Every method emits a
+> **Beta:** annotation queues are a pre-release feature. Every method emits a
 > one-time pre-release warning and the API may change in a backward-incompatible way.
 
 A full runnable example lives in [`examples/annotationqueues`](./examples/annotationqueues).
@@ -1363,7 +1363,7 @@ err := client.AnnotationQueues.Delete(ctx, annotationqueues.DeleteRequest{
 Use `client.Users` to manage account users. These take strict user IDs, except `Get`,
 whose `User` field accepts a user ID **or** an email address.
 
-> **Alpha:** users are a pre-release feature. Every method emits a one-time
+> **Beta:** users are a pre-release feature. Every method emits a one-time
 > pre-release warning and the API may change in a backward-incompatible way.
 
 A full runnable example lives in [`examples/users`](./examples/users).
@@ -1467,7 +1467,7 @@ Use `client.Tasks` to manage tasks — automated jobs that evaluate data
 (`template_evaluation` / `code_evaluation`) or run experiments
 (`run_experiment`) — and their async runs.
 
-> **Alpha:** tasks are a pre-release feature. Every method emits a one-time
+> **Beta:** tasks are a pre-release feature. Every method emits a one-time
 > pre-release warning and the API may change in a backward-incompatible way.
 
 A full runnable example lives in [`examples/tasks`](./examples/tasks).

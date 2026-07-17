@@ -15,7 +15,7 @@ type (
 	Task = generated.Task
 
 	// TaskList is the cursor-paginated list response shape.
-	TaskList = generated.TaskList
+	TaskList = generated.ListTasksResponse
 
 	// TaskEvaluator is an evaluator attached to an evaluation task, as
 	// returned on Task.Evaluators.
@@ -25,17 +25,17 @@ type (
 	TaskRun = generated.TaskRun
 
 	// TaskRunList is the cursor-paginated run list response shape.
-	TaskRunList = generated.TaskRunList
+	TaskRunList = generated.ListTaskRunsResponse
 
-	// TaskType is the task kind: template_evaluation, code_evaluation, or
-	// run_experiment.
+	// TaskType is the task kind: TEMPLATE_EVALUATION, CODE_EVALUATION, or
+	// RUN_EXPERIMENT.
 	TaskType = generated.TaskType
 
 	// TaskRunStatus is the lifecycle status of a task run.
 	TaskRunStatus = generated.TaskRunStatus
 
 	// RunConfiguration is the experiment execution configuration for a
-	// run_experiment task. It is a oneOf: populate exactly one variant with
+	// RUN_EXPERIMENT task. It is a oneOf: populate exactly one variant with
 	// FromLlmGenerationRunConfig / FromTemplateEvaluationRunConfig and read
 	// the active variant with ValueByDiscriminator and a type switch over
 	// LLMGenerationRunConfig / TemplateEvaluationRunConfig.
@@ -45,7 +45,7 @@ type (
 	// RunConfiguration: runs an LLM over each dataset example.
 	LLMGenerationRunConfig = generated.LlmGenerationRunConfig
 
-	// TemplateEvaluationRunConfig is the template_evaluation variant of a
+	// TemplateEvaluationRunConfig is the TEMPLATE_EVALUATION variant of a
 	// RunConfiguration: evaluates dataset examples with a prompt template.
 	TemplateEvaluationRunConfig = generated.TemplateEvaluationRunConfig
 
@@ -64,15 +64,15 @@ type (
 )
 
 const (
-	TaskTypeTemplateEvaluation TaskType = generated.TaskTypeTemplateEvaluation
-	TaskTypeCodeEvaluation     TaskType = generated.TaskTypeCodeEvaluation
-	TaskTypeRunExperiment      TaskType = generated.TaskTypeRunExperiment
+	TaskTypeTemplateEvaluation TaskType = generated.TaskTypeTEMPLATEEVALUATION
+	TaskTypeCodeEvaluation     TaskType = generated.TaskTypeCODEEVALUATION
+	TaskTypeRunExperiment      TaskType = generated.TaskTypeRUNEXPERIMENT
 
-	TaskRunStatusPending   TaskRunStatus = generated.TaskRunStatusPending
-	TaskRunStatusRunning   TaskRunStatus = generated.TaskRunStatusRunning
-	TaskRunStatusCompleted TaskRunStatus = generated.TaskRunStatusCompleted
-	TaskRunStatusFailed    TaskRunStatus = generated.TaskRunStatusFailed
-	TaskRunStatusCancelled TaskRunStatus = generated.TaskRunStatusCancelled
+	TaskRunStatusPending   TaskRunStatus = generated.TaskRunStatusPENDING
+	TaskRunStatusRunning   TaskRunStatus = generated.TaskRunStatusRUNNING
+	TaskRunStatusCompleted TaskRunStatus = generated.TaskRunStatusCOMPLETED
+	TaskRunStatusFailed    TaskRunStatus = generated.TaskRunStatusFAILED
+	TaskRunStatusCancelled TaskRunStatus = generated.TaskRunStatusCANCELLED
 )
 
 // EvaluatorInput attaches an evaluator to an evaluation task.
@@ -127,8 +127,8 @@ type GetRequest struct {
 	Space string
 }
 
-// CreateEvaluationTaskRequest describes a new template_evaluation or
-// code_evaluation task. Exactly one of Project or Dataset must be set.
+// CreateEvaluationTaskRequest describes a new TEMPLATE_EVALUATION or
+// CODE_EVALUATION task. Exactly one of Project or Dataset must be set.
 type CreateEvaluationTaskRequest struct {
 	// Name is the task's name (must be unique within the space).
 	Name string
@@ -166,7 +166,7 @@ type CreateEvaluationTaskRequest struct {
 	QueryFilter string
 }
 
-// CreateRunExperimentTaskRequest describes a new run_experiment task.
+// CreateRunExperimentTaskRequest describes a new RUN_EXPERIMENT task.
 type CreateRunExperimentTaskRequest struct {
 	// Name is the task's name (must be unique within the space).
 	Name string
@@ -186,7 +186,7 @@ type CreateRunExperimentTaskRequest struct {
 // fetches the task to determine its type and rejects fields that don't apply
 // to it: Name applies to all tasks; SamplingRate, IsContinuous, QueryFilter,
 // and Evaluators apply only to evaluation tasks; RunConfiguration applies
-// only to run_experiment tasks. At least one patch field must be set.
+// only to RUN_EXPERIMENT tasks. At least one patch field must be set.
 type UpdateRequest struct {
 	// Task accepts either a task name or ID.
 	Task string
@@ -214,7 +214,7 @@ type UpdateRequest struct {
 	// required by the API); when nil, the existing evaluators are
 	// preserved.
 	Evaluators []EvaluatorInput
-	// RunConfiguration is optional (run_experiment tasks only). When
+	// RunConfiguration is optional (RUN_EXPERIMENT tasks only). When
 	// non-nil, fully replaces the stored run configuration; when nil, the
 	// existing configuration is preserved.
 	RunConfiguration *RunConfiguration
@@ -234,7 +234,7 @@ type DeleteRequest struct {
 // apply to it: DataStartTime, DataEndTime, MaxSpans, OverrideEvaluations, and
 // ExperimentIDs apply only to evaluation tasks; ExperimentName,
 // DatasetVersionID, ExampleIDs, MaxExamples, TracingMetadata, and
-// EvaluationTaskIDs apply only to run_experiment tasks.
+// EvaluationTaskIDs apply only to RUN_EXPERIMENT tasks.
 type TriggerRunRequest struct {
 	// Task accepts either a task name or ID.
 	Task string
@@ -242,7 +242,7 @@ type TriggerRunRequest struct {
 	// name; ignored when Task is an ID.
 	Space string
 
-	// Evaluation-task fields (template_evaluation / code_evaluation).
+	// Evaluation-task fields (TEMPLATE_EVALUATION / CODE_EVALUATION).
 
 	// DataStartTime is the optional start of the data window to evaluate.
 	// When zero, the server defaults to the task's last run time (required
@@ -266,7 +266,7 @@ type TriggerRunRequest struct {
 	// Run-experiment-task fields.
 
 	// ExperimentName is the display name for the experiment to be created
-	// (must be unique within the dataset). Required for run_experiment
+	// (must be unique within the dataset). Required for RUN_EXPERIMENT
 	// tasks.
 	ExperimentName string
 	// DatasetVersionID is the optional dataset version (base64) to run

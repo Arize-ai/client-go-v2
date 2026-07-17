@@ -84,7 +84,7 @@ func TestExperiments(t *testing.T) {
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
 					ExperimentID: experimentID,
-					ExperimentRuns: []experiments.ExperimentRunCreate{
+					ExperimentRuns: []experiments.ExperimentRunInput{
 						{ExampleId: "ex-1", Output: "result-1"},
 						{ExampleId: "ex-2", Output: "result-2"},
 					},
@@ -110,7 +110,7 @@ func TestExperiments(t *testing.T) {
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
 					ExperimentID:   "nonexistent",
-					ExperimentRuns: []experiments.ExperimentRunCreate{{ExampleId: "ex-1", Output: "out"}},
+					ExperimentRuns: []experiments.ExperimentRunInput{{ExampleId: "ex-1", Output: "out"}},
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -130,7 +130,7 @@ func TestExperiments(t *testing.T) {
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
 					ExperimentID:   experimentID,
-					ExperimentRuns: []experiments.ExperimentRunCreate{{ExampleId: "ex-1", Output: "out"}},
+					ExperimentRuns: []experiments.ExperimentRunInput{{ExampleId: "ex-1", Output: "out"}},
 				})
 			},
 			check: func(t *testing.T, got any, err error) {

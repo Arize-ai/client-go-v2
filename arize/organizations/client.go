@@ -26,12 +26,12 @@ func (c *Client) List(
 	req ListRequest,
 ) (*OrganizationList, error) {
 	prerelease.Warn("organizations.list", prerelease.Beta)
-	params := generated.OrganizationsListParams{
+	params := generated.ListOrganizationsParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.OrganizationsListWithResponse(ctx, &params)
+	resp, err := c.gen.ListOrganizationsWithResponse(ctx, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *Client) Get(
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.OrganizationsGetWithResponse(ctx, id)
+	resp, err := c.gen.GetOrganizationWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -67,11 +67,11 @@ func (c *Client) Create(
 	req CreateRequest,
 ) (*Organization, error) {
 	prerelease.Warn("organizations.create", prerelease.Beta)
-	body := generated.OrganizationCreate{
+	body := generated.CreateOrganizationRequest{
 		Name:        req.Name,
 		Description: optfields.PtrIfSet(req.Description),
 	}
-	resp, err := c.gen.OrganizationsCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateOrganizationWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -92,11 +92,11 @@ func (c *Client) Update(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.OrganizationUpdate{
+	body := generated.UpdateOrganizationRequest{
 		Name:        req.Name,
 		Description: req.Description,
 	}
-	resp, err := c.gen.OrganizationsUpdateWithResponse(ctx, id, body)
+	resp, err := c.gen.UpdateOrganizationWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func (c *Client) Delete(
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.OrganizationsDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteOrganizationWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -133,7 +133,7 @@ func (c *Client) AddUser(
 	ctx context.Context,
 	req AddUserRequest,
 ) (*OrganizationMembership, error) {
-	prerelease.Warn("organizations.add_user", prerelease.Alpha)
+	prerelease.Warn("organizations.add_user", prerelease.Beta)
 	id, err := resolve.FindOrganizationID(ctx, c.gen, req.Organization)
 	if err != nil {
 		return nil, err
@@ -144,11 +144,11 @@ func (c *Client) AddUser(
 	if err := assignment.FromOrganizationPredefinedRoleAssignment(role); err != nil {
 		return nil, err
 	}
-	body := generated.OrganizationMembershipInput{
+	body := generated.AddOrganizationUserRequest{
 		UserId: req.UserID,
 		Role:   assignment,
 	}
-	resp, err := c.gen.OrganizationsAddUserWithResponse(ctx, id, body)
+	resp, err := c.gen.AddOrganizationUserWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -164,12 +164,12 @@ func (c *Client) RemoveUser(
 	ctx context.Context,
 	req RemoveUserRequest,
 ) error {
-	prerelease.Warn("organizations.remove_user", prerelease.Alpha)
+	prerelease.Warn("organizations.remove_user", prerelease.Beta)
 	id, err := resolve.FindOrganizationID(ctx, c.gen, req.Organization)
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.OrganizationsRemoveUserWithResponse(ctx, id, req.UserID)
+	resp, err := c.gen.RemoveOrganizationUserWithResponse(ctx, id, req.UserID)
 	if err != nil {
 		return err
 	}

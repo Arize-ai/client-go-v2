@@ -4,7 +4,7 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 
 type (
 	AnnotationConfig            = generated.AnnotationConfig
-	AnnotationConfigList        = generated.AnnotationConfigList
+	AnnotationConfigList        = generated.ListAnnotationConfigsResponse
 	CategoricalAnnotationConfig = generated.CategoricalAnnotationConfig
 	ContinuousAnnotationConfig  = generated.ContinuousAnnotationConfig
 	FreeformAnnotationConfig    = generated.FreeformAnnotationConfig
@@ -14,13 +14,13 @@ type (
 )
 
 const (
-	AnnotationConfigTypeCategorical AnnotationConfigType = generated.AnnotationConfigTypeCategorical
-	AnnotationConfigTypeContinuous  AnnotationConfigType = generated.AnnotationConfigTypeContinuous
-	AnnotationConfigTypeFreeform    AnnotationConfigType = generated.AnnotationConfigTypeFreeform
+	AnnotationConfigTypeCategorical AnnotationConfigType = generated.AnnotationConfigTypeCATEGORICAL
+	AnnotationConfigTypeContinuous  AnnotationConfigType = generated.AnnotationConfigTypeCONTINUOUS
+	AnnotationConfigTypeFreeform    AnnotationConfigType = generated.AnnotationConfigTypeFREEFORM
 
-	OptimizationDirectionMaximize OptimizationDirection = generated.OptimizationDirectionMaximize
-	OptimizationDirectionMinimize OptimizationDirection = generated.OptimizationDirectionMinimize
-	OptimizationDirectionNone     OptimizationDirection = generated.OptimizationDirectionNone
+	OptimizationDirectionMaximize OptimizationDirection = generated.OptimizationDirectionMAXIMIZE
+	OptimizationDirectionMinimize OptimizationDirection = generated.OptimizationDirectionMINIMIZE
+	OptimizationDirectionNone     OptimizationDirection = generated.OptimizationDirectionNONE
 )
 
 // ListRequest is the request shape for Client.List.

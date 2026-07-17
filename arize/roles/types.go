@@ -8,7 +8,7 @@ import (
 // callers can construct and assert on them without importing internal/generated.
 type (
 	Role     = generated.Role
-	RoleList = generated.RoleList
+	RoleList = generated.ListRolesResponse
 
 	// Permission is the enum of permission identifiers (e.g. PROJECT_READ).
 	// Construct values via the Permissions namespace, e.g.

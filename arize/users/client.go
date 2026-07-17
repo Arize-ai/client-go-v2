@@ -25,8 +25,8 @@ func New(gen *generated.ClientWithResponses) *Client {
 
 // List returns a paginated list of account users. Defaults to a page size of 50.
 func (c *Client) List(ctx context.Context, req ListRequest) (*UserList, error) {
-	prerelease.Warn("users.list", prerelease.Alpha)
-	params := &generated.UsersListParams{
+	prerelease.Warn("users.list", prerelease.Beta)
+	params := &generated.ListUsersParams{
 		Email:  optfields.PtrIfSet(req.Email),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
@@ -35,7 +35,7 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*UserList, error) {
 		status := generated.UserStatusQueryParam(req.Status)
 		params.Status = &status
 	}
-	resp, err := c.gen.UsersListWithResponse(ctx, params)
+	resp, err := c.gen.ListUsersWithResponse(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -49,15 +49,15 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*UserList, error) {
 // Leave a field nil to preserve its current value. At least one of Name or
 // IsDeveloper must be non-nil.
 func (c *Client) Update(ctx context.Context, req UpdateRequest) (*User, error) {
-	prerelease.Warn("users.update", prerelease.Alpha)
+	prerelease.Warn("users.update", prerelease.Beta)
 	if req.Name == nil && req.IsDeveloper == nil {
 		return nil, fmt.Errorf("users: update requires at least one of Name or IsDeveloper")
 	}
-	body := generated.UserUpdate{
+	body := generated.UpdateUserRequest{
 		Name:        req.Name,
 		IsDeveloper: req.IsDeveloper,
 	}
-	resp, err := c.gen.UsersUpdateWithResponse(ctx, req.UserID, body)
+	resp, err := c.gen.UpdateUserWithResponse(ctx, req.UserID, body)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (c *Client) Update(ctx context.Context, req UpdateRequest) (*User, error) {
 // password when InviteMode is InviteModeTemporaryPassword; that value is not
 // surfaced by this method.
 func (c *Client) Create(ctx context.Context, req CreateRequest) (*User, error) {
-	prerelease.Warn("users.create", prerelease.Alpha)
+	prerelease.Warn("users.create", prerelease.Beta)
 	body := generated.CreateUserRequest{
 		Name:        req.Name,
 		Email:       generated.Email(req.Email),
@@ -83,7 +83,7 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*User, error) {
 		InviteMode:  req.InviteMode,
 		IsDeveloper: req.IsDeveloper,
 	}
-	resp, err := c.gen.UsersCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateUserWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -112,8 +112,8 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*User, error) {
 // memberships, API keys, and role bindings. Idempotent: deleting an already
 // inactive user succeeds.
 func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
-	prerelease.Warn("users.delete", prerelease.Alpha)
-	resp, err := c.gen.UsersDeleteWithResponse(ctx, req.UserID)
+	prerelease.Warn("users.delete", prerelease.Beta)
+	resp, err := c.gen.DeleteUserWithResponse(ctx, req.UserID)
 	if err != nil {
 		return err
 	}
@@ -123,8 +123,8 @@ func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
 // ResendInvitation resends the invitation email for a pending (invited) user.
 // The target user must be in the invited state.
 func (c *Client) ResendInvitation(ctx context.Context, req ResendInvitationRequest) error {
-	prerelease.Warn("users.resend_invitation", prerelease.Alpha)
-	resp, err := c.gen.UsersResendInvitationWithResponse(ctx, req.UserID)
+	prerelease.Warn("users.resend_invitation", prerelease.Beta)
+	resp, err := c.gen.ResendUserInvitationWithResponse(ctx, req.UserID)
 	if err != nil {
 		return err
 	}
@@ -134,8 +134,8 @@ func (c *Client) ResendInvitation(ctx context.Context, req ResendInvitationReque
 // ResetPassword triggers a password-reset email for a user. The user must
 // authenticate via password (not SSO/SAML) and must have verified their account.
 func (c *Client) ResetPassword(ctx context.Context, req ResetPasswordRequest) error {
-	prerelease.Warn("users.reset_password", prerelease.Alpha)
-	resp, err := c.gen.UsersPasswordResetWithResponse(ctx, req.UserID)
+	prerelease.Warn("users.reset_password", prerelease.Beta)
+	resp, err := c.gen.ResetUserPasswordWithResponse(ctx, req.UserID)
 	if err != nil {
 		return err
 	}
@@ -147,12 +147,12 @@ func (c *Client) ResetPassword(ctx context.Context, req ResetPasswordRequest) er
 // (case-insensitive exact match), and a non-matching email yields a
 // *ResourceNotFoundError.
 func (c *Client) Get(ctx context.Context, req GetRequest) (*User, error) {
-	prerelease.Warn("users.get", prerelease.Alpha)
+	prerelease.Warn("users.get", prerelease.Beta)
 	id, err := resolve.FindUserID(ctx, c.gen, req.User)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.UsersGetWithResponse(ctx, id)
+	resp, err := c.gen.GetUserWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -169,7 +169,7 @@ func (c *Client) Get(ctx context.Context, req GetRequest) (*User, error) {
 // outcome is returned as a BulkUserDeletionResult.
 // Per-user delete failures are recorded as Failed and do not abort the batch.
 func (c *Client) BulkDelete(ctx context.Context, req BulkDeleteRequest) ([]BulkUserDeletionResult, error) {
-	prerelease.Warn("users.bulk_delete", prerelease.Alpha)
+	prerelease.Warn("users.bulk_delete", prerelease.Beta)
 	if len(req.UserIDs) == 0 && len(req.Emails) == 0 {
 		return nil, fmt.Errorf("users: bulk delete requires at least one of UserIDs or Emails")
 	}

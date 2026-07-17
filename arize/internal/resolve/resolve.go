@@ -134,11 +134,11 @@ func FindSpaceID(ctx context.Context, gen *generated.ClientWithResponses, space 
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.SpacesListParams{Name: &space, Limit: &limit}
+		p := &generated.ListSpacesParams{Name: &space, Limit: &limit}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.SpacesListWithResponse(ctx, p)
+		resp, err := gen.ListSpacesWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -173,11 +173,11 @@ func FindOrganizationID(ctx context.Context, gen *generated.ClientWithResponses,
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.OrganizationsListParams{Name: &organization, Limit: &limit}
+		p := &generated.ListOrganizationsParams{Name: &organization, Limit: &limit}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.OrganizationsListWithResponse(ctx, p)
+		resp, err := gen.ListOrganizationsWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -207,11 +207,11 @@ func FindRoleID(ctx context.Context, gen *generated.ClientWithResponses, role st
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.RolesListParams{Limit: &limit}
+		p := &generated.ListRolesParams{Limit: &limit}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.RolesListWithResponse(ctx, p)
+		resp, err := gen.ListRolesWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -246,11 +246,11 @@ func FindProjectID(ctx context.Context, gen *generated.ClientWithResponses, proj
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.ProjectsListParams{Name: &project, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
+		p := &generated.ListProjectsParams{Name: &project, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.ProjectsListWithResponse(ctx, p)
+		resp, err := gen.ListProjectsWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -285,11 +285,11 @@ func FindDatasetID(ctx context.Context, gen *generated.ClientWithResponses, data
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.DatasetsListParams{Name: &dataset, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
+		p := &generated.ListDatasetsParams{Name: &dataset, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.DatasetsListWithResponse(ctx, p)
+		resp, err := gen.ListDatasetsWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -337,11 +337,11 @@ func FindExperimentID(ctx context.Context, gen *generated.ClientWithResponses, e
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.ExperimentsListParams{DatasetId: &datasetID, Limit: &limit}
+		p := &generated.ListExperimentsParams{DatasetId: &datasetID, Limit: &limit}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.ExperimentsListWithResponse(ctx, p)
+		resp, err := gen.ListExperimentsWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -376,11 +376,11 @@ func FindPromptID(ctx context.Context, gen *generated.ClientWithResponses, promp
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.PromptsListParams{Name: &prompt, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
+		p := &generated.ListPromptsParams{Name: &prompt, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.PromptsListWithResponse(ctx, p)
+		resp, err := gen.ListPromptsWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -415,11 +415,11 @@ func FindEvaluatorID(ctx context.Context, gen *generated.ClientWithResponses, ev
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.EvaluatorsListParams{Name: &evaluator, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
+		p := &generated.ListEvaluatorsParams{Name: &evaluator, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.EvaluatorsListWithResponse(ctx, p)
+		resp, err := gen.ListEvaluatorsWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -456,11 +456,11 @@ func FindAnnotationConfigID(ctx context.Context, gen *generated.ClientWithRespon
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.AnnotationConfigsListParams{Name: &annotationConfig, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
+		p := &generated.ListAnnotationConfigsParams{Name: &annotationConfig, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.AnnotationConfigsListWithResponse(ctx, p)
+		resp, err := gen.ListAnnotationConfigsWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -486,13 +486,16 @@ func FindAnnotationConfigID(ctx context.Context, gen *generated.ClientWithRespon
 }
 
 // annotationConfigIDAndName extracts (id, name) from a oneof AnnotationConfig
-// by re-marshalling to JSON and unmarshalling to AnnotationConfigBase.
+// by re-marshalling to JSON and unmarshalling only the shared id/name fields.
 func annotationConfigIDAndName(cfg generated.AnnotationConfig) (string, string, bool) {
 	b, err := json.Marshal(cfg)
 	if err != nil {
 		return "", "", false
 	}
-	var base generated.AnnotationConfigBase
+	var base struct {
+		Id   string `json:"id"`
+		Name string `json:"name"`
+	}
 	if err := json.Unmarshal(b, &base); err != nil {
 		return "", "", false
 	}
@@ -513,11 +516,11 @@ func FindAnnotationQueueID(ctx context.Context, gen *generated.ClientWithRespons
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.AnnotationQueuesListParams{Name: &annotationQueue, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
+		p := &generated.ListAnnotationQueuesParams{Name: &annotationQueue, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.AnnotationQueuesListWithResponse(ctx, p)
+		resp, err := gen.ListAnnotationQueuesWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -552,11 +555,11 @@ func FindAIIntegrationID(ctx context.Context, gen *generated.ClientWithResponses
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.AiIntegrationsListParams{Name: &integration, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
+		p := &generated.ListAiIntegrationsParams{Name: &integration, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.AiIntegrationsListWithResponse(ctx, p)
+		resp, err := gen.ListAiIntegrationsWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -591,11 +594,11 @@ func FindTaskID(ctx context.Context, gen *generated.ClientWithResponses, task, s
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.TasksListParams{Name: &task, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
+		p := &generated.ListTasksParams{Name: &task, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.TasksListWithResponse(ctx, p)
+		resp, err := gen.ListTasksWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}
@@ -631,11 +634,11 @@ func FindUserID(ctx context.Context, gen *generated.ClientWithResponses, user st
 	limit := listPageSize
 	var cursor string
 	for {
-		p := &generated.UsersListParams{Email: &user, Limit: &limit}
+		p := &generated.ListUsersParams{Email: &user, Limit: &limit}
 		if cursor != "" {
 			p.Cursor = &cursor
 		}
-		resp, err := gen.UsersListWithResponse(ctx, p)
+		resp, err := gen.ListUsersWithResponse(ctx, p)
 		if err != nil {
 			return "", err
 		}

@@ -7,7 +7,7 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // internal/generated.
 type (
 	Space               = generated.Space
-	SpaceList           = generated.SpaceList
+	SpaceList           = generated.ListSpacesResponse
 	SpaceMembership     = generated.SpaceMembership
 	SpaceRoleAssignment = generated.SpaceRoleAssignment
 	PredefinedSpaceRole = generated.PredefinedRoleAssignment
@@ -18,16 +18,16 @@ type (
 
 // UserSpaceRole enum values.
 const (
-	UserSpaceRoleAdmin     = generated.UserSpaceRoleAdmin
-	UserSpaceRoleMember    = generated.UserSpaceRoleMember
-	UserSpaceRoleReadOnly  = generated.UserSpaceRoleReadOnly
-	UserSpaceRoleAnnotator = generated.UserSpaceRoleAnnotator
+	UserSpaceRoleAdmin     = generated.UserSpaceRoleADMIN
+	UserSpaceRoleMember    = generated.UserSpaceRoleMEMBER
+	UserSpaceRoleReadOnly  = generated.UserSpaceRoleREADONLY
+	UserSpaceRoleAnnotator = generated.UserSpaceRoleANNOTATOR
 )
 
 // Role assignment discriminator values.
 const (
-	RoleAssignmentTypePredefined = generated.SpaceRoleAssignmentTypePredefined
-	RoleAssignmentTypeCustom     = generated.SpaceRoleAssignmentTypeCustom
+	RoleAssignmentTypePredefined = generated.SpaceRoleAssignmentTypePREDEFINED
+	RoleAssignmentTypeCustom     = generated.SpaceRoleAssignmentTypeCUSTOM
 )
 
 // AssignPredefinedRole builds a role assignment naming one of the predefined

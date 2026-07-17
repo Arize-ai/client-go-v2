@@ -83,9 +83,13 @@ type RefreshRequest struct {
 }
 
 type (
-	APIKey        = generated.ApiKey
-	APIKeyList    = generated.ApiKeyList
-	APIKeyCreated = generated.ApiKeyCreated
+	// APIKey is a full API key including its raw secret value. Returned only by
+	// Create, CreateServiceKey, and Refresh — the raw key is shown exactly once.
+	APIKey = generated.ApiKey
+	// APIKeyRedacted is an API key without its secret, as returned in list results.
+	APIKeyRedacted = generated.ApiKeyRedacted
+	// APIKeyList is the cursor-paginated list response of redacted API keys.
+	APIKeyList = generated.ListApiKeysResponse
 
 	// APIKeyType is the type of an API key (user or service). Shared across
 	// responses, create requests, and list filters.
@@ -104,20 +108,20 @@ type (
 )
 
 const (
-	APIKeyTypeService APIKeyType = generated.ApiKeyTypeService
-	APIKeyTypeUser    APIKeyType = generated.ApiKeyTypeUser
+	APIKeyTypeService APIKeyType = generated.ApiKeyTypeSERVICE
+	APIKeyTypeUser    APIKeyType = generated.ApiKeyTypeUSER
 
-	APIKeyStatusActive  APIKeyStatus = generated.ApiKeyStatusActive
-	APIKeyStatusRevoked APIKeyStatus = generated.ApiKeyStatusRevoked
+	APIKeyStatusActive  APIKeyStatus = generated.ApiKeyStatusACTIVE
+	APIKeyStatusRevoked APIKeyStatus = generated.ApiKeyStatusREVOKED
 
-	APIKeyAccountRoleAdmin  APIKeyAccountRole = generated.ApiKeyAccountRoleAdmin
-	APIKeyAccountRoleMember APIKeyAccountRole = generated.ApiKeyAccountRoleMember
+	APIKeyAccountRoleAdmin  APIKeyAccountRole = generated.ApiKeyAccountRoleADMIN
+	APIKeyAccountRoleMember APIKeyAccountRole = generated.ApiKeyAccountRoleMEMBER
 
-	APIKeyOrganizationRoleAdmin    APIKeyOrganizationRole = generated.ApiKeyOrganizationRoleAdmin
-	APIKeyOrganizationRoleMember   APIKeyOrganizationRole = generated.ApiKeyOrganizationRoleMember
-	APIKeyOrganizationRoleReadOnly APIKeyOrganizationRole = generated.ApiKeyOrganizationRoleReadOnly
+	APIKeyOrganizationRoleAdmin    APIKeyOrganizationRole = generated.ApiKeyOrganizationRoleADMIN
+	APIKeyOrganizationRoleMember   APIKeyOrganizationRole = generated.ApiKeyOrganizationRoleMEMBER
+	APIKeyOrganizationRoleReadOnly APIKeyOrganizationRole = generated.ApiKeyOrganizationRoleREADONLY
 
-	APIKeySpaceRoleAdmin    APIKeySpaceRole = generated.ApiKeySpaceRoleAdmin
-	APIKeySpaceRoleMember   APIKeySpaceRole = generated.ApiKeySpaceRoleMember
-	APIKeySpaceRoleReadOnly APIKeySpaceRole = generated.ApiKeySpaceRoleReadOnly
+	APIKeySpaceRoleAdmin    APIKeySpaceRole = generated.ApiKeySpaceRoleADMIN
+	APIKeySpaceRoleMember   APIKeySpaceRole = generated.ApiKeySpaceRoleMEMBER
+	APIKeySpaceRoleReadOnly APIKeySpaceRole = generated.ApiKeySpaceRoleREADONLY
 )

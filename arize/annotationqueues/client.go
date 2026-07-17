@@ -25,13 +25,13 @@ func New(gen *generated.ClientWithResponses) *Client {
 // non-empty, accepts a space name or ID and restricts results to that space.
 func (c *Client) List(ctx context.Context, req ListRequest) (*AnnotationQueueList, error) {
 	prerelease.Warn("annotationqueues.list", prerelease.Beta)
-	params := generated.AnnotationQueuesListParams{
+	params := generated.ListAnnotationQueuesParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrIfSet(req.Limit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
-	resp, err := c.gen.AnnotationQueuesListWithResponse(ctx, &params)
+	resp, err := c.gen.ListAnnotationQueuesWithResponse(ctx, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (c *Client) Get(ctx context.Context, req GetRequest) (*AnnotationQueue, err
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.AnnotationQueuesGetWithResponse(ctx, id)
+	resp, err := c.gen.GetAnnotationQueueWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*AnnotationQueu
 	if err != nil {
 		return nil, err
 	}
-	body := generated.AnnotationQueuesCreateJSONRequestBody{
+	body := generated.CreateAnnotationQueueJSONRequestBody{
 		SpaceId:             spaceID,
 		Name:                req.Name,
 		AnnotationConfigIds: req.AnnotationConfigIDs,
@@ -76,7 +76,7 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*AnnotationQueu
 	if len(req.RecordSources) > 0 {
 		body.RecordSources = &req.RecordSources
 	}
-	resp, err := c.gen.AnnotationQueuesCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateAnnotationQueueWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func (c *Client) Update(ctx context.Context, req UpdateRequest) (*AnnotationQueu
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.AnnotationQueuesUpdateWithResponse(ctx, id, generated.AnnotationQueuesUpdateJSONRequestBody{
+	resp, err := c.gen.UpdateAnnotationQueueWithResponse(ctx, id, generated.UpdateAnnotationQueueJSONRequestBody{
 		Name:                req.Name,
 		Instructions:        req.Instructions,
 		AnnotatorEmails:     req.AnnotatorEmails,
@@ -115,7 +115,7 @@ func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.AnnotationQueuesDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteAnnotationQueueWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -130,11 +130,11 @@ func (c *Client) ListRecords(ctx context.Context, req ListRecordsRequest) (*Anno
 	if err != nil {
 		return nil, err
 	}
-	params := &generated.AnnotationQueueRecordsListParams{
+	params := &generated.ListAnnotationQueueRecordsParams{
 		Cursor: optfields.PtrIfSet(req.Cursor),
 		Limit:  optfields.PtrIfSet(req.Limit),
 	}
-	resp, err := c.gen.AnnotationQueueRecordsListWithResponse(ctx, id, params)
+	resp, err := c.gen.ListAnnotationQueueRecordsWithResponse(ctx, id, params)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func (c *Client) AddRecords(ctx context.Context, req AddRecordsRequest) (*Annota
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.AnnotationQueuesRecordsCreateWithResponse(ctx, id, generated.AnnotationQueuesRecordsCreateJSONRequestBody{
+	resp, err := c.gen.CreateAnnotationQueueRecordWithResponse(ctx, id, generated.CreateAnnotationQueueRecordJSONRequestBody{
 		RecordSources: req.RecordSources,
 	})
 	if err != nil {
@@ -179,7 +179,7 @@ func (c *Client) DeleteRecords(ctx context.Context, req DeleteRecordsRequest) er
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.AnnotationQueuesRecordsDeleteWithResponse(ctx, id, generated.AnnotationQueuesRecordsDeleteJSONRequestBody{
+	resp, err := c.gen.DeleteAnnotationQueueRecordWithResponse(ctx, id, generated.DeleteAnnotationQueueRecordJSONRequestBody{
 		RecordIds: req.RecordIDs,
 	})
 	if err != nil {
@@ -196,7 +196,7 @@ func (c *Client) Annotate(ctx context.Context, req AnnotateRequest) (*Annotation
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.AnnotationQueuesRecordsAnnotateWithResponse(ctx, id, req.RecordID, generated.AnnotationQueuesRecordsAnnotateJSONRequestBody{
+	resp, err := c.gen.AnnotateAnnotationQueueRecordWithResponse(ctx, id, req.RecordID, generated.AnnotateAnnotationQueueRecordJSONRequestBody{
 		Annotations: req.Annotations,
 	})
 	if err != nil {
@@ -216,7 +216,7 @@ func (c *Client) Assign(ctx context.Context, req AssignRequest) (*AnnotationQueu
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.AnnotationQueuesRecordsAssignWithResponse(ctx, id, req.RecordID, generated.AnnotationQueuesRecordsAssignJSONRequestBody{
+	resp, err := c.gen.AssignAnnotationQueueRecordWithResponse(ctx, id, req.RecordID, generated.AssignAnnotationQueueRecordJSONRequestBody{
 		AssignedUserEmails: req.AssignedUserEmails,
 	})
 	if err != nil {

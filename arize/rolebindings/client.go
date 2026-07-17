@@ -26,13 +26,13 @@ func (c *Client) List(
 	req ListRequest,
 ) (*RoleBindingList, error) {
 	prerelease.Warn("rolebindings.list", prerelease.Beta)
-	params := &generated.RoleBindingsListParams{
+	params := &generated.ListRoleBindingsParams{
 		ResourceType: req.ResourceType,
 		UserId:       optfields.PtrIfSet(req.UserID),
 		Limit:        optfields.PtrWithDefault(req.Limit, 50),
 		Cursor:       optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.RoleBindingsListWithResponse(ctx, params)
+	resp, err := c.gen.ListRoleBindingsWithResponse(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (c *Client) Get(
 	req GetRequest,
 ) (*RoleBinding, error) {
 	prerelease.Warn("rolebindings.get", prerelease.Beta)
-	resp, err := c.gen.RoleBindingsGetWithResponse(ctx, req.RoleBindingID)
+	resp, err := c.gen.GetRoleBindingWithResponse(ctx, req.RoleBindingID)
 	if err != nil {
 		return nil, err
 	}
@@ -64,13 +64,13 @@ func (c *Client) Create(
 	req CreateRequest,
 ) (*RoleBinding, error) {
 	prerelease.Warn("rolebindings.create", prerelease.Beta)
-	body := generated.RoleBindingCreate{
+	body := generated.CreateRoleBindingRequest{
 		ResourceId:   req.ResourceID,
 		ResourceType: req.ResourceType,
 		RoleId:       req.RoleID,
 		UserId:       req.UserID,
 	}
-	resp, err := c.gen.RoleBindingsCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateRoleBindingWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -86,10 +86,10 @@ func (c *Client) Update(
 	req UpdateRequest,
 ) (*RoleBinding, error) {
 	prerelease.Warn("rolebindings.update", prerelease.Beta)
-	body := generated.RoleBindingUpdate{
+	body := generated.UpdateRoleBindingRequest{
 		RoleId: req.RoleID,
 	}
-	resp, err := c.gen.RoleBindingsUpdateWithResponse(ctx, req.RoleBindingID, body)
+	resp, err := c.gen.UpdateRoleBindingWithResponse(ctx, req.RoleBindingID, body)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func (c *Client) Delete(
 	req DeleteRequest,
 ) error {
 	prerelease.Warn("rolebindings.delete", prerelease.Beta)
-	resp, err := c.gen.RoleBindingsDeleteWithResponse(ctx, req.RoleBindingID)
+	resp, err := c.gen.DeleteRoleBindingWithResponse(ctx, req.RoleBindingID)
 	if err != nil {
 		return err
 	}

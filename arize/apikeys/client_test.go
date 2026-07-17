@@ -45,7 +45,7 @@ func TestAPIKeys(t *testing.T) {
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(apikeys.APIKeyList{
-					ApiKeys: []apikeys.APIKey{{
+					ApiKeys: []apikeys.APIKeyRedacted{{
 						Id:              "key-1",
 						Name:            "my-key",
 						CreatedAt:       time.Now(),
@@ -88,10 +88,10 @@ func TestAPIKeys(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				if seenKeyType != "service" {
+				if seenKeyType != "SERVICE" {
 					t.Errorf("key_type query: want service, got %q", seenKeyType)
 				}
-				if seenStatus != "revoked" {
+				if seenStatus != "REVOKED" {
 					t.Errorf("status query: want revoked, got %q", seenStatus)
 				}
 			},
@@ -173,11 +173,10 @@ func TestAPIKeys(t *testing.T) {
 				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusCreated)
-				json.NewEncoder(w).Encode(apikeys.APIKeyCreated{
+				json.NewEncoder(w).Encode(apikeys.APIKey{
 					Id:              "key-2",
 					Name:            "new-key",
 					Key:             "ak-secret",
-					RedactedKey:     "ak-sec...ret",
 					KeyType:         apikeys.APIKeyTypeUser,
 					Status:          apikeys.APIKeyStatusActive,
 					CreatedAt:       time.Now(),
@@ -191,7 +190,7 @@ func TestAPIKeys(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*apikeys.APIKeyCreated)
+				resp := got.(*apikeys.APIKey)
 				if resp.Id != "key-2" {
 					t.Errorf("expected Id %q, got %q", "key-2", resp.Id)
 				}
@@ -225,11 +224,10 @@ func TestAPIKeys(t *testing.T) {
 				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusCreated)
-				json.NewEncoder(w).Encode(apikeys.APIKeyCreated{
+				json.NewEncoder(w).Encode(apikeys.APIKey{
 					Id:              "key-3",
 					Name:            "svc-key",
 					Key:             "ak-service-secret",
-					RedactedKey:     "ak-ser...ret",
 					KeyType:         apikeys.APIKeyTypeService,
 					Status:          apikeys.APIKeyStatusActive,
 					CreatedAt:       time.Now(),
@@ -248,7 +246,7 @@ func TestAPIKeys(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*apikeys.APIKeyCreated)
+				resp := got.(*apikeys.APIKey)
 				if resp.KeyType != apikeys.APIKeyTypeService {
 					t.Errorf("expected service key type, got %v", resp.KeyType)
 				}
@@ -276,11 +274,10 @@ func TestAPIKeys(t *testing.T) {
 					t.Errorf("expected POST, got %s", r.Method)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(apikeys.APIKeyCreated{
+				json.NewEncoder(w).Encode(apikeys.APIKey{
 					Id:              "key-1",
 					Name:            "rotated-key",
 					Key:             "ak-rotated",
-					RedactedKey:     "ak-rot...ted",
 					KeyType:         apikeys.APIKeyTypeUser,
 					Status:          apikeys.APIKeyStatusActive,
 					CreatedAt:       time.Now(),
@@ -294,7 +291,7 @@ func TestAPIKeys(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*apikeys.APIKeyCreated)
+				resp := got.(*apikeys.APIKey)
 				if resp.Key == "" {
 					t.Error("expected non-empty Key on refresh")
 				}
@@ -336,7 +333,7 @@ func TestAPIKeys(t *testing.T) {
 					t.Errorf("expires_at should be omitted when zero, got %v", wire.ExpiresAt)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(apikeys.APIKeyCreated{
+				json.NewEncoder(w).Encode(apikeys.APIKey{
 					Id: "key-1", Key: "ak-new", KeyType: apikeys.APIKeyTypeUser,
 					Status: apikeys.APIKeyStatusActive, CreatedAt: time.Now(),
 				})
@@ -365,7 +362,7 @@ func TestAPIKeys(t *testing.T) {
 					t.Error("grace_period_seconds should be omitted when GracePeriodSeconds is 0")
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(apikeys.APIKeyCreated{
+				json.NewEncoder(w).Encode(apikeys.APIKey{
 					Id: "key-1", Key: "ak-new", KeyType: apikeys.APIKeyTypeUser,
 					Status: apikeys.APIKeyStatusActive, CreatedAt: time.Now(),
 				})
@@ -398,7 +395,7 @@ func TestAPIKeys(t *testing.T) {
 					t.Error("expected expires_at in request body, got nil")
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(apikeys.APIKeyCreated{
+				json.NewEncoder(w).Encode(apikeys.APIKey{
 					Id: "key-1", Key: "ak-new", KeyType: apikeys.APIKeyTypeUser,
 					Status: apikeys.APIKeyStatusActive, CreatedAt: time.Now(),
 				})

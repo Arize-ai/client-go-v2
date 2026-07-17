@@ -7,7 +7,7 @@ type (
 	Evaluator = generated.Evaluator
 
 	// EvaluatorList is the cursor-paginated list response shape.
-	EvaluatorList = generated.EvaluatorList
+	EvaluatorList = generated.ListEvaluatorsResponse
 
 	// EvaluatorWithVersion is an evaluator together with one of its versions
 	// (the latest, or a specific version when GetRequest.VersionID is set).
@@ -20,7 +20,7 @@ type (
 	EvaluatorVersion = generated.EvaluatorVersion
 
 	// EvaluatorVersionList is the cursor-paginated version list response shape.
-	EvaluatorVersionList = generated.EvaluatorVersionList
+	EvaluatorVersionList = generated.ListEvaluatorVersionsResponse
 
 	// EvaluatorVersionTemplate is the template (LLM-based) variant of an
 	// EvaluatorVersion, returned by EvaluatorVersion.AsEvaluatorVersionTemplate.
@@ -42,7 +42,7 @@ type (
 	// accessible via the REST API.
 	EvaluatorVersionRemote = generated.EvaluatorVersionRemote
 
-	// EvaluatorType is the evaluator kind: template, code, harness, or remote.
+	// EvaluatorType is the evaluator kind: TEMPLATE, CODE, HARNESS, or REMOTE.
 	EvaluatorType = generated.EvaluatorType
 
 	// TemplateConfig is the configuration for a template (LLM-based)
@@ -84,13 +84,13 @@ type (
 
 const (
 	// EvaluatorTypeTemplate is a template (LLM-based) evaluator.
-	EvaluatorTypeTemplate EvaluatorType = generated.EvaluatorTypeTemplate
+	EvaluatorTypeTemplate EvaluatorType = generated.EvaluatorTypeTEMPLATE
 	// EvaluatorTypeCode is a code (managed built-in or custom Python) evaluator.
-	EvaluatorTypeCode EvaluatorType = generated.EvaluatorTypeCode
+	EvaluatorTypeCode EvaluatorType = generated.EvaluatorTypeCODE
 	// EvaluatorTypeHarness is a harness evaluator.
-	EvaluatorTypeHarness EvaluatorType = generated.EvaluatorTypeHarness
+	EvaluatorTypeHarness EvaluatorType = generated.EvaluatorTypeHARNESS
 	// EvaluatorTypeRemote is a remote evaluator.
-	EvaluatorTypeRemote EvaluatorType = generated.EvaluatorTypeRemote
+	EvaluatorTypeRemote EvaluatorType = generated.EvaluatorTypeREMOTE
 )
 
 // VersionConfig is the configuration payload for a new evaluator version,

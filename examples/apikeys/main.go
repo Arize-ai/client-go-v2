@@ -46,7 +46,7 @@ func listAPIKeys(ctx context.Context, client *arize.Client) {
 
 // createAPIKey returns the only response that ever contains the plaintext
 // Key — store it immediately, you cannot retrieve it later.
-func createAPIKey(ctx context.Context, client *arize.Client, name string) *apikeys.APIKeyCreated {
+func createAPIKey(ctx context.Context, client *arize.Client, name string) *apikeys.APIKey {
 	created, err := client.APIKeys.Create(ctx, apikeys.CreateRequest{
 		Name:      name,
 		ExpiresAt: time.Now().Add(30 * 24 * time.Hour),

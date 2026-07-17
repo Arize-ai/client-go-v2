@@ -8,7 +8,7 @@ type (
 	AIIntegration = generated.AiIntegration
 
 	// AIIntegrationList is the cursor-paginated list response shape.
-	AIIntegrationList = generated.AiIntegrationList
+	AIIntegrationList = generated.ListAiIntegrationsResponse
 
 	// AIIntegrationProvider is the LLM provider for an integration.
 	AIIntegrationProvider = generated.AiIntegrationProvider
@@ -35,18 +35,18 @@ type (
 )
 
 const (
-	AIIntegrationProviderOpenAI      AIIntegrationProvider = generated.AiIntegrationProviderOpenAI
-	AIIntegrationProviderAzureOpenAI AIIntegrationProvider = generated.AiIntegrationProviderAzureOpenAI
-	AIIntegrationProviderAWSBedrock  AIIntegrationProvider = generated.AiIntegrationProviderAwsBedrock
-	AIIntegrationProviderVertexAI    AIIntegrationProvider = generated.AiIntegrationProviderVertexAI
-	AIIntegrationProviderAnthropic   AIIntegrationProvider = generated.AiIntegrationProviderAnthropic
-	AIIntegrationProviderCustom      AIIntegrationProvider = generated.AiIntegrationProviderCustom
-	AIIntegrationProviderNvidiaNim   AIIntegrationProvider = generated.AiIntegrationProviderNvidiaNim
-	AIIntegrationProviderGemini      AIIntegrationProvider = generated.AiIntegrationProviderGemini
+	AIIntegrationProviderOpenAI      AIIntegrationProvider = generated.AiIntegrationProviderOPENAI
+	AIIntegrationProviderAzureOpenAI AIIntegrationProvider = generated.AiIntegrationProviderAZUREOPENAI
+	AIIntegrationProviderAWSBedrock  AIIntegrationProvider = generated.AiIntegrationProviderAWSBEDROCK
+	AIIntegrationProviderVertexAI    AIIntegrationProvider = generated.AiIntegrationProviderVERTEXAI
+	AIIntegrationProviderAnthropic   AIIntegrationProvider = generated.AiIntegrationProviderANTHROPIC
+	AIIntegrationProviderCustom      AIIntegrationProvider = generated.AiIntegrationProviderCUSTOM
+	AIIntegrationProviderNvidiaNim   AIIntegrationProvider = generated.AiIntegrationProviderNVIDIANIM
+	AIIntegrationProviderGemini      AIIntegrationProvider = generated.AiIntegrationProviderGEMINI
 
-	AIIntegrationAuthTypeDefault          AIIntegrationAuthType = generated.AiIntegrationAuthTypeDefault
-	AIIntegrationAuthTypeProxyWithHeaders AIIntegrationAuthType = generated.AiIntegrationAuthTypeProxyWithHeaders
-	AIIntegrationAuthTypeBearerToken      AIIntegrationAuthType = generated.AiIntegrationAuthTypeBearerToken
+	AIIntegrationAuthTypeDefault          AIIntegrationAuthType = generated.AiIntegrationAuthTypeDEFAULT
+	AIIntegrationAuthTypeProxyWithHeaders AIIntegrationAuthType = generated.AiIntegrationAuthTypePROXYWITHHEADERS
+	AIIntegrationAuthTypeBearerToken      AIIntegrationAuthType = generated.AiIntegrationAuthTypeBEARERTOKEN
 )
 
 // ListRequest is the request shape for Client.List.

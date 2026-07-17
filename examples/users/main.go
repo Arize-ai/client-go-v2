@@ -101,7 +101,7 @@ func getUser(ctx context.Context, client *arize.Client, userOrEmail string) {
 	}
 }
 
-// createUser invites a new account user with the predefined "member" role.
+// createUser invites a new account user with the predefined "MEMBER" role.
 func createUser(ctx context.Context, client *arize.Client, name, email string) *users.User {
 	user, err := client.Users.Create(ctx, users.CreateRequest{
 		Name:       name,

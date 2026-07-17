@@ -20,11 +20,6 @@ type wireResourceRestrictionCreate struct {
 	ResourceID string `json:"resource_id"`
 }
 
-// wireResourceRestrictionResponse mirrors the API JSON response envelope.
-type wireResourceRestrictionResponse struct {
-	ResourceRestriction wireResourceRestriction `json:"resource_restriction"`
-}
-
 type wireResourceRestriction struct {
 	ResourceID   string    `json:"resource_id"`
 	ResourceType string    `json:"resource_type"`
@@ -137,12 +132,10 @@ func TestResourceRestrictions(t *testing.T) {
 				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(200)
-				json.NewEncoder(w).Encode(wireResourceRestrictionResponse{
-					ResourceRestriction: wireResourceRestriction{
-						ResourceID:   "proj-1",
-						ResourceType: "PROJECT",
-						CreatedAt:    time.Now(),
-					},
+				json.NewEncoder(w).Encode(wireResourceRestriction{
+					ResourceID:   "proj-1",
+					ResourceType: "PROJECT",
+					CreatedAt:    time.Now(),
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {

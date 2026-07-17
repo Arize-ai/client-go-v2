@@ -36,13 +36,13 @@ func (c *Client) List(
 		}
 		orgID = resolved
 	}
-	params := generated.SpacesListParams{
+	params := generated.ListSpacesParams{
 		OrgId:  optfields.PtrIfSet(orgID),
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.SpacesListWithResponse(ctx, &params)
+	resp, err := c.gen.ListSpacesWithResponse(ctx, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (c *Client) Get(
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.SpacesGetWithResponse(ctx, id)
+	resp, err := c.gen.GetSpaceWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -83,12 +83,12 @@ func (c *Client) Create(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.SpacesCreateJSONRequestBody{
+	body := generated.CreateSpaceJSONRequestBody{
 		Name:           req.Name,
 		OrganizationId: orgID,
 		Description:    optfields.PtrIfSet(req.Description),
 	}
-	resp, err := c.gen.SpacesCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateSpaceWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -109,11 +109,11 @@ func (c *Client) Update(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.SpacesUpdateJSONRequestBody{
+	body := generated.UpdateSpaceJSONRequestBody{
 		Name:        req.Name,
 		Description: req.Description,
 	}
-	resp, err := c.gen.SpacesUpdateWithResponse(ctx, id, body)
+	resp, err := c.gen.UpdateSpaceWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func (c *Client) Delete(
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.SpacesDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteSpaceWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -149,16 +149,16 @@ func (c *Client) AddUser(
 	ctx context.Context,
 	req AddUserRequest,
 ) (*SpaceMembership, error) {
-	prerelease.Warn("spaces.add_user", prerelease.Alpha)
+	prerelease.Warn("spaces.add_user", prerelease.Beta)
 	id, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	body := generated.SpacesAddUserJSONRequestBody{
+	body := generated.AddSpaceUserJSONRequestBody{
 		UserId: req.UserID,
 		Role:   req.Role,
 	}
-	resp, err := c.gen.SpacesAddUserWithResponse(ctx, id, body)
+	resp, err := c.gen.AddSpaceUserWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -174,12 +174,12 @@ func (c *Client) RemoveUser(
 	ctx context.Context,
 	req RemoveUserRequest,
 ) error {
-	prerelease.Warn("spaces.remove_user", prerelease.Alpha)
+	prerelease.Warn("spaces.remove_user", prerelease.Beta)
 	id, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.SpacesRemoveUserWithResponse(ctx, id, req.UserID)
+	resp, err := c.gen.RemoveSpaceUserWithResponse(ctx, id, req.UserID)
 	if err != nil {
 		return err
 	}

@@ -6,29 +6,28 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // wire shapes so callers can construct and assert on them without importing
 // internal/generated.
 type (
-	Organization                = generated.Organization
-	OrganizationList            = generated.OrganizationList
-	OrganizationMembership      = generated.OrganizationMembership
-	OrganizationMembershipInput = generated.OrganizationMembershipInput
-	OrganizationRole            = generated.OrganizationRole
-	OrganizationRoleAssignment  = generated.OrganizationRoleAssignment
-	PredefinedOrgRole           = generated.OrganizationPredefinedRoleAssignment
-	CustomOrgRole               = generated.OrganizationCustomRoleAssignment
-	RoleAssignmentType          = generated.OrganizationRoleAssignmentType
+	Organization               = generated.Organization
+	OrganizationList           = generated.ListOrganizationsResponse
+	OrganizationMembership     = generated.OrganizationMembership
+	OrganizationRole           = generated.OrganizationRole
+	OrganizationRoleAssignment = generated.OrganizationRoleAssignment
+	PredefinedOrgRole          = generated.OrganizationPredefinedRoleAssignment
+	CustomOrgRole              = generated.OrganizationCustomRoleAssignment
+	RoleAssignmentType         = generated.OrganizationRoleAssignmentType
 )
 
 // OrganizationRole enum values.
 const (
-	OrganizationRoleAdmin     = generated.OrganizationRoleAdmin
-	OrganizationRoleMember    = generated.OrganizationRoleMember
-	OrganizationRoleReadOnly  = generated.OrganizationRoleReadOnly
-	OrganizationRoleAnnotator = generated.OrganizationRoleAnnotator
+	OrganizationRoleAdmin     = generated.OrganizationRoleADMIN
+	OrganizationRoleMember    = generated.OrganizationRoleMEMBER
+	OrganizationRoleReadOnly  = generated.OrganizationRoleREADONLY
+	OrganizationRoleAnnotator = generated.OrganizationRoleANNOTATOR
 )
 
 // Role assignment discriminator values.
 const (
-	RoleAssignmentTypePredefined = generated.OrganizationRoleAssignmentTypePredefined
-	RoleAssignmentTypeCustom     = generated.OrganizationRoleAssignmentTypeCustom
+	RoleAssignmentTypePredefined = generated.OrganizationRoleAssignmentTypePREDEFINED
+	RoleAssignmentTypeCustom     = generated.OrganizationRoleAssignmentTypeCUSTOM
 )
 
 // GetRequest selects a single organization.

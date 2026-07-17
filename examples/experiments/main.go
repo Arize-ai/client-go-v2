@@ -122,7 +122,7 @@ func getExperiment(ctx context.Context, client *arize.Client, experiment, datase
 func appendRuns(ctx context.Context, client *arize.Client, experimentID string) {
 	result, err := client.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
 		ExperimentID: experimentID,
-		ExperimentRuns: []experiments.ExperimentRunCreate{
+		ExperimentRuns: []experiments.ExperimentRunInput{
 			{ExampleId: "example-1", Output: "An AI observability platform."},
 			{ExampleId: "example-2", Output: "A unit of work in a trace."},
 		},

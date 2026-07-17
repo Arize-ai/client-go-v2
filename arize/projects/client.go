@@ -28,13 +28,13 @@ func (c *Client) List(
 	req ListRequest,
 ) (*ProjectList, error) {
 	prerelease.Warn("projects.list", prerelease.Beta)
-	params := generated.ProjectsListParams{
+	params := generated.ListProjectsParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
-	resp, err := c.gen.ProjectsListWithResponse(ctx, &params)
+	resp, err := c.gen.ListProjectsWithResponse(ctx, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (c *Client) Get(
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.ProjectsGetWithResponse(ctx, id)
+	resp, err := c.gen.GetProjectWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -75,11 +75,11 @@ func (c *Client) Create(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.ProjectCreate{
+	body := generated.CreateProjectRequest{
 		Name:    req.Name,
 		SpaceId: spaceID,
 	}
-	resp, err := c.gen.ProjectsCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateProjectWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func (c *Client) Delete(
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.ProjectsDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteProjectWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -117,10 +117,10 @@ func (c *Client) Update(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.ProjectUpdate{
+	body := generated.UpdateProjectRequest{
 		Name: req.Name,
 	}
-	resp, err := c.gen.ProjectsUpdateWithResponse(ctx, projectID, body)
+	resp, err := c.gen.UpdateProjectWithResponse(ctx, projectID, body)
 	if err != nil {
 		return nil, err
 	}

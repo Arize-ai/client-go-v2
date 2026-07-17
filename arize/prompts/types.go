@@ -8,12 +8,9 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 type (
 	Prompt            = generated.Prompt
 	PromptWithVersion = generated.PromptWithVersion
-	PromptList        = generated.PromptList
+	PromptList        = generated.ListPromptsResponse
 	PromptVersion     = generated.PromptVersion
-	PromptVersionList = generated.PromptVersionList
-
-	// PromptVersionLabels is the set of labels currently on a prompt version.
-	PromptVersionLabels = generated.PromptVersionLabelsResponse
+	PromptVersionList = generated.ListPromptVersionsResponse
 
 	// PromptVersionCreate is the initial/new version configuration supplied when
 	// creating a prompt.
@@ -30,33 +27,33 @@ type (
 
 	// InputVariableFormat declares how prompt variables are interpolated.
 	InputVariableFormat = generated.InputVariableFormat
-	// LlmProvider is the LLM provider (e.g. "openai").
+	// LlmProvider is the LLM provider (e.g. "OPEN_AI").
 	LlmProvider = generated.LlmProvider
 )
 
 // MessageRole enum values.
 const (
-	MessageRoleSystem    = generated.MessageRoleSystem
-	MessageRoleUser      = generated.MessageRoleUser
-	MessageRoleAssistant = generated.MessageRoleAssistant
-	MessageRoleTool      = generated.MessageRoleTool
+	MessageRoleSystem    = generated.MessageRoleSYSTEM
+	MessageRoleUser      = generated.MessageRoleUSER
+	MessageRoleAssistant = generated.MessageRoleASSISTANT
+	MessageRoleTool      = generated.MessageRoleTOOL
 )
 
 // InputVariableFormat enum values.
 const (
-	InputVariableFormatFString  = generated.InputVariableFormatFString
-	InputVariableFormatMustache = generated.InputVariableFormatMustache
-	InputVariableFormatNone     = generated.InputVariableFormatNone
+	InputVariableFormatFString  = generated.InputVariableFormatFSTRING
+	InputVariableFormatMustache = generated.InputVariableFormatMUSTACHE
+	InputVariableFormatNone     = generated.InputVariableFormatNONE
 )
 
 // LlmProvider enum values.
 const (
-	LlmProviderAnthropic   = generated.LlmProviderAnthropic
-	LlmProviderAwsBedrock  = generated.LlmProviderAwsBedrock
-	LlmProviderAzureOpenAi = generated.LlmProviderAzureOpenAi
-	LlmProviderCustom      = generated.LlmProviderCustom
-	LlmProviderOpenAi      = generated.LlmProviderOpenAi
-	LlmProviderVertexAi    = generated.LlmProviderVertexAi
+	LlmProviderAnthropic   = generated.LlmProviderANTHROPIC
+	LlmProviderAwsBedrock  = generated.LlmProviderAWSBEDROCK
+	LlmProviderAzureOpenAi = generated.LlmProviderAZUREOPENAI
+	LlmProviderCustom      = generated.LlmProviderCUSTOM
+	LlmProviderOpenAi      = generated.LlmProviderOPENAI
+	LlmProviderVertexAi    = generated.LlmProviderVERTEXAI
 )
 
 // ListRequest holds optional filters for listing prompts.
@@ -156,7 +153,7 @@ type CreateVersionRequest struct {
 	Space string
 	// CommitMessage is the version's commit message. Required.
 	CommitMessage string
-	// Provider is the LLM provider (e.g. "openai"). Required.
+	// Provider is the LLM provider (e.g. "OPEN_AI"). Required.
 	Provider LlmProvider
 	// Messages is the prompt messages list. Required.
 	Messages []LLMMessage

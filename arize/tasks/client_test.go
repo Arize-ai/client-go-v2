@@ -199,8 +199,8 @@ func TestTasks(t *testing.T) {
 				if got := q.Get("name"); got != "eval" {
 					t.Errorf("name query: want eval, got %q", got)
 				}
-				if got := q.Get("type"); got != "template_evaluation" {
-					t.Errorf("type query: want template_evaluation, got %q", got)
+				if got := q.Get("type"); got != "TEMPLATE_EVALUATION" {
+					t.Errorf("type query: want TEMPLATE_EVALUATION, got %q", got)
 				}
 				if got := q.Get("limit"); got != "25" {
 					t.Errorf("limit query: want 25, got %q", got)
@@ -313,8 +313,8 @@ func TestTasks(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Fatalf("decode body: %v", err)
 				}
-				if body.Type != "template_evaluation" {
-					t.Errorf("body type: want template_evaluation, got %q", body.Type)
+				if body.Type != "TEMPLATE_EVALUATION" {
+					t.Errorf("body type: want TEMPLATE_EVALUATION, got %q", body.Type)
 				}
 				if body.Name != "eval-task" {
 					t.Errorf("body name: want eval-task, got %q", body.Name)
@@ -378,7 +378,7 @@ func TestTasks(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Fatalf("decode body: %v", err)
 				}
-				if body.Type != "code_evaluation" {
+				if body.Type != "CODE_EVALUATION" {
 					t.Errorf("body type: want code_evaluation, got %q", body.Type)
 				}
 				if body.DatasetId == nil || *body.DatasetId != datasetID("ds-1") {
@@ -422,7 +422,7 @@ func TestTasks(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Fatalf("decode body: %v", err)
 				}
-				if body.Type != "run_experiment" {
+				if body.Type != "RUN_EXPERIMENT" {
 					t.Errorf("body type: want run_experiment, got %q", body.Type)
 				}
 				if body.Name != "exp-task" {
@@ -431,8 +431,8 @@ func TestTasks(t *testing.T) {
 				if body.DatasetId != datasetID("ds-1") {
 					t.Errorf("body dataset_id: want %q, got %q", datasetID("ds-1"), body.DatasetId)
 				}
-				if got := body.RunConfiguration["experiment_type"]; got != "template_evaluation" {
-					t.Errorf("run_configuration experiment_type: want template_evaluation, got %v", got)
+				if got := body.RunConfiguration["experiment_type"]; got != "TEMPLATE_EVALUATION" {
+					t.Errorf("run_configuration experiment_type: want TEMPLATE_EVALUATION, got %v", got)
 				}
 				if got := body.RunConfiguration["template"]; got != "Is {{output}} correct?" {
 					t.Errorf("run_configuration template: got %v", got)
@@ -520,8 +520,8 @@ func TestTasks(t *testing.T) {
 					if body.Name == nil || *body.Name != "renamed" {
 						t.Errorf("body name: want renamed, got %v", body.Name)
 					}
-					if got := body.RunConfiguration["experiment_type"]; got != "template_evaluation" {
-						t.Errorf("run_configuration experiment_type: want template_evaluation, got %v", got)
+					if got := body.RunConfiguration["experiment_type"]; got != "TEMPLATE_EVALUATION" {
+						t.Errorf("run_configuration experiment_type: want TEMPLATE_EVALUATION, got %v", got)
 					}
 					serveTask(t, w, tID, tasks.TaskTypeRunExperiment)
 				default:
@@ -825,7 +825,7 @@ func TestTasks(t *testing.T) {
 					t.Errorf("unexpected path: %s", r.URL.Path)
 				}
 				q := r.URL.Query()
-				if got := q.Get("status"); got != "completed" {
+				if got := q.Get("status"); got != "COMPLETED" {
 					t.Errorf("status query: want completed, got %q", got)
 				}
 				if got := q.Get("limit"); got != "50" {

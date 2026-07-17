@@ -404,7 +404,7 @@ func TestFindUserID(t *testing.T) {
 						t.Errorf("email query = %q, want Alice@Example.com", got)
 					}
 					w.Header().Set("Content-Type", "application/json")
-					_, _ = w.Write([]byte(`{"users":[{"id":"` + uid + `","name":"Alice","email":"alice@example.com","created_at":"2026-01-01T00:00:00Z","status":"active","is_developer":true,"role":{"type":"predefined","name":"member"}}],"pagination":{"has_more":false}}`))
+					_, _ = w.Write([]byte(`{"users":[{"id":"` + uid + `","name":"Alice","email":"alice@example.com","created_at":"2026-01-01T00:00:00Z","status":"ACTIVE","is_developer":true,"role":{"type":"PREDEFINED","name":"MEMBER"}}],"pagination":{"has_more":false}}`))
 				})
 			},
 			wantID: b64("usr-real"),

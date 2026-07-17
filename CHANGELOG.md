@@ -1,5 +1,55 @@
 # Changelog
 
+## [0.17.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.16.0...arize-go-sdk-v2/v0.17.0) (2026-07-17)
+
+> **Minor release.** The v2 REST API standardization ([#78907](https://github.com/Arize-ai/arize/pull/78907)) is technically breaking, but **only affects endpoints/methods in `alpha` or `beta`** — all gated behind the pre-release opt-in and documented with a warning. **No stable surface changes.**
+
+### ⚠ BREAKING CHANGES (pre-release only)
+
+* **enums:** standardize all enum values to `SCREAMING_SNAKE_CASE` — AI integrations, prompts, evaluators, tasks, orgs, spaces, users, API keys, and roles ([#78718](https://github.com/Arize-ai/arize/issues/78718), [#78720](https://github.com/Arize-ai/arize/issues/78720), [#78721](https://github.com/Arize-ai/arize/issues/78721), [#78722](https://github.com/Arize-ai/arize/issues/78722)) ([b17b78d](https://github.com/Arize-ai/arize/commit/b17b78d6a68bf8a6e0736df251a73a9dc0c33cab))
+* **types:** apply type-naming convention across dataset, org/space/user, access-control, and API-key/audit-log schemas ([#78740](https://github.com/Arize-ai/arize/issues/78740), [#79098](https://github.com/Arize-ai/arize/issues/79098), [#79101](https://github.com/Arize-ai/arize/issues/79101), [#79099](https://github.com/Arize-ai/arize/issues/79099)) ([b17b78d](https://github.com/Arize-ai/arize/commit/b17b78d6a68bf8a6e0736df251a73a9dc0c33cab))
+* **openapi:** enforce verb-first `operationId` naming (`*ListResponse` → `List*Response`), incl. annotation-config & evaluator-version request schemas ([#79270](https://github.com/Arize-ai/arize/issues/79270), [#79433](https://github.com/Arize-ai/arize/issues/79433)) ([b17b78d](https://github.com/Arize-ai/arize/commit/b17b78d6a68bf8a6e0736df251a73a9dc0c33cab))
+* **prompts:** `SetVersionLabels` now returns the full `PromptVersion` ([#79278](https://github.com/Arize-ai/arize/issues/79278)) ([b17b78d](https://github.com/Arize-ai/arize/commit/b17b78d6a68bf8a6e0736df251a73a9dc0c33cab))
+
+### 🎁 New Features
+
+* **api:** return `404` for list endpoints when the scoped resource is missing or inaccessible ([#79279](https://github.com/Arize-ai/arize/issues/79279)) ([b17b78d](https://github.com/Arize-ai/arize/commit/b17b78d6a68bf8a6e0736df251a73a9dc0c33cab))
+* **openapi:** enforce naming conventions and extract shared nested schemas ([#79103](https://github.com/Arize-ai/arize/issues/79103)) ([b17b78d](https://github.com/Arize-ai/arize/commit/b17b78d6a68bf8a6e0736df251a73a9dc0c33cab))
+* **spectral:** enforce lockstep naming and strict nested-schema lint rules ([#79280](https://github.com/Arize-ai/arize/issues/79280)) ([b17b78d](https://github.com/Arize-ai/arize/commit/b17b78d6a68bf8a6e0736df251a73a9dc0c33cab))
+
+### 🐛 Bug Fixes
+
+* **ci:** fix the OpenAPI lint check ([#78913](https://github.com/Arize-ai/arize/issues/78913)) ([b17b78d](https://github.com/Arize-ai/arize/commit/b17b78d6a68bf8a6e0736df251a73a9dc0c33cab))
+* **openapi:** resolve follow-up gaps from the REST API audit ([#79440](https://github.com/Arize-ai/arize/issues/79440)) ([b17b78d](https://github.com/Arize-ai/arize/commit/b17b78d6a68bf8a6e0736df251a73a9dc0c33cab))
+
+### ❔ Miscellaneous Chores
+
+* promote pre-release stage from `alpha` to `beta` ([#78707](https://github.com/Arize-ai/arize/issues/78707)) ([b17b78d](https://github.com/Arize-ai/arize/commit/b17b78d6a68bf8a6e0736df251a73a9dc0c33cab))
+
+---
+
+## Migration notes — pre-release (`alpha`/`beta`) consumers only
+
+The renames flow from the OpenAPI spec into the generated v2 client. In Go, **enum values are exposed as typed constants whose exported names are unchanged** (e.g. `apikeys.APIKeyStatusRevoked`, `users.UserRoleMember`, `tasks.TaskTypeTemplateEvaluation`) — the `SCREAMING_SNAKE_CASE` recasing happens in the underlying wire values, so code using the exported constants needs **no change**. **Public client method names are also unchanged** (e.g. `Users.Create`, `Tasks.List`, `Prompts.SetVersionLabels`). The same is true for `*List` type aliases (e.g. `datasets.DatasetList`, `users.UserList`) — the exported names stay; only the underlying generated struct was renamed to `List*Response`.
+
+What consumers actually need to change:
+
+**Exported types renamed / split:**
+
+| Before | After |
+|---|---|
+| `apikeys.APIKeyCreated` | split into `apikeys.APIKey` (create/refresh result) and `apikeys.APIKeyRedacted` (list result) |
+| `datasets.DatasetExampleCreate` | `datasets.CreateDatasetExampleInput` |
+| `experiments.ExperimentRunCreate` | `experiments.ExperimentRunInput` |
+| `prompts.PromptVersionLabels` | removed — see return-type change below |
+| `organizations.OrganizationMembershipInput` | removed |
+
+**Return-type change:** `Prompts.SetVersionLabels` now returns `*prompts.PromptVersion` (previously `*prompts.PromptVersionLabels`).
+
+**Behavior change:** list endpoints now return `404` when the scoped resource is missing or inaccessible.
+
+> ℹ️ At the wire level the API key `status` value changed `"deleted"` → `"REVOKED"`, but the exported constant `apikeys.APIKeyStatusRevoked` is unchanged, so typed-constant users are unaffected.
+
 ## [0.16.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.15.0...arize-go-sdk-v2/v0.16.0) (2026-07-10)
 
 

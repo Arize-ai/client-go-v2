@@ -23,8 +23,8 @@ func New(gen *generated.ClientWithResponses) *Client {
 // newest first. The caller must be an account admin and the account must have
 // audit logging enabled.
 func (c *Client) List(ctx context.Context, req ListRequest) (*AuditLogList, error) {
-	prerelease.Warn("audit_logs.list", prerelease.Alpha)
-	params := &generated.AuditLogsListParams{
+	prerelease.Warn("audit_logs.list", prerelease.Beta)
+	params := &generated.ListAuditLogsParams{
 		StartTime:     optfields.PtrIfSet(req.StartTime),
 		EndTime:       optfields.PtrIfSet(req.EndTime),
 		UserId:        optfields.PtrIfSet(req.UserID),
@@ -32,7 +32,7 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*AuditLogList, erro
 		Limit:         optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor:        optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.AuditLogsListWithResponse(ctx, params)
+	resp, err := c.gen.ListAuditLogsWithResponse(ctx, params)
 	if err != nil {
 		return nil, err
 	}

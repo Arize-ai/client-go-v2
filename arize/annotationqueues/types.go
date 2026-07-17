@@ -7,12 +7,12 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // internal/generated.
 type (
 	AnnotationQueue                     = generated.AnnotationQueue
-	AnnotationQueueList                 = generated.AnnotationQueueList
+	AnnotationQueueList                 = generated.ListAnnotationQueuesResponse
 	AnnotationQueueRecord               = generated.AnnotationQueueRecord
-	AnnotationQueueRecordList           = generated.AnnotationQueueRecordList
-	AnnotationQueueRecordCreate         = generated.AnnotationQueueRecordCreate
-	AnnotationQueueRecordAnnotateResult = generated.AnnotationQueueRecordAnnotateResult
-	AnnotationQueueRecordAssignResult   = generated.AnnotationQueueRecordAssignResult
+	AnnotationQueueRecordList           = generated.ListAnnotationQueueRecordsResponse
+	AnnotationQueueRecordCreate         = generated.CreateAnnotationQueueRecordResponse
+	AnnotationQueueRecordAnnotateResult = generated.AnnotateAnnotationQueueRecordResponse
+	AnnotationQueueRecordAssignResult   = generated.AssignAnnotationQueueRecordResponse
 
 	// Email is an annotator or assignee email address.
 	Email = generated.Email
@@ -36,15 +36,15 @@ type (
 
 const (
 	// AssignmentMethodAll assigns every record to every annotator.
-	AssignmentMethodAll AssignmentMethod = generated.AssignmentMethodAll
+	AssignmentMethodAll AssignmentMethod = generated.AssignmentMethodALL
 	// AssignmentMethodRandom assigns each record randomly to one annotator.
-	AssignmentMethodRandom AssignmentMethod = generated.AssignmentMethodRandom
+	AssignmentMethodRandom AssignmentMethod = generated.AssignmentMethodRANDOM
 )
 
 // NewExampleRecordSource builds a record source that adds dataset examples to a
 // queue, setting the record-type discriminator for the caller.
 func NewExampleRecordSource(in AnnotationQueueExampleRecordInput) (AnnotationQueueRecordInput, error) {
-	in.RecordType = generated.AnnotationQueueExampleRecordInputRecordTypeExample
+	in.RecordType = generated.AnnotationQueueExampleRecordInputRecordTypeEXAMPLE
 	var src AnnotationQueueRecordInput
 	if err := src.FromAnnotationQueueExampleRecordInput(in); err != nil {
 		return AnnotationQueueRecordInput{}, err
@@ -55,7 +55,7 @@ func NewExampleRecordSource(in AnnotationQueueExampleRecordInput) (AnnotationQue
 // NewSpanRecordSource builds a record source that adds spans to a queue, setting
 // the record-type discriminator for the caller.
 func NewSpanRecordSource(in AnnotationQueueSpanRecordInput) (AnnotationQueueRecordInput, error) {
-	in.RecordType = generated.AnnotationQueueSpanRecordInputRecordTypeSpan
+	in.RecordType = generated.AnnotationQueueSpanRecordInputRecordTypeSPAN
 	var src AnnotationQueueRecordInput
 	if err := src.FromAnnotationQueueSpanRecordInput(in); err != nil {
 		return AnnotationQueueRecordInput{}, err

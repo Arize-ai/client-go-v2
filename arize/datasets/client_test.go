@@ -267,7 +267,7 @@ func TestDatasets(t *testing.T) {
 				return c.Datasets.Create(ctx, datasets.CreateRequest{
 					Space: spaceID("space-1"),
 					Name:  "new-ds",
-					Examples: []datasets.DatasetExampleCreate{
+					Examples: []datasets.CreateDatasetExampleInput{
 						{"input": "hello"},
 					},
 				})
@@ -314,7 +314,7 @@ func TestDatasets(t *testing.T) {
 				return c.Datasets.Create(ctx, datasets.CreateRequest{
 					Space: "demo",
 					Name:  "new-ds",
-					Examples: []datasets.DatasetExampleCreate{
+					Examples: []datasets.CreateDatasetExampleInput{
 						{"input": "hello"},
 					},
 				})
@@ -501,7 +501,7 @@ func TestDatasets(t *testing.T) {
 				return c.Datasets.AppendExamples(ctx, datasets.AppendExamplesRequest{
 					Dataset:          dsID,
 					DatasetVersionID: "v-1",
-					Examples: []datasets.DatasetExampleCreate{
+					Examples: []datasets.CreateDatasetExampleInput{
 						{"input": "hello", "output": "world"},
 					},
 				})
@@ -528,7 +528,7 @@ func TestDatasets(t *testing.T) {
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Datasets.AppendExamples(ctx, datasets.AppendExamplesRequest{
 					Dataset:  datasetID("ds-1"),
-					Examples: []datasets.DatasetExampleCreate{{"input": "x"}},
+					Examples: []datasets.CreateDatasetExampleInput{{"input": "x"}},
 				})
 			},
 			check: func(t *testing.T, got any, err error) {

@@ -394,14 +394,14 @@ func TestPrompts(t *testing.T) {
 				if body.CommitMessage != "v2" {
 					t.Errorf("body commit_message: want v2, got %q", body.CommitMessage)
 				}
-				if body.Provider != "open_ai" {
+				if body.Provider != "OPEN_AI" {
 					t.Errorf("body provider: want open_ai, got %q", body.Provider)
 				}
 				if body.Model == nil || *body.Model != "gpt-4" {
 					t.Errorf("body model: want pointer to gpt-4, got %v", body.Model)
 				}
-				if body.InputVariableFormat == nil || *body.InputVariableFormat != "f_string" {
-					t.Errorf("body input_variable_format: want pointer to f_string, got %v", body.InputVariableFormat)
+				if body.InputVariableFormat == nil || *body.InputVariableFormat != "F_STRING" {
+					t.Errorf("body input_variable_format: want pointer to F_STRING, got %v", body.InputVariableFormat)
 				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(201)
@@ -485,7 +485,7 @@ func TestPrompts(t *testing.T) {
 					t.Errorf("body labels: want [production stable], got %v", body.Labels)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(prompts.PromptVersionLabels{Labels: []string{"production", "stable"}})
+				json.NewEncoder(w).Encode(prompts.PromptVersion{Id: "pv-1", Labels: &[]string{"production", "stable"}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Prompts.SetVersionLabels(ctx, prompts.SetVersionLabelsRequest{
@@ -497,9 +497,14 @@ func TestPrompts(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*prompts.PromptVersionLabels)
-				if len(resp.Labels) != 2 || resp.Labels[0] != "production" || resp.Labels[1] != "stable" {
-					t.Errorf("returned labels: want [production stable], got %v", resp.Labels)
+				resp := got.(*prompts.PromptVersion)
+				if resp.Id != "pv-1" {
+					t.Errorf("unexpected id: %s", resp.Id)
+				}
+				if resp.Labels == nil || len(*resp.Labels) != 2 {
+					t.Errorf("returned labels: want 2, got %v", resp.Labels)
+				} else if (*resp.Labels)[0] != "production" || (*resp.Labels)[1] != "stable" {
+					t.Errorf("returned labels: want [production stable], got %v", *resp.Labels)
 				}
 			},
 		},

@@ -6,7 +6,7 @@ type (
 	RoleBinding = generated.RoleBinding
 
 	// RoleBindingList is the cursor-paginated list response shape.
-	RoleBindingList = generated.RoleBindingList
+	RoleBindingList = generated.ListRoleBindingsResponse
 
 	// RoleBindingResourceType is the resource type for a role binding (SPACE or PROJECT).
 	RoleBindingResourceType = generated.RoleBindingResourceType

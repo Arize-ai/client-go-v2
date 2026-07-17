@@ -86,7 +86,7 @@ func updateOrganization(ctx context.Context, client *arize.Client, orgID, newNam
 	fmt.Printf("renamed organization %s to %s\n", org.Id, org.Name)
 }
 
-// addOrganizationUser adds a user with the predefined "member" role. Custom
+// addOrganizationUser adds a user with the predefined "MEMBER" role. Custom
 // role assignments are not yet supported by the server.
 func addOrganizationUser(ctx context.Context, client *arize.Client, orgID, userID string) {
 	m, err := client.Organizations.AddUser(ctx, organizations.AddUserRequest{

@@ -7,7 +7,7 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // internal/generated.
 type (
 	User                   = generated.User
-	UserList               = generated.UserListResponse
+	UserList               = generated.ListUsersResponse
 	UserStatus             = generated.UserStatus
 	UserRole               = generated.UserRole
 	InviteMode             = generated.InviteMode
@@ -19,29 +19,29 @@ type (
 
 // User status values.
 const (
-	UserStatusActive  = generated.UserStatusActive
-	UserStatusInvited = generated.UserStatusInvited
-	UserStatusExpired = generated.UserStatusExpired
+	UserStatusActive  = generated.UserStatusACTIVE
+	UserStatusInvited = generated.UserStatusINVITED
+	UserStatusExpired = generated.UserStatusEXPIRED
 )
 
 // Predefined account-level role names.
 const (
-	UserRoleAdmin     = generated.UserRoleAdmin
-	UserRoleMember    = generated.UserRoleMember
-	UserRoleAnnotator = generated.UserRoleAnnotator
+	UserRoleAdmin     = generated.UserRoleADMIN
+	UserRoleMember    = generated.UserRoleMEMBER
+	UserRoleAnnotator = generated.UserRoleANNOTATOR
 )
 
 // Invite modes for Client.Create.
 const (
-	InviteModeNone              = generated.InviteModeNone
-	InviteModeEmailLink         = generated.InviteModeEmailLink
-	InviteModeTemporaryPassword = generated.InviteModeTemporaryPassword
+	InviteModeNone              = generated.InviteModeNONE
+	InviteModeEmailLink         = generated.InviteModeEMAILLINK
+	InviteModeTemporaryPassword = generated.InviteModeTEMPORARYPASSWORD
 )
 
 // Role assignment discriminator values.
 const (
-	RoleAssignmentTypePredefined = generated.UserRoleAssignmentTypePredefined
-	RoleAssignmentTypeCustom     = generated.UserRoleAssignmentTypeCustom
+	RoleAssignmentTypePredefined = generated.UserRoleAssignmentTypePREDEFINED
+	RoleAssignmentTypeCustom     = generated.UserRoleAssignmentTypeCUSTOM
 )
 
 // AssignPredefinedRole builds an account-level role assignment naming one of

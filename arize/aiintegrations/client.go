@@ -26,13 +26,13 @@ func New(gen *generated.ClientWithResponses) *Client {
 // List returns a paginated list of AI integrations. Defaults to a page size of 50.
 func (c *Client) List(ctx context.Context, req ListRequest) (*AIIntegrationList, error) {
 	prerelease.Warn("aiintegrations.list", prerelease.Alpha)
-	params := &generated.AiIntegrationsListParams{
+	params := &generated.ListAiIntegrationsParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
-	resp, err := c.gen.AiIntegrationsListWithResponse(ctx, params)
+	resp, err := c.gen.ListAiIntegrationsWithResponse(ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (c *Client) Get(ctx context.Context, req GetRequest) (*AIIntegration, error
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.AiIntegrationsGetWithResponse(ctx, id)
+	resp, err := c.gen.GetAiIntegrationWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*AIIntegration,
 	if err != nil {
 		return nil, fmt.Errorf("aiintegrations: marshal create body: %w", err)
 	}
-	resp, err := c.gen.AiIntegrationsCreateWithBodyWithResponse(ctx, "application/json", bytes.NewReader(raw))
+	resp, err := c.gen.CreateAiIntegrationWithBodyWithResponse(ctx, "application/json", bytes.NewReader(raw))
 	if err != nil {
 		return nil, err
 	}
@@ -183,7 +183,7 @@ func (c *Client) Update(ctx context.Context, req UpdateRequest) (*AIIntegration,
 	if err != nil {
 		return nil, fmt.Errorf("aiintegrations: marshal update body: %w", err)
 	}
-	resp, err := c.gen.AiIntegrationsUpdateWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(raw))
+	resp, err := c.gen.UpdateAiIntegrationWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(raw))
 	if err != nil {
 		return nil, err
 	}
@@ -200,7 +200,7 @@ func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.AiIntegrationsDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteAiIntegrationWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}

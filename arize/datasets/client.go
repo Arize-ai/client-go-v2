@@ -31,14 +31,14 @@ func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
 ) (*DatasetList, error) {
-	prerelease.Warn("datasets.list", prerelease.Alpha)
-	params := generated.DatasetsListParams{
+	prerelease.Warn("datasets.list", prerelease.Beta)
+	params := generated.ListDatasetsParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
 	params.SpaceId, params.SpaceName = resolve.ResolveSpaceFilter(req.Space)
-	resp, err := c.gen.DatasetsListWithResponse(ctx, &params)
+	resp, err := c.gen.ListDatasetsWithResponse(ctx, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -54,12 +54,12 @@ func (c *Client) Get(
 	ctx context.Context,
 	req GetRequest,
 ) (*Dataset, error) {
-	prerelease.Warn("datasets.get", prerelease.Alpha)
+	prerelease.Warn("datasets.get", prerelease.Beta)
 	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.DatasetsGetWithResponse(ctx, id)
+	resp, err := c.gen.GetDatasetWithResponse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (c *Client) Create(
 	ctx context.Context,
 	req CreateRequest,
 ) (*Dataset, error) {
-	prerelease.Warn("datasets.create", prerelease.Alpha)
+	prerelease.Warn("datasets.create", prerelease.Beta)
 	if len(req.Examples) == 0 {
 		return nil, ErrNoExamples
 	}
@@ -84,12 +84,12 @@ func (c *Client) Create(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.DatasetsCreateJSONRequestBody{
+	body := generated.CreateDatasetJSONRequestBody{
 		SpaceId:  spaceID,
 		Name:     req.Name,
 		Examples: req.Examples,
 	}
-	resp, err := c.gen.DatasetsCreateWithResponse(ctx, body)
+	resp, err := c.gen.CreateDatasetWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -110,10 +110,10 @@ func (c *Client) Update(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.DatasetsUpdateJSONRequestBody{
+	body := generated.UpdateDatasetJSONRequestBody{
 		Name: req.Name,
 	}
-	resp, err := c.gen.DatasetsUpdateWithResponse(ctx, id, body)
+	resp, err := c.gen.UpdateDatasetWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -129,12 +129,12 @@ func (c *Client) Delete(
 	ctx context.Context,
 	req DeleteRequest,
 ) error {
-	prerelease.Warn("datasets.delete", prerelease.Alpha)
+	prerelease.Warn("datasets.delete", prerelease.Beta)
 	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {
 		return err
 	}
-	resp, err := c.gen.DatasetsDeleteWithResponse(ctx, id)
+	resp, err := c.gen.DeleteDatasetWithResponse(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -148,17 +148,17 @@ func (c *Client) ListExamples(
 	ctx context.Context,
 	req ListExamplesRequest,
 ) (*DatasetExampleList, error) {
-	prerelease.Warn("datasets.list_examples", prerelease.Alpha)
+	prerelease.Warn("datasets.list_examples", prerelease.Beta)
 	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	params := generated.DatasetsExamplesListParams{
+	params := generated.ListDatasetExamplesParams{
 		Limit:            optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		DatasetVersionId: optfields.PtrIfSet(req.DatasetVersionID),
 		Cursor:           optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.DatasetsExamplesListWithResponse(ctx, id, &params)
+	resp, err := c.gen.ListDatasetExamplesWithResponse(ctx, id, &params)
 	if err != nil {
 		return nil, err
 	}
@@ -176,18 +176,18 @@ func (c *Client) AppendExamples(
 	ctx context.Context,
 	req AppendExamplesRequest,
 ) (*DatasetExamplesInserted, error) {
-	prerelease.Warn("datasets.append_examples", prerelease.Alpha)
+	prerelease.Warn("datasets.append_examples", prerelease.Beta)
 	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	params := generated.DatasetsExamplesInsertParams{
+	params := generated.InsertDatasetExamplesParams{
 		DatasetVersionId: optfields.PtrIfSet(req.DatasetVersionID),
 	}
-	body := generated.DatasetsExamplesInsertJSONRequestBody{
+	body := generated.InsertDatasetExamplesJSONRequestBody{
 		Examples: req.Examples,
 	}
-	resp, err := c.gen.DatasetsExamplesInsertWithResponse(ctx, id, &params, body)
+	resp, err := c.gen.InsertDatasetExamplesWithResponse(ctx, id, &params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -206,16 +206,16 @@ func (c *Client) DeleteExamples(
 	ctx context.Context,
 	req DeleteExamplesRequest,
 ) (*DatasetExamplesDeleteResult, error) {
-	prerelease.Warn("datasets.delete_examples", prerelease.Alpha)
+	prerelease.Warn("datasets.delete_examples", prerelease.Beta)
 	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	body := generated.DatasetsExamplesDeleteJSONRequestBody{
+	body := generated.DeleteDatasetExamplesJSONRequestBody{
 		DatasetVersionId: req.DatasetVersionID,
 		ExampleIds:       req.ExampleIDs,
 	}
-	resp, err := c.gen.DatasetsExamplesDeleteWithResponse(ctx, id, body)
+	resp, err := c.gen.DeleteDatasetExamplesWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -239,10 +239,10 @@ func (c *Client) AnnotateExamples(
 	if err != nil {
 		return err
 	}
-	body := generated.DatasetsExamplesAnnotateJSONRequestBody{
+	body := generated.AnnotateDatasetExamplesJSONRequestBody{
 		Annotations: req.Annotations,
 	}
-	resp, err := c.gen.DatasetsExamplesAnnotateWithResponse(ctx, id, body)
+	resp, err := c.gen.AnnotateDatasetExamplesWithResponse(ctx, id, body)
 	if err != nil {
 		return err
 	}

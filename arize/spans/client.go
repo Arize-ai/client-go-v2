@@ -44,11 +44,11 @@ func (c *Client) List(
 		EndTime:   optfields.PtrIfSet(req.End),
 		Filter:    optfields.PtrIfSet(req.Filter),
 	}
-	params := generated.SpansListParams{
+	params := generated.ListSpansParams{
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.SpansListWithResponse(ctx, &params, body)
+	resp, err := c.gen.ListSpansWithResponse(ctx, &params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func (c *Client) Delete(
 		ProjectId: projectID,
 		SpanIds:   req.SpanIDs,
 	}
-	resp, err := c.gen.SpansDeleteWithResponse(ctx, body)
+	resp, err := c.gen.DeleteSpansWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
 	}
@@ -116,13 +116,13 @@ func (c *Client) Annotate(
 	if err != nil {
 		return err
 	}
-	body := generated.AnnotateSpansRequestBody{
+	body := generated.AnnotateSpansRequest{
 		ProjectId:   projectID,
 		Annotations: req.Annotations,
 		StartTime:   optfields.PtrIfSet(req.Start),
 		EndTime:     optfields.PtrIfSet(req.End),
 	}
-	resp, err := c.gen.SpansAnnotateWithResponse(ctx, body)
+	resp, err := c.gen.AnnotateSpansWithResponse(ctx, body)
 	if err != nil {
 		return err
 	}

@@ -101,7 +101,7 @@ func updateSpace(ctx context.Context, client *arize.Client, spaceID, newName str
 	fmt.Printf("renamed space %s to %s\n", space.Id, space.Name)
 }
 
-// addSpaceUser adds a user with the predefined "member" role. Build the role
+// addSpaceUser adds a user with the predefined "MEMBER" role. Build the role
 // assignment with spaces.AssignPredefinedRole (one of the UserSpaceRole values)
 // or spaces.AssignCustomRole (a custom RBAC role id).
 func addSpaceUser(ctx context.Context, client *arize.Client, spaceID, userID string) {

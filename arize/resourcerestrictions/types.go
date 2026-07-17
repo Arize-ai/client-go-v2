@@ -11,7 +11,7 @@ type (
 
 	// ResourceRestrictionList is the paginated envelope returned by List. It
 	// carries the ResourceRestrictions slice and Pagination metadata.
-	ResourceRestrictionList = generated.ResourceRestrictionList
+	ResourceRestrictionList = generated.ListResourceRestrictionsResponse
 
 	// ResourceRestrictionType is the type of a restricted resource. Currently
 	// only PROJECT is supported.

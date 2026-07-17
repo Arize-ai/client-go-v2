@@ -34,7 +34,7 @@ type (
 	AuditLog = generated.AuditLog
 
 	// AuditLogList is the cursor-paginated list response shape.
-	AuditLogList = generated.AuditLogList
+	AuditLogList = generated.ListAuditLogsResponse
 
 	// AuditLogOperationType is the type of audited operation.
 	AuditLogOperationType = generated.AuditLogOperationType

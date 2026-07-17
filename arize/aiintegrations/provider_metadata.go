@@ -35,11 +35,11 @@ func (p ProviderMetadata) MarshalJSON() ([]byte, error) {
 		return nil, fmt.Errorf("aiintegrations: ProviderMetadata.AWS and ProviderMetadata.GCP are mutually exclusive; set exactly one")
 	case p.AWS != nil:
 		m := *p.AWS
-		m.Kind = generated.AwsProviderMetadataKindAws
+		m.Kind = generated.AwsProviderMetadataKindAWS
 		return json.Marshal(m)
 	case p.GCP != nil:
 		m := *p.GCP
-		m.Kind = generated.GcpProviderMetadataKindGcp
+		m.Kind = generated.GcpProviderMetadataKindGCP
 		return json.Marshal(m)
 	default:
 		return []byte("null"), nil
