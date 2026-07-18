@@ -22,7 +22,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 }
 
 // List returns a paginated list of evaluators. Defaults to a page size of 50.
-func (c *Client) List(ctx context.Context, req ListRequest) (*EvaluatorList, error) {
+func (c *Client) List(ctx context.Context, req ListRequest) (*ListEvaluators, error) {
 	prerelease.Warn("evaluators.list", prerelease.Beta)
 	params := &generated.ListEvaluatorsParams{
 		Name:   optfields.PtrIfSet(req.Name),
@@ -131,7 +131,7 @@ func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
 
 // ListVersions returns a paginated list of versions for an evaluator,
 // resolving the evaluator by name or ID. Defaults to a page size of 50.
-func (c *Client) ListVersions(ctx context.Context, req ListVersionsRequest) (*EvaluatorVersionList, error) {
+func (c *Client) ListVersions(ctx context.Context, req ListVersionsRequest) (*ListEvaluatorVersions, error) {
 	prerelease.Warn("evaluators.list_versions", prerelease.Beta)
 	id, err := resolve.FindEvaluatorID(ctx, c.gen, req.Evaluator, req.Space)
 	if err != nil {

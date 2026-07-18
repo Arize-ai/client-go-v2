@@ -6,13 +6,13 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // shapes so callers can construct and assert on them without importing
 // internal/generated.
 type (
-	AnnotationQueue                     = generated.AnnotationQueue
-	AnnotationQueueList                 = generated.ListAnnotationQueuesResponse
-	AnnotationQueueRecord               = generated.AnnotationQueueRecord
-	AnnotationQueueRecordList           = generated.ListAnnotationQueueRecordsResponse
-	AnnotationQueueRecordCreate         = generated.CreateAnnotationQueueRecordResponse
-	AnnotationQueueRecordAnnotateResult = generated.AnnotateAnnotationQueueRecordResponse
-	AnnotationQueueRecordAssignResult   = generated.AssignAnnotationQueueRecordResponse
+	AnnotationQueue               = generated.AnnotationQueue
+	ListAnnotationQueues          = generated.ListAnnotationQueuesResponse
+	AnnotationQueueRecord         = generated.AnnotationQueueRecord
+	ListAnnotationQueueRecords    = generated.ListAnnotationQueueRecordsResponse
+	CreateAnnotationQueueRecord   = generated.CreateAnnotationQueueRecordResponse
+	AnnotateAnnotationQueueRecord = generated.AnnotateAnnotationQueueRecordResponse
+	AssignAnnotationQueueRecord   = generated.AssignAnnotationQueueRecordResponse
 
 	// Email is an annotator or assignee email address.
 	Email = generated.Email

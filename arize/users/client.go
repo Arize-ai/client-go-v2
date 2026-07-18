@@ -24,7 +24,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 }
 
 // List returns a paginated list of account users. Defaults to a page size of 50.
-func (c *Client) List(ctx context.Context, req ListRequest) (*UserList, error) {
+func (c *Client) List(ctx context.Context, req ListRequest) (*ListUsers, error) {
 	prerelease.Warn("users.list", prerelease.Beta)
 	params := &generated.ListUsersParams{
 		Email:  optfields.PtrIfSet(req.Email),

@@ -48,7 +48,7 @@ func TestUsersList(t *testing.T) {
 					t.Errorf("status = %v, want [ACTIVE]", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				_ = json.NewEncoder(w).Encode(users.UserList{
+				_ = json.NewEncoder(w).Encode(users.ListUsers{
 					Users: []users.User{{
 						Id:    "usr-1",
 						Name:  "Alice",
@@ -68,7 +68,7 @@ func TestUsersList(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*users.UserList)
+				resp := got.(*users.ListUsers)
 				if len(resp.Users) != 1 || resp.Users[0].Name != "Alice" {
 					t.Errorf("unexpected users: %+v", resp.Users)
 				}
@@ -134,7 +134,7 @@ func TestUsersGet(t *testing.T) {
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				if r.URL.Query().Get("email") != "" {
-					_ = json.NewEncoder(w).Encode(users.UserList{
+					_ = json.NewEncoder(w).Encode(users.ListUsers{
 						Users:      []users.User{{Id: "VXNlcjoxOnVzci05", Name: "Bob", Email: "bob@example.com"}},
 						Pagination: arize.PaginationMetadata{HasMore: false},
 					})
@@ -161,7 +161,7 @@ func TestUsersGet(t *testing.T) {
 			name: "email no-match returns ResourceNotFoundError",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				_ = json.NewEncoder(w).Encode(users.UserList{
+				_ = json.NewEncoder(w).Encode(users.ListUsers{
 					Users:      []users.User{},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
@@ -463,13 +463,13 @@ func TestUsersBulkDelete(t *testing.T) {
 			switch {
 			case r.Method == http.MethodGet && r.URL.Query().Get("email") == "found@example.com":
 				w.Header().Set("Content-Type", "application/json")
-				_ = json.NewEncoder(w).Encode(users.UserList{
+				_ = json.NewEncoder(w).Encode(users.ListUsers{
 					Users:      []users.User{{Id: "usr-ok", Email: "found@example.com"}},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
 			case r.Method == http.MethodGet && r.URL.Query().Get("email") == "ghost@example.com":
 				w.Header().Set("Content-Type", "application/json")
-				_ = json.NewEncoder(w).Encode(users.UserList{Pagination: arize.PaginationMetadata{HasMore: false}})
+				_ = json.NewEncoder(w).Encode(users.ListUsers{Pagination: arize.PaginationMetadata{HasMore: false}})
 			case r.Method == http.MethodDelete && r.URL.Path == "/v2/users/usr-bad":
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusForbidden)

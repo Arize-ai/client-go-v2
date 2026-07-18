@@ -32,7 +32,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*SpanList, error) {
+) (*ListSpans, error) {
 	prerelease.Warn("spans.list", prerelease.Beta)
 	projectID, err := resolve.FindProjectID(ctx, c.gen, req.Project, req.Space)
 	if err != nil {
@@ -72,7 +72,7 @@ func (c *Client) List(
 func (c *Client) Delete(
 	ctx context.Context,
 	req DeleteRequest,
-) (*SpanDeleteResult, error) {
+) (*DeleteSpans, error) {
 	prerelease.Warn("spans.delete", prerelease.Beta)
 	projectID, err := resolve.FindProjectID(ctx, c.gen, req.Project, req.Space)
 	if err != nil {

@@ -7,8 +7,8 @@ type (
 	// LLM provider.
 	AIIntegration = generated.AiIntegration
 
-	// AIIntegrationList is the cursor-paginated list response shape.
-	AIIntegrationList = generated.ListAiIntegrationsResponse
+	// ListAIIntegrations is the cursor-paginated list response shape.
+	ListAIIntegrations = generated.ListAiIntegrationsResponse
 
 	// AIIntegrationProvider is the LLM provider for an integration.
 	AIIntegrationProvider = generated.AiIntegrationProvider

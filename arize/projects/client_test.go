@@ -64,7 +64,7 @@ func TestProjects(t *testing.T) {
 			name: "List",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(projects.ProjectList{
+				json.NewEncoder(w).Encode(projects.ListProjects{
 					Projects:   []projects.Project{{Id: "proj-1", Name: "my-project", CreatedAt: time.Now(), SpaceId: "space-1"}},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
@@ -76,7 +76,7 @@ func TestProjects(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*projects.ProjectList)
+				resp := got.(*projects.ListProjects)
 				if len(resp.Projects) != 1 {
 					t.Errorf("expected 1 project, got %d", len(resp.Projects))
 				}

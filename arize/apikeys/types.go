@@ -88,8 +88,8 @@ type (
 	APIKey = generated.ApiKey
 	// APIKeyRedacted is an API key without its secret, as returned in list results.
 	APIKeyRedacted = generated.ApiKeyRedacted
-	// APIKeyList is the cursor-paginated list response of redacted API keys.
-	APIKeyList = generated.ListApiKeysResponse
+	// ListAPIKeys is the cursor-paginated list response of redacted API keys.
+	ListAPIKeys = generated.ListApiKeysResponse
 
 	// APIKeyType is the type of an API key (user or service). Shared across
 	// responses, create requests, and list filters.

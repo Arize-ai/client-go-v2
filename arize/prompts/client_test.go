@@ -70,7 +70,7 @@ func TestPrompts(t *testing.T) {
 			name: "List",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(prompts.PromptList{
+				json.NewEncoder(w).Encode(prompts.ListPrompts{
 					Prompts:    []prompts.Prompt{{Id: "p-1", Name: "my-prompt"}},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
@@ -82,7 +82,7 @@ func TestPrompts(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*prompts.PromptList)
+				resp := got.(*prompts.ListPrompts)
 				if len(resp.Prompts) != 1 {
 					t.Errorf("expected 1 prompt, got %d", len(resp.Prompts))
 				}
@@ -105,7 +105,7 @@ func TestPrompts(t *testing.T) {
 					t.Errorf("cursor query: want cursor-abc, got %q", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(prompts.PromptList{Pagination: arize.PaginationMetadata{HasMore: false}})
+				json.NewEncoder(w).Encode(prompts.ListPrompts{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Prompts.List(ctx, prompts.ListRequest{
@@ -139,7 +139,7 @@ func TestPrompts(t *testing.T) {
 					t.Errorf("space_id query: want empty, got %q", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(prompts.PromptList{Pagination: arize.PaginationMetadata{HasMore: false}})
+				json.NewEncoder(w).Encode(prompts.ListPrompts{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Prompts.List(ctx, prompts.ListRequest{Space: "demo"})
@@ -216,7 +216,7 @@ func TestPrompts(t *testing.T) {
 					if got := r.URL.Query().Get("name"); got != "my-prompt" {
 						t.Errorf("resolver list name query: want my-prompt, got %q", got)
 					}
-					json.NewEncoder(w).Encode(prompts.PromptList{
+					json.NewEncoder(w).Encode(prompts.ListPrompts{
 						Prompts:    []prompts.Prompt{{Id: promptID("p-1"), Name: "my-prompt"}},
 						Pagination: arize.PaginationMetadata{HasMore: false},
 					})
@@ -360,7 +360,7 @@ func TestPrompts(t *testing.T) {
 					t.Errorf("limit query: want 10, got %q", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(prompts.PromptVersionList{
+				json.NewEncoder(w).Encode(prompts.ListPromptVersions{
 					PromptVersions: []prompts.PromptVersion{{Id: "v-1"}},
 					Pagination:     arize.PaginationMetadata{HasMore: false},
 				})
@@ -375,7 +375,7 @@ func TestPrompts(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*prompts.PromptVersionList)
+				resp := got.(*prompts.ListPromptVersions)
 				if len(resp.PromptVersions) != 1 {
 					t.Errorf("expected 1 version, got %d", len(resp.PromptVersions))
 				}

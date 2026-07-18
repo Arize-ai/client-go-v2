@@ -30,7 +30,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*DatasetList, error) {
+) (*ListDatasets, error) {
 	prerelease.Warn("datasets.list", prerelease.Beta)
 	params := generated.ListDatasetsParams{
 		Name:   optfields.PtrIfSet(req.Name),
@@ -147,7 +147,7 @@ func (c *Client) Delete(
 func (c *Client) ListExamples(
 	ctx context.Context,
 	req ListExamplesRequest,
-) (*DatasetExampleList, error) {
+) (*ListDatasetExamples, error) {
 	prerelease.Warn("datasets.list_examples", prerelease.Beta)
 	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {
@@ -175,7 +175,7 @@ func (c *Client) ListExamples(
 func (c *Client) AppendExamples(
 	ctx context.Context,
 	req AppendExamplesRequest,
-) (*DatasetExamplesInserted, error) {
+) (*InsertDatasetExamples, error) {
 	prerelease.Warn("datasets.append_examples", prerelease.Beta)
 	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {
@@ -197,6 +197,37 @@ func (c *Client) AppendExamples(
 	return resp.JSON201, nil
 }
 
+// UpdateExamples updates existing examples in a dataset version by example ID
+// and returns the version they were written to along with the updated example
+// IDs. req.Dataset accepts a name or ID; req.Space is required when
+// req.Dataset is a name. When req.NewVersion is set, the update is captured as
+// a new dataset version; otherwise the selected version is updated in place.
+func (c *Client) UpdateExamples(
+	ctx context.Context,
+	req UpdateDatasetExamplesRequest,
+) (*UpdateDatasetExamplesResponse, error) {
+	prerelease.Warn("datasets.update_examples", prerelease.Beta)
+	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
+	if err != nil {
+		return nil, err
+	}
+	params := generated.UpdateDatasetExamplesParams{
+		DatasetVersionId: optfields.PtrIfSet(req.DatasetVersionID),
+	}
+	body := generated.UpdateDatasetExamplesJSONRequestBody{
+		Examples:   req.Examples,
+		NewVersion: optfields.PtrIfSet(req.NewVersion),
+	}
+	resp, err := c.gen.UpdateDatasetExamplesWithResponse(ctx, id, &params, body)
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON200, nil
+}
+
 // DeleteExamples removes a batch of examples from a specific dataset version.
 // The result reports which IDs were deleted and which were not; when Completed
 // is false the delete did not fully complete and the full request should be
@@ -205,7 +236,7 @@ func (c *Client) AppendExamples(
 func (c *Client) DeleteExamples(
 	ctx context.Context,
 	req DeleteExamplesRequest,
-) (*DatasetExamplesDeleteResult, error) {
+) (*DeleteDatasetExamples, error) {
 	prerelease.Warn("datasets.delete_examples", prerelease.Beta)
 	id, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {

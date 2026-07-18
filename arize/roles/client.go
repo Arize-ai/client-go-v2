@@ -24,7 +24,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*RoleList, error) {
+) (*ListRoles, error) {
 	prerelease.Warn("roles.list", prerelease.Beta)
 	params := &generated.ListRolesParams{
 		IsPredefined: req.IsPredefined,

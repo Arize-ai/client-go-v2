@@ -33,8 +33,8 @@ type (
 	// AuditLog is a single audit log entry recording an authenticated user action.
 	AuditLog = generated.AuditLog
 
-	// AuditLogList is the cursor-paginated list response shape.
-	AuditLogList = generated.ListAuditLogsResponse
+	// ListAuditLogs is the cursor-paginated list response shape.
+	ListAuditLogs = generated.ListAuditLogsResponse
 
 	// AuditLogOperationType is the type of audited operation.
 	AuditLogOperationType = generated.AuditLogOperationType

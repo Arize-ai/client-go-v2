@@ -159,7 +159,7 @@ func TestTasks(t *testing.T) {
 				}
 				next := "cursor-next"
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(tasks.TaskList{
+				json.NewEncoder(w).Encode(tasks.ListTasks{
 					Tasks:      []tasks.Task{{Id: tID, Name: "my-task", Type: tasks.TaskTypeTemplateEvaluation}},
 					Pagination: arize.PaginationMetadata{HasMore: true, NextCursor: &next},
 				})
@@ -171,7 +171,7 @@ func TestTasks(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*tasks.TaskList)
+				resp := got.(*tasks.ListTasks)
 				if len(resp.Tasks) != 1 || resp.Tasks[0].Name != "my-task" {
 					t.Errorf("unexpected tasks: %+v", resp.Tasks)
 				}
@@ -209,7 +209,7 @@ func TestTasks(t *testing.T) {
 					t.Errorf("cursor query: want cursor-abc, got %q", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(tasks.TaskList{Pagination: arize.PaginationMetadata{HasMore: false}})
+				json.NewEncoder(w).Encode(tasks.ListTasks{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Tasks.List(ctx, tasks.ListRequest{
@@ -263,7 +263,7 @@ func TestTasks(t *testing.T) {
 					if got, want := r.URL.Query().Get("space_id"), spaceID("sp-1"); got != want {
 						t.Errorf("resolver list space_id query: want %q, got %q", want, got)
 					}
-					json.NewEncoder(w).Encode(tasks.TaskList{
+					json.NewEncoder(w).Encode(tasks.ListTasks{
 						Tasks:      []tasks.Task{{Id: tID, Name: "my-task", Type: tasks.TaskTypeTemplateEvaluation}},
 						Pagination: arize.PaginationMetadata{HasMore: false},
 					})
@@ -832,7 +832,7 @@ func TestTasks(t *testing.T) {
 					t.Errorf("limit query: want default 50, got %q", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(tasks.TaskRunList{
+				json.NewEncoder(w).Encode(tasks.ListTaskRuns{
 					TaskRuns:   []tasks.TaskRun{{Id: runID, TaskId: tID, Status: tasks.TaskRunStatusCompleted}},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
@@ -847,7 +847,7 @@ func TestTasks(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*tasks.TaskRunList)
+				resp := got.(*tasks.ListTaskRuns)
 				if len(resp.TaskRuns) != 1 || resp.TaskRuns[0].Id != runID {
 					t.Errorf("unexpected runs: %+v", resp.TaskRuns)
 				}

@@ -561,6 +561,23 @@ ins, err := client.Datasets.AppendExamples(ctx, datasets.AppendExamplesRequest{
 })
 ```
 
+### Update Examples
+
+Updates existing examples by ID. Set `NewVersion` to capture the update as a
+new dataset version; leave it empty to update the selected version in place.
+
+```go
+example := datasets.UpdateDatasetExampleInput{Id: "<example-id>"}
+example.Set("input", "updated")
+
+resp, err := client.Datasets.UpdateExamples(ctx, datasets.UpdateDatasetExamplesRequest{
+    Dataset: "<dataset-id-or-name>", Space: "<space-id-or-name>",
+    DatasetVersionID: "<dataset-version-id>",
+    Examples:         []datasets.UpdateDatasetExampleInput{example},
+    NewVersion:       "v2",
+})
+```
+
 ### Delete Examples
 
 Removes examples from a specific dataset version. The delete is partial-tolerant:

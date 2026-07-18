@@ -65,7 +65,7 @@ func TestSpaces(t *testing.T) {
 			name: "List",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(spaces.SpaceList{
+				json.NewEncoder(w).Encode(spaces.ListSpaces{
 					Spaces:     []spaces.Space{{Id: "space-1", Name: "my-space", CreatedAt: time.Now()}},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
@@ -77,7 +77,7 @@ func TestSpaces(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*spaces.SpaceList)
+				resp := got.(*spaces.ListSpaces)
 				if len(resp.Spaces) != 1 {
 					t.Errorf("expected 1 space, got %d", len(resp.Spaces))
 				}
@@ -100,7 +100,7 @@ func TestSpaces(t *testing.T) {
 					t.Errorf("cursor query: want cursor-abc, got %q", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(spaces.SpaceList{Pagination: arize.PaginationMetadata{HasMore: false}})
+				json.NewEncoder(w).Encode(spaces.ListSpaces{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Spaces.List(ctx, spaces.ListRequest{
@@ -137,7 +137,7 @@ func TestSpaces(t *testing.T) {
 					if got, want := r.URL.Query().Get("org_id"), orgID("org-1"); got != want {
 						t.Errorf("spaces list org_id query: want %q, got %q", want, got)
 					}
-					json.NewEncoder(w).Encode(spaces.SpaceList{Pagination: arize.PaginationMetadata{HasMore: false}})
+					json.NewEncoder(w).Encode(spaces.ListSpaces{Pagination: arize.PaginationMetadata{HasMore: false}})
 				default:
 					t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
 					w.WriteHeader(http.StatusInternalServerError)
@@ -183,7 +183,7 @@ func TestSpaces(t *testing.T) {
 					if got := r.URL.Query().Get("name"); got != "my-space" {
 						t.Errorf("resolver list name query: want my-space, got %q", got)
 					}
-					json.NewEncoder(w).Encode(spaces.SpaceList{
+					json.NewEncoder(w).Encode(spaces.ListSpaces{
 						Spaces:     []spaces.Space{{Id: spaceID("space-1"), Name: "my-space", CreatedAt: time.Now()}},
 						Pagination: arize.PaginationMetadata{HasMore: false},
 					})
@@ -396,7 +396,7 @@ func TestSpaces(t *testing.T) {
 				w.Header().Set("Content-Type", "application/json")
 				switch {
 				case r.Method == http.MethodGet && r.URL.Path == "/v2/spaces":
-					json.NewEncoder(w).Encode(spaces.SpaceList{
+					json.NewEncoder(w).Encode(spaces.ListSpaces{
 						Spaces:     []spaces.Space{{Id: spaceID("space-1"), Name: "my-space", CreatedAt: time.Now()}},
 						Pagination: arize.PaginationMetadata{HasMore: false},
 					})
@@ -460,7 +460,7 @@ func TestSpaces(t *testing.T) {
 				switch {
 				case r.Method == http.MethodGet && r.URL.Path == "/v2/spaces":
 					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(spaces.SpaceList{
+					json.NewEncoder(w).Encode(spaces.ListSpaces{
 						Spaces:     []spaces.Space{{Id: spaceID("space-1"), Name: "my-space", CreatedAt: time.Now()}},
 						Pagination: arize.PaginationMetadata{HasMore: false},
 					})
@@ -610,7 +610,7 @@ func TestSpaces(t *testing.T) {
 				w.Header().Set("Content-Type", "application/json")
 				switch {
 				case r.Method == http.MethodGet && r.URL.Path == "/v2/spaces":
-					json.NewEncoder(w).Encode(spaces.SpaceList{
+					json.NewEncoder(w).Encode(spaces.ListSpaces{
 						Spaces:     []spaces.Space{{Id: spaceID("space-1"), Name: "my-space", CreatedAt: time.Now()}},
 						Pagination: arize.PaginationMetadata{HasMore: false},
 					})
@@ -671,7 +671,7 @@ func TestSpaces(t *testing.T) {
 				switch {
 				case r.Method == http.MethodGet && r.URL.Path == "/v2/spaces":
 					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(spaces.SpaceList{
+					json.NewEncoder(w).Encode(spaces.ListSpaces{
 						Spaces:     []spaces.Space{{Id: spaceID("space-1"), Name: "my-space", CreatedAt: time.Now()}},
 						Pagination: arize.PaginationMetadata{HasMore: false},
 					})

@@ -50,7 +50,7 @@ func TestAuditLogs(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				resp := got.(*auditlogs.AuditLogList)
+				resp := got.(*auditlogs.ListAuditLogs)
 				if len(resp.Logs) != 1 || resp.Logs[0].Id != "QXVkaXRMb2c6MQ==" {
 					t.Errorf("unexpected list: %+v", resp.Logs)
 				}
@@ -131,7 +131,7 @@ func TestAuditLogs(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				resp := got.(*auditlogs.AuditLogList)
+				resp := got.(*auditlogs.ListAuditLogs)
 				if !resp.Pagination.HasMore {
 					t.Error("expected has_more=true")
 				}

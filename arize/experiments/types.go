@@ -5,11 +5,11 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // Response and nested types are aliases to generated wire shapes so callers
 // can construct/assert on them without importing internal/generated.
 type (
-	Experiment          = generated.Experiment
-	ExperimentList      = generated.ListExperimentsResponse
-	ExperimentRun       = generated.ExperimentRun
-	ExperimentRunInput = generated.ExperimentRunInput
-	ExperimentRunsList  = generated.ListExperimentRunsResponse
+	Experiment           = generated.Experiment
+	ListExperiments      = generated.ListExperimentsResponse
+	ExperimentRun        = generated.ExperimentRun
+	ExperimentRunInput   = generated.ExperimentRunInput
+	ListExperimentRuns   = generated.ListExperimentRunsResponse
 	ExperimentWithRunIds = generated.ExperimentWithRunIds
 )
 

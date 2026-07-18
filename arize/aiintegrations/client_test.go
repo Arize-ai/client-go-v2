@@ -96,7 +96,7 @@ func TestAIIntegrations(t *testing.T) {
 			name: "List_Success",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				_ = json.NewEncoder(w).Encode(aiintegrations.AIIntegrationList{
+				_ = json.NewEncoder(w).Encode(aiintegrations.ListAIIntegrations{
 					AiIntegrations: []aiintegrations.AIIntegration{{
 						Id:                     "int-1",
 						Name:                   "my-integration",
@@ -120,7 +120,7 @@ func TestAIIntegrations(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*aiintegrations.AIIntegrationList)
+				resp := got.(*aiintegrations.ListAIIntegrations)
 				if len(resp.AiIntegrations) != 1 {
 					t.Errorf("expected 1 integration, got %d", len(resp.AiIntegrations))
 				}
@@ -131,7 +131,7 @@ func TestAIIntegrations(t *testing.T) {
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				listQuery = r.URL.Query()
 				w.Header().Set("Content-Type", "application/json")
-				_ = json.NewEncoder(w).Encode(aiintegrations.AIIntegrationList{
+				_ = json.NewEncoder(w).Encode(aiintegrations.ListAIIntegrations{
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
 			},
@@ -166,7 +166,7 @@ func TestAIIntegrations(t *testing.T) {
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				listQuery = r.URL.Query()
 				w.Header().Set("Content-Type", "application/json")
-				_ = json.NewEncoder(w).Encode(aiintegrations.AIIntegrationList{
+				_ = json.NewEncoder(w).Encode(aiintegrations.ListAIIntegrations{
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
 			},
@@ -192,7 +192,7 @@ func TestAIIntegrations(t *testing.T) {
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				listQuery = r.URL.Query()
 				w.Header().Set("Content-Type", "application/json")
-				_ = json.NewEncoder(w).Encode(aiintegrations.AIIntegrationList{
+				_ = json.NewEncoder(w).Encode(aiintegrations.ListAIIntegrations{
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
 			},
@@ -279,7 +279,7 @@ func TestAIIntegrations(t *testing.T) {
 					if q.Get("space_id") != helperID("Space", "demo") {
 						t.Errorf("list query space_id: got %q, want %q", q.Get("space_id"), helperID("Space", "demo"))
 					}
-					_ = json.NewEncoder(w).Encode(aiintegrations.AIIntegrationList{
+					_ = json.NewEncoder(w).Encode(aiintegrations.ListAIIntegrations{
 						AiIntegrations: []aiintegrations.AIIntegration{{
 							Id:       "int-resolved",
 							Name:     "my-integration",
@@ -306,7 +306,7 @@ func TestAIIntegrations(t *testing.T) {
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.AIIntegrations.Get(ctx, aiintegrations.GetRequest{
-					Integration: "my-integration",        // bare name → triggers list-and-match
+					Integration: "my-integration", // bare name → triggers list-and-match
 					Space:       helperID("Space", "demo"),
 				})
 			},
@@ -437,8 +437,8 @@ func TestAIIntegrations(t *testing.T) {
 				return c.AIIntegrations.Create(ctx, aiintegrations.CreateRequest{
 					Name:       "empty-collections",
 					Provider:   aiintegrations.AIIntegrationProviderCustom,
-					ModelNames: []string{},                          // non-nil empty → explicit []
-					Headers:    map[string]string{},                 // non-nil empty → explicit {}
+					ModelNames: []string{},                              // non-nil empty → explicit []
+					Headers:    map[string]string{},                     // non-nil empty → explicit {}
 					Scopings:   []aiintegrations.AIIntegrationScoping{}, // non-nil empty → explicit []
 				})
 			},

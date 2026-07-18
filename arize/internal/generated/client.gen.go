@@ -23,6 +23,21 @@ const (
 	BearerAuthScopes = "bearerAuth.Scopes"
 )
 
+// Defines values for AgentIntegrationType.
+const (
+	AgentIntegrationTypeAGENT AgentIntegrationType = "AGENT"
+)
+
+// Valid indicates whether the value is a known member of the AgentIntegrationType enum.
+func (e AgentIntegrationType) Valid() bool {
+	switch e {
+	case AgentIntegrationTypeAGENT:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AiIntegrationAuthType.
 const (
 	AiIntegrationAuthTypeBEARERTOKEN      AiIntegrationAuthType = "BEARER_TOKEN"
@@ -377,6 +392,21 @@ func (e ContinuousAnnotationConfigType) Valid() bool {
 	}
 }
 
+// Defines values for CreateAgentIntegrationRequestType.
+const (
+	CreateAgentIntegrationRequestTypeAGENT CreateAgentIntegrationRequestType = "AGENT"
+)
+
+// Valid indicates whether the value is a known member of the CreateAgentIntegrationRequestType enum.
+func (e CreateAgentIntegrationRequestType) Valid() bool {
+	switch e {
+	case CreateAgentIntegrationRequestTypeAGENT:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for CreateAnthropicConfigProvider.
 const (
 	CreateAnthropicConfigProviderANTHROPIC CreateAnthropicConfigProvider = "ANTHROPIC"
@@ -512,6 +542,21 @@ func (e CreateTemplateEvaluationTaskRequestType) Valid() bool {
 	}
 }
 
+// Defines values for CustomBaselineConfigType.
+const (
+	CustomBaselineConfigTypeCUSTOMBASELINE CustomBaselineConfigType = "CUSTOM_BASELINE"
+)
+
+// Valid indicates whether the value is a known member of the CustomBaselineConfigType enum.
+func (e CustomBaselineConfigType) Valid() bool {
+	switch e {
+	case CustomBaselineConfigTypeCUSTOMBASELINE:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for CustomCodeConfigType.
 const (
 	CustomCodeConfigTypeCUSTOM CustomCodeConfigType = "CUSTOM"
@@ -521,6 +566,21 @@ const (
 func (e CustomCodeConfigType) Valid() bool {
 	switch e {
 	case CustomCodeConfigTypeCUSTOM:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CustomMetricMonitorType.
+const (
+	CustomMetricMonitorTypeCUSTOMMETRIC CustomMetricMonitorType = "CUSTOM_METRIC"
+)
+
+// Valid indicates whether the value is a known member of the CustomMetricMonitorType enum.
+func (e CustomMetricMonitorType) Valid() bool {
+	switch e {
+	case CustomMetricMonitorTypeCUSTOMMETRIC:
 		return true
 	default:
 		return false
@@ -542,6 +602,213 @@ func (e DataGranularity) Valid() bool {
 	case DataGranularitySPAN:
 		return true
 	case DataGranularityTRACE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DataQualityMetric.
+const (
+	DataQualityMetricAVERAGESTRINGLISTLENGTH DataQualityMetric = "AVERAGE_STRING_LIST_LENGTH"
+	DataQualityMetricAVG                     DataQualityMetric = "AVG"
+	DataQualityMetricCARDINALITY             DataQualityMetric = "CARDINALITY"
+	DataQualityMetricCOUNT                   DataQualityMetric = "COUNT"
+	DataQualityMetricMISSINGVALUES           DataQualityMetric = "MISSING_VALUES"
+	DataQualityMetricNEWVALUES               DataQualityMetric = "NEW_VALUES"
+	DataQualityMetricP50                     DataQualityMetric = "P50"
+	DataQualityMetricP95                     DataQualityMetric = "P95"
+	DataQualityMetricP99                     DataQualityMetric = "P99"
+	DataQualityMetricP999                    DataQualityMetric = "P99_9"
+	DataQualityMetricPERCENTEMPTY            DataQualityMetric = "PERCENT_EMPTY"
+	DataQualityMetricSTANDARDDEVIATION       DataQualityMetric = "STANDARD_DEVIATION"
+	DataQualityMetricSUM                     DataQualityMetric = "SUM"
+)
+
+// Valid indicates whether the value is a known member of the DataQualityMetric enum.
+func (e DataQualityMetric) Valid() bool {
+	switch e {
+	case DataQualityMetricAVERAGESTRINGLISTLENGTH:
+		return true
+	case DataQualityMetricAVG:
+		return true
+	case DataQualityMetricCARDINALITY:
+		return true
+	case DataQualityMetricCOUNT:
+		return true
+	case DataQualityMetricMISSINGVALUES:
+		return true
+	case DataQualityMetricNEWVALUES:
+		return true
+	case DataQualityMetricP50:
+		return true
+	case DataQualityMetricP95:
+		return true
+	case DataQualityMetricP99:
+		return true
+	case DataQualityMetricP999:
+		return true
+	case DataQualityMetricPERCENTEMPTY:
+		return true
+	case DataQualityMetricSTANDARDDEVIATION:
+		return true
+	case DataQualityMetricSUM:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DataQualityMonitorType.
+const (
+	DataQualityMonitorTypeDATAQUALITY DataQualityMonitorType = "DATA_QUALITY"
+)
+
+// Valid indicates whether the value is a known member of the DataQualityMonitorType enum.
+func (e DataQualityMonitorType) Valid() bool {
+	switch e {
+	case DataQualityMonitorTypeDATAQUALITY:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DimensionCategory.
+const (
+	DimensionCategoryACTUALS          DimensionCategory = "ACTUALS"
+	DimensionCategoryACTUALSCLASS     DimensionCategory = "ACTUALS_CLASS"
+	DimensionCategoryACTUALSSCORE     DimensionCategory = "ACTUALS_SCORE"
+	DimensionCategoryBATCHID          DimensionCategory = "BATCH_ID"
+	DimensionCategoryFEATURELABEL     DimensionCategory = "FEATURE_LABEL"
+	DimensionCategoryLLMEVAL          DimensionCategory = "LLM_EVAL"
+	DimensionCategoryMODELVERSION     DimensionCategory = "MODEL_VERSION"
+	DimensionCategoryPREDICTIONS      DimensionCategory = "PREDICTIONS"
+	DimensionCategoryPREDICTIONSCLASS DimensionCategory = "PREDICTIONS_CLASS"
+	DimensionCategoryPREDICTIONSSCORE DimensionCategory = "PREDICTIONS_SCORE"
+	DimensionCategorySPANATTRIBUTE    DimensionCategory = "SPAN_ATTRIBUTE"
+	DimensionCategoryTAG              DimensionCategory = "TAG"
+	DimensionCategoryUSERANNOTATION   DimensionCategory = "USER_ANNOTATION"
+)
+
+// Valid indicates whether the value is a known member of the DimensionCategory enum.
+func (e DimensionCategory) Valid() bool {
+	switch e {
+	case DimensionCategoryACTUALS:
+		return true
+	case DimensionCategoryACTUALSCLASS:
+		return true
+	case DimensionCategoryACTUALSSCORE:
+		return true
+	case DimensionCategoryBATCHID:
+		return true
+	case DimensionCategoryFEATURELABEL:
+		return true
+	case DimensionCategoryLLMEVAL:
+		return true
+	case DimensionCategoryMODELVERSION:
+		return true
+	case DimensionCategoryPREDICTIONS:
+		return true
+	case DimensionCategoryPREDICTIONSCLASS:
+		return true
+	case DimensionCategoryPREDICTIONSSCORE:
+		return true
+	case DimensionCategorySPANATTRIBUTE:
+		return true
+	case DimensionCategoryTAG:
+		return true
+	case DimensionCategoryUSERANNOTATION:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DriftMetric.
+const (
+	DriftMetricCOSINESIMILARITY  DriftMetric = "COSINE_SIMILARITY"
+	DriftMetricEUCLIDEANDISTANCE DriftMetric = "EUCLIDEAN_DISTANCE"
+	DriftMetricJS                DriftMetric = "JS"
+	DriftMetricKL                DriftMetric = "KL"
+	DriftMetricKS                DriftMetric = "KS"
+	DriftMetricPSI               DriftMetric = "PSI"
+)
+
+// Valid indicates whether the value is a known member of the DriftMetric enum.
+func (e DriftMetric) Valid() bool {
+	switch e {
+	case DriftMetricCOSINESIMILARITY:
+		return true
+	case DriftMetricEUCLIDEANDISTANCE:
+		return true
+	case DriftMetricJS:
+		return true
+	case DriftMetricKL:
+		return true
+	case DriftMetricKS:
+		return true
+	case DriftMetricPSI:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DriftMonitorType.
+const (
+	DriftMonitorTypeDRIFT DriftMonitorType = "DRIFT"
+)
+
+// Valid indicates whether the value is a known member of the DriftMonitorType enum.
+func (e DriftMonitorType) Valid() bool {
+	switch e {
+	case DriftMonitorTypeDRIFT:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DynamicRangeThresholdType.
+const (
+	DynamicRangeThresholdTypeDYNAMICRANGE DynamicRangeThresholdType = "DYNAMIC_RANGE"
+)
+
+// Valid indicates whether the value is a known member of the DynamicRangeThresholdType enum.
+func (e DynamicRangeThresholdType) Valid() bool {
+	switch e {
+	case DynamicRangeThresholdTypeDYNAMICRANGE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DynamicSingleThresholdType.
+const (
+	DynamicSingleThresholdTypeDYNAMICSINGLE DynamicSingleThresholdType = "DYNAMIC_SINGLE"
+)
+
+// Valid indicates whether the value is a known member of the DynamicSingleThresholdType enum.
+func (e DynamicSingleThresholdType) Valid() bool {
+	switch e {
+	case DynamicSingleThresholdTypeDYNAMICSINGLE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for EmailNotificationConfigType.
+const (
+	EmailNotificationConfigTypeEMAIL EmailNotificationConfigType = "EMAIL"
+)
+
+// Valid indicates whether the value is a known member of the EmailNotificationConfigType enum.
+func (e EmailNotificationConfigType) Valid() bool {
+	switch e {
+	case EmailNotificationConfigTypeEMAIL:
 		return true
 	default:
 		return false
@@ -632,6 +899,63 @@ func (e EvaluatorVersionTemplateType) Valid() bool {
 	}
 }
 
+// Defines values for FilterOperator.
+const (
+	FilterOperatorCONTAINS           FilterOperator = "CONTAINS"
+	FilterOperatorCONTAINSSTRING     FilterOperator = "CONTAINS_STRING"
+	FilterOperatorEQUALS             FilterOperator = "EQUALS"
+	FilterOperatorGREATERTHAN        FilterOperator = "GREATER_THAN"
+	FilterOperatorGREATERTHANOREQUAL FilterOperator = "GREATER_THAN_OR_EQUAL"
+	FilterOperatorLESSTHAN           FilterOperator = "LESS_THAN"
+	FilterOperatorLESSTHANOREQUAL    FilterOperator = "LESS_THAN_OR_EQUAL"
+	FilterOperatorNOTEQUALS          FilterOperator = "NOT_EQUALS"
+	FilterOperatorSIMILARTO          FilterOperator = "SIMILAR_TO"
+	FilterOperatorTOPN               FilterOperator = "TOP_N"
+)
+
+// Valid indicates whether the value is a known member of the FilterOperator enum.
+func (e FilterOperator) Valid() bool {
+	switch e {
+	case FilterOperatorCONTAINS:
+		return true
+	case FilterOperatorCONTAINSSTRING:
+		return true
+	case FilterOperatorEQUALS:
+		return true
+	case FilterOperatorGREATERTHAN:
+		return true
+	case FilterOperatorGREATERTHANOREQUAL:
+		return true
+	case FilterOperatorLESSTHAN:
+		return true
+	case FilterOperatorLESSTHANOREQUAL:
+		return true
+	case FilterOperatorNOTEQUALS:
+		return true
+	case FilterOperatorSIMILARTO:
+		return true
+	case FilterOperatorTOPN:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for FixedCustomBaselineWindowType.
+const (
+	FixedCustomBaselineWindowTypeFIXED FixedCustomBaselineWindowType = "FIXED"
+)
+
+// Valid indicates whether the value is a known member of the FixedCustomBaselineWindowType enum.
+func (e FixedCustomBaselineWindowType) Valid() bool {
+	switch e {
+	case FixedCustomBaselineWindowTypeFIXED:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for FreeformAnnotationConfigType.
 const (
 	FreeformAnnotationConfigTypeFREEFORM FreeformAnnotationConfigType = "FREEFORM"
@@ -683,14 +1007,32 @@ func (e InputVariableFormat) Valid() bool {
 	}
 }
 
+// Defines values for IntegrationNotificationConfigType.
+const (
+	IntegrationNotificationConfigTypeINTEGRATION IntegrationNotificationConfigType = "INTEGRATION"
+)
+
+// Valid indicates whether the value is a known member of the IntegrationNotificationConfigType enum.
+func (e IntegrationNotificationConfigType) Valid() bool {
+	switch e {
+	case IntegrationNotificationConfigTypeINTEGRATION:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for IntegrationType.
 const (
-	IntegrationTypeLLM IntegrationType = "LLM"
+	IntegrationTypeAGENT IntegrationType = "AGENT"
+	IntegrationTypeLLM   IntegrationType = "LLM"
 )
 
 // Valid indicates whether the value is a known member of the IntegrationType enum.
 func (e IntegrationType) Valid() bool {
 	switch e {
+	case IntegrationTypeAGENT:
+		return true
 	case IntegrationTypeLLM:
 		return true
 	default:
@@ -839,6 +1181,36 @@ func (e ManagedCodeEvaluator) Valid() bool {
 	}
 }
 
+// Defines values for ManualRangeThresholdType.
+const (
+	ManualRangeThresholdTypeMANUALRANGE ManualRangeThresholdType = "MANUAL_RANGE"
+)
+
+// Valid indicates whether the value is a known member of the ManualRangeThresholdType enum.
+func (e ManualRangeThresholdType) Valid() bool {
+	switch e {
+	case ManualRangeThresholdTypeMANUALRANGE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ManualSingleThresholdType.
+const (
+	ManualSingleThresholdTypeMANUALSINGLE ManualSingleThresholdType = "MANUAL_SINGLE"
+)
+
+// Valid indicates whether the value is a known member of the ManualSingleThresholdType enum.
+func (e ManualSingleThresholdType) Valid() bool {
+	switch e {
+	case ManualSingleThresholdTypeMANUALSINGLE:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for MessageRole.
 const (
 	MessageRoleASSISTANT MessageRole = "ASSISTANT"
@@ -857,6 +1229,84 @@ func (e MessageRole) Valid() bool {
 	case MessageRoleTOOL:
 		return true
 	case MessageRoleUSER:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ModelBaselineConfigType.
+const (
+	ModelBaselineConfigTypeMODELBASELINE ModelBaselineConfigType = "MODEL_BASELINE"
+)
+
+// Valid indicates whether the value is a known member of the ModelBaselineConfigType enum.
+func (e ModelBaselineConfigType) Valid() bool {
+	switch e {
+	case ModelBaselineConfigTypeMODELBASELINE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for MonitorStatus.
+const (
+	MonitorStatusCLEARED   MonitorStatus = "CLEARED"
+	MonitorStatusNODATA    MonitorStatus = "NO_DATA"
+	MonitorStatusTRIGGERED MonitorStatus = "TRIGGERED"
+)
+
+// Valid indicates whether the value is a known member of the MonitorStatus enum.
+func (e MonitorStatus) Valid() bool {
+	switch e {
+	case MonitorStatusCLEARED:
+		return true
+	case MonitorStatusNODATA:
+		return true
+	case MonitorStatusTRIGGERED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for MonitorType.
+const (
+	MonitorTypeCUSTOMMETRIC MonitorType = "CUSTOM_METRIC"
+	MonitorTypeDATAQUALITY  MonitorType = "DATA_QUALITY"
+	MonitorTypeDRIFT        MonitorType = "DRIFT"
+	MonitorTypePERFORMANCE  MonitorType = "PERFORMANCE"
+	MonitorTypeTRACING      MonitorType = "TRACING"
+)
+
+// Valid indicates whether the value is a known member of the MonitorType enum.
+func (e MonitorType) Valid() bool {
+	switch e {
+	case MonitorTypeCUSTOMMETRIC:
+		return true
+	case MonitorTypeDATAQUALITY:
+		return true
+	case MonitorTypeDRIFT:
+		return true
+	case MonitorTypePERFORMANCE:
+		return true
+	case MonitorTypeTRACING:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for MovingCustomBaselineWindowType.
+const (
+	MovingCustomBaselineWindowTypeMOVING MovingCustomBaselineWindowType = "MOVING"
+)
+
+// Valid indicates whether the value is a known member of the MovingCustomBaselineWindowType enum.
+func (e MovingCustomBaselineWindowType) Valid() bool {
+	switch e {
+	case MovingCustomBaselineWindowTypeMOVING:
 		return true
 	default:
 		return false
@@ -935,6 +1385,150 @@ func (e OrganizationRoleAssignmentType) Valid() bool {
 	case OrganizationRoleAssignmentTypeCUSTOM:
 		return true
 	case OrganizationRoleAssignmentTypePREDEFINED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PerformanceMetric.
+const (
+	PerformanceMetricACCURACY                PerformanceMetric = "ACCURACY"
+	PerformanceMetricACTUALSAVERAGE          PerformanceMetric = "ACTUALS_AVERAGE"
+	PerformanceMetricAUC                     PerformanceMetric = "AUC"
+	PerformanceMetricCALIBRATION             PerformanceMetric = "CALIBRATION"
+	PerformanceMetricDISPARATEIMPACT         PerformanceMetric = "DISPARATE_IMPACT"
+	PerformanceMetricF1                      PerformanceMetric = "F_1"
+	PerformanceMetricFALSENEGATIVEDENSITY    PerformanceMetric = "FALSE_NEGATIVE_DENSITY"
+	PerformanceMetricFALSENEGATIVERATE       PerformanceMetric = "FALSE_NEGATIVE_RATE"
+	PerformanceMetricFALSEPOSITIVERATE       PerformanceMetric = "FALSE_POSITIVE_RATE"
+	PerformanceMetricFALSEPOSITIVERATEPARITY PerformanceMetric = "FALSE_POSITIVE_RATE_PARITY"
+	PerformanceMetricGROUPAUC                PerformanceMetric = "GROUP_AUC"
+	PerformanceMetricLOGLOSS                 PerformanceMetric = "LOG_LOSS"
+	PerformanceMetricMACROAVERAGEDPRECISION  PerformanceMetric = "MACRO_AVERAGED_PRECISION"
+	PerformanceMetricMACROAVERAGEDRECALL     PerformanceMetric = "MACRO_AVERAGED_RECALL"
+	PerformanceMetricMAE                     PerformanceMetric = "MAE"
+	PerformanceMetricMAPE                    PerformanceMetric = "MAPE"
+	PerformanceMetricMASE                    PerformanceMetric = "MASE"
+	PerformanceMetricMEANERROR               PerformanceMetric = "MEAN_ERROR"
+	PerformanceMetricMICROAVERAGEDPRECISION  PerformanceMetric = "MICRO_AVERAGED_PRECISION"
+	PerformanceMetricMICROAVERAGEDRECALL     PerformanceMetric = "MICRO_AVERAGED_RECALL"
+	PerformanceMetricMRR                     PerformanceMetric = "MRR"
+	PerformanceMetricMSE                     PerformanceMetric = "MSE"
+	PerformanceMetricMULTICLASSPRECISION     PerformanceMetric = "MULTI_CLASS_PRECISION"
+	PerformanceMetricMULTICLASSRECALL        PerformanceMetric = "MULTI_CLASS_RECALL"
+	PerformanceMetricNDCG                    PerformanceMetric = "NDCG"
+	PerformanceMetricPRAUC                   PerformanceMetric = "PR_AUC"
+	PerformanceMetricPRECISION               PerformanceMetric = "PRECISION"
+	PerformanceMetricPREDICTIONAVERAGE       PerformanceMetric = "PREDICTION_AVERAGE"
+	PerformanceMetricRANKINGMAP              PerformanceMetric = "RANKING_MAP"
+	PerformanceMetricRANKINGPRECISION        PerformanceMetric = "RANKING_PRECISION"
+	PerformanceMetricRANKINGRECALL           PerformanceMetric = "RANKING_RECALL"
+	PerformanceMetricRECALL                  PerformanceMetric = "RECALL"
+	PerformanceMetricRECALLPARITY            PerformanceMetric = "RECALL_PARITY"
+	PerformanceMetricRMSE                    PerformanceMetric = "RMSE"
+	PerformanceMetricRSQUARED                PerformanceMetric = "R_SQUARED"
+	PerformanceMetricSENSITIVITY             PerformanceMetric = "SENSITIVITY"
+	PerformanceMetricSMAPE                   PerformanceMetric = "SMAPE"
+	PerformanceMetricSPECIFICITY             PerformanceMetric = "SPECIFICITY"
+	PerformanceMetricWAPE                    PerformanceMetric = "WAPE"
+)
+
+// Valid indicates whether the value is a known member of the PerformanceMetric enum.
+func (e PerformanceMetric) Valid() bool {
+	switch e {
+	case PerformanceMetricACCURACY:
+		return true
+	case PerformanceMetricACTUALSAVERAGE:
+		return true
+	case PerformanceMetricAUC:
+		return true
+	case PerformanceMetricCALIBRATION:
+		return true
+	case PerformanceMetricDISPARATEIMPACT:
+		return true
+	case PerformanceMetricF1:
+		return true
+	case PerformanceMetricFALSENEGATIVEDENSITY:
+		return true
+	case PerformanceMetricFALSENEGATIVERATE:
+		return true
+	case PerformanceMetricFALSEPOSITIVERATE:
+		return true
+	case PerformanceMetricFALSEPOSITIVERATEPARITY:
+		return true
+	case PerformanceMetricGROUPAUC:
+		return true
+	case PerformanceMetricLOGLOSS:
+		return true
+	case PerformanceMetricMACROAVERAGEDPRECISION:
+		return true
+	case PerformanceMetricMACROAVERAGEDRECALL:
+		return true
+	case PerformanceMetricMAE:
+		return true
+	case PerformanceMetricMAPE:
+		return true
+	case PerformanceMetricMASE:
+		return true
+	case PerformanceMetricMEANERROR:
+		return true
+	case PerformanceMetricMICROAVERAGEDPRECISION:
+		return true
+	case PerformanceMetricMICROAVERAGEDRECALL:
+		return true
+	case PerformanceMetricMRR:
+		return true
+	case PerformanceMetricMSE:
+		return true
+	case PerformanceMetricMULTICLASSPRECISION:
+		return true
+	case PerformanceMetricMULTICLASSRECALL:
+		return true
+	case PerformanceMetricNDCG:
+		return true
+	case PerformanceMetricPRAUC:
+		return true
+	case PerformanceMetricPRECISION:
+		return true
+	case PerformanceMetricPREDICTIONAVERAGE:
+		return true
+	case PerformanceMetricRANKINGMAP:
+		return true
+	case PerformanceMetricRANKINGPRECISION:
+		return true
+	case PerformanceMetricRANKINGRECALL:
+		return true
+	case PerformanceMetricRECALL:
+		return true
+	case PerformanceMetricRECALLPARITY:
+		return true
+	case PerformanceMetricRMSE:
+		return true
+	case PerformanceMetricRSQUARED:
+		return true
+	case PerformanceMetricSENSITIVITY:
+		return true
+	case PerformanceMetricSMAPE:
+		return true
+	case PerformanceMetricSPECIFICITY:
+		return true
+	case PerformanceMetricWAPE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PerformanceMonitorType.
+const (
+	PerformanceMonitorTypePERFORMANCE PerformanceMonitorType = "PERFORMANCE"
+)
+
+// Valid indicates whether the value is a known member of the PerformanceMonitorType enum.
+func (e PerformanceMonitorType) Valid() bool {
+	switch e {
+	case PerformanceMonitorTypePERFORMANCE:
 		return true
 	default:
 		return false
@@ -1568,6 +2162,54 @@ func (e TemplateEvaluationRunConfigExperimentType) Valid() bool {
 	}
 }
 
+// Defines values for ThresholdCalculation.
+const (
+	ThresholdCalculationMAD   ThresholdCalculation = "MAD"
+	ThresholdCalculationSTDEV ThresholdCalculation = "STDEV"
+)
+
+// Valid indicates whether the value is a known member of the ThresholdCalculation enum.
+func (e ThresholdCalculation) Valid() bool {
+	switch e {
+	case ThresholdCalculationMAD:
+		return true
+	case ThresholdCalculationSTDEV:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ThresholdOperator.
+const (
+	ThresholdOperatorEQUALS             ThresholdOperator = "EQUALS"
+	ThresholdOperatorGREATERTHAN        ThresholdOperator = "GREATER_THAN"
+	ThresholdOperatorGREATERTHANOREQUAL ThresholdOperator = "GREATER_THAN_OR_EQUAL"
+	ThresholdOperatorLESSTHAN           ThresholdOperator = "LESS_THAN"
+	ThresholdOperatorLESSTHANOREQUAL    ThresholdOperator = "LESS_THAN_OR_EQUAL"
+	ThresholdOperatorNOTEQUALS          ThresholdOperator = "NOT_EQUALS"
+)
+
+// Valid indicates whether the value is a known member of the ThresholdOperator enum.
+func (e ThresholdOperator) Valid() bool {
+	switch e {
+	case ThresholdOperatorEQUALS:
+		return true
+	case ThresholdOperatorGREATERTHAN:
+		return true
+	case ThresholdOperatorGREATERTHANOREQUAL:
+		return true
+	case ThresholdOperatorLESSTHAN:
+		return true
+	case ThresholdOperatorLESSTHANOREQUAL:
+		return true
+	case ThresholdOperatorNOTEQUALS:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ToolCallType.
 const (
 	ToolCallTypeFUNCTION ToolCallType = "FUNCTION"
@@ -1577,6 +2219,78 @@ const (
 func (e ToolCallType) Valid() bool {
 	switch e {
 	case ToolCallTypeFUNCTION:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for TracingDataQualityMetric.
+const (
+	TracingDataQualityMetricAVG               TracingDataQualityMetric = "AVG"
+	TracingDataQualityMetricCARDINALITY       TracingDataQualityMetric = "CARDINALITY"
+	TracingDataQualityMetricCOUNT             TracingDataQualityMetric = "COUNT"
+	TracingDataQualityMetricP50               TracingDataQualityMetric = "P50"
+	TracingDataQualityMetricP95               TracingDataQualityMetric = "P95"
+	TracingDataQualityMetricP99               TracingDataQualityMetric = "P99"
+	TracingDataQualityMetricP999              TracingDataQualityMetric = "P99_9"
+	TracingDataQualityMetricPERCENTEMPTY      TracingDataQualityMetric = "PERCENT_EMPTY"
+	TracingDataQualityMetricSTANDARDDEVIATION TracingDataQualityMetric = "STANDARD_DEVIATION"
+	TracingDataQualityMetricSUM               TracingDataQualityMetric = "SUM"
+)
+
+// Valid indicates whether the value is a known member of the TracingDataQualityMetric enum.
+func (e TracingDataQualityMetric) Valid() bool {
+	switch e {
+	case TracingDataQualityMetricAVG:
+		return true
+	case TracingDataQualityMetricCARDINALITY:
+		return true
+	case TracingDataQualityMetricCOUNT:
+		return true
+	case TracingDataQualityMetricP50:
+		return true
+	case TracingDataQualityMetricP95:
+		return true
+	case TracingDataQualityMetricP99:
+		return true
+	case TracingDataQualityMetricP999:
+		return true
+	case TracingDataQualityMetricPERCENTEMPTY:
+		return true
+	case TracingDataQualityMetricSTANDARDDEVIATION:
+		return true
+	case TracingDataQualityMetricSUM:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for TracingMonitorType.
+const (
+	TracingMonitorTypeTRACING TracingMonitorType = "TRACING"
+)
+
+// Valid indicates whether the value is a known member of the TracingMonitorType enum.
+func (e TracingMonitorType) Valid() bool {
+	switch e {
+	case TracingMonitorTypeTRACING:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for UpdateAgentIntegrationRequestType.
+const (
+	UpdateAgentIntegrationRequestTypeAGENT UpdateAgentIntegrationRequestType = "AGENT"
+)
+
+// Valid indicates whether the value is a known member of the UpdateAgentIntegrationRequestType enum.
+func (e UpdateAgentIntegrationRequestType) Valid() bool {
+	switch e {
+	case UpdateAgentIntegrationRequestTypeAGENT:
 		return true
 	default:
 		return false
@@ -1727,6 +2441,21 @@ func (e UserStatus) Valid() bool {
 	}
 }
 
+// Defines values for WebhookNotificationConfigType.
+const (
+	WebhookNotificationConfigTypeWEBHOOK WebhookNotificationConfigType = "WEBHOOK"
+)
+
+// Valid indicates whether the value is a known member of the WebhookNotificationConfigType enum.
+func (e WebhookNotificationConfigType) Valid() bool {
+	switch e {
+	case WebhookNotificationConfigTypeWEBHOOK:
+		return true
+	default:
+		return false
+	}
+}
+
 // AddAnnotationQueueRecordsRequest defines model for AddAnnotationQueueRecordsRequest.
 type AddAnnotationQueueRecordsRequest struct {
 	// RecordSources Record sources to add to the annotation queue. At most 2 record sources (projects or datasets) may be provided in a single request.
@@ -1753,6 +2482,87 @@ type AddSpaceUserRequest struct {
 
 	// UserId The unique identifier of the user to add
 	UserId Id `json:"user_id"`
+}
+
+// AgentConfig Configuration for `type: AGENT` integrations: a customer-hosted HTTPS
+// endpoint plus a JSON Schema describing the request payload.
+type AgentConfig struct {
+	// Endpoint HTTPS endpoint URL Arize calls for replay. Validated server-side
+	// for SSRF (must resolve to a public address).
+	Endpoint string `json:"endpoint"`
+
+	// HasHeaders Whether any headers are configured. Read-only — derived from
+	// `headers` on write. Header values are never returned.
+	HasHeaders *bool `json:"has_headers,omitempty"`
+
+	// InputSchema JSON Schema (Draft-07) the endpoint's request body conforms to.
+	InputSchema map[string]interface{} `json:"input_schema"`
+
+	// RequestPresets Named, reusable request payloads. Replace-on-provide on PATCH.
+	// Always present; an integration with no presets returns `[]`.
+	RequestPresets []AgentRequestPreset `json:"request_presets"`
+}
+
+// AgentIntegration An agent integration (type=AGENT): a customer-hosted HTTPS endpoint plus
+// a JSON Schema describing the request payload.
+type AgentIntegration struct {
+	// Config Configuration for `type: AGENT` integrations: a customer-hosted HTTPS
+	// endpoint plus a JSON Schema describing the request payload.
+	Config AgentConfig `json:"config"`
+
+	// CreatedAt When the integration was created.
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId Unique identifier of the user who created the integration. Null if that user has since been deleted.
+	CreatedByUserId *string `json:"created_by_user_id"`
+
+	// Description Optional human-readable description of the integration.
+	Description *string `json:"description,omitempty"`
+
+	// Id The unique identifier for the integration.
+	Id string `json:"id"`
+
+	// Name The integration name. Unique per (account, type).
+	Name string `json:"name"`
+
+	// Scopings Visibility scoping rules. Account-wide when empty.
+	Scopings []IntegrationScoping `json:"scopings"`
+
+	// Type Discriminator identifying an agent integration.
+	Type AgentIntegrationType `json:"type"`
+
+	// UpdatedAt When the integration was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// AgentIntegrationType Discriminator identifying an agent integration.
+type AgentIntegrationType string
+
+// AgentRequestPreset A named, reusable request payload bound to an agent integration. Embedded
+// in `agent.config.request_presets[]`. There is no standalone preset
+// endpoint; presets are managed exclusively via the nested collection on
+// the parent integration.
+//
+// Validation rules:
+//   - `name` is unique within the integration (case-sensitive). Length 1-255.
+//   - `description` length 0-1024 (nullable).
+//   - `config` must conform to the integration's `input_schema` *with
+//     `required` dropped* (present fields validated; missing fields ignored).
+type AgentRequestPreset struct {
+	// Config Partial request body. Validated against the parent integration's
+	// `input_schema` with `required` dropped.
+	Config    map[string]interface{} `json:"config"`
+	CreatedAt *time.Time             `json:"created_at,omitempty"`
+
+	// Description Optional preset description (length 0-1024).
+	Description *string `json:"description,omitempty"`
+
+	// Id Server-generated, opaque preset identifier. Read-only.
+	Id *string `json:"id,omitempty"`
+
+	// Name Preset name (unique within the integration). Length 1-255.
+	Name      string     `json:"name"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 // AiIntegration An AI integration configures access to an external LLM provider (e.g. OpenAI,
@@ -2307,6 +3117,11 @@ type AzureParams struct {
 	AzureOpenaiVersion *string `json:"azure_openai_version,omitempty"`
 }
 
+// BaselineConfig The comparison dataset configuration used by drift and comparison-based data quality monitors. The `type` field determines whether the comparison dataset uses the model's primary baseline or a custom fixed or moving window.
+type BaselineConfig struct {
+	union json.RawMessage
+}
+
 // BedrockOptions AWS Bedrock options
 type BedrockOptions struct {
 	// UseConverseEndpoint Whether to use the AWS Bedrock Converse endpoint. Defaults to `false`.
@@ -2386,6 +3201,52 @@ type ContinuousAnnotationConfig struct {
 
 // ContinuousAnnotationConfigType Discriminator value identifying a continuous annotation config.
 type ContinuousAnnotationConfigType string
+
+// CreateAgentConfig defines model for CreateAgentConfig.
+type CreateAgentConfig struct {
+	Endpoint string `json:"endpoint"`
+
+	// Headers Cleartext header map. Encrypted at rest; never returned in responses.
+	Headers *map[string]string `json:"headers,omitempty"`
+
+	// InputSchema JSON Schema (Draft-07) the endpoint's request body conforms to.
+	InputSchema map[string]interface{} `json:"input_schema"`
+
+	// RequestPresets Optional initial presets for the integration.
+	RequestPresets *[]CreateAgentRequestPresetInput `json:"request_presets,omitempty"`
+}
+
+// CreateAgentIntegrationRequest defines model for CreateAgentIntegrationRequest.
+type CreateAgentIntegrationRequest struct {
+	Config      CreateAgentConfig `json:"config"`
+	Description *string           `json:"description,omitempty"`
+
+	// Name Integration name (unique within the account).
+	Name string `json:"name"`
+
+	// Scopings Visibility scoping rules. Defaults to account-wide if omitted
+	// or empty. A scoping with `space_id` set MUST also set
+	// `organization_id`.
+	Scopings *[]IntegrationScoping             `json:"scopings,omitempty"`
+	Type     CreateAgentIntegrationRequestType `json:"type"`
+}
+
+// CreateAgentIntegrationRequestType defines model for CreateAgentIntegrationRequest.Type.
+type CreateAgentIntegrationRequestType string
+
+// CreateAgentRequestPresetInput Write shape for an agent request preset on create. Server-generated fields
+// (`id`, `created_at`, `updated_at`) are not accepted on input.
+type CreateAgentRequestPresetInput struct {
+	// Config Partial request body. Validated against the parent integration's
+	// `input_schema` with `required` dropped.
+	Config map[string]interface{} `json:"config"`
+
+	// Description Optional preset description (length 0-1024).
+	Description *string `json:"description,omitempty"`
+
+	// Name Preset name (unique within the integration). Length 1-255.
+	Name string `json:"name"`
+}
 
 // CreateAiIntegrationRequest defines model for CreateAiIntegrationRequest.
 type CreateAiIntegrationRequest struct {
@@ -2973,6 +3834,27 @@ type CreateUserResponse struct {
 	TemporaryPassword *string `json:"temporary_password,omitempty"`
 }
 
+// CustomBaselineConfig Uses a custom fixed or moving window as the comparison dataset.
+type CustomBaselineConfig struct {
+	// Filters Filters applied to the comparison dataset. An empty array means no comparison dataset filters are configured.
+	Filters []MonitorFilter `json:"filters"`
+
+	// ModelVersions Model versions included in the comparison dataset. An empty array means all model versions.
+	ModelVersions []string                 `json:"model_versions"`
+	Type          CustomBaselineConfigType `json:"type"`
+
+	// Window The custom comparison window. The `type` field determines whether the window is fixed or moving.
+	Window CustomBaselineWindow `json:"window"`
+}
+
+// CustomBaselineConfigType defines model for CustomBaselineConfig.Type.
+type CustomBaselineConfigType string
+
+// CustomBaselineWindow The custom comparison window. The `type` field determines whether the window is fixed or moving.
+type CustomBaselineWindow struct {
+	union json.RawMessage
+}
+
 // CustomCodeConfig defines model for CustomCodeConfig.
 type CustomCodeConfig struct {
 	// Code Python source defining the evaluator class
@@ -3006,6 +3888,75 @@ type CustomCodeConfig struct {
 // CustomCodeConfigType Discriminator identifying this as a custom (user-supplied Python) code evaluator
 type CustomCodeConfigType string
 
+// CustomMetricMonitor defines model for CustomMetricMonitor.
+type CustomMetricMonitor struct {
+	// CreatedAt When the monitor was created.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+
+	// CreatedByUserId The user who created the monitor (base64 global ID).
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// CustomMetricId The custom metric this monitor evaluates (base64 global ID).
+	CustomMetricId string `json:"custom_metric_id"`
+
+	// DelaySeconds The delay applied before evaluating a window, in seconds. Omitted when unset.
+	DelaySeconds *int            `json:"delay_seconds,omitempty"`
+	Downtime     *DowntimeConfig `json:"downtime,omitempty"`
+
+	// EvaluatedAt The last time the metric was computed. Omitted if it has never been evaluated.
+	EvaluatedAt *time.Time `json:"evaluated_at,omitempty"`
+
+	// EvaluationWindowLengthSeconds The length of the evaluation window in seconds. Omitted when unset.
+	EvaluationWindowLengthSeconds *int `json:"evaluation_window_length_seconds,omitempty"`
+
+	// Filters Data filters applied to the monitor's metric. Omitted when the metric is computed over all data.
+	Filters *[]MonitorFilter `json:"filters,omitempty"`
+
+	// Id Unique identifier for the monitor (base64 global ID).
+	Id string `json:"id"`
+
+	// LatestComputedValue The most recently computed metric value. Omitted if it has never been evaluated.
+	LatestComputedValue *float32 `json:"latest_computed_value,omitempty"`
+
+	// ManualEvaluationEnabled Whether the monitor is evaluated manually rather than on the automatic cadence.
+	ManualEvaluationEnabled bool `json:"manual_evaluation_enabled"`
+
+	// ModelVersions The model versions the metric is scoped to. An empty array means all model versions.
+	ModelVersions []string `json:"model_versions"`
+
+	// Name Human-readable name of the monitor.
+	Name string `json:"name"`
+
+	// Notes Free-form notes attached to the monitor. Omitted when unset.
+	Notes *string `json:"notes,omitempty"`
+
+	// NotificationConfigs Notification channels (email / integration / webhook) notified on a triggered transition. Omitted when no channels are configured.
+	NotificationConfigs *[]NotificationConfig `json:"notification_configs,omitempty"`
+
+	// NotificationsEnabled Whether notifications fire on a triggered transition.
+	NotificationsEnabled bool `json:"notifications_enabled"`
+
+	// ProjectId The project that the monitor belongs to (base64 global ID).
+	ProjectId        string                  `json:"project_id"`
+	ScheduledRuntime *ScheduledRuntimeConfig `json:"scheduled_runtime,omitempty"`
+
+	// Status Current evaluation state. Read-only.
+	Status MonitorStatus `json:"status"`
+
+	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
+	Threshold ThresholdConfig         `json:"threshold"`
+	Type      CustomMetricMonitorType `json:"type"`
+
+	// UpdatedAt When the monitor was last updated.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+
+	// Uri The UI deep link to the monitor.
+	Uri *string `json:"uri,omitempty"`
+}
+
+// CustomMetricMonitorType defines model for CustomMetricMonitor.Type.
+type CustomMetricMonitorType string
+
 // CustomRoleAssignment A custom RBAC role assignment.
 type CustomRoleAssignment struct {
 	// Id The unique identifier of the custom RBAC role.
@@ -3037,6 +3988,82 @@ type CustomUserRoleAssignment struct {
 // - TRACE - Evaluate at the full trace level.
 // - SESSION - Evaluate at the session level.
 type DataGranularity string
+
+// DataQualityMetric The data quality metric computed over the selected dimension.
+type DataQualityMetric string
+
+// DataQualityMonitor defines model for DataQualityMonitor.
+type DataQualityMonitor struct {
+	// BaselineConfig The comparison dataset configuration used by drift and comparison-based data quality monitors. The `type` field determines whether the comparison dataset uses the model's primary baseline or a custom fixed or moving window.
+	BaselineConfig *BaselineConfig `json:"baseline_config,omitempty"`
+
+	// CreatedAt When the monitor was created.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+
+	// CreatedByUserId The user who created the monitor (base64 global ID).
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// DelaySeconds The delay applied before evaluating a window, in seconds. Omitted when unset.
+	DelaySeconds *int            `json:"delay_seconds,omitempty"`
+	Dimension    Dimension       `json:"dimension"`
+	Downtime     *DowntimeConfig `json:"downtime,omitempty"`
+
+	// EvaluatedAt The last time the metric was computed. Omitted if it has never been evaluated.
+	EvaluatedAt *time.Time `json:"evaluated_at,omitempty"`
+
+	// EvaluationWindowLengthSeconds The length of the evaluation window in seconds. Omitted when unset.
+	EvaluationWindowLengthSeconds *int `json:"evaluation_window_length_seconds,omitempty"`
+
+	// Filters Data filters applied to the monitor's metric. Omitted when the metric is computed over all data.
+	Filters *[]MonitorFilter `json:"filters,omitempty"`
+
+	// Id Unique identifier for the monitor (base64 global ID).
+	Id string `json:"id"`
+
+	// LatestComputedValue The most recently computed metric value. Omitted if it has never been evaluated.
+	LatestComputedValue *float32 `json:"latest_computed_value,omitempty"`
+
+	// ManualEvaluationEnabled Whether the monitor is evaluated manually rather than on the automatic cadence.
+	ManualEvaluationEnabled bool `json:"manual_evaluation_enabled"`
+
+	// Metric The data quality metric computed over the selected dimension.
+	Metric DataQualityMetric `json:"metric"`
+
+	// ModelVersions The model versions the metric is scoped to. An empty array means all model versions.
+	ModelVersions []string `json:"model_versions"`
+
+	// Name Human-readable name of the monitor.
+	Name string `json:"name"`
+
+	// Notes Free-form notes attached to the monitor. Omitted when unset.
+	Notes *string `json:"notes,omitempty"`
+
+	// NotificationConfigs Notification channels (email / integration / webhook) notified on a triggered transition. Omitted when no channels are configured.
+	NotificationConfigs *[]NotificationConfig `json:"notification_configs,omitempty"`
+
+	// NotificationsEnabled Whether notifications fire on a triggered transition.
+	NotificationsEnabled bool `json:"notifications_enabled"`
+
+	// ProjectId The project that the monitor belongs to (base64 global ID).
+	ProjectId        string                  `json:"project_id"`
+	ScheduledRuntime *ScheduledRuntimeConfig `json:"scheduled_runtime,omitempty"`
+
+	// Status Current evaluation state. Read-only.
+	Status MonitorStatus `json:"status"`
+
+	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
+	Threshold ThresholdConfig        `json:"threshold"`
+	Type      DataQualityMonitorType `json:"type"`
+
+	// UpdatedAt When the monitor was last updated.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+
+	// Uri The UI deep link to the monitor.
+	Uri *string `json:"uri,omitempty"`
+}
+
+// DataQualityMonitorType defines model for DataQualityMonitor.Type.
+type DataQualityMonitorType string
 
 // Dataset A dataset is a structured collection of examples used to test and evaluate
 // LLM applications. Datasets allow you to test models consistently across
@@ -3264,8 +4291,166 @@ type DeleteSpansResponse struct {
 	NotDeletedSpanIds []string `json:"not_deleted_span_ids"`
 }
 
+// Dimension defines model for Dimension.
+type Dimension struct {
+	// Category The category of the monitored dimension.
+	Category DimensionCategory `json:"category"`
+
+	// Name Name of the monitored field. Omitted when the category has no concrete field name.
+	Name *string `json:"name,omitempty"`
+}
+
+// DimensionCategory The category of dimension the metric is evaluated over.
+type DimensionCategory string
+
+// DowntimeConfig defines model for DowntimeConfig.
+type DowntimeConfig struct {
+	// DurationSeconds How long each downtime window lasts, in seconds.
+	DurationSeconds int `json:"duration_seconds"`
+
+	// FrequencyDays How often the downtime window repeats, in days.
+	FrequencyDays int `json:"frequency_days"`
+
+	// Start When the downtime window begins.
+	Start time.Time `json:"start"`
+}
+
+// DriftMetric The statistical drift metric. `PSI`/`KL`/`JS`/`KS` apply to structured data;
+// `EUCLIDEAN_DISTANCE`/`COSINE_SIMILARITY` apply to unstructured (embedding) data.
+type DriftMetric string
+
+// DriftMonitor defines model for DriftMonitor.
+type DriftMonitor struct {
+	// BaselineConfig The comparison dataset configuration used by drift and comparison-based data quality monitors. The `type` field determines whether the comparison dataset uses the model's primary baseline or a custom fixed or moving window.
+	BaselineConfig BaselineConfig `json:"baseline_config"`
+
+	// CreatedAt When the monitor was created.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+
+	// CreatedByUserId The user who created the monitor (base64 global ID).
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// DelaySeconds The delay applied before evaluating a window, in seconds. Omitted when unset.
+	DelaySeconds *int            `json:"delay_seconds,omitempty"`
+	Dimension    Dimension       `json:"dimension"`
+	Downtime     *DowntimeConfig `json:"downtime,omitempty"`
+
+	// EvaluatedAt The last time the metric was computed. Omitted if it has never been evaluated.
+	EvaluatedAt *time.Time `json:"evaluated_at,omitempty"`
+
+	// EvaluationWindowLengthSeconds The length of the evaluation window in seconds. Omitted when unset.
+	EvaluationWindowLengthSeconds *int `json:"evaluation_window_length_seconds,omitempty"`
+
+	// Filters Data filters applied to the monitor's metric. Omitted when the metric is computed over all data.
+	Filters *[]MonitorFilter `json:"filters,omitempty"`
+
+	// Id Unique identifier for the monitor (base64 global ID).
+	Id string `json:"id"`
+
+	// LatestComputedValue The most recently computed metric value. Omitted if it has never been evaluated.
+	LatestComputedValue *float32 `json:"latest_computed_value,omitempty"`
+
+	// ManualEvaluationEnabled Whether the monitor is evaluated manually rather than on the automatic cadence.
+	ManualEvaluationEnabled bool `json:"manual_evaluation_enabled"`
+
+	// Metric The statistical drift metric. `PSI`/`KL`/`JS`/`KS` apply to structured data;
+	// `EUCLIDEAN_DISTANCE`/`COSINE_SIMILARITY` apply to unstructured (embedding) data.
+	Metric DriftMetric `json:"metric"`
+
+	// ModelVersions The model versions the metric is scoped to. An empty array means all model versions.
+	ModelVersions []string `json:"model_versions"`
+
+	// Name Human-readable name of the monitor.
+	Name string `json:"name"`
+
+	// Notes Free-form notes attached to the monitor. Omitted when unset.
+	Notes *string `json:"notes,omitempty"`
+
+	// NotificationConfigs Notification channels (email / integration / webhook) notified on a triggered transition. Omitted when no channels are configured.
+	NotificationConfigs *[]NotificationConfig `json:"notification_configs,omitempty"`
+
+	// NotificationsEnabled Whether notifications fire on a triggered transition.
+	NotificationsEnabled bool `json:"notifications_enabled"`
+
+	// ProjectId The project that the monitor belongs to (base64 global ID).
+	ProjectId        string                  `json:"project_id"`
+	ScheduledRuntime *ScheduledRuntimeConfig `json:"scheduled_runtime,omitempty"`
+
+	// Status Current evaluation state. Read-only.
+	Status MonitorStatus `json:"status"`
+
+	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
+	Threshold ThresholdConfig  `json:"threshold"`
+	Type      DriftMonitorType `json:"type"`
+
+	// UpdatedAt When the monitor was last updated.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+
+	// Uri The UI deep link to the monitor.
+	Uri *string `json:"uri,omitempty"`
+}
+
+// DriftMonitorType defines model for DriftMonitor.Type.
+type DriftMonitorType string
+
+// DynamicRangeThreshold defines model for DynamicRangeThreshold.
+type DynamicRangeThreshold struct {
+	// Calculation The statistical calculation used to derive a dynamic threshold.
+	// - `STDEV` - standard deviation of the metric over the baseline.
+	// - `MAD` - median absolute deviation of the metric over the baseline.
+	Calculation ThresholdCalculation `json:"calculation"`
+
+	// Lower The lower bound of the range. Its `operator` must be `GREATER_THAN` or `GREATER_THAN_OR_EQUAL`.
+	Lower DynamicThresholdBound     `json:"lower"`
+	Type  DynamicRangeThresholdType `json:"type"`
+
+	// Upper The upper bound of the range. Its `operator` must be `LESS_THAN` or `LESS_THAN_OR_EQUAL`.
+	Upper DynamicThresholdBound `json:"upper"`
+}
+
+// DynamicRangeThresholdType defines model for DynamicRangeThreshold.Type.
+type DynamicRangeThresholdType string
+
+// DynamicSingleThreshold defines model for DynamicSingleThreshold.
+type DynamicSingleThreshold struct {
+	// Calculation The statistical calculation used to derive a dynamic threshold.
+	// - `STDEV` - standard deviation of the metric over the baseline.
+	// - `MAD` - median absolute deviation of the metric over the baseline.
+	Calculation ThresholdCalculation `json:"calculation"`
+
+	// Multiplier The multiplier applied to the calculation (e.g. number of standard
+	// deviations) to derive the threshold.
+	Multiplier float32 `json:"multiplier"`
+
+	// Operator Numeric comparison operators used when evaluating a computed metric value against a threshold.
+	Operator ThresholdOperator          `json:"operator"`
+	Type     DynamicSingleThresholdType `json:"type"`
+}
+
+// DynamicSingleThresholdType defines model for DynamicSingleThreshold.Type.
+type DynamicSingleThresholdType string
+
+// DynamicThresholdBound defines model for DynamicThresholdBound.
+type DynamicThresholdBound struct {
+	// Multiplier The multiplier applied to the calculation (e.g. number of standard deviations) to derive this bound.
+	Multiplier float32 `json:"multiplier"`
+
+	// Operator Numeric comparison operators used when evaluating a computed metric value against a threshold.
+	Operator ThresholdOperator `json:"operator"`
+}
+
 // Email An email address
 type Email = openapi_types.Email
+
+// EmailNotificationConfig defines model for EmailNotificationConfig.
+type EmailNotificationConfig struct {
+	// EmailAddress Email address notified on a triggered transition.
+	EmailAddress openapi_types.Email         `json:"email_address"`
+	Type         EmailNotificationConfigType `json:"type"`
+}
+
+// EmailNotificationConfigType defines model for EmailNotificationConfig.Type.
+type EmailNotificationConfigType string
 
 // Evaluation An evaluation result on a record.
 type Evaluation struct {
@@ -3569,6 +4754,11 @@ type Experiment struct {
 	// Id Unique identifier for the experiment
 	Id string `json:"id"`
 
+	// IntegrationId Identifier (base64) of the agent integration that backs this
+	// experiment, as returned by the integrations API. Null for non-agent
+	// experiments (for example, SDK or Playground experiments).
+	IntegrationId *string `json:"integration_id,omitempty"`
+
 	// Name Name of the experiment
 	Name string `json:"name"`
 
@@ -3622,6 +4812,11 @@ type ExperimentWithRunIds struct {
 	// Id Unique identifier for the experiment
 	Id string `json:"id"`
 
+	// IntegrationId Identifier (base64) of the agent integration that backs this
+	// experiment, as returned by the integrations API. Null for non-agent
+	// experiments (for example, SDK or Playground experiments).
+	IntegrationId *string `json:"integration_id,omitempty"`
+
 	// Name Name of the experiment
 	Name string `json:"name"`
 
@@ -3631,6 +4826,22 @@ type ExperimentWithRunIds struct {
 	// UpdatedAt Timestamp for the last update of the experiment
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+// FilterOperator Operators used by a monitor's data filters. Includes string operators as well as numeric ones.
+type FilterOperator string
+
+// FixedCustomBaselineWindow A custom comparison dataset using data between a fixed start and end date.
+type FixedCustomBaselineWindow struct {
+	// FixedEndDate The end of the fixed comparison window.
+	FixedEndDate time.Time `json:"fixed_end_date"`
+
+	// FixedStartDate The start of the fixed comparison window.
+	FixedStartDate time.Time                     `json:"fixed_start_date"`
+	Type           FixedCustomBaselineWindowType `json:"type"`
+}
+
+// FixedCustomBaselineWindowType defines model for FixedCustomBaselineWindow.Type.
+type FixedCustomBaselineWindowType string
 
 // FreeformAnnotationConfig defines model for FreeformAnnotationConfig.
 type FreeformAnnotationConfig struct {
@@ -3697,6 +4908,16 @@ type Integration struct {
 	union json.RawMessage
 }
 
+// IntegrationNotificationConfig defines model for IntegrationNotificationConfig.
+type IntegrationNotificationConfig struct {
+	// IntegrationId The integration to notify (base64 global ID).
+	IntegrationId string                            `json:"integration_id"`
+	Type          IntegrationNotificationConfigType `json:"type"`
+}
+
+// IntegrationNotificationConfigType defines model for IntegrationNotificationConfig.Type.
+type IntegrationNotificationConfigType string
+
 // IntegrationScoping Visibility scoping for the integration.
 type IntegrationScoping struct {
 	// OrganizationId Organization identifier (base64). Null means account-wide.
@@ -3706,7 +4927,11 @@ type IntegrationScoping struct {
 	SpaceId *string `json:"space_id,omitempty"`
 }
 
-// IntegrationType The integration category. Selects the shape of `config`. Currently only `LLM` is implemented; additional types (agent, alerting, webhook) are added non-breakingly.
+// IntegrationType The integration category. Selects the shape of `config`. Additive — new
+// types (alerting, webhook, ...) are added non-breakingly.
+//
+// - `LLM`   — a model-provider integration (e.g. OpenAI).
+// - `AGENT` — connects your own agent, exposed at an HTTP endpoint.
 type IntegrationType string
 
 // InviteMode Controls how the user is invited to the account.
@@ -4142,10 +5367,10 @@ type LlmIntegration struct {
 	// CreatedAt When the integration was created.
 	CreatedAt time.Time `json:"created_at"`
 
-	// CreatedByUserId Global ID of the user who created the integration.
+	// CreatedByUserId Unique identifier of the user who created the integration.
 	CreatedByUserId string `json:"created_by_user_id"`
 
-	// Id The integration ID (base64 global ID).
+	// Id The unique identifier for the integration.
 	Id string `json:"id"`
 
 	// Name The integration name. Unique per (account, type).
@@ -4206,8 +5431,163 @@ type ManagedCodeConfigType string
 // ManagedCodeEvaluator Built-in managed code evaluator name
 type ManagedCodeEvaluator string
 
+// ManualRangeThreshold defines model for ManualRangeThreshold.
+type ManualRangeThreshold struct {
+	// Lower The lower bound of the range. Its operator must be `GREATER_THAN` or `GREATER_THAN_OR_EQUAL`.
+	Lower ManualThresholdBound     `json:"lower"`
+	Type  ManualRangeThresholdType `json:"type"`
+
+	// Upper The upper bound of the range. Its `operator` must be `LESS_THAN` or `LESS_THAN_OR_EQUAL`.
+	Upper ManualThresholdBound `json:"upper"`
+}
+
+// ManualRangeThresholdType defines model for ManualRangeThreshold.Type.
+type ManualRangeThresholdType string
+
+// ManualSingleThreshold defines model for ManualSingleThreshold.
+type ManualSingleThreshold struct {
+	// Operator Numeric comparison operators used when evaluating a computed metric value against a threshold.
+	Operator ThresholdOperator         `json:"operator"`
+	Type     ManualSingleThresholdType `json:"type"`
+
+	// Value The threshold value the computed metric is compared against.
+	Value float32 `json:"value"`
+}
+
+// ManualSingleThresholdType defines model for ManualSingleThreshold.Type.
+type ManualSingleThresholdType string
+
+// ManualThresholdBound defines model for ManualThresholdBound.
+type ManualThresholdBound struct {
+	// Operator Numeric comparison operators used when evaluating a computed metric value against a threshold.
+	Operator ThresholdOperator `json:"operator"`
+
+	// Value The bound value the computed metric is compared against.
+	Value float32 `json:"value"`
+}
+
 // MessageRole The role of the message author
 type MessageRole string
+
+// ModelBaselineConfig Uses the model's primary baseline as the comparison dataset.
+type ModelBaselineConfig struct {
+	// Filters Filters applied to the comparison dataset. An empty array means no comparison dataset filters are configured.
+	Filters []MonitorFilter         `json:"filters"`
+	Type    ModelBaselineConfigType `json:"type"`
+}
+
+// ModelBaselineConfigType defines model for ModelBaselineConfig.Type.
+type ModelBaselineConfigType string
+
+// Monitor A monitor. The `type` field discriminates which variant (and therefore which type-specific fields) applies.
+type Monitor struct {
+	union json.RawMessage
+}
+
+// MonitorBase defines model for MonitorBase.
+type MonitorBase struct {
+	// CreatedAt When the monitor was created.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+
+	// CreatedByUserId The user who created the monitor (base64 global ID).
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// DelaySeconds The delay applied before evaluating a window, in seconds. Omitted when unset.
+	DelaySeconds *int            `json:"delay_seconds,omitempty"`
+	Downtime     *DowntimeConfig `json:"downtime,omitempty"`
+
+	// EvaluatedAt The last time the metric was computed. Omitted if it has never been evaluated.
+	EvaluatedAt *time.Time `json:"evaluated_at,omitempty"`
+
+	// EvaluationWindowLengthSeconds The length of the evaluation window in seconds. Omitted when unset.
+	EvaluationWindowLengthSeconds *int `json:"evaluation_window_length_seconds,omitempty"`
+
+	// Filters Data filters applied to the monitor's metric. Omitted when the metric is computed over all data.
+	Filters *[]MonitorFilter `json:"filters,omitempty"`
+
+	// Id Unique identifier for the monitor (base64 global ID).
+	Id string `json:"id"`
+
+	// LatestComputedValue The most recently computed metric value. Omitted if it has never been evaluated.
+	LatestComputedValue *float32 `json:"latest_computed_value,omitempty"`
+
+	// ManualEvaluationEnabled Whether the monitor is evaluated manually rather than on the automatic cadence.
+	ManualEvaluationEnabled bool `json:"manual_evaluation_enabled"`
+
+	// Name Human-readable name of the monitor.
+	Name string `json:"name"`
+
+	// Notes Free-form notes attached to the monitor. Omitted when unset.
+	Notes *string `json:"notes,omitempty"`
+
+	// NotificationConfigs Notification channels (email / integration / webhook) notified on a triggered transition. Omitted when no channels are configured.
+	NotificationConfigs *[]NotificationConfig `json:"notification_configs,omitempty"`
+
+	// NotificationsEnabled Whether notifications fire on a triggered transition.
+	NotificationsEnabled bool `json:"notifications_enabled"`
+
+	// ProjectId The project that the monitor belongs to (base64 global ID).
+	ProjectId        string                  `json:"project_id"`
+	ScheduledRuntime *ScheduledRuntimeConfig `json:"scheduled_runtime,omitempty"`
+
+	// Status Current evaluation state. Read-only.
+	Status MonitorStatus `json:"status"`
+
+	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
+	Threshold ThresholdConfig `json:"threshold"`
+
+	// Type Required on create. Immutable after creation.
+	Type MonitorType `json:"type"`
+
+	// UpdatedAt When the monitor was last updated.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+
+	// Uri The UI deep link to the monitor.
+	Uri *string `json:"uri,omitempty"`
+}
+
+// MonitorFilter defines model for MonitorFilter.
+type MonitorFilter struct {
+	Dimension Dimension `json:"dimension"`
+
+	// Operator Operators used by a monitor's data filters. Includes string operators as well as numeric ones.
+	Operator FilterOperator `json:"operator"`
+
+	// Values The values compared against by the operator.
+	Values []string `json:"values"`
+}
+
+// MonitorStatus The monitor's current state from its most recent evaluation.
+// - `TRIGGERED` - The metric breached the threshold.
+// - `CLEARED` - The metric is within healthy bounds.
+// - `NO_DATA` - No data was available to evaluate.
+type MonitorStatus string
+
+// MonitorType The kind of monitor. Determines which type-specific fields apply.
+// - `DATA_QUALITY` - Monitors a data quality metric (e.g. percent empty, CARDINALITY).
+// - `PERFORMANCE` - Monitors a model performance metric (e.g. ACCURACY, RMSE).
+// - `DRIFT` - Monitors distributional drift of a feature/output.
+// - `CUSTOM_METRIC` - Monitors a user-defined custom metric.
+// - `TRACING` - Monitors a span/trace-derived metric (e.g. span attributes, evals).
+type MonitorType string
+
+// MovingCustomBaselineWindow A custom comparison dataset using a moving window defined in seconds.
+type MovingCustomBaselineWindow struct {
+	// MovingWindowDelaySeconds The delay before the moving comparison window, in seconds.
+	MovingWindowDelaySeconds int `json:"moving_window_delay_seconds"`
+
+	// MovingWindowSeconds The length of the moving comparison window, in seconds.
+	MovingWindowSeconds int                            `json:"moving_window_seconds"`
+	Type                MovingCustomBaselineWindowType `json:"type"`
+}
+
+// MovingCustomBaselineWindowType defines model for MovingCustomBaselineWindow.Type.
+type MovingCustomBaselineWindowType string
+
+// NotificationConfig defines model for NotificationConfig.
+type NotificationConfig struct {
+	union json.RawMessage
+}
 
 // OpenAiConfig Config for an OpenAI LLM integration.
 type OpenAiConfig struct {
@@ -4317,6 +5697,84 @@ type PaginationMetadata struct {
 	// Present when `has_more` is true; omitted when `has_more` is false.
 	NextCursor *string `json:"next_cursor,omitempty"`
 }
+
+// PerformanceMetric The model performance metric.
+type PerformanceMetric string
+
+// PerformanceMonitor defines model for PerformanceMonitor.
+type PerformanceMonitor struct {
+	// CreatedAt When the monitor was created.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+
+	// CreatedByUserId The user who created the monitor (base64 global ID).
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// DelaySeconds The delay applied before evaluating a window, in seconds. Omitted when unset.
+	DelaySeconds *int            `json:"delay_seconds,omitempty"`
+	Downtime     *DowntimeConfig `json:"downtime,omitempty"`
+
+	// EvaluatedAt The last time the metric was computed. Omitted if it has never been evaluated.
+	EvaluatedAt *time.Time `json:"evaluated_at,omitempty"`
+
+	// EvaluationWindowLengthSeconds The length of the evaluation window in seconds. Omitted when unset.
+	EvaluationWindowLengthSeconds *int `json:"evaluation_window_length_seconds,omitempty"`
+
+	// Filters Data filters applied to the monitor's metric. Omitted when the metric is computed over all data.
+	Filters *[]MonitorFilter `json:"filters,omitempty"`
+
+	// Id Unique identifier for the monitor (base64 global ID).
+	Id string `json:"id"`
+
+	// LatestComputedValue The most recently computed metric value. Omitted if it has never been evaluated.
+	LatestComputedValue *float32 `json:"latest_computed_value,omitempty"`
+
+	// ManualEvaluationEnabled Whether the monitor is evaluated manually rather than on the automatic cadence.
+	ManualEvaluationEnabled bool `json:"manual_evaluation_enabled"`
+
+	// Metric The model performance metric.
+	Metric PerformanceMetric `json:"metric"`
+
+	// MetricAtRankingKValue The `k` cutoff for ranking metrics (e.g. NDCG@k). Omitted when unset.
+	MetricAtRankingKValue *int `json:"metric_at_ranking_k_value,omitempty"`
+
+	// ModelVersions The model versions the metric is scoped to. An empty array means all model versions.
+	ModelVersions []string `json:"model_versions"`
+
+	// Name Human-readable name of the monitor.
+	Name string `json:"name"`
+
+	// Notes Free-form notes attached to the monitor. Omitted when unset.
+	Notes *string `json:"notes,omitempty"`
+
+	// NotificationConfigs Notification channels (email / integration / webhook) notified on a triggered transition. Omitted when no channels are configured.
+	NotificationConfigs *[]NotificationConfig `json:"notification_configs,omitempty"`
+
+	// NotificationsEnabled Whether notifications fire on a triggered transition.
+	NotificationsEnabled bool `json:"notifications_enabled"`
+
+	// PositiveClassValue The positive class used for classification metrics. Omitted when unset.
+	PositiveClassValue *string `json:"positive_class_value,omitempty"`
+
+	// ProjectId The project that the monitor belongs to (base64 global ID).
+	ProjectId        string                  `json:"project_id"`
+	ScheduledRuntime *ScheduledRuntimeConfig `json:"scheduled_runtime,omitempty"`
+
+	// Status Current evaluation state. Read-only.
+	Status MonitorStatus `json:"status"`
+
+	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
+	Threshold ThresholdConfig        `json:"threshold"`
+	Type      PerformanceMonitorType `json:"type"`
+
+	// UpdatedAt When the monitor was last updated.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+
+	// Uri The UI deep link to the monitor.
+	Uri *string `json:"uri,omitempty"`
+}
+
+// PerformanceMonitorType defines model for PerformanceMonitor.Type.
+type PerformanceMonitorType string
 
 // Permission A permission identifier following the pattern {RESOURCE}_{ACTION}.
 // Auto-generated from proto/auth/protocol/permissions.proto.
@@ -4643,6 +6101,18 @@ type RoleBindingResourceType string
 // the top level alongside `experiment_type` (flat — no wrapper sub-object).
 type RunConfiguration struct {
 	union json.RawMessage
+}
+
+// ScheduledRuntimeConfig defines model for ScheduledRuntimeConfig.
+type ScheduledRuntimeConfig struct {
+	// CadenceSeconds How often the monitor evaluates, in seconds.
+	CadenceSeconds *int `json:"cadence_seconds,omitempty"`
+
+	// DaysOfWeek Days of the week the monitor runs on (`0` = Sunday … `6` = Saturday).
+	DaysOfWeek *[]int `json:"days_of_week,omitempty"`
+
+	// Enabled Whether the monitor runs on a schedule. `false` means automatic scheduled evaluation is disabled.
+	Enabled bool `json:"enabled"`
 }
 
 // SetPromptVersionLabelsRequest Labels to set on a prompt version.
@@ -5009,6 +6479,19 @@ type TemplateEvaluationRunConfig struct {
 // TemplateEvaluationRunConfigExperimentType Discriminator. Must be `"TEMPLATE_EVALUATION"`.
 type TemplateEvaluationRunConfigExperimentType string
 
+// ThresholdCalculation The statistical calculation used to derive a dynamic threshold.
+// - `STDEV` - standard deviation of the metric over the baseline.
+// - `MAD` - median absolute deviation of the metric over the baseline.
+type ThresholdCalculation string
+
+// ThresholdConfig The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
+type ThresholdConfig struct {
+	union json.RawMessage
+}
+
+// ThresholdOperator Numeric comparison operators used when evaluating a computed metric value against a threshold.
+type ThresholdOperator string
+
 // ToolCall A tool call generated by the model
 type ToolCall struct {
 	// Function The function to call
@@ -5082,6 +6565,81 @@ type Trace struct {
 	TraceId string `json:"trace_id"`
 }
 
+// TracingDataQualityMetric The data quality metrics computed by a tracing monitor.
+// Numeric span attributes support aggregations such as `SUM` and `AVG`;
+// categorical attributes support `COUNT`, `PERCENT_EMPTY`, and `CARDINALITY`.
+// Comparison metrics (`NEW_VALUES`, `MISSING_VALUES`) are not supported.
+type TracingDataQualityMetric string
+
+// TracingMonitor defines model for TracingMonitor.
+type TracingMonitor struct {
+	// CreatedAt When the monitor was created.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+
+	// CreatedByUserId The user who created the monitor (base64 global ID).
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// DelaySeconds The delay applied before evaluating a window, in seconds. Omitted when unset.
+	DelaySeconds *int `json:"delay_seconds,omitempty"`
+
+	// Dimension The span/trace-derived field the metric is computed over. **Restricted to span_attribute, llm_eval, and user_annotation only.**
+	Dimension Dimension       `json:"dimension"`
+	Downtime  *DowntimeConfig `json:"downtime,omitempty"`
+
+	// EvaluatedAt The last time the metric was computed. Omitted if it has never been evaluated.
+	EvaluatedAt *time.Time `json:"evaluated_at,omitempty"`
+
+	// EvaluationWindowLengthSeconds The length of the evaluation window in seconds. Omitted when unset.
+	EvaluationWindowLengthSeconds *int `json:"evaluation_window_length_seconds,omitempty"`
+
+	// Filters Data filters applied to the monitor's metric. Omitted when the metric is computed over all data.
+	Filters *[]MonitorFilter `json:"filters,omitempty"`
+
+	// Id Unique identifier for the monitor (base64 global ID).
+	Id string `json:"id"`
+
+	// LatestComputedValue The most recently computed metric value. Omitted if it has never been evaluated.
+	LatestComputedValue *float32 `json:"latest_computed_value,omitempty"`
+
+	// ManualEvaluationEnabled Whether the monitor is evaluated manually rather than on the automatic cadence.
+	ManualEvaluationEnabled bool `json:"manual_evaluation_enabled"`
+
+	// Metric Tracing monitors support only these data quality metrics.
+	Metric TracingDataQualityMetric `json:"metric"`
+
+	// Name Human-readable name of the monitor.
+	Name string `json:"name"`
+
+	// Notes Free-form notes attached to the monitor. Omitted when unset.
+	Notes *string `json:"notes,omitempty"`
+
+	// NotificationConfigs Notification channels (email / integration / webhook) notified on a triggered transition. Omitted when no channels are configured.
+	NotificationConfigs *[]NotificationConfig `json:"notification_configs,omitempty"`
+
+	// NotificationsEnabled Whether notifications fire on a triggered transition.
+	NotificationsEnabled bool `json:"notifications_enabled"`
+
+	// ProjectId The project that the monitor belongs to (base64 global ID).
+	ProjectId        string                  `json:"project_id"`
+	ScheduledRuntime *ScheduledRuntimeConfig `json:"scheduled_runtime,omitempty"`
+
+	// Status Current evaluation state. Read-only.
+	Status MonitorStatus `json:"status"`
+
+	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
+	Threshold ThresholdConfig    `json:"threshold"`
+	Type      TracingMonitorType `json:"type"`
+
+	// UpdatedAt When the monitor was last updated.
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+
+	// Uri The UI deep link to the monitor.
+	Uri *string `json:"uri,omitempty"`
+}
+
+// TracingMonitorType defines model for TracingMonitor.Type.
+type TracingMonitorType string
+
 // TriggerEvaluationTaskRunRequest Trigger request for `TEMPLATE_EVALUATION` or `CODE_EVALUATION` tasks.
 // `data_start_time` and `data_end_time` together must span no more than 30 days.
 // `data_start_time` must be before `data_end_time`.
@@ -5151,6 +6709,59 @@ type TriggerRunExperimentTaskRunRequest struct {
 // optional — an empty body is valid and uses server defaults.
 type TriggerTaskRunRequest struct {
 	union json.RawMessage
+}
+
+// UpdateAgentConfig Partial agent config for PATCH. All collection fields are
+// replace-on-provide.
+type UpdateAgentConfig struct {
+	Endpoint *string `json:"endpoint,omitempty"`
+
+	// Headers Replace-on-provide. Pass `null` (or `{}`) to clear all headers.
+	// Encrypted at rest; never returned in responses.
+	Headers *map[string]string `json:"headers,omitempty"`
+
+	// InputSchema New JSON Schema for the request payload shape.
+	InputSchema *map[string]interface{} `json:"input_schema,omitempty"`
+
+	// RequestPresets Replace-on-provide preset list, matched by `name`: existing names
+	// update in place (preserving id/timestamps), new names insert,
+	// removed names delete.
+	RequestPresets *[]UpdateAgentRequestPresetInput `json:"request_presets,omitempty"`
+}
+
+// UpdateAgentIntegrationRequest Partial update body for `type=AGENT`. `type` is immutable; if present
+// it must equal `AGENT` (422 otherwise).
+type UpdateAgentIntegrationRequest struct {
+	// Config Partial agent config for PATCH. All collection fields are
+	// replace-on-provide.
+	Config      *UpdateAgentConfig `json:"config,omitempty"`
+	Description *string            `json:"description,omitempty"`
+	Name        *string            `json:"name,omitempty"`
+
+	// Scopings Replace-on-provide. Empty array reverts to account-wide.
+	Scopings *[]IntegrationScoping `json:"scopings,omitempty"`
+
+	// Type Discriminator. Immutable; must match the integration's type.
+	Type UpdateAgentIntegrationRequestType `json:"type"`
+}
+
+// UpdateAgentIntegrationRequestType Discriminator. Immutable; must match the integration's type.
+type UpdateAgentIntegrationRequestType string
+
+// UpdateAgentRequestPresetInput Write shape for an agent request preset on update. Matched by `name`:
+// existing names update in place (preserving id/timestamps), new names insert,
+// removed names delete. Server-generated fields (`id`, `created_at`,
+// `updated_at`) are not accepted on input.
+type UpdateAgentRequestPresetInput struct {
+	// Config Partial request body. Validated against the parent integration's
+	// `input_schema` with `required` dropped.
+	Config map[string]interface{} `json:"config"`
+
+	// Description Optional preset description (length 0-1024).
+	Description *string `json:"description,omitempty"`
+
+	// Name Preset name (unique within the integration). Length 1-255.
+	Name string `json:"name"`
 }
 
 // UpdateAiIntegrationRequest defines model for UpdateAiIntegrationRequest.
@@ -5514,6 +7125,19 @@ type UserSpaceRole string
 // - `EXPIRED`: User was invited but their verification token has expired or is missing. A new invite is required.
 type UserStatus string
 
+// WebhookNotificationConfig defines model for WebhookNotificationConfig.
+type WebhookNotificationConfig struct {
+	// Id The webhook to notify (base64 global ID).
+	Id   string                        `json:"id"`
+	Type WebhookNotificationConfigType `json:"type"`
+
+	// Url The webhook endpoint URL.
+	Url *string `json:"url,omitempty"`
+}
+
+// WebhookNotificationConfigType defines model for WebhookNotificationConfig.Type.
+type WebhookNotificationConfigType string
+
 // AiIntegrationIdPathParam A universally unique identifier (base64-encoded opaque string).
 type AiIntegrationIdPathParam = Id
 
@@ -5572,7 +7196,11 @@ type ExperimentIdPathParam = Id
 // IntegrationIdPathParam A universally unique identifier (base64-encoded opaque string).
 type IntegrationIdPathParam = Id
 
-// IntegrationTypeQueryParam The integration category. Selects the shape of `config`. Currently only `LLM` is implemented; additional types (agent, alerting, webhook) are added non-breakingly.
+// IntegrationTypeQueryParam The integration category. Selects the shape of `config`. Additive — new
+// types (alerting, webhook, ...) are added non-breakingly.
+//
+// - `LLM`   — a model-provider integration (e.g. OpenAI).
+// - `AGENT` — connects your own agent, exposed at an HTTP endpoint.
 type IntegrationTypeQueryParam = IntegrationType
 
 // LabelNamePathParam defines model for LabelNamePathParam.
@@ -5589,6 +7217,9 @@ type LimitQueryParamMax50 = int
 
 // LimitQueryParamMax500 defines model for LimitQueryParamMax500.
 type LimitQueryParamMax500 = int
+
+// MonitorIdPathParam A universally unique identifier (base64-encoded opaque string).
+type MonitorIdPathParam = Id
 
 // NameSearchQueryParam defines model for NameSearchQueryParam.
 type NameSearchQueryParam = string
@@ -6198,8 +7829,8 @@ type ListExperimentRunsParams struct {
 
 // ListIntegrationsParams defines parameters for ListIntegrations.
 type ListIntegrationsParams struct {
-	// Type Filter the list to a single integration type. Omit to list all types.
-	Type *IntegrationTypeQueryParam `form:"type,omitempty" json:"type,omitempty"`
+	// Type The integration type to list. Required - the list returns only integrations of this type.
+	Type IntegrationTypeQueryParam `form:"type" json:"type"`
 
 	// SpaceId Filter search results to a particular space ID
 	SpaceId *SpaceIdQueryParam `form:"space_id,omitempty" json:"space_id,omitempty"`
@@ -7644,6 +9275,95 @@ func (t *AnnotationQueueRecordInput) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsModelBaselineConfig returns the union data inside the BaselineConfig as a ModelBaselineConfig
+func (t BaselineConfig) AsModelBaselineConfig() (ModelBaselineConfig, error) {
+	var body ModelBaselineConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromModelBaselineConfig overwrites any union data inside the BaselineConfig as the provided ModelBaselineConfig
+func (t *BaselineConfig) FromModelBaselineConfig(v ModelBaselineConfig) error {
+	v.Type = "MODEL_BASELINE"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeModelBaselineConfig performs a merge with any union data inside the BaselineConfig, using the provided ModelBaselineConfig
+func (t *BaselineConfig) MergeModelBaselineConfig(v ModelBaselineConfig) error {
+	v.Type = "MODEL_BASELINE"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCustomBaselineConfig returns the union data inside the BaselineConfig as a CustomBaselineConfig
+func (t BaselineConfig) AsCustomBaselineConfig() (CustomBaselineConfig, error) {
+	var body CustomBaselineConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCustomBaselineConfig overwrites any union data inside the BaselineConfig as the provided CustomBaselineConfig
+func (t *BaselineConfig) FromCustomBaselineConfig(v CustomBaselineConfig) error {
+	v.Type = "CUSTOM_BASELINE"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCustomBaselineConfig performs a merge with any union data inside the BaselineConfig, using the provided CustomBaselineConfig
+func (t *BaselineConfig) MergeCustomBaselineConfig(v CustomBaselineConfig) error {
+	v.Type = "CUSTOM_BASELINE"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t BaselineConfig) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t BaselineConfig) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "CUSTOM_BASELINE":
+		return t.AsCustomBaselineConfig()
+	case "MODEL_BASELINE":
+		return t.AsModelBaselineConfig()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t BaselineConfig) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *BaselineConfig) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsManagedCodeConfig returns the union data inside the CodeConfig as a ManagedCodeConfig
 func (t CodeConfig) AsManagedCodeConfig() (ManagedCodeConfig, error) {
 	var body ManagedCodeConfig
@@ -7981,6 +9701,34 @@ func (t *CreateIntegrationRequest) MergeCreateLlmIntegrationRequest(v CreateLlmI
 	return err
 }
 
+// AsCreateAgentIntegrationRequest returns the union data inside the CreateIntegrationRequest as a CreateAgentIntegrationRequest
+func (t CreateIntegrationRequest) AsCreateAgentIntegrationRequest() (CreateAgentIntegrationRequest, error) {
+	var body CreateAgentIntegrationRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateAgentIntegrationRequest overwrites any union data inside the CreateIntegrationRequest as the provided CreateAgentIntegrationRequest
+func (t *CreateIntegrationRequest) FromCreateAgentIntegrationRequest(v CreateAgentIntegrationRequest) error {
+	v.Type = "AGENT"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateAgentIntegrationRequest performs a merge with any union data inside the CreateIntegrationRequest, using the provided CreateAgentIntegrationRequest
+func (t *CreateIntegrationRequest) MergeCreateAgentIntegrationRequest(v CreateAgentIntegrationRequest) error {
+	v.Type = "AGENT"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t CreateIntegrationRequest) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"type"`
@@ -7995,6 +9743,8 @@ func (t CreateIntegrationRequest) ValueByDiscriminator() (interface{}, error) {
 		return nil, err
 	}
 	switch discriminator {
+	case "AGENT":
+		return t.AsCreateAgentIntegrationRequest()
 	case "LLM":
 		return t.AsCreateLlmIntegrationRequest()
 	default:
@@ -8220,6 +9970,95 @@ func (t *CreateTaskRequest) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsFixedCustomBaselineWindow returns the union data inside the CustomBaselineWindow as a FixedCustomBaselineWindow
+func (t CustomBaselineWindow) AsFixedCustomBaselineWindow() (FixedCustomBaselineWindow, error) {
+	var body FixedCustomBaselineWindow
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromFixedCustomBaselineWindow overwrites any union data inside the CustomBaselineWindow as the provided FixedCustomBaselineWindow
+func (t *CustomBaselineWindow) FromFixedCustomBaselineWindow(v FixedCustomBaselineWindow) error {
+	v.Type = "FIXED"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeFixedCustomBaselineWindow performs a merge with any union data inside the CustomBaselineWindow, using the provided FixedCustomBaselineWindow
+func (t *CustomBaselineWindow) MergeFixedCustomBaselineWindow(v FixedCustomBaselineWindow) error {
+	v.Type = "FIXED"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsMovingCustomBaselineWindow returns the union data inside the CustomBaselineWindow as a MovingCustomBaselineWindow
+func (t CustomBaselineWindow) AsMovingCustomBaselineWindow() (MovingCustomBaselineWindow, error) {
+	var body MovingCustomBaselineWindow
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromMovingCustomBaselineWindow overwrites any union data inside the CustomBaselineWindow as the provided MovingCustomBaselineWindow
+func (t *CustomBaselineWindow) FromMovingCustomBaselineWindow(v MovingCustomBaselineWindow) error {
+	v.Type = "MOVING"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeMovingCustomBaselineWindow performs a merge with any union data inside the CustomBaselineWindow, using the provided MovingCustomBaselineWindow
+func (t *CustomBaselineWindow) MergeMovingCustomBaselineWindow(v MovingCustomBaselineWindow) error {
+	v.Type = "MOVING"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t CustomBaselineWindow) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t CustomBaselineWindow) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "FIXED":
+		return t.AsFixedCustomBaselineWindow()
+	case "MOVING":
+		return t.AsMovingCustomBaselineWindow()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t CustomBaselineWindow) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *CustomBaselineWindow) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsEvaluatorVersionTemplate returns the union data inside the EvaluatorVersion as a EvaluatorVersionTemplate
 func (t EvaluatorVersion) AsEvaluatorVersionTemplate() (EvaluatorVersionTemplate, error) {
 	var body EvaluatorVersionTemplate
@@ -8397,6 +10236,34 @@ func (t *Integration) MergeLlmIntegration(v LlmIntegration) error {
 	return err
 }
 
+// AsAgentIntegration returns the union data inside the Integration as a AgentIntegration
+func (t Integration) AsAgentIntegration() (AgentIntegration, error) {
+	var body AgentIntegration
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAgentIntegration overwrites any union data inside the Integration as the provided AgentIntegration
+func (t *Integration) FromAgentIntegration(v AgentIntegration) error {
+	v.Type = "AGENT"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAgentIntegration performs a merge with any union data inside the Integration, using the provided AgentIntegration
+func (t *Integration) MergeAgentIntegration(v AgentIntegration) error {
+	v.Type = "AGENT"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t Integration) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"type"`
@@ -8411,6 +10278,8 @@ func (t Integration) ValueByDiscriminator() (interface{}, error) {
 		return nil, err
 	}
 	switch discriminator {
+	case "AGENT":
+		return t.AsAgentIntegration()
 	case "LLM":
 		return t.AsLlmIntegration()
 	default:
@@ -8513,6 +10382,304 @@ func (t LlmConfig) MarshalJSON() ([]byte, error) {
 }
 
 func (t *LlmConfig) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsDataQualityMonitor returns the union data inside the Monitor as a DataQualityMonitor
+func (t Monitor) AsDataQualityMonitor() (DataQualityMonitor, error) {
+	var body DataQualityMonitor
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataQualityMonitor overwrites any union data inside the Monitor as the provided DataQualityMonitor
+func (t *Monitor) FromDataQualityMonitor(v DataQualityMonitor) error {
+	v.Type = "DATA_QUALITY"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataQualityMonitor performs a merge with any union data inside the Monitor, using the provided DataQualityMonitor
+func (t *Monitor) MergeDataQualityMonitor(v DataQualityMonitor) error {
+	v.Type = "DATA_QUALITY"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPerformanceMonitor returns the union data inside the Monitor as a PerformanceMonitor
+func (t Monitor) AsPerformanceMonitor() (PerformanceMonitor, error) {
+	var body PerformanceMonitor
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPerformanceMonitor overwrites any union data inside the Monitor as the provided PerformanceMonitor
+func (t *Monitor) FromPerformanceMonitor(v PerformanceMonitor) error {
+	v.Type = "PERFORMANCE"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePerformanceMonitor performs a merge with any union data inside the Monitor, using the provided PerformanceMonitor
+func (t *Monitor) MergePerformanceMonitor(v PerformanceMonitor) error {
+	v.Type = "PERFORMANCE"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDriftMonitor returns the union data inside the Monitor as a DriftMonitor
+func (t Monitor) AsDriftMonitor() (DriftMonitor, error) {
+	var body DriftMonitor
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDriftMonitor overwrites any union data inside the Monitor as the provided DriftMonitor
+func (t *Monitor) FromDriftMonitor(v DriftMonitor) error {
+	v.Type = "DRIFT"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDriftMonitor performs a merge with any union data inside the Monitor, using the provided DriftMonitor
+func (t *Monitor) MergeDriftMonitor(v DriftMonitor) error {
+	v.Type = "DRIFT"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCustomMetricMonitor returns the union data inside the Monitor as a CustomMetricMonitor
+func (t Monitor) AsCustomMetricMonitor() (CustomMetricMonitor, error) {
+	var body CustomMetricMonitor
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCustomMetricMonitor overwrites any union data inside the Monitor as the provided CustomMetricMonitor
+func (t *Monitor) FromCustomMetricMonitor(v CustomMetricMonitor) error {
+	v.Type = "CUSTOM_METRIC"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCustomMetricMonitor performs a merge with any union data inside the Monitor, using the provided CustomMetricMonitor
+func (t *Monitor) MergeCustomMetricMonitor(v CustomMetricMonitor) error {
+	v.Type = "CUSTOM_METRIC"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsTracingMonitor returns the union data inside the Monitor as a TracingMonitor
+func (t Monitor) AsTracingMonitor() (TracingMonitor, error) {
+	var body TracingMonitor
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromTracingMonitor overwrites any union data inside the Monitor as the provided TracingMonitor
+func (t *Monitor) FromTracingMonitor(v TracingMonitor) error {
+	v.Type = "TRACING"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeTracingMonitor performs a merge with any union data inside the Monitor, using the provided TracingMonitor
+func (t *Monitor) MergeTracingMonitor(v TracingMonitor) error {
+	v.Type = "TRACING"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t Monitor) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t Monitor) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "CUSTOM_METRIC":
+		return t.AsCustomMetricMonitor()
+	case "DATA_QUALITY":
+		return t.AsDataQualityMonitor()
+	case "DRIFT":
+		return t.AsDriftMonitor()
+	case "PERFORMANCE":
+		return t.AsPerformanceMonitor()
+	case "TRACING":
+		return t.AsTracingMonitor()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t Monitor) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *Monitor) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsEmailNotificationConfig returns the union data inside the NotificationConfig as a EmailNotificationConfig
+func (t NotificationConfig) AsEmailNotificationConfig() (EmailNotificationConfig, error) {
+	var body EmailNotificationConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEmailNotificationConfig overwrites any union data inside the NotificationConfig as the provided EmailNotificationConfig
+func (t *NotificationConfig) FromEmailNotificationConfig(v EmailNotificationConfig) error {
+	v.Type = "EMAIL"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEmailNotificationConfig performs a merge with any union data inside the NotificationConfig, using the provided EmailNotificationConfig
+func (t *NotificationConfig) MergeEmailNotificationConfig(v EmailNotificationConfig) error {
+	v.Type = "EMAIL"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsIntegrationNotificationConfig returns the union data inside the NotificationConfig as a IntegrationNotificationConfig
+func (t NotificationConfig) AsIntegrationNotificationConfig() (IntegrationNotificationConfig, error) {
+	var body IntegrationNotificationConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromIntegrationNotificationConfig overwrites any union data inside the NotificationConfig as the provided IntegrationNotificationConfig
+func (t *NotificationConfig) FromIntegrationNotificationConfig(v IntegrationNotificationConfig) error {
+	v.Type = "INTEGRATION"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeIntegrationNotificationConfig performs a merge with any union data inside the NotificationConfig, using the provided IntegrationNotificationConfig
+func (t *NotificationConfig) MergeIntegrationNotificationConfig(v IntegrationNotificationConfig) error {
+	v.Type = "INTEGRATION"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsWebhookNotificationConfig returns the union data inside the NotificationConfig as a WebhookNotificationConfig
+func (t NotificationConfig) AsWebhookNotificationConfig() (WebhookNotificationConfig, error) {
+	var body WebhookNotificationConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromWebhookNotificationConfig overwrites any union data inside the NotificationConfig as the provided WebhookNotificationConfig
+func (t *NotificationConfig) FromWebhookNotificationConfig(v WebhookNotificationConfig) error {
+	v.Type = "WEBHOOK"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeWebhookNotificationConfig performs a merge with any union data inside the NotificationConfig, using the provided WebhookNotificationConfig
+func (t *NotificationConfig) MergeWebhookNotificationConfig(v WebhookNotificationConfig) error {
+	v.Type = "WEBHOOK"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t NotificationConfig) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t NotificationConfig) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "EMAIL":
+		return t.AsEmailNotificationConfig()
+	case "INTEGRATION":
+		return t.AsIntegrationNotificationConfig()
+	case "WEBHOOK":
+		return t.AsWebhookNotificationConfig()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t NotificationConfig) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *NotificationConfig) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -8935,6 +11102,155 @@ func (t *StaticParam_DefaultValue) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsManualSingleThreshold returns the union data inside the ThresholdConfig as a ManualSingleThreshold
+func (t ThresholdConfig) AsManualSingleThreshold() (ManualSingleThreshold, error) {
+	var body ManualSingleThreshold
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromManualSingleThreshold overwrites any union data inside the ThresholdConfig as the provided ManualSingleThreshold
+func (t *ThresholdConfig) FromManualSingleThreshold(v ManualSingleThreshold) error {
+	v.Type = "MANUAL_SINGLE"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeManualSingleThreshold performs a merge with any union data inside the ThresholdConfig, using the provided ManualSingleThreshold
+func (t *ThresholdConfig) MergeManualSingleThreshold(v ManualSingleThreshold) error {
+	v.Type = "MANUAL_SINGLE"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDynamicSingleThreshold returns the union data inside the ThresholdConfig as a DynamicSingleThreshold
+func (t ThresholdConfig) AsDynamicSingleThreshold() (DynamicSingleThreshold, error) {
+	var body DynamicSingleThreshold
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDynamicSingleThreshold overwrites any union data inside the ThresholdConfig as the provided DynamicSingleThreshold
+func (t *ThresholdConfig) FromDynamicSingleThreshold(v DynamicSingleThreshold) error {
+	v.Type = "DYNAMIC_SINGLE"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDynamicSingleThreshold performs a merge with any union data inside the ThresholdConfig, using the provided DynamicSingleThreshold
+func (t *ThresholdConfig) MergeDynamicSingleThreshold(v DynamicSingleThreshold) error {
+	v.Type = "DYNAMIC_SINGLE"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsManualRangeThreshold returns the union data inside the ThresholdConfig as a ManualRangeThreshold
+func (t ThresholdConfig) AsManualRangeThreshold() (ManualRangeThreshold, error) {
+	var body ManualRangeThreshold
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromManualRangeThreshold overwrites any union data inside the ThresholdConfig as the provided ManualRangeThreshold
+func (t *ThresholdConfig) FromManualRangeThreshold(v ManualRangeThreshold) error {
+	v.Type = "MANUAL_RANGE"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeManualRangeThreshold performs a merge with any union data inside the ThresholdConfig, using the provided ManualRangeThreshold
+func (t *ThresholdConfig) MergeManualRangeThreshold(v ManualRangeThreshold) error {
+	v.Type = "MANUAL_RANGE"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDynamicRangeThreshold returns the union data inside the ThresholdConfig as a DynamicRangeThreshold
+func (t ThresholdConfig) AsDynamicRangeThreshold() (DynamicRangeThreshold, error) {
+	var body DynamicRangeThreshold
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDynamicRangeThreshold overwrites any union data inside the ThresholdConfig as the provided DynamicRangeThreshold
+func (t *ThresholdConfig) FromDynamicRangeThreshold(v DynamicRangeThreshold) error {
+	v.Type = "DYNAMIC_RANGE"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDynamicRangeThreshold performs a merge with any union data inside the ThresholdConfig, using the provided DynamicRangeThreshold
+func (t *ThresholdConfig) MergeDynamicRangeThreshold(v DynamicRangeThreshold) error {
+	v.Type = "DYNAMIC_RANGE"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t ThresholdConfig) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t ThresholdConfig) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "DYNAMIC_RANGE":
+		return t.AsDynamicRangeThreshold()
+	case "DYNAMIC_SINGLE":
+		return t.AsDynamicSingleThreshold()
+	case "MANUAL_RANGE":
+		return t.AsManualRangeThreshold()
+	case "MANUAL_SINGLE":
+		return t.AsManualSingleThreshold()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t ThresholdConfig) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *ThresholdConfig) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsTriggerEvaluationTaskRunRequest returns the union data inside the TriggerTaskRunRequest as a TriggerEvaluationTaskRunRequest
 func (t TriggerTaskRunRequest) AsTriggerEvaluationTaskRunRequest() (TriggerEvaluationTaskRunRequest, error) {
 	var body TriggerEvaluationTaskRunRequest
@@ -9183,6 +11499,34 @@ func (t *UpdateIntegrationRequest) MergeUpdateLlmIntegrationRequest(v UpdateLlmI
 	return err
 }
 
+// AsUpdateAgentIntegrationRequest returns the union data inside the UpdateIntegrationRequest as a UpdateAgentIntegrationRequest
+func (t UpdateIntegrationRequest) AsUpdateAgentIntegrationRequest() (UpdateAgentIntegrationRequest, error) {
+	var body UpdateAgentIntegrationRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromUpdateAgentIntegrationRequest overwrites any union data inside the UpdateIntegrationRequest as the provided UpdateAgentIntegrationRequest
+func (t *UpdateIntegrationRequest) FromUpdateAgentIntegrationRequest(v UpdateAgentIntegrationRequest) error {
+	v.Type = "AGENT"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeUpdateAgentIntegrationRequest performs a merge with any union data inside the UpdateIntegrationRequest, using the provided UpdateAgentIntegrationRequest
+func (t *UpdateIntegrationRequest) MergeUpdateAgentIntegrationRequest(v UpdateAgentIntegrationRequest) error {
+	v.Type = "AGENT"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t UpdateIntegrationRequest) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"type"`
@@ -9197,6 +11541,8 @@ func (t UpdateIntegrationRequest) ValueByDiscriminator() (interface{}, error) {
 		return nil, err
 	}
 	switch discriminator {
+	case "AGENT":
+		return t.AsUpdateAgentIntegrationRequest()
 	case "LLM":
 		return t.AsUpdateLlmIntegrationRequest()
 	default:
@@ -9704,6 +12050,9 @@ type ClientInterface interface {
 	UpdateIntegrationWithBody(ctx context.Context, integrationId IntegrationIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateIntegration(ctx context.Context, integrationId IntegrationIdPathParam, body UpdateIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetMonitors request
+	GetMonitors(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListOrganizations request
 	ListOrganizations(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -10909,6 +13258,18 @@ func (c *Client) UpdateIntegrationWithBody(ctx context.Context, integrationId In
 
 func (c *Client) UpdateIntegration(ctx context.Context, integrationId IntegrationIdPathParam, body UpdateIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateIntegrationRequest(c.Server, integrationId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetMonitors(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetMonitorsRequest(c.Server, monitorId)
 	if err != nil {
 		return nil, err
 	}
@@ -14868,20 +17229,16 @@ func NewListIntegrationsRequest(server string, params *ListIntegrationsParams) (
 	if params != nil {
 		queryValues := queryURL.Query()
 
-		if params.Type != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "type", *params.Type, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
+		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "type", params.Type, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
 				}
 			}
-
 		}
 
 		if params.SpaceId != nil {
@@ -15126,6 +17483,40 @@ func NewUpdateIntegrationRequestWithBody(server string, integrationId Integratio
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetMonitorsRequest generates requests for GetMonitors
+func NewGetMonitorsRequest(server string, monitorId MonitorIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "monitor_id", monitorId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/monitors/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -18624,6 +21015,9 @@ type ClientWithResponsesInterface interface {
 
 	UpdateIntegrationWithResponse(ctx context.Context, integrationId IntegrationIdPathParam, body UpdateIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateIntegrationResp, error)
 
+	// GetMonitorsWithResponse request
+	GetMonitorsWithResponse(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*GetMonitorsResp, error)
+
 	// ListOrganizationsWithResponse request
 	ListOrganizationsWithResponse(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*ListOrganizationsResp, error)
 
@@ -20366,6 +22760,32 @@ func (r UpdateIntegrationResp) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r UpdateIntegrationResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetMonitorsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Monitor
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r GetMonitorsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetMonitorsResp) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -22777,6 +25197,15 @@ func (c *ClientWithResponses) UpdateIntegrationWithResponse(ctx context.Context,
 		return nil, err
 	}
 	return ParseUpdateIntegrationResp(rsp)
+}
+
+// GetMonitorsWithResponse request returning *GetMonitorsResp
+func (c *ClientWithResponses) GetMonitorsWithResponse(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*GetMonitorsResp, error) {
+	rsp, err := c.GetMonitors(ctx, monitorId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetMonitorsResp(rsp)
 }
 
 // ListOrganizationsWithResponse request returning *ListOrganizationsResp
@@ -27043,6 +29472,60 @@ func ParseUpdateIntegrationResp(rsp *http.Response) (*UpdateIntegrationResp, err
 			return nil, err
 		}
 		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetMonitorsResp parses an HTTP response from a GetMonitorsWithResponse call
+func ParseGetMonitorsResp(rsp *http.Response) (*GetMonitorsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetMonitorsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Monitor
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded

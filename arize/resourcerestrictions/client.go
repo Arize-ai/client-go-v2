@@ -37,7 +37,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*ResourceRestrictionList, error) {
+) (*ListResourceRestrictions, error) {
 	prerelease.Warn("resourcerestrictions.list", prerelease.Beta)
 	params := &generated.ListResourceRestrictionsParams{
 		ResourceType: optfields.PtrIfSet(req.ResourceType),

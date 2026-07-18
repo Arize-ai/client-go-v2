@@ -22,7 +22,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 // List returns a paginated list of audit log entries for the account, ordered
 // newest first. The caller must be an account admin and the account must have
 // audit logging enabled.
-func (c *Client) List(ctx context.Context, req ListRequest) (*AuditLogList, error) {
+func (c *Client) List(ctx context.Context, req ListRequest) (*ListAuditLogs, error) {
 	prerelease.Warn("audit_logs.list", prerelease.Beta)
 	params := &generated.ListAuditLogsParams{
 		StartTime:     optfields.PtrIfSet(req.StartTime),

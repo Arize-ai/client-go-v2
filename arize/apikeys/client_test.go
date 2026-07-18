@@ -44,7 +44,7 @@ func TestAPIKeys(t *testing.T) {
 			name: "List success",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(apikeys.APIKeyList{
+				json.NewEncoder(w).Encode(apikeys.ListAPIKeys{
 					ApiKeys: []apikeys.APIKeyRedacted{{
 						Id:              "key-1",
 						Name:            "my-key",
@@ -64,7 +64,7 @@ func TestAPIKeys(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*apikeys.APIKeyList)
+				resp := got.(*apikeys.ListAPIKeys)
 				if len(resp.ApiKeys) != 1 {
 					t.Errorf("expected 1 key, got %d", len(resp.ApiKeys))
 				}
@@ -76,7 +76,7 @@ func TestAPIKeys(t *testing.T) {
 				seenKeyType = r.URL.Query().Get("key_type")
 				seenStatus = r.URL.Query().Get("status")
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(apikeys.APIKeyList{Pagination: arize.PaginationMetadata{HasMore: false}})
+				json.NewEncoder(w).Encode(apikeys.ListAPIKeys{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.APIKeys.List(ctx, apikeys.ListRequest{
@@ -103,7 +103,7 @@ func TestAPIKeys(t *testing.T) {
 					t.Errorf("expected limit=50, got %q", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(apikeys.APIKeyList{Pagination: arize.PaginationMetadata{HasMore: false}})
+				json.NewEncoder(w).Encode(apikeys.ListAPIKeys{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.APIKeys.List(ctx, apikeys.ListRequest{})

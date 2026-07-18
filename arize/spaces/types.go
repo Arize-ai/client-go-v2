@@ -7,7 +7,7 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // internal/generated.
 type (
 	Space               = generated.Space
-	SpaceList           = generated.ListSpacesResponse
+	ListSpaces          = generated.ListSpacesResponse
 	SpaceMembership     = generated.SpaceMembership
 	SpaceRoleAssignment = generated.SpaceRoleAssignment
 	PredefinedSpaceRole = generated.PredefinedRoleAssignment

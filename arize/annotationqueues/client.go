@@ -23,7 +23,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 
 // List returns a paginated list of annotation queues. req.Space, when
 // non-empty, accepts a space name or ID and restricts results to that space.
-func (c *Client) List(ctx context.Context, req ListRequest) (*AnnotationQueueList, error) {
+func (c *Client) List(ctx context.Context, req ListRequest) (*ListAnnotationQueues, error) {
 	prerelease.Warn("annotationqueues.list", prerelease.Beta)
 	params := generated.ListAnnotationQueuesParams{
 		Name:   optfields.PtrIfSet(req.Name),
@@ -124,7 +124,7 @@ func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
 
 // ListRecords returns a paginated list of records for an annotation queue,
 // resolving the queue by name or ID.
-func (c *Client) ListRecords(ctx context.Context, req ListRecordsRequest) (*AnnotationQueueRecordList, error) {
+func (c *Client) ListRecords(ctx context.Context, req ListRecordsRequest) (*ListAnnotationQueueRecords, error) {
 	prerelease.Warn("annotationqueues.list_records", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {
@@ -146,7 +146,7 @@ func (c *Client) ListRecords(ctx context.Context, req ListRecordsRequest) (*Anno
 
 // AddRecords adds records to an annotation queue (resolved by name or ID) and
 // returns the created records.
-func (c *Client) AddRecords(ctx context.Context, req AddRecordsRequest) (*AnnotationQueueRecordCreate, error) {
+func (c *Client) AddRecords(ctx context.Context, req AddRecordsRequest) (*CreateAnnotationQueueRecord, error) {
 	prerelease.Warn("annotationqueues.add_records", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {
@@ -190,7 +190,7 @@ func (c *Client) DeleteRecords(ctx context.Context, req DeleteRecordsRequest) er
 
 // Annotate submits annotations for a record in an annotation queue, resolving
 // the queue by name or ID. RecordID is a pure ID with no name resolution.
-func (c *Client) Annotate(ctx context.Context, req AnnotateRequest) (*AnnotationQueueRecordAnnotateResult, error) {
+func (c *Client) Annotate(ctx context.Context, req AnnotateRequest) (*AnnotateAnnotationQueueRecord, error) {
 	prerelease.Warn("annotationqueues.annotate", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {
@@ -210,7 +210,7 @@ func (c *Client) Annotate(ctx context.Context, req AnnotateRequest) (*Annotation
 
 // Assign assigns users to a record in an annotation queue, resolving the queue
 // by name or ID. RecordID is a pure ID with no name resolution.
-func (c *Client) Assign(ctx context.Context, req AssignRequest) (*AnnotationQueueRecordAssignResult, error) {
+func (c *Client) Assign(ctx context.Context, req AssignRequest) (*AssignAnnotationQueueRecord, error) {
 	prerelease.Warn("annotationqueues.assign", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {

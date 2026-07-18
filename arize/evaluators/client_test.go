@@ -64,7 +64,7 @@ func TestEvaluators(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				resp := got.(*evaluators.EvaluatorList)
+				resp := got.(*evaluators.ListEvaluators)
 				if len(resp.Evaluators) != 1 || resp.Evaluators[0].Id != "ev-1" {
 					t.Errorf("unexpected list: %+v", resp.Evaluators)
 				}
@@ -367,7 +367,7 @@ func TestEvaluators(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				if resp := got.(*evaluators.EvaluatorVersionList); len(resp.EvaluatorVersions) != 1 {
+				if resp := got.(*evaluators.ListEvaluatorVersions); len(resp.EvaluatorVersions) != 1 {
 					t.Errorf("expected 1 version, got %d", len(resp.EvaluatorVersions))
 				}
 			},

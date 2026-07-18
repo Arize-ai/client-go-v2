@@ -7,7 +7,7 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // internal/generated.
 type (
 	Organization               = generated.Organization
-	OrganizationList           = generated.ListOrganizationsResponse
+	ListOrganizations          = generated.ListOrganizationsResponse
 	OrganizationMembership     = generated.OrganizationMembership
 	OrganizationRole           = generated.OrganizationRole
 	OrganizationRoleAssignment = generated.OrganizationRoleAssignment

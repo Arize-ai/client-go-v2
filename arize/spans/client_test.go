@@ -98,7 +98,7 @@ func TestSpans(t *testing.T) {
 					t.Errorf("query limit: %q", r.URL.Query().Get("limit"))
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(spans.SpanList{
+				json.NewEncoder(w).Encode(spans.ListSpans{
 					Spans:      []spans.Span{},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
@@ -153,7 +153,7 @@ func TestSpans(t *testing.T) {
 					t.Errorf("body span_ids: %v", body.SpanIds)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(spans.SpanDeleteResult{
+				json.NewEncoder(w).Encode(spans.DeleteSpans{
 					Completed:         true,
 					DeletedSpanIds:    []string{"span-1"},
 					NotDeletedSpanIds: []string{},
@@ -169,9 +169,9 @@ func TestSpans(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				result, ok := got.(*spans.SpanDeleteResult)
+				result, ok := got.(*spans.DeleteSpans)
 				if !ok || result == nil {
-					t.Fatalf("expected *SpanDeleteResult, got %T", got)
+					t.Fatalf("expected *DeleteSpans, got %T", got)
 				}
 				if !result.Completed {
 					t.Errorf("expected Completed=true on full success, got false")
@@ -188,7 +188,7 @@ func TestSpans(t *testing.T) {
 			name: "Delete_Incomplete",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(spans.SpanDeleteResult{
+				json.NewEncoder(w).Encode(spans.DeleteSpans{
 					Completed:         false,
 					DeletedSpanIds:    []string{"span-1"},
 					NotDeletedSpanIds: []string{"span-2"},
@@ -204,9 +204,9 @@ func TestSpans(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				result, ok := got.(*spans.SpanDeleteResult)
+				result, ok := got.(*spans.DeleteSpans)
 				if !ok || result == nil {
-					t.Fatalf("expected *SpanDeleteResult, got %T", got)
+					t.Fatalf("expected *DeleteSpans, got %T", got)
 				}
 				if result.Completed {
 					t.Errorf("expected Completed=false on incomplete, got true")

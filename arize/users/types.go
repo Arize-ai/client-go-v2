@@ -7,7 +7,7 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // internal/generated.
 type (
 	User                   = generated.User
-	UserList               = generated.ListUsersResponse
+	ListUsers              = generated.ListUsersResponse
 	UserStatus             = generated.UserStatus
 	UserRole               = generated.UserRole
 	InviteMode             = generated.InviteMode

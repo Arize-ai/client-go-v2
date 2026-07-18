@@ -24,7 +24,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 }
 
 // List returns a paginated list of AI integrations. Defaults to a page size of 50.
-func (c *Client) List(ctx context.Context, req ListRequest) (*AIIntegrationList, error) {
+func (c *Client) List(ctx context.Context, req ListRequest) (*ListAIIntegrations, error) {
 	prerelease.Warn("aiintegrations.list", prerelease.Alpha)
 	params := &generated.ListAiIntegrationsParams{
 		Name:   optfields.PtrIfSet(req.Name),

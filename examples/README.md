@@ -10,7 +10,7 @@ examples/
 ├── annotationconfigs/    client.AnnotationConfigs.{List, Get, CreateCategorical, CreateContinuous, CreateFreeform, Delete}
 ├── annotationqueues/     client.AnnotationQueues.{List, Get, Create, Update, Delete, ListRecords, AddRecords, DeleteRecords, Annotate, Assign}
 ├── apikeys/              client.APIKeys.{List, Create, CreateServiceKey, Refresh, Revoke}
-├── datasets/             client.Datasets.{List, Get, Create, Update, Delete, ListExamples, AppendExamples, DeleteExamples, AnnotateExamples}
+├── datasets/             client.Datasets.{List, Get, Create, Update, Delete, ListExamples, AppendExamples, UpdateExamples, DeleteExamples, AnnotateExamples}
 ├── evaluators/           client.Evaluators.{List, Get, Create, Update, Delete, ListVersions, CreateVersion, GetVersion}
 ├── experiments/          client.Experiments.{List, Get, Create, ListRuns, Delete}
 ├── organizations/        client.Organizations.{List, Get, Create, Update, Delete, AddUser, RemoveUser}

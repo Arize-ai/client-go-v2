@@ -22,7 +22,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 }
 
 // List returns a paginated list of annotation configs.
-func (c *Client) List(ctx context.Context, req ListRequest) (*AnnotationConfigList, error) {
+func (c *Client) List(ctx context.Context, req ListRequest) (*ListAnnotationConfigs, error) {
 	prerelease.Warn("annotationconfigs.list", prerelease.Beta)
 	params := &generated.ListAnnotationConfigsParams{
 		Name:   optfields.PtrIfSet(req.Name),

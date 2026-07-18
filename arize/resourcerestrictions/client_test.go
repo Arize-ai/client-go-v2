@@ -91,7 +91,7 @@ func TestResourceRestrictions(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				list := got.(*resourcerestrictions.ResourceRestrictionList)
+				list := got.(*resourcerestrictions.ListResourceRestrictions)
 				if len(list.ResourceRestrictions) != 2 {
 					t.Fatalf("want 2 restrictions, got %d", len(list.ResourceRestrictions))
 				}

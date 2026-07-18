@@ -1,5 +1,55 @@
 # Changelog
 
+## [0.18.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.17.0...arize-go-sdk-v2/v0.18.0) (2026-07-17)
+
+### 🎁 New Features
+
+* **datasets:** add update_examples function ([#78586](https://github.com/Arize-ai/arize/issues/78586)) ([103c8b1](https://github.com/Arize-ai/arize/commit/103c8b1f2ca97bf7ba8c44f2de283f83ff1373d3))
+
+
+### 💫 Code Refactoring
+
+* **openapi:** name response envelopes verb-first ([#79619](https://github.com/Arize-ai/arize/issues/79619)) ([98b129f](https://github.com/Arize-ai/arize/commit/98b129f5f947372b385c53bb87503578eb6cff3d))
+
+---
+
+## Migration notes — pre-release (`alpha`/`beta`) consumers only
+
+Response types now read verb-first. If your code writes one of these type names, rename it; the call and behavior are unchanged.
+
+| Package | Before | After |
+|---|---|---|
+| `aiintegrations` | `AIIntegrationList` | `ListAIIntegrations` |
+| `annotationconfigs` | `AnnotationConfigList` | `ListAnnotationConfigs` |
+| `annotationqueues` | `AnnotationQueueList` | `ListAnnotationQueues` |
+| `annotationqueues` | `AnnotationQueueRecordList` | `ListAnnotationQueueRecords` |
+| `annotationqueues` | `AnnotationQueueRecordCreate` | `CreateAnnotationQueueRecord` |
+| `annotationqueues` | `AnnotationQueueRecordAnnotateResult` | `AnnotateAnnotationQueueRecord` |
+| `annotationqueues` | `AnnotationQueueRecordAssignResult` | `AssignAnnotationQueueRecord` |
+| `apikeys` | `APIKeyList` | `ListAPIKeys` |
+| `auditlogs` | `AuditLogList` | `ListAuditLogs` |
+| `datasets` | `DatasetList` | `ListDatasets` |
+| `datasets` | `DatasetExampleList` | `ListDatasetExamples` |
+| `datasets` | `DatasetExamplesInserted` | `InsertDatasetExamples` |
+| `datasets` | `DatasetExamplesDeleteResult` | `DeleteDatasetExamples` |
+| `evaluators` | `EvaluatorList` | `ListEvaluators` |
+| `evaluators` | `EvaluatorVersionList` | `ListEvaluatorVersions` |
+| `experiments` | `ExperimentList` | `ListExperiments` |
+| `experiments` | `ExperimentRunsList` | `ListExperimentRuns` |
+| `organizations` | `OrganizationList` | `ListOrganizations` |
+| `projects` | `ProjectList` | `ListProjects` |
+| `prompts` | `PromptList` | `ListPrompts` |
+| `prompts` | `PromptVersionList` | `ListPromptVersions` |
+| `resourcerestrictions` | `ResourceRestrictionList` | `ListResourceRestrictions` |
+| `rolebindings` | `RoleBindingList` | `ListRoleBindings` |
+| `roles` | `RoleList` | `ListRoles` |
+| `spaces` | `SpaceList` | `ListSpaces` |
+| `spans` | `SpanList` | `ListSpans` |
+| `spans` | `SpanDeleteResult` | `DeleteSpans` |
+| `tasks` | `TaskList` | `ListTasks` |
+| `tasks` | `TaskRunList` | `ListTaskRuns` |
+| `users` | `UserList` | `ListUsers` |
+
 ## [0.17.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.16.0...arize-go-sdk-v2/v0.17.0) (2026-07-17)
 
 > **Minor release.** The v2 REST API standardization ([#78907](https://github.com/Arize-ai/arize/pull/78907)) is technically breaking, but **only affects endpoints/methods in `alpha` or `beta`** — all gated behind the pre-release opt-in and documented with a warning. **No stable surface changes.**

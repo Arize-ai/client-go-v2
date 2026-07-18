@@ -14,8 +14,8 @@ type (
 	// experiments.
 	Task = generated.Task
 
-	// TaskList is the cursor-paginated list response shape.
-	TaskList = generated.ListTasksResponse
+	// ListTasks is the cursor-paginated list response shape.
+	ListTasks = generated.ListTasksResponse
 
 	// TaskEvaluator is an evaluator attached to an evaluation task, as
 	// returned on Task.Evaluators.
@@ -24,8 +24,8 @@ type (
 	// TaskRun is a single async run of a task, created by TriggerRun.
 	TaskRun = generated.TaskRun
 
-	// TaskRunList is the cursor-paginated run list response shape.
-	TaskRunList = generated.ListTaskRunsResponse
+	// ListTaskRuns is the cursor-paginated run list response shape.
+	ListTaskRuns = generated.ListTaskRunsResponse
 
 	// TaskType is the task kind: TEMPLATE_EVALUATION, CODE_EVALUATION, or
 	// RUN_EXPERIMENT.

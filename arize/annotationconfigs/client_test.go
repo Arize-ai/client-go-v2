@@ -80,7 +80,7 @@ func TestAnnotationConfigs(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				if got.(*annotationconfigs.AnnotationConfigList) == nil {
+				if got.(*annotationconfigs.ListAnnotationConfigs) == nil {
 					t.Error("expected non-nil response")
 				}
 			},

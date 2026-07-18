@@ -24,7 +24,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*OrganizationList, error) {
+) (*ListOrganizations, error) {
 	prerelease.Warn("organizations.list", prerelease.Beta)
 	params := generated.ListOrganizationsParams{
 		Name:   optfields.PtrIfSet(req.Name),

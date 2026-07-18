@@ -25,7 +25,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*APIKeyList, error) {
+) (*ListAPIKeys, error) {
 	prerelease.Warn("apikeys.list", prerelease.Beta)
 	params := &generated.ListApiKeysParams{
 		KeyType: optfields.PtrIfSet(req.KeyType),

@@ -7,8 +7,8 @@ import (
 // Response, list, and enum types remain aliases to the generated wire shapes so
 // callers can construct and assert on them without importing internal/generated.
 type (
-	Role     = generated.Role
-	RoleList = generated.ListRolesResponse
+	Role      = generated.Role
+	ListRoles = generated.ListRolesResponse
 
 	// Permission is the enum of permission identifiers (e.g. PROJECT_READ).
 	// Construct values via the Permissions namespace, e.g.

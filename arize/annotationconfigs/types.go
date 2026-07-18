@@ -4,7 +4,7 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 
 type (
 	AnnotationConfig            = generated.AnnotationConfig
-	AnnotationConfigList        = generated.ListAnnotationConfigsResponse
+	ListAnnotationConfigs       = generated.ListAnnotationConfigsResponse
 	CategoricalAnnotationConfig = generated.CategoricalAnnotationConfig
 	ContinuousAnnotationConfig  = generated.ContinuousAnnotationConfig
 	FreeformAnnotationConfig    = generated.FreeformAnnotationConfig

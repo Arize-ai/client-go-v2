@@ -61,7 +61,7 @@ func TestOrganizations(t *testing.T) {
 			name: "List",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(organizations.OrganizationList{
+				json.NewEncoder(w).Encode(organizations.ListOrganizations{
 					Organizations: []organizations.Organization{{Id: "org-1", Name: "my-org", CreatedAt: time.Now()}},
 					Pagination:    arize.PaginationMetadata{HasMore: false},
 				})
@@ -73,7 +73,7 @@ func TestOrganizations(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*organizations.OrganizationList)
+				resp := got.(*organizations.ListOrganizations)
 				if len(resp.Organizations) != 1 {
 					t.Errorf("expected 1 organization, got %d", len(resp.Organizations))
 				}
@@ -84,7 +84,7 @@ func TestOrganizations(t *testing.T) {
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				seenName = r.URL.Query().Get("name")
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(organizations.OrganizationList{Pagination: arize.PaginationMetadata{HasMore: false}})
+				json.NewEncoder(w).Encode(organizations.ListOrganizations{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Organizations.List(ctx, organizations.ListRequest{Name: "acme"})

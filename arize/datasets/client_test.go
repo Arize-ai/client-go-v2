@@ -51,6 +51,12 @@ type wireInsert struct {
 	Examples []map[string]any `json:"examples"`
 }
 
+// wireUpdateExamples mirrors the JSON shape of the UpdateExamples request body.
+type wireUpdateExamples struct {
+	Examples   []map[string]any `json:"examples"`
+	NewVersion *string          `json:"new_version"`
+}
+
 // wireUpdate mirrors the JSON shape of the Update (rename) request body.
 type wireUpdate struct {
 	Name string `json:"name"`
@@ -89,7 +95,7 @@ func TestDatasets(t *testing.T) {
 					t.Errorf("unexpected path: %s", r.URL.Path)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(datasets.DatasetList{
+				json.NewEncoder(w).Encode(datasets.ListDatasets{
 					Datasets:   []datasets.Dataset{{Id: "ds-1", Name: "my-dataset"}},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
@@ -101,7 +107,7 @@ func TestDatasets(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*datasets.DatasetList)
+				resp := got.(*datasets.ListDatasets)
 				if len(resp.Datasets) != 1 {
 					t.Errorf("expected 1 dataset, got %d", len(resp.Datasets))
 				}
@@ -127,7 +133,7 @@ func TestDatasets(t *testing.T) {
 					t.Errorf("cursor query: want cursor-abc, got %q", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(datasets.DatasetList{Pagination: arize.PaginationMetadata{HasMore: false}})
+				json.NewEncoder(w).Encode(datasets.ListDatasets{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Datasets.List(ctx, datasets.ListRequest{
@@ -156,7 +162,7 @@ func TestDatasets(t *testing.T) {
 					t.Errorf("space_id should be empty for a name, got %q", q.Get("space_id"))
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(datasets.DatasetList{Pagination: arize.PaginationMetadata{HasMore: false}})
+				json.NewEncoder(w).Encode(datasets.ListDatasets{Pagination: arize.PaginationMetadata{HasMore: false}})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Datasets.List(ctx, datasets.ListRequest{Space: "demo"})
@@ -200,7 +206,7 @@ func TestDatasets(t *testing.T) {
 					if got, want := r.URL.Query().Get("space_id"), spaceID("sp-1"); got != want {
 						t.Errorf("resolver list space_id query: want %q, got %q", want, got)
 					}
-					json.NewEncoder(w).Encode(datasets.DatasetList{
+					json.NewEncoder(w).Encode(datasets.ListDatasets{
 						Datasets:   []datasets.Dataset{{Id: dsID, Name: "my-dataset"}},
 						Pagination: arize.PaginationMetadata{HasMore: false},
 					})
@@ -376,7 +382,7 @@ func TestDatasets(t *testing.T) {
 				}
 				exampleID := "ex-1"
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(datasets.DatasetExampleList{
+				json.NewEncoder(w).Encode(datasets.ListDatasetExamples{
 					Examples:   []datasets.DatasetExample{{Id: &exampleID}},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
@@ -392,7 +398,7 @@ func TestDatasets(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*datasets.DatasetExampleList)
+				resp := got.(*datasets.ListDatasetExamples)
 				if len(resp.Examples) != 1 {
 					t.Errorf("expected 1 example, got %d", len(resp.Examples))
 				}
@@ -407,7 +413,7 @@ func TestDatasets(t *testing.T) {
 				exampleID := "ex-2"
 				nextCursor := "tok-456"
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(datasets.DatasetExampleList{
+				json.NewEncoder(w).Encode(datasets.ListDatasetExamples{
 					Examples: []datasets.DatasetExample{{Id: &exampleID}},
 					Pagination: arize.PaginationMetadata{
 						HasMore:    true,
@@ -425,7 +431,7 @@ func TestDatasets(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*datasets.DatasetExampleList)
+				resp := got.(*datasets.ListDatasetExamples)
 				if !resp.Pagination.HasMore {
 					t.Errorf("expected HasMore true")
 				}
@@ -492,7 +498,7 @@ func TestDatasets(t *testing.T) {
 				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(201)
-				json.NewEncoder(w).Encode(datasets.DatasetExamplesInserted{
+				json.NewEncoder(w).Encode(datasets.InsertDatasetExamples{
 					DatasetVersionId: "v-1",
 					ExampleIds:       []string{"ex-new"},
 				})
@@ -510,7 +516,7 @@ func TestDatasets(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*datasets.DatasetExamplesInserted)
+				resp := got.(*datasets.InsertDatasetExamples)
 				if resp.DatasetVersionId != "v-1" {
 					t.Errorf("unexpected version: %s", resp.DatasetVersionId)
 				}
@@ -529,6 +535,127 @@ func TestDatasets(t *testing.T) {
 				return c.Datasets.AppendExamples(ctx, datasets.AppendExamplesRequest{
 					Dataset:  datasetID("ds-1"),
 					Examples: []datasets.CreateDatasetExampleInput{{"input": "x"}},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var bre *arize.BadRequestError
+				if !errors.As(err, &bre) {
+					t.Fatalf("expected *BadRequestError, got %T: %v", err, err)
+				}
+			},
+		},
+		{
+			name: "UpdateExamples",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodPatch {
+					t.Errorf("expected PATCH, got %s", r.Method)
+				}
+				if r.URL.Path != "/v2/datasets/"+dsID+"/examples" {
+					t.Errorf("unexpected path: %s", r.URL.Path)
+				}
+				if got := r.URL.Query().Get("dataset_version_id"); got != "v-1" {
+					t.Errorf("dataset_version_id query: want v-1, got %s", got)
+				}
+				var body wireUpdateExamples
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if body.NewVersion == nil || *body.NewVersion != "v-2" {
+					t.Errorf("new_version: want v-2, got %v", body.NewVersion)
+				}
+				if len(body.Examples) != 1 {
+					t.Fatalf("expected 1 example in body, got %d", len(body.Examples))
+				}
+				if v := body.Examples[0]["id"]; v != "ex-1" {
+					t.Errorf("expected id=ex-1, got %v", v)
+				}
+				if v := body.Examples[0]["input"]; v != "updated" {
+					t.Errorf("expected input=updated, got %v", v)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(datasets.UpdateDatasetExamplesResponse{
+					DatasetVersionId: "v-2",
+					ExampleIds:       []string{"ex-1"},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Datasets.UpdateExamples(ctx, datasets.UpdateDatasetExamplesRequest{
+					Dataset:          dsID,
+					DatasetVersionID: "v-1",
+					NewVersion:       "v-2",
+					Examples: []datasets.UpdateDatasetExampleInput{
+						{
+							Id: "ex-1",
+							AdditionalProperties: map[string]any{
+								"input": "updated",
+							},
+						},
+					},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				resp := got.(*datasets.UpdateDatasetExamplesResponse)
+				if resp.DatasetVersionId != "v-2" {
+					t.Errorf("unexpected version: %s", resp.DatasetVersionId)
+				}
+				if len(resp.ExampleIds) != 1 || resp.ExampleIds[0] != "ex-1" {
+					t.Errorf("unexpected example ids: %v", resp.ExampleIds)
+				}
+			},
+		},
+		{
+			name: "UpdateExamples_InPlace",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if _, ok := r.URL.Query()["dataset_version_id"]; ok {
+					t.Errorf("dataset_version_id query should be omitted, got %s", r.URL.RawQuery)
+				}
+				var body wireUpdateExamples
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if body.NewVersion != nil {
+					t.Errorf("new_version should be omitted, got %q", *body.NewVersion)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(datasets.UpdateDatasetExamplesResponse{
+					DatasetVersionId: "v-1",
+					ExampleIds:       []string{"ex-1"},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Datasets.UpdateExamples(ctx, datasets.UpdateDatasetExamplesRequest{
+					Dataset: dsID,
+					Examples: []datasets.UpdateDatasetExampleInput{
+						{
+							Id: "ex-1",
+							AdditionalProperties: map[string]any{
+								"input": "updated",
+							},
+						},
+					},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "UpdateExamples_ServerError",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(400)
+				_, _ = w.Write([]byte(`{"title":"invalid example"}`))
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Datasets.UpdateExamples(ctx, datasets.UpdateDatasetExamplesRequest{
+					Dataset: datasetID("ds-1"),
+					Examples: []datasets.UpdateDatasetExampleInput{
+						{Id: "ex-1"},
+					},
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -558,7 +685,7 @@ func TestDatasets(t *testing.T) {
 					t.Errorf("unexpected example_ids: %v", body.ExampleIds)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(datasets.DatasetExamplesDeleteResult{
+				json.NewEncoder(w).Encode(datasets.DeleteDatasetExamples{
 					Completed:            true,
 					DeletedExampleIds:    []string{"ex-1", "ex-2"},
 					NotDeletedExampleIds: []string{},
@@ -575,7 +702,7 @@ func TestDatasets(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*datasets.DatasetExamplesDeleteResult)
+				resp := got.(*datasets.DeleteDatasetExamples)
 				if !resp.Completed {
 					t.Errorf("expected Completed=true on full success, got false")
 				}
@@ -593,7 +720,7 @@ func TestDatasets(t *testing.T) {
 			name: "DeleteExamples_Incomplete",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(datasets.DatasetExamplesDeleteResult{
+				json.NewEncoder(w).Encode(datasets.DeleteDatasetExamples{
 					Completed:            false,
 					DeletedExampleIds:    []string{"ex-1"},
 					NotDeletedExampleIds: []string{"ex-2"},
@@ -610,7 +737,7 @@ func TestDatasets(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*datasets.DatasetExamplesDeleteResult)
+				resp := got.(*datasets.DeleteDatasetExamples)
 				if resp.Completed {
 					t.Errorf("expected Completed=false on incomplete, got true")
 				}

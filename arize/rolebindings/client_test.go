@@ -64,7 +64,7 @@ func TestRoleBindings(t *testing.T) {
 					t.Errorf("cursor: got %q, want %q", got, "next-page-token")
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(rolebindings.RoleBindingList{
+				json.NewEncoder(w).Encode(rolebindings.ListRoleBindings{
 					Pagination: arize.PaginationMetadata{HasMore: false},
 					RoleBindings: []rolebindings.RoleBinding{
 						{
@@ -91,7 +91,7 @@ func TestRoleBindings(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				list := got.(*rolebindings.RoleBindingList)
+				list := got.(*rolebindings.ListRoleBindings)
 				if len(list.RoleBindings) != 1 || list.RoleBindings[0].Id != "binding-1" {
 					t.Errorf("unexpected list: %+v", list)
 				}
@@ -104,7 +104,7 @@ func TestRoleBindings(t *testing.T) {
 					t.Errorf("default limit: got %q, want %q", got, "50")
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(rolebindings.RoleBindingList{
+				json.NewEncoder(w).Encode(rolebindings.ListRoleBindings{
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
 			},

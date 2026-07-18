@@ -26,7 +26,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*PromptList, error) {
+) (*ListPrompts, error) {
 	prerelease.Warn("prompts.list", prerelease.Beta)
 	params := generated.ListPromptsParams{
 		Name:   optfields.PtrIfSet(req.Name),
@@ -143,7 +143,7 @@ func (c *Client) Delete(
 func (c *Client) ListVersions(
 	ctx context.Context,
 	req ListVersionsRequest,
-) (*PromptVersionList, error) {
+) (*ListPromptVersions, error) {
 	prerelease.Warn("prompts.list_versions", prerelease.Beta)
 	id, err := resolve.FindPromptID(ctx, c.gen, req.Prompt, req.Space)
 	if err != nil {

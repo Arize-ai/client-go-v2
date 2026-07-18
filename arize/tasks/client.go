@@ -45,7 +45,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*TaskList, error) {
+) (*ListTasks, error) {
 	prerelease.Warn("tasks.list", prerelease.Beta)
 	params := generated.ListTasksParams{
 		Name:   optfields.PtrIfSet(req.Name),
@@ -411,7 +411,7 @@ func (c *Client) TriggerRun(
 func (c *Client) ListRuns(
 	ctx context.Context,
 	req ListRunsRequest,
-) (*TaskRunList, error) {
+) (*ListTaskRuns, error) {
 	prerelease.Warn("tasks.list_runs", prerelease.Beta)
 	id, err := resolve.FindTaskID(ctx, c.gen, req.Task, req.Space)
 	if err != nil {

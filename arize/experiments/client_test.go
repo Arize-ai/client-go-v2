@@ -150,7 +150,7 @@ func TestExperiments(t *testing.T) {
 					t.Errorf("expected GET, got %s", r.Method)
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(experiments.ExperimentList{
+				json.NewEncoder(w).Encode(experiments.ListExperiments{
 					Experiments: []experiments.Experiment{
 						{Id: "exp-1", Name: "my-experiment", DatasetId: "ds-1", DatasetVersionId: "dv-1"},
 					},
@@ -164,7 +164,7 @@ func TestExperiments(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*experiments.ExperimentList)
+				resp := got.(*experiments.ListExperiments)
 				if len(resp.Experiments) != 1 {
 					t.Errorf("expected 1 experiment, got %d", len(resp.Experiments))
 				}
@@ -183,7 +183,7 @@ func TestExperiments(t *testing.T) {
 					t.Errorf("expected dataset_id query param %q, got: %s", datasetID, r.URL.Query().Get("dataset_id"))
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(experiments.ExperimentList{
+				json.NewEncoder(w).Encode(experiments.ListExperiments{
 					Experiments: []experiments.Experiment{},
 					Pagination:  arize.PaginationMetadata{HasMore: false},
 				})
@@ -556,7 +556,7 @@ func TestExperiments(t *testing.T) {
 				}
 				w.Header().Set("Content-Type", "application/json")
 				out := "output-1"
-				json.NewEncoder(w).Encode(experiments.ExperimentRunsList{
+				json.NewEncoder(w).Encode(experiments.ListExperimentRuns{
 					ExperimentRuns: []experiments.ExperimentRun{
 						{Output: &out},
 					},
@@ -570,7 +570,7 @@ func TestExperiments(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				runs := got.(*experiments.ExperimentRunsList)
+				runs := got.(*experiments.ListExperimentRuns)
 				if len(runs.ExperimentRuns) != 1 {
 					t.Errorf("expected 1 run, got %d", len(runs.ExperimentRuns))
 				}

@@ -57,7 +57,7 @@ func TestAnnotationQueues(t *testing.T) {
 			name: "List",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(annotationqueues.AnnotationQueueList{
+				json.NewEncoder(w).Encode(annotationqueues.ListAnnotationQueues{
 					AnnotationQueues: []annotationqueues.AnnotationQueue{{Id: "aq-1", Name: "queue-1"}},
 					Pagination:       arize.PaginationMetadata{HasMore: false},
 				})
@@ -69,7 +69,7 @@ func TestAnnotationQueues(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				resp := got.(*annotationqueues.AnnotationQueueList)
+				resp := got.(*annotationqueues.ListAnnotationQueues)
 				if len(resp.AnnotationQueues) != 1 {
 					t.Errorf("expected 1 annotation queue, got %d", len(resp.AnnotationQueues))
 				}
@@ -218,7 +218,7 @@ func TestAnnotationQueues(t *testing.T) {
 			name: "ListRecords",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(annotationqueues.AnnotationQueueRecordList{
+				json.NewEncoder(w).Encode(annotationqueues.ListAnnotationQueueRecords{
 					Records:    []annotationqueues.AnnotationQueueRecord{{Id: "rec-1", AnnotationQueueId: "aq-1"}},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
@@ -230,7 +230,7 @@ func TestAnnotationQueues(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				resp := got.(*annotationqueues.AnnotationQueueRecordList)
+				resp := got.(*annotationqueues.ListAnnotationQueueRecords)
 				if len(resp.Records) != 1 {
 					t.Errorf("expected 1 record, got %d", len(resp.Records))
 				}
@@ -243,7 +243,7 @@ func TestAnnotationQueues(t *testing.T) {
 			name: "AddRecords",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(annotationqueues.AnnotationQueueRecordCreate{
+				json.NewEncoder(w).Encode(annotationqueues.CreateAnnotationQueueRecord{
 					RecordSources: []annotationqueues.AnnotationQueueRecord{{Id: "rec-1", AnnotationQueueId: "aq-1"}},
 				})
 			},
@@ -256,7 +256,7 @@ func TestAnnotationQueues(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				result := got.(*annotationqueues.AnnotationQueueRecordCreate)
+				result := got.(*annotationqueues.CreateAnnotationQueueRecord)
 				if len(result.RecordSources) != 1 {
 					t.Errorf("expected 1 record source, got %d", len(result.RecordSources))
 				}
@@ -267,7 +267,7 @@ func TestAnnotationQueues(t *testing.T) {
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(201)
-				json.NewEncoder(w).Encode(annotationqueues.AnnotationQueueRecordCreate{
+				json.NewEncoder(w).Encode(annotationqueues.CreateAnnotationQueueRecord{
 					RecordSources: []annotationqueues.AnnotationQueueRecord{{Id: "rec-2", AnnotationQueueId: "aq-1"}},
 				})
 			},
@@ -280,7 +280,7 @@ func TestAnnotationQueues(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				result := got.(*annotationqueues.AnnotationQueueRecordCreate)
+				result := got.(*annotationqueues.CreateAnnotationQueueRecord)
 				if len(result.RecordSources) != 1 {
 					t.Errorf("expected 1 record source, got %d", len(result.RecordSources))
 				}
@@ -310,7 +310,7 @@ func TestAnnotationQueues(t *testing.T) {
 			name: "Annotate",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(annotationqueues.AnnotationQueueRecordAnnotateResult{
+				json.NewEncoder(w).Encode(annotationqueues.AnnotateAnnotationQueueRecord{
 					Id:                "rec-1",
 					AnnotationQueueId: "aq-1",
 				})
@@ -326,7 +326,7 @@ func TestAnnotationQueues(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				result := got.(*annotationqueues.AnnotationQueueRecordAnnotateResult)
+				result := got.(*annotationqueues.AnnotateAnnotationQueueRecord)
 				if result.Id != "rec-1" {
 					t.Errorf("unexpected id: %s", result.Id)
 				}
@@ -336,7 +336,7 @@ func TestAnnotationQueues(t *testing.T) {
 			name: "Assign",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(annotationqueues.AnnotationQueueRecordAssignResult{
+				json.NewEncoder(w).Encode(annotationqueues.AssignAnnotationQueueRecord{
 					Id:                "rec-1",
 					AnnotationQueueId: "aq-1",
 				})
@@ -352,7 +352,7 @@ func TestAnnotationQueues(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				result := got.(*annotationqueues.AnnotationQueueRecordAssignResult)
+				result := got.(*annotationqueues.AssignAnnotationQueueRecord)
 				if result.Id != "rec-1" {
 					t.Errorf("unexpected id: %s", result.Id)
 				}

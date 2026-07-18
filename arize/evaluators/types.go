@@ -6,8 +6,8 @@ type (
 	// Evaluator is a single evaluator's metadata (without a version body).
 	Evaluator = generated.Evaluator
 
-	// EvaluatorList is the cursor-paginated list response shape.
-	EvaluatorList = generated.ListEvaluatorsResponse
+	// ListEvaluators is the cursor-paginated list response shape.
+	ListEvaluators = generated.ListEvaluatorsResponse
 
 	// EvaluatorWithVersion is an evaluator together with one of its versions
 	// (the latest, or a specific version when GetRequest.VersionID is set).
@@ -19,8 +19,8 @@ type (
 	// EvaluatorVersionCode / EvaluatorVersionHarness / EvaluatorVersionRemote.
 	EvaluatorVersion = generated.EvaluatorVersion
 
-	// EvaluatorVersionList is the cursor-paginated version list response shape.
-	EvaluatorVersionList = generated.ListEvaluatorVersionsResponse
+	// ListEvaluatorVersions is the cursor-paginated version list response shape.
+	ListEvaluatorVersions = generated.ListEvaluatorVersionsResponse
 
 	// EvaluatorVersionTemplate is the template (LLM-based) variant of an
 	// EvaluatorVersion, returned by EvaluatorVersion.AsEvaluatorVersionTemplate.

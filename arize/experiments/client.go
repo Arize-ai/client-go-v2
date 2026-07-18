@@ -51,7 +51,7 @@ func (c *Client) AppendRuns(ctx context.Context, req AppendRunsRequest) (*Experi
 
 // List returns a paginated list of experiments. req.Dataset, when non-empty,
 // accepts a dataset name or ID and restricts results to that dataset.
-func (c *Client) List(ctx context.Context, req ListRequest) (*ExperimentList, error) {
+func (c *Client) List(ctx context.Context, req ListRequest) (*ListExperiments, error) {
 	prerelease.Warn("experiments.list", prerelease.Beta)
 	params := generated.ListExperimentsParams{
 		Name:   optfields.PtrIfSet(req.Name),
@@ -233,7 +233,7 @@ func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
 
 // ListRuns returns a paginated list of runs for an experiment, resolving the
 // experiment by name or ID.
-func (c *Client) ListRuns(ctx context.Context, req ListRunsRequest) (*ExperimentRunsList, error) {
+func (c *Client) ListRuns(ctx context.Context, req ListRunsRequest) (*ListExperimentRuns, error) {
 	prerelease.Warn("experiments.list_runs", prerelease.Beta)
 	id, err := resolve.FindExperimentID(ctx, c.gen, req.Experiment, req.Dataset, req.Space)
 	if err != nil {

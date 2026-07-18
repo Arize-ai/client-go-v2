@@ -54,7 +54,7 @@ func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *a
 func rolesListPage(w http.ResponseWriter, items []roles.Role, nextCursor *string) {
 	w.Header().Set("Content-Type", "application/json")
 	pagination := arize.PaginationMetadata{HasMore: nextCursor != nil, NextCursor: nextCursor}
-	_ = json.NewEncoder(w).Encode(roles.RoleList{Roles: items, Pagination: pagination})
+	_ = json.NewEncoder(w).Encode(roles.ListRoles{Roles: items, Pagination: pagination})
 }
 
 func TestRoles(t *testing.T) {
@@ -92,7 +92,7 @@ func TestRoles(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*roles.RoleList)
+				resp := got.(*roles.ListRoles)
 				if len(resp.Roles) != 1 {
 					t.Errorf("expected 1 role, got %d", len(resp.Roles))
 				}

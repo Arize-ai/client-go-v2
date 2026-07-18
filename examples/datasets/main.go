@@ -33,6 +33,7 @@ func main() {
 	getDataset(ctx, client, datasetName, space)
 	listExamples(ctx, client, datasetName, space)
 	appendExamples(ctx, client, datasetName, space)
+	updateExamples(ctx, client, datasetName, space)
 	annotateExamples(ctx, client, datasetName, space)
 	deleteExamples(ctx, client, datasetName, space, "<dataset-version-id>", []string{"<example-id>"})
 	renameDataset(ctx, client, datasetName, space)
@@ -115,6 +116,37 @@ func appendExamples(ctx context.Context, client *arize.Client, dataset, space st
 	}
 	fmt.Printf("appended %d example(s) to dataset %q (version %s)\n",
 		len(resp.ExampleIds), dataset, resp.DatasetVersionId)
+}
+
+// updateExamples updates an existing example by ID. Supplying NewVersion
+// captures the update as a new dataset version; leaving it empty updates the
+// selected version in place.
+func updateExamples(ctx context.Context, client *arize.Client, dataset, space string) {
+	resp, err := client.Datasets.ListExamples(ctx, datasets.ListExamplesRequest{
+		Dataset: dataset,
+		Space:   space,
+		Limit:   1,
+	})
+	if err != nil {
+		log.Fatalf("list examples for update: %v", err)
+	}
+	if len(resp.Examples) == 0 || resp.Examples[0].Id == nil {
+		fmt.Println("no examples to update")
+		return
+	}
+	example := datasets.UpdateDatasetExampleInput{Id: *resp.Examples[0].Id}
+	example.Set("input", "What is Arize AX?")
+	updated, err := client.Datasets.UpdateExamples(ctx, datasets.UpdateDatasetExamplesRequest{
+		Dataset:    dataset,
+		Space:      space,
+		Examples:   []datasets.UpdateDatasetExampleInput{example},
+		NewVersion: "example-updated",
+	})
+	if err != nil {
+		log.Fatalf("update examples: %v", err)
+	}
+	fmt.Printf("updated %d example(s) in dataset %q (version %s)\n",
+		len(updated.ExampleIds), dataset, updated.DatasetVersionId)
 }
 
 // deleteExamples removes a batch of examples from a specific dataset version.

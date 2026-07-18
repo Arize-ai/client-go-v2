@@ -6,11 +6,11 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // wire shapes so callers can construct and assert on them without importing
 // internal/generated.
 type (
-	Prompt            = generated.Prompt
-	PromptWithVersion = generated.PromptWithVersion
-	PromptList        = generated.ListPromptsResponse
-	PromptVersion     = generated.PromptVersion
-	PromptVersionList = generated.ListPromptVersionsResponse
+	Prompt             = generated.Prompt
+	PromptWithVersion  = generated.PromptWithVersion
+	ListPrompts        = generated.ListPromptsResponse
+	PromptVersion      = generated.PromptVersion
+	ListPromptVersions = generated.ListPromptVersionsResponse
 
 	// PromptVersionCreate is the initial/new version configuration supplied when
 	// creating a prompt.

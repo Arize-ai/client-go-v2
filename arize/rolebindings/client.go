@@ -24,7 +24,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*RoleBindingList, error) {
+) (*ListRoleBindings, error) {
 	prerelease.Warn("rolebindings.list", prerelease.Beta)
 	params := &generated.ListRoleBindingsParams{
 		ResourceType: req.ResourceType,

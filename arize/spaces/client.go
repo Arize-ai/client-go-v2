@@ -26,7 +26,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*SpaceList, error) {
+) (*ListSpaces, error) {
 	prerelease.Warn("spaces.list", prerelease.Beta)
 	var orgID string
 	if req.Organization != "" {

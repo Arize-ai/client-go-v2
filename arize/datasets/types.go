@@ -6,24 +6,32 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // wire shapes so callers can construct and assert on them without importing
 // internal/generated.
 type (
-	Dataset            = generated.Dataset
-	DatasetList        = generated.ListDatasetsResponse
-	DatasetExample     = generated.DatasetExample
-	DatasetExampleList = generated.ListDatasetExamplesResponse
+	Dataset             = generated.Dataset
+	ListDatasets        = generated.ListDatasetsResponse
+	DatasetExample      = generated.DatasetExample
+	ListDatasetExamples = generated.ListDatasetExamplesResponse
 
 	// CreateDatasetExampleInput is a new example's arbitrary user-defined fields.
 	CreateDatasetExampleInput = generated.CreateDatasetExampleInput
 
+	// UpdateDatasetExampleInput is an existing example ID plus arbitrary
+	// user-defined fields to update.
+	UpdateDatasetExampleInput = generated.UpdateDatasetExampleInput
+
 	// DatasetExamplesInserted reports the dataset version the examples were
 	// written to and the server-assigned IDs of the inserted examples.
-	DatasetExamplesInserted = generated.InsertDatasetExamplesResponse
+	InsertDatasetExamples = generated.InsertDatasetExamplesResponse
+
+	// UpdateDatasetExamplesResponse reports the dataset version the examples were
+	// written to and the IDs of the updated examples.
+	UpdateDatasetExamplesResponse = generated.UpdateDatasetExamplesResponse
 
 	// DatasetExamplesDeleteResult reports the outcome of a batch example
 	// delete. Completed indicates whether a retry is needed; DeletedExampleIds
 	// are the IDs confirmed deleted; NotDeletedExampleIds are requested IDs
 	// that were not deleted (not found in the selected version, or not reached
 	// when Completed is false).
-	DatasetExamplesDeleteResult = generated.DeleteDatasetExamplesResponse
+	DeleteDatasetExamples = generated.DeleteDatasetExamplesResponse
 
 	// AnnotateRecordInput is a single dataset example to annotate, identified
 	// by its example ID (RecordId) plus the annotation Values to set.
@@ -124,6 +132,25 @@ type AppendExamplesRequest struct {
 	DatasetVersionID string
 	// Examples are the examples to append.
 	Examples []CreateDatasetExampleInput
+}
+
+// UpdateDatasetExamplesRequest identifies the dataset and examples to update.
+type UpdateDatasetExamplesRequest struct {
+	// Dataset accepts either a dataset name or ID.
+	Dataset string
+	// Space accepts either a space name or ID. Required when Dataset is a
+	// name; ignored when Dataset is an ID.
+	Space string
+	// DatasetVersionID is the optional version to update. When empty, the
+	// server uses the dataset's latest version.
+	DatasetVersionID string
+	// Examples are existing examples to update. Each example must include Id;
+	// arbitrary user-defined fields may be supplied through
+	// AdditionalProperties.
+	Examples []UpdateDatasetExampleInput
+	// NewVersion is an optional name for a new dataset version. When empty,
+	// the selected version is updated in place.
+	NewVersion string
 }
 
 // DeleteExamplesRequest identifies the dataset and the examples to delete.
