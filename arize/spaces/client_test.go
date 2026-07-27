@@ -46,6 +46,7 @@ type wireSpace struct {
 	Name           string  `json:"name,omitempty"`
 	OrganizationId string  `json:"organization_id,omitempty"`
 	Description    *string `json:"description,omitempty"`
+	IsPrivate      *bool   `json:"is_private,omitempty"`
 }
 
 // wireMembershipInput mirrors the JSON shape of the AddUser request body.
@@ -313,6 +314,90 @@ func TestSpaces(t *testing.T) {
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Spaces.Create(ctx, spaces.CreateRequest{Name: "new-space", Organization: "my-org"})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "Create_IsPrivate",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body wireSpace
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if body.IsPrivate == nil || !*body.IsPrivate {
+					t.Errorf("is_private: want true, got %v", body.IsPrivate)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(201)
+				json.NewEncoder(w).Encode(spaces.Space{Id: "space-priv", Name: "priv-space", IsPrivate: true, CreatedAt: time.Now()})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Spaces.Create(ctx, spaces.CreateRequest{
+					Name:         "priv-space",
+					Organization: orgID("org-1"),
+					IsPrivate:    true,
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				s := got.(*spaces.Space)
+				if !s.IsPrivate {
+					t.Errorf("expected IsPrivate=true, got false")
+				}
+			},
+		},
+		{
+			name: "Update_IsPrivate",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodPatch {
+					t.Errorf("expected PATCH, got %s", r.Method)
+				}
+				var body wireSpace
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if body.IsPrivate == nil || !*body.IsPrivate {
+					t.Errorf("is_private: want true, got %v", body.IsPrivate)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(spaces.Space{Id: spaceID("space-1"), Name: "my-space", IsPrivate: true, CreatedAt: time.Now()})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				priv := true
+				return c.Spaces.Update(ctx, spaces.UpdateRequest{Space: spaceID("space-1"), IsPrivate: &priv})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				s := got.(*spaces.Space)
+				if !s.IsPrivate {
+					t.Errorf("expected IsPrivate=true, got false")
+				}
+			},
+		},
+		{
+			name: "Update_IsPrivate_OmittedWhenNil",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				raw := map[string]json.RawMessage{}
+				if err := json.NewDecoder(r.Body).Decode(&raw); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if _, ok := raw["is_private"]; ok {
+					t.Errorf("is_private should be omitted when nil, got keys %v", raw)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(spaces.Space{Id: spaceID("space-1"), Name: "renamed", CreatedAt: time.Now()})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				name := "renamed"
+				return c.Spaces.Update(ctx, spaces.UpdateRequest{Space: spaceID("space-1"), Name: &name})
 			},
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {

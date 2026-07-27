@@ -27,6 +27,10 @@ func main() {
 
 	toRevoke := createAPIKey(ctx, client, "example-key-to-revoke")
 	revokeAPIKey(ctx, client, toRevoke.Id)
+
+	// Provide real org and space IDs from your Arize account when running.
+	createServiceKey(ctx, client, "example-service-key",
+		"<org-hmac-id>", []string{"<space-hmac-id>"})
 }
 
 // listAPIKeys shows filtering the list by key_type and status.
@@ -46,7 +50,7 @@ func listAPIKeys(ctx context.Context, client *arize.Client) {
 
 // createAPIKey returns the only response that ever contains the plaintext
 // Key — store it immediately, you cannot retrieve it later.
-func createAPIKey(ctx context.Context, client *arize.Client, name string) *apikeys.APIKey {
+func createAPIKey(ctx context.Context, client *arize.Client, name string) *apikeys.UserApiKeyCreated {
 	created, err := client.APIKeys.Create(ctx, apikeys.CreateRequest{
 		Name:      name,
 		ExpiresAt: time.Now().Add(30 * 24 * time.Hour),
@@ -84,4 +88,39 @@ func revokeAPIKey(ctx context.Context, client *arize.Client, keyID string) {
 	if err := client.APIKeys.Revoke(ctx, apikeys.RevokeRequest{APIKeyID: keyID}); err != nil {
 		log.Fatalf("revoke api key: %v", err)
 	}
+}
+
+// createServiceKey creates a bot service key scoped to a specific set of spaces.
+// orgID and spaceIDs are HMAC-encoded IDs from the Arize UI or API.
+//
+// To assign a custom RBAC role to a space instead of a predefined one, set
+// SpaceBinding.CustomRoleID to the role's HMAC-encoded ID and leave Role empty.
+func createServiceKey(ctx context.Context, client *arize.Client, name, orgID string, spaceIDs []string) {
+	spaces := make([]apikeys.SpaceBinding, 0, len(spaceIDs))
+	for _, id := range spaceIDs {
+		spaces = append(spaces, apikeys.SpaceBinding{
+			Space: id,
+			Role:  apikeys.AssignPredefinedSpaceRole(apikeys.SpaceRoleMember),
+		})
+	}
+
+	created, err := client.APIKeys.CreateServiceKey(ctx, apikeys.CreateServiceKeyRequest{
+		Name:        name,
+		AccountRole: apikeys.AssignPredefinedAccountRole(apikeys.AccountRoleMember),
+		Orgs: []apikeys.OrgBinding{
+			{
+				OrgID:  orgID,
+				Role:   apikeys.AssignPredefinedOrgRole(apikeys.OrgRoleReadOnly),
+				Spaces: spaces,
+			},
+		},
+		ExpiresAt: time.Now().Add(90 * 24 * time.Hour),
+	})
+	if err != nil {
+		log.Fatalf("create service key: %v", err)
+	}
+	// The raw key value is only returned at creation. Store it securely —
+	// it cannot be retrieved again.
+	fmt.Printf("created service key %s (bot user %s) — secret: %s\n",
+		created.Id, created.BotUser.Id, created.Key)
 }

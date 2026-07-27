@@ -13,10 +13,14 @@ import (
 type APIError struct {
 	StatusCode int
 	Title      string
+	Detail     string
 	Body       string
 }
 
 func (e *APIError) Error() string {
+	if e.Detail != "" {
+		return fmt.Sprintf("arize API error %d: %s", e.StatusCode, e.Detail)
+	}
 	return fmt.Sprintf("arize API error %d: %s", e.StatusCode, e.Title)
 }
 
@@ -55,11 +59,16 @@ func CheckResponse(resp *http.Response, body []byte) error {
 	}
 
 	var problem struct {
-		Title string `json:"title"`
+		Title  string `json:"title"`
+		Detail string `json:"detail"`
 	}
-	if err := json.Unmarshal(body, &problem); err == nil && problem.Title != "" {
-		base.Title = problem.Title
-	} else {
+	if err := json.Unmarshal(body, &problem); err == nil {
+		base.Detail = problem.Detail
+		if problem.Title != "" {
+			base.Title = problem.Title
+		}
+	}
+	if base.Title == "" {
 		base.Title = http.StatusText(resp.StatusCode)
 	}
 

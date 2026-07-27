@@ -6,6 +6,40 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 )
 
+// SpaceBinding declares one space that the service key's bot user should access.
+//
+// The binding (Space) answers "which space?". The role assignment (Role) answers
+// "with what role?" — either a named predefined role or a custom RBAC role by ID.
+// Build Role with [AssignPredefinedSpaceRole] or [AssignCustomSpaceRole].
+type SpaceBinding struct {
+	// Space identifies the target space. Required. Accepts either a space name or ID.
+	Space string
+	// Role is the role to assign the bot user within this space. Build it with
+	// AssignPredefinedSpaceRole (e.g. SpaceRoleMember) for a predefined role, or
+	// AssignCustomSpaceRole (an existing custom RBAC role ID) for a custom role.
+	// When zero, the server applies the predefined member role.
+	Role SpaceRoleAssignment
+}
+
+// OrgBinding declares one organization that the service key's bot user should access,
+// together with the spaces within that organization.
+//
+// The binding (OrgID) answers "which organization?". The role assignment (Role) answers
+// "with what org-level role?". Spaces carries the per-space bindings nested under this org.
+// Build Role with [AssignPredefinedOrgRole] or [AssignCustomOrgRole].
+type OrgBinding struct {
+	// OrgID is the HMAC-encoded ID of the organization. Required.
+	OrgID string
+	// Role is the role to assign the bot user within this organization. Build it with
+	// AssignPredefinedOrgRole (e.g. OrgRoleReadOnly) for a predefined role, or
+	// AssignCustomOrgRole (an existing custom RBAC role ID) for a custom role.
+	// When zero, the server applies the predefined read-only role.
+	Role OrgRoleAssignment
+	// Spaces is the list of space bindings within this organization. At least one
+	// space is required per organization. All spaces must belong to this organization.
+	Spaces []SpaceBinding
+}
+
 // CreateRequest is the request shape for Client.Create (user keys).
 type CreateRequest struct {
 	// Name is the user-defined name for the API key.
@@ -22,24 +56,20 @@ type CreateRequest struct {
 type CreateServiceKeyRequest struct {
 	// Name is the user-defined name for the API key.
 	Name string
-	// Space identifies the target space. Required. Accepts either a space name
-	// or ID.
-	Space string
+	// AccountRole is the optional account-level role assignment for the bot user.
+	// Build it with AssignPredefinedAccountRole (one of the AccountRole values) or
+	// AssignCustomAccountRole (an existing custom role ID). When zero, the server
+	// applies the predefined member role.
+	AccountRole AccountRoleAssignment
+	// Orgs is the list of organization bindings for the bot user. At least one
+	// organization with at least one space is required.
+	Orgs []OrgBinding
 	// Description is an optional user-defined description. When empty, the key
 	// is created without a description.
 	Description string
 	// ExpiresAt is the optional expiration timestamp. When zero, the key never
 	// expires.
 	ExpiresAt time.Time
-	// SpaceRole is the optional space-level role for the bot user. When empty,
-	// the server applies APIKeySpaceRoleMember.
-	SpaceRole APIKeySpaceRole
-	// OrgRole is the optional organization-level role for the bot user. When
-	// empty, the server applies APIKeyOrganizationRoleReadOnly.
-	OrgRole APIKeyOrganizationRole
-	// AccountRole is the optional account-level role for the bot user. When
-	// empty, the server applies APIKeyAccountRoleMember.
-	AccountRole APIKeyAccountRole
 }
 
 // ListRequest is the request shape for Client.List.
@@ -83,13 +113,15 @@ type RefreshRequest struct {
 }
 
 type (
-	// APIKey is a full API key including its raw secret value. Returned only by
-	// Create, CreateServiceKey, and Refresh — the raw key is shown exactly once.
-	APIKey = generated.ApiKey
-	// APIKeyRedacted is an API key without its secret, as returned in list results.
-	APIKeyRedacted = generated.ApiKeyRedacted
-	// ListAPIKeys is the cursor-paginated list response of redacted API keys.
-	ListAPIKeys = generated.ListApiKeysResponse
+	APIKey                = generated.ApiKey
+	ListApiKeysResponse   = generated.ListApiKeysResponse
+	CreateApiKeyResponse  = generated.CreateApiKeyResponse
+	RefreshApiKeyResponse = generated.RefreshApiKeyResponse
+
+	// UserApiKeyCreated is the response body when a user API key is created.
+	UserApiKeyCreated = generated.UserApiKeyCreated
+	// ServiceApiKeyCreated is the response body when a service API key is created.
+	ServiceApiKeyCreated = generated.ServiceApiKeyCreated
 
 	// APIKeyType is the type of an API key (user or service). Shared across
 	// responses, create requests, and list filters.
@@ -97,14 +129,35 @@ type (
 	// APIKeyStatus is the lifecycle status of an API key.
 	APIKeyStatus = generated.ApiKeyStatus
 
-	// APIKeyRoles holds role assignments for the bot user created with a service key.
-	APIKeyRoles = generated.ApiKeyRoles
-	// APIKeyAccountRole is the account-level role for a service key's bot user.
-	APIKeyAccountRole = generated.ApiKeyAccountRole
-	// APIKeyOrganizationRole is the org-level role for a service key's bot user.
-	APIKeyOrganizationRole = generated.ApiKeyOrganizationRole
-	// APIKeySpaceRole is the space-level role for a service key's bot user.
-	APIKeySpaceRole = generated.ApiKeySpaceRole
+	// SpaceRoleAssignment is the role assignment for a service key's bot user within
+	// a space. Build with AssignPredefinedSpaceRole or AssignCustomSpaceRole.
+	SpaceRoleAssignment = generated.SpaceRoleAssignment
+	// OrgRoleAssignment is the role assignment for a service key's bot user within
+	// an organization. Build with AssignPredefinedOrgRole or AssignCustomOrgRole.
+	OrgRoleAssignment = generated.OrganizationRoleAssignment
+	// AccountRoleAssignment is the role assignment for a service key's bot user at
+	// the account level. Build with AssignPredefinedAccountRole or AssignCustomAccountRole.
+	AccountRoleAssignment = generated.UserRoleAssignment
+
+	// PredefinedSpaceRole is the predefined variant of SpaceRoleAssignment.
+	PredefinedSpaceRole = generated.PredefinedRoleAssignment
+	// CustomSpaceRole is the custom variant of SpaceRoleAssignment.
+	CustomSpaceRole = generated.CustomRoleAssignment
+	// PredefinedOrgRole is the predefined variant of OrgRoleAssignment.
+	PredefinedOrgRole = generated.OrganizationPredefinedRoleAssignment
+	// CustomOrgRole is the custom variant of OrgRoleAssignment.
+	CustomOrgRole = generated.OrganizationCustomRoleAssignment
+	// PredefinedAccountRole is the predefined variant of AccountRoleAssignment.
+	PredefinedAccountRole = generated.PredefinedUserRoleAssignment
+	// CustomAccountRole is the custom variant of AccountRoleAssignment.
+	CustomAccountRole = generated.CustomUserRoleAssignment
+
+	// SpaceRole is the predefined space-level role for a service key's bot user.
+	SpaceRole = generated.UserSpaceRole
+	// OrgRole is the predefined organization-level role for a service key's bot user.
+	OrgRole = generated.OrganizationRole
+	// AccountRole is the predefined account-level role for a service key's bot user.
+	AccountRole = generated.UserRole
 )
 
 const (
@@ -114,14 +167,65 @@ const (
 	APIKeyStatusActive  APIKeyStatus = generated.ApiKeyStatusACTIVE
 	APIKeyStatusRevoked APIKeyStatus = generated.ApiKeyStatusREVOKED
 
-	APIKeyAccountRoleAdmin  APIKeyAccountRole = generated.ApiKeyAccountRoleADMIN
-	APIKeyAccountRoleMember APIKeyAccountRole = generated.ApiKeyAccountRoleMEMBER
+	SpaceRoleAdmin    SpaceRole = generated.UserSpaceRoleADMIN
+	SpaceRoleMember   SpaceRole = generated.UserSpaceRoleMEMBER
+	SpaceRoleReadOnly SpaceRole = generated.UserSpaceRoleREADONLY
 
-	APIKeyOrganizationRoleAdmin    APIKeyOrganizationRole = generated.ApiKeyOrganizationRoleADMIN
-	APIKeyOrganizationRoleMember   APIKeyOrganizationRole = generated.ApiKeyOrganizationRoleMEMBER
-	APIKeyOrganizationRoleReadOnly APIKeyOrganizationRole = generated.ApiKeyOrganizationRoleREADONLY
+	OrgRoleAdmin    OrgRole = generated.OrganizationRoleADMIN
+	OrgRoleMember   OrgRole = generated.OrganizationRoleMEMBER
+	OrgRoleReadOnly OrgRole = generated.OrganizationRoleREADONLY
 
-	APIKeySpaceRoleAdmin    APIKeySpaceRole = generated.ApiKeySpaceRoleADMIN
-	APIKeySpaceRoleMember   APIKeySpaceRole = generated.ApiKeySpaceRoleMEMBER
-	APIKeySpaceRoleReadOnly APIKeySpaceRole = generated.ApiKeySpaceRoleREADONLY
+	AccountRoleAdmin  AccountRole = generated.UserRoleADMIN
+	AccountRoleMember AccountRole = generated.UserRoleMEMBER
 )
+
+// AssignPredefinedSpaceRole builds a space role assignment for one of the predefined
+// SpaceRole values (e.g. SpaceRoleMember). Pass the result as SpaceBinding.Role.
+func AssignPredefinedSpaceRole(name SpaceRole) SpaceRoleAssignment {
+	var r SpaceRoleAssignment
+	// From* only marshals a fixed struct and sets the discriminator internally;
+	// it cannot fail, so the error is safely discarded.
+	_ = r.FromPredefinedRoleAssignment(PredefinedSpaceRole{Name: name})
+	return r
+}
+
+// AssignCustomSpaceRole builds a space role assignment referencing an existing custom
+// RBAC role by its ID (see the roles package). Pass the result as SpaceBinding.Role.
+func AssignCustomSpaceRole(roleID string) SpaceRoleAssignment {
+	var r SpaceRoleAssignment
+	_ = r.FromCustomRoleAssignment(CustomSpaceRole{Id: roleID})
+	return r
+}
+
+// AssignPredefinedOrgRole builds an org role assignment for one of the predefined
+// OrgRole values (e.g. OrgRoleReadOnly). Pass the result as OrgBinding.Role.
+func AssignPredefinedOrgRole(name OrgRole) OrgRoleAssignment {
+	var r OrgRoleAssignment
+	_ = r.FromOrganizationPredefinedRoleAssignment(PredefinedOrgRole{Name: name})
+	return r
+}
+
+// AssignCustomOrgRole builds an org role assignment referencing an existing custom
+// RBAC role by its ID. Pass the result as OrgBinding.Role.
+func AssignCustomOrgRole(roleID string) OrgRoleAssignment {
+	var r OrgRoleAssignment
+	_ = r.FromOrganizationCustomRoleAssignment(CustomOrgRole{Id: roleID})
+	return r
+}
+
+// AssignPredefinedAccountRole builds an account role assignment for one of the
+// predefined AccountRole values (e.g. AccountRoleMember). Pass the result as
+// CreateServiceKeyRequest.AccountRole.
+func AssignPredefinedAccountRole(name AccountRole) AccountRoleAssignment {
+	var r AccountRoleAssignment
+	_ = r.FromPredefinedUserRoleAssignment(PredefinedAccountRole{Name: name})
+	return r
+}
+
+// AssignCustomAccountRole builds an account role assignment referencing an existing
+// custom RBAC role by its ID. Pass the result as CreateServiceKeyRequest.AccountRole.
+func AssignCustomAccountRole(roleID string) AccountRoleAssignment {
+	var r AccountRoleAssignment
+	_ = r.FromCustomUserRoleAssignment(CustomAccountRole{Id: roleID})
+	return r
+}

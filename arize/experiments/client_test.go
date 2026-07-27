@@ -17,6 +17,8 @@ func testID(suffix string) string {
 	return base64.StdEncoding.EncodeToString([]byte("Experiment:1:" + suffix))
 }
 
+func ptr(s string) *string { return &s }
+
 func newTestClient(t *testing.T, handler http.HandlerFunc) *arize.Client {
 	t.Helper()
 	srv := httptest.NewServer(handler)
@@ -152,7 +154,7 @@ func TestExperiments(t *testing.T) {
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(experiments.ListExperiments{
 					Experiments: []experiments.Experiment{
-						{Id: "exp-1", Name: "my-experiment", DatasetId: "ds-1", DatasetVersionId: "dv-1"},
+						{Id: "exp-1", Name: "my-experiment", DatasetId: ptr("ds-1"), DatasetVersionId: ptr("dv-1")},
 					},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
@@ -211,7 +213,7 @@ func TestExperiments(t *testing.T) {
 				}
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(experiments.Experiment{
-					Id: expID, Name: "my-experiment", DatasetId: "ds-1", DatasetVersionId: "dv-1",
+					Id: expID, Name: "my-experiment", DatasetId: ptr("ds-1"), DatasetVersionId: ptr("dv-1"),
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
@@ -256,7 +258,7 @@ func TestExperiments(t *testing.T) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusCreated)
 				json.NewEncoder(w).Encode(experiments.Experiment{
-					Id: "exp-new", Name: "new-experiment", DatasetId: "ds-1", DatasetVersionId: "dv-1",
+					Id: "exp-new", Name: "new-experiment", DatasetId: ptr("ds-1"), DatasetVersionId: ptr("dv-1"),
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
@@ -285,7 +287,7 @@ func TestExperiments(t *testing.T) {
 				_ = json.NewDecoder(r.Body).Decode(&createTransformsBody)
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusCreated)
-				json.NewEncoder(w).Encode(experiments.Experiment{Id: "exp-x", Name: "x", DatasetId: "ds-1", DatasetVersionId: "dv-1"})
+				json.NewEncoder(w).Encode(experiments.Experiment{Id: "exp-x", Name: "x", DatasetId: ptr("ds-1"), DatasetVersionId: ptr("dv-1")})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Experiments.Create(ctx, experiments.CreateRequest{

@@ -909,6 +909,47 @@ func TestTasks(t *testing.T) {
 	}
 }
 
+func TestTasks_CreateEvaluationTask_CustomCodeEvaluatorLimit(t *testing.T) {
+	const errorMessage = "Only one custom code evaluator runs per task. Create one task per custom evaluator."
+	_, client := newTestServer(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost || r.URL.Path != "/v2/tasks" {
+			t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+		}
+		var body wireCreateEval
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if len(body.Evaluators) != 2 {
+			t.Errorf("evaluators: want 2, got %d", len(body.Evaluators))
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		if err := json.NewEncoder(w).Encode(map[string]string{
+			"title":  "Validation error",
+			"detail": errorMessage,
+		}); err != nil {
+			t.Errorf("encode response: %v", err)
+		}
+	})
+
+	_, err := client.Tasks.CreateEvaluationTask(context.Background(), tasks.CreateEvaluationTaskRequest{
+		Name: "two-custom-evaluators",
+		Type: tasks.TaskTypeCodeEvaluation,
+		Evaluators: []tasks.EvaluatorInput{
+			{EvaluatorID: "custom-1"},
+			{EvaluatorID: "custom-2"},
+		},
+		Project: projectID("p-1"),
+	})
+	var unprocessable *arize.UnprocessableEntityError
+	if !errors.As(err, &unprocessable) {
+		t.Fatalf("expected *UnprocessableEntityError, got %T: %v", err, err)
+	}
+	if !strings.Contains(unprocessable.Error(), errorMessage) {
+		t.Errorf("error: want %q, got %q", errorMessage, unprocessable.Error())
+	}
+}
+
 // TestTasks_CreateEvaluationTask_Validation covers the client-side checks
 // that reject a create before any request is sent.
 func TestTasks_CreateEvaluationTask_Validation(t *testing.T) {

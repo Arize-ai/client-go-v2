@@ -121,7 +121,6 @@
     - [Refresh an API Key](#refresh-an-api-key)
     - [Revoke an API Key](#revoke-an-api-key)
   - [Operations on Resource Restrictions](#operations-on-resource-restrictions)
-    - [List Resource Restrictions](#list-resource-restrictions)
     - [Restrict a Resource](#restrict-a-resource)
     - [Unrestrict a Resource](#unrestrict-a-resource)
   - [Operations on Annotation Queues](#operations-on-annotation-queues)
@@ -364,8 +363,13 @@ space, err := client.Spaces.Create(ctx, spaces.CreateRequest{
     Name:         "my-space",
     Organization: "<org-id-or-name>", // accepts a name or ID
     Description:  "optional",
+    IsPrivate:    true, // omit or set false for a public space (default)
 })
 ```
+
+Private spaces are visible only to their members and account/org/space admins.
+A warning is logged when `IsPrivate: true` to remind you to add members before
+the space becomes inaccessible to other users.
 
 ### Update a Space
 
@@ -373,7 +377,12 @@ Patch semantics: nil fields are preserved.
 
 ```go
 newName := "renamed-space"
-space, err := client.Spaces.Update(ctx, spaces.UpdateRequest{Space: "<space-id-or-name>", Name: &newName})
+isPrivate := false // set to true to make the space private
+space, err := client.Spaces.Update(ctx, spaces.UpdateRequest{
+    Space:     "<space-id-or-name>",
+    Name:      &newName,
+    IsPrivate: &isPrivate, // nil preserves the current visibility
+})
 ```
 
 ### Delete a Space
@@ -1192,13 +1201,24 @@ created, err := client.APIKeys.Create(ctx, apikeys.CreateRequest{
 
 ### Create a Service Key
 
-A key bound to a bot user with roles in a space.
+A key bound to a dedicated bot user scoped to one or more organizations and spaces.
 
 ```go
 svc, err := client.APIKeys.CreateServiceKey(ctx, apikeys.CreateServiceKeyRequest{
-    Name:  "ci-bot",
-    Space: "<space-id-or-name>",
+    Name: "ci-bot",
+    Orgs: []apikeys.OrgBinding{
+        {
+            OrgID: "<org-hmac-id>",
+            // Role is optional; zero = server applies predefined read-only role.
+            // Use AssignPredefinedOrgRole or AssignCustomOrgRole to set explicitly.
+            Spaces: []apikeys.SpaceBinding{
+                {Space: "<space-name-or-id>", Role: apikeys.AssignPredefinedSpaceRole(apikeys.SpaceRoleMember)},
+            },
+        },
+    },
 })
+// svc.BotUser.Id — the bot user created for this key
+// svc.Key       — the raw key value, returned only once; store it securely
 ```
 
 ### Refresh an API Key
@@ -1227,32 +1247,18 @@ err := client.APIKeys.Revoke(ctx, apikeys.RevokeRequest{APIKeyID: "<key-id>"})
 ## Operations on Resource Restrictions
 
 Use `client.ResourceRestrictions` to restrict a resource (e.g. a project), preventing
-roles bound at higher levels (space, org, account) from granting access. The
-restrict/unrestrict calls take the restricted **resource** ID (e.g. a project
-ID), not a restriction-record ID. Only `PROJECT` resources are supported today.
+roles bound at higher levels (space, org, account) from granting access. Both
+calls take the restricted **resource** ID (e.g. a project ID), not a
+restriction-record ID. Only `PROJECT` resources are supported today.
 
 A full runnable example lives in [`examples/resourcerestrictions`](./examples/resourcerestrictions).
 
 ### List Resource Restrictions
 
-`List` returns a cursor-paginated set of restrictions. Leave `Limit` at zero to
-use the default page size (50), and leave `ResourceType` empty to return every
-supported type. Advance pages by passing `Pagination.NextCursor` back as `Cursor`.
-
 ```go
-page, err := client.ResourceRestrictions.List(ctx, resourcerestrictions.ListRequest{
-    ResourceType: resourcerestrictions.ResourceRestrictionTypePROJECT, // optional filter
-    Limit:        50,
+resp, err := client.ResourceRestrictions.List(ctx, resourcerestrictions.ListRequest{
+    Limit: 50, // optional
 })
-if err != nil {
-    // handle error
-}
-for _, rr := range page.ResourceRestrictions {
-    fmt.Printf("%s (type=%s)\n", rr.ResourceId, rr.ResourceType)
-}
-if page.Pagination.HasMore && page.Pagination.NextCursor != nil {
-    // fetch the next page with Cursor: *page.Pagination.NextCursor
-}
 ```
 
 ### Restrict a Resource

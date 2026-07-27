@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.20.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.19.0...arize-go-sdk-v2/v0.20.0) (2026-07-27)
+
+
+### 🎁 New Features
+
+* Make dataset id and dataset version id nullable in the REST API experiment response schema ([#80200](https://github.com/Arize-ai/arize/issues/80200)) ([2cd9eaf](https://github.com/Arize-ai/arize/commit/2cd9eaf5c9a15fa9db3ef2c6cd2d462b077efa32))
+* **spaces:** add is_private field to REST API and SDKs ([#79702](https://github.com/Arize-ai/arize/issues/79702)) ([f2eb74b](https://github.com/Arize-ai/arize/commit/f2eb74b690231e9939a9f4da1446e349c87eed79))
+
+
+### 🐛 Bug Fixes
+
+* **cli:** reject CODE_EVALUATION tasks with multiple custom code evaluators ([#79880](https://github.com/Arize-ai/arize/issues/79880)) ([b10d1dd](https://github.com/Arize-ai/arize/commit/b10d1dda6549449d04b8f48681f374bd9fb9a747)), closes [#79853](https://github.com/Arize-ai/arize/issues/79853)
+* **onlinetasks:** reject CODE_EVALUATION tasks with multiple custom code ([b10d1dd](https://github.com/Arize-ai/arize/commit/b10d1dda6549449d04b8f48681f374bd9fb9a747))
+
+## [0.19.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.18.0...arize-go-sdk-v2/v0.19.0) (2026-07-22)
+
+
+### 🎁 New Features
+
+* **service-keys:** multi-space/multi-org support — OpenAPI + Go backend ([#76038](https://github.com/Arize-ai/arize/issues/76038)) ([d6dbeb5](https://github.com/Arize-ai/arize/commit/d6dbeb5db7f0d9f1316f8b7bca5989d0570de332))
+
 ## [0.18.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.17.0...arize-go-sdk-v2/v0.18.0) (2026-07-17)
 
 ### 🎁 New Features

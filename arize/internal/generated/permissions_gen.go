@@ -56,6 +56,13 @@ var Permissions = struct {
 	FileImportDelete                Permission
 	FileImportRead                  Permission
 	FileImportUpdate                Permission
+	LlmIntegrationCreate            Permission
+	LlmIntegrationDelete            Permission
+	LlmIntegrationUpdate            Permission
+	ManagedAgentCreate              Permission
+	ManagedAgentDelete              Permission
+	ManagedAgentRead                Permission
+	ManagedAgentUpdate              Permission
 	MLModelCreate                   Permission
 	MLModelDelete                   Permission
 	MLModelRead                     Permission
@@ -113,8 +120,8 @@ var Permissions = struct {
 	RoleBindingDelete               Permission
 	RoleBindingRead                 Permission
 	ServiceKeyCreate                Permission
-	ServiceKeyDelete                Permission
 	ServiceKeyRead                  Permission
+	ServiceKeyRevoke                Permission
 	SpaceCreate                     Permission
 	SpaceDelete                     Permission
 	SpaceRead                       Permission
@@ -182,6 +189,13 @@ var Permissions = struct {
 	FileImportDelete:                PermissionFILEIMPORTDELETE,
 	FileImportRead:                  PermissionFILEIMPORTREAD,
 	FileImportUpdate:                PermissionFILEIMPORTUPDATE,
+	LlmIntegrationCreate:            PermissionLLMINTEGRATIONCREATE,
+	LlmIntegrationDelete:            PermissionLLMINTEGRATIONDELETE,
+	LlmIntegrationUpdate:            PermissionLLMINTEGRATIONUPDATE,
+	ManagedAgentCreate:              PermissionMANAGEDAGENTCREATE,
+	ManagedAgentDelete:              PermissionMANAGEDAGENTDELETE,
+	ManagedAgentRead:                PermissionMANAGEDAGENTREAD,
+	ManagedAgentUpdate:              PermissionMANAGEDAGENTUPDATE,
 	MLModelCreate:                   PermissionMLMODELCREATE,
 	MLModelDelete:                   PermissionMLMODELDELETE,
 	MLModelRead:                     PermissionMLMODELREAD,
@@ -239,8 +253,8 @@ var Permissions = struct {
 	RoleBindingDelete:               PermissionROLEBINDINGDELETE,
 	RoleBindingRead:                 PermissionROLEBINDINGREAD,
 	ServiceKeyCreate:                PermissionSERVICEKEYCREATE,
-	ServiceKeyDelete:                PermissionSERVICEKEYDELETE,
 	ServiceKeyRead:                  PermissionSERVICEKEYREAD,
+	ServiceKeyRevoke:                PermissionSERVICEKEYREVOKE,
 	SpaceCreate:                     PermissionSPACECREATE,
 	SpaceDelete:                     PermissionSPACEDELETE,
 	SpaceRead:                       PermissionSPACEREAD,

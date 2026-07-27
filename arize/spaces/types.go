@@ -66,6 +66,10 @@ type CreateRequest struct {
 	// Description is an optional brief description of the space's purpose. When
 	// empty, the space is created without a description.
 	Description string
+	// IsPrivate controls whether the space is private. Private spaces are only
+	// visible to their members and account/org/space admins. When false (the
+	// default), the space is public.
+	IsPrivate bool
 }
 
 // UpdateRequest is the request body for updating an existing space. Leave a
@@ -80,6 +84,10 @@ type UpdateRequest struct {
 	// pointer to an empty string to clear the existing description); when nil,
 	// the existing description is preserved.
 	Description *string
+	// IsPrivate is optional. When non-nil, sets the space visibility: true makes
+	// it private (visible only to members and admins), false makes it public.
+	// When nil, the existing visibility is preserved.
+	IsPrivate *bool
 }
 
 // DeleteRequest identifies a space to delete. Deletion is irreversible and

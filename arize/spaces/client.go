@@ -2,6 +2,7 @@ package spaces
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
@@ -79,6 +80,9 @@ func (c *Client) Create(
 	req CreateRequest,
 ) (*Space, error) {
 	prerelease.Warn("spaces.create", prerelease.Beta)
+	if req.IsPrivate {
+		slog.Warn("spaces.create: private spaces restrict visibility to space members and admins; ensure members are added before the space becomes inaccessible to other users")
+	}
 	orgID, err := resolve.FindOrganizationID(ctx, c.gen, req.Organization)
 	if err != nil {
 		return nil, err
@@ -87,6 +91,7 @@ func (c *Client) Create(
 		Name:           req.Name,
 		OrganizationId: orgID,
 		Description:    optfields.PtrIfSet(req.Description),
+		IsPrivate:      optfields.PtrIfSet(req.IsPrivate),
 	}
 	resp, err := c.gen.CreateSpaceWithResponse(ctx, body)
 	if err != nil {
@@ -105,6 +110,9 @@ func (c *Client) Update(
 	req UpdateRequest,
 ) (*Space, error) {
 	prerelease.Warn("spaces.update", prerelease.Beta)
+	if req.IsPrivate != nil && *req.IsPrivate {
+		slog.Warn("spaces.update: private spaces restrict visibility to space members and admins; ensure members are added before the space becomes inaccessible to other users")
+	}
 	id, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
@@ -112,6 +120,7 @@ func (c *Client) Update(
 	body := generated.UpdateSpaceJSONRequestBody{
 		Name:        req.Name,
 		Description: req.Description,
+		IsPrivate:   req.IsPrivate,
 	}
 	resp, err := c.gen.UpdateSpaceWithResponse(ctx, id, body)
 	if err != nil {

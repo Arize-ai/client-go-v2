@@ -161,6 +161,12 @@ func TestCheckResponse_TitleAndBodyFallback(t *testing.T) {
 				if be.Title != "Bad Request" {
 					t.Errorf("expected title %q, got %q", "Bad Request", be.Title)
 				}
+				if be.Detail != "missing field" {
+					t.Errorf("expected detail %q, got %q", "missing field", be.Detail)
+				}
+				if be.Error() != "arize API error 400: missing field" {
+					t.Errorf("unexpected error message: %q", be.Error())
+				}
 				if be.Body != string(body) {
 					t.Errorf("expected full body preserved in Body, got %q", be.Body)
 				}

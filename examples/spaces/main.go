@@ -75,30 +75,37 @@ func getSpace(ctx context.Context, client *arize.Client, nameOrID string) {
 // createSpace creates a space under the given organization. Organization
 // accepts either an organization name or ID; it is resolved internally to an
 // organization ID.
+//
+// Pass IsPrivate: true to restrict visibility to space members and admins only.
+// When false (the default), the space is visible to all organization members.
 func createSpace(ctx context.Context, client *arize.Client, name, organization string) *spaces.Space {
 	space, err := client.Spaces.Create(ctx, spaces.CreateRequest{
 		Name:         name,
 		Organization: organization,
 		Description:  "created by the spaces example",
+		IsPrivate:    false, // set to true to create a private space
 	})
 	if err != nil {
 		log.Fatalf("create space: %v", err)
 	}
-	fmt.Printf("created space %s (%s)\n", space.Name, space.Id)
+	fmt.Printf("created space %s (%s) is_private=%v\n", space.Name, space.Id, space.IsPrivate)
 	return space
 }
 
-// updateSpace accepts either a space name or ID. A nil patch field is left
-// unchanged.
+// updateSpace accepts either a space name or ID. Nil patch fields are left
+// unchanged. IsPrivate is a pointer: non-nil sets the visibility, nil preserves
+// the existing value.
 func updateSpace(ctx context.Context, client *arize.Client, spaceID, newName string) {
+	isPrivate := true // toggle visibility to private
 	space, err := client.Spaces.Update(ctx, spaces.UpdateRequest{
-		Space: spaceID,
-		Name:  &newName,
+		Space:     spaceID,
+		Name:      &newName,
+		IsPrivate: &isPrivate,
 	})
 	if err != nil {
 		log.Fatalf("update space: %v", err)
 	}
-	fmt.Printf("renamed space %s to %s\n", space.Id, space.Name)
+	fmt.Printf("updated space %s: name=%s is_private=%v\n", space.Id, space.Name, space.IsPrivate)
 }
 
 // addSpaceUser adds a user with the predefined "MEMBER" role. Build the role

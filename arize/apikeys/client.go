@@ -25,7 +25,7 @@ func New(gen *generated.ClientWithResponses) *Client {
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
-) (*ListAPIKeys, error) {
+) (*ListApiKeysResponse, error) {
 	prerelease.Warn("apikeys.list", prerelease.Beta)
 	params := &generated.ListApiKeysParams{
 		KeyType: optfields.PtrIfSet(req.KeyType),
@@ -55,14 +55,16 @@ func (c *Client) List(
 func (c *Client) Create(
 	ctx context.Context,
 	req CreateRequest,
-) (*APIKey, error) {
+) (*UserApiKeyCreated, error) {
 	prerelease.Warn("apikeys.create", prerelease.Beta)
-	keyType := APIKeyTypeUser
-	body := generated.CreateApiKeyRequest{
+	var body generated.CreateApiKeyRequest
+	if err := body.FromCreateUserApiKeyRequest(generated.CreateUserApiKeyRequest{
+		KeyType:     generated.CreateUserApiKeyRequestKeyTypeUSER,
 		Name:        req.Name,
 		Description: optfields.PtrIfSet(req.Description),
-		KeyType:     &keyType,
 		ExpiresAt:   optfields.PtrIfSet(req.ExpiresAt),
+	}); err != nil {
+		return nil, fmt.Errorf("apikeys: build request body: %w", err)
 	}
 	resp, err := c.gen.CreateApiKeyWithResponse(ctx, body)
 	if err != nil {
@@ -71,37 +73,90 @@ func (c *Client) Create(
 	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
 		return nil, err
 	}
-	return resp.JSON201, nil
+	created, err := resp.JSON201.AsUserApiKeyCreated()
+	if err != nil {
+		return nil, fmt.Errorf("apikeys: decode user key response: %w", err)
+	}
+	return &created, nil
 }
 
 // CreateServiceKey creates a new service API key and returns it.
 func (c *Client) CreateServiceKey(
 	ctx context.Context,
 	req CreateServiceKeyRequest,
-) (*APIKey, error) {
+) (*ServiceApiKeyCreated, error) {
 	prerelease.Warn("apikeys.create_service_key", prerelease.Beta)
-	if req.Space == "" {
-		return nil, fmt.Errorf("apikeys: space is required for service keys")
+	if len(req.Orgs) == 0 {
+		return nil, fmt.Errorf("apikeys: at least one organization binding with at least one space is required")
 	}
-	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
-	if err != nil {
-		return nil, err
-	}
-	keyType := APIKeyTypeService
-	body := generated.CreateApiKeyRequest{
-		Name:        req.Name,
-		Description: optfields.PtrIfSet(req.Description),
-		KeyType:     &keyType,
-		ExpiresAt:   optfields.PtrIfSet(req.ExpiresAt),
-		SpaceId:     &spaceID,
-	}
-	if req.SpaceRole != "" || req.OrgRole != "" || req.AccountRole != "" {
-		body.Roles = &generated.ApiKeyRoles{
-			SpaceRole:   optfields.PtrIfSet(req.SpaceRole),
-			OrgRole:     optfields.PtrIfSet(req.OrgRole),
-			AccountRole: optfields.PtrIfSet(req.AccountRole),
+
+	orgBindings := make([]generated.ServiceKeyOrgAssignment, 0, len(req.Orgs))
+	for j, orgBinding := range req.Orgs {
+		if orgBinding.OrgID == "" {
+			return nil, fmt.Errorf("apikeys: orgs[%d]: OrgID is required", j)
 		}
+		if len(orgBinding.Spaces) == 0 {
+			return nil, fmt.Errorf("apikeys: orgs[%d]: at least one space binding is required", j)
+		}
+
+		var orgRole *generated.OrganizationRoleAssignment
+		if !isZeroRole(orgBinding.Role) {
+			r := orgBinding.Role
+			orgRole = &r
+		}
+
+		// Translate SDK space bindings because callers may pass a space name,
+		// while the API request body requires the resolved space ID.
+		spaceBindings := make([]generated.ServiceKeySpaceAssignment, 0, len(orgBinding.Spaces))
+		for k, sb := range orgBinding.Spaces {
+			if sb.Space == "" {
+				return nil, fmt.Errorf("apikeys: orgs[%d].spaces[%d]: space is required", j, k)
+			}
+			spaceID, err := resolve.FindSpaceID(ctx, c.gen, sb.Space)
+			if err != nil {
+				return nil, err
+			}
+
+			var spaceRole *generated.SpaceRoleAssignment
+			if !isZeroRole(sb.Role) {
+				r := sb.Role
+				spaceRole = &r
+			}
+
+			spaceBindings = append(spaceBindings, generated.ServiceKeySpaceAssignment{
+				SpaceId: spaceID,
+				Role:    spaceRole,
+			})
+		}
+
+		orgBindings = append(orgBindings, generated.ServiceKeyOrgAssignment{
+			OrgId:  orgBinding.OrgID,
+			Role:   orgRole,
+			Spaces: spaceBindings,
+		})
 	}
+
+	// Build the optional account-level role; nil when zero (server applies default).
+	var accountRole *generated.UserRoleAssignment
+	if !isZeroRole(req.AccountRole) {
+		r := req.AccountRole
+		accountRole = &r
+	}
+
+	svc := generated.CreateServiceApiKeyRequest{
+		KeyType:       generated.CreateServiceApiKeyRequestKeyTypeSERVICE,
+		Name:          req.Name,
+		Description:   optfields.PtrIfSet(req.Description),
+		ExpiresAt:     optfields.PtrIfSet(req.ExpiresAt),
+		AccountRole:   accountRole,
+		Organizations: orgBindings,
+	}
+
+	var body generated.CreateApiKeyRequest
+	if err := body.FromCreateServiceApiKeyRequest(svc); err != nil {
+		return nil, fmt.Errorf("apikeys: build request body: %w", err)
+	}
+
 	resp, err := c.gen.CreateApiKeyWithResponse(ctx, body)
 	if err != nil {
 		return nil, err
@@ -109,7 +164,11 @@ func (c *Client) CreateServiceKey(
 	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
 		return nil, err
 	}
-	return resp.JSON201, nil
+	created, err := resp.JSON201.AsServiceApiKeyCreated()
+	if err != nil {
+		return nil, fmt.Errorf("apikeys: decode service key response: %w", err)
+	}
+	return &created, nil
 }
 
 // Revoke sets an API key's status to revoked by ID. The key stops working
@@ -126,13 +185,13 @@ func (c *Client) Revoke(
 	return apierrors.CheckResponse(resp.HTTPResponse, resp.Body)
 }
 
-// Refresh rotates an API key and returns the new key.
+// Refresh rotates an API key and returns the replacement in the legacy refresh shape.
 func (c *Client) Refresh(
 	ctx context.Context,
 	req RefreshRequest,
-) (*APIKey, error) {
+) (*RefreshApiKeyResponse, error) {
 	prerelease.Warn("apikeys.refresh", prerelease.Beta)
-	body := generated.RefreshApiKeyRequest{
+	body := generated.RefreshApiKeyRequestBody{
 		ExpiresAt:          optfields.PtrIfSet(req.ExpiresAt),
 		GracePeriodSeconds: optfields.PtrIfSet(req.GracePeriodSeconds),
 	}
@@ -144,4 +203,11 @@ func (c *Client) Refresh(
 		return nil, err
 	}
 	return resp.JSON200, nil
+}
+
+// isZeroRole reports whether a union role value is unset (zero). The union types
+// store their data as json.RawMessage; when nil the MarshalJSON returns "null".
+func isZeroRole(r interface{ MarshalJSON() ([]byte, error) }) bool {
+	b, err := r.MarshalJSON()
+	return err == nil && string(b) == "null"
 }
