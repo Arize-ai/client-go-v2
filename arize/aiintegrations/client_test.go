@@ -589,6 +589,36 @@ func TestAIIntegrations(t *testing.T) {
 			},
 		},
 		{
+			name: "Update_ClearBaseURL",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body map[string]json.RawMessage
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if got, ok := body["base_url"]; !ok || string(got) != "null" {
+					t.Errorf("base_url: want JSON null, got %q", got)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				_ = json.NewEncoder(w).Encode(aiintegrations.AIIntegration{
+					Id: "int-1", Name: "x", Provider: aiintegrations.AIIntegrationProviderOpenAI,
+					AuthType: aiintegrations.AIIntegrationAuthTypeDefault,
+					Scopings: []aiintegrations.AIIntegrationScoping{},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				empty := ""
+				return c.AIIntegrations.Update(ctx, aiintegrations.UpdateRequest{
+					Integration: helperID("AiIntegration", "int-1"),
+					BaseURL:     &empty,
+				})
+			},
+			check: func(t *testing.T, _ any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
 			name: "Delete_Success",
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				deletePath = r.URL.Path

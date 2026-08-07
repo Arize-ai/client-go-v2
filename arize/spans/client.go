@@ -81,6 +81,8 @@ func (c *Client) Delete(
 	body := generated.DeleteSpansRequest{
 		ProjectId: projectID,
 		SpanIds:   req.SpanIDs,
+		StartTime: optfields.PtrIfSet(req.Start),
+		EndTime:   optfields.PtrIfSet(req.End),
 	}
 	resp, err := c.gen.DeleteSpansWithResponse(ctx, body)
 	if err != nil {

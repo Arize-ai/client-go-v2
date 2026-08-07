@@ -1,7 +1,10 @@
 package organizations
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
@@ -92,11 +95,22 @@ func (c *Client) Update(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.UpdateOrganizationRequest{
-		Name:        req.Name,
-		Description: req.Description,
+	body := map[string]any{}
+	if req.Name != nil {
+		body["name"] = *req.Name
 	}
-	resp, err := c.gen.UpdateOrganizationWithResponse(ctx, id, body)
+	if req.Description != nil {
+		if *req.Description == "" {
+			body["description"] = nil
+		} else {
+			body["description"] = *req.Description
+		}
+	}
+	raw, err := json.Marshal(body)
+	if err != nil {
+		return nil, fmt.Errorf("organizations: marshal update body: %w", err)
+	}
+	resp, err := c.gen.UpdateOrganizationWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(raw))
 	if err != nil {
 		return nil, err
 	}
@@ -138,10 +152,11 @@ func (c *Client) AddUser(
 	if err != nil {
 		return nil, err
 	}
-	role := req.Role
-	role.Type = RoleAssignmentTypePredefined
-	var assignment generated.OrganizationRoleAssignment
-	if err := assignment.FromOrganizationPredefinedRoleAssignment(role); err != nil {
+	var assignment generated.OrganizationRoleAssignmentRequest
+	if err := assignment.FromOrganizationPredefinedRoleAssignmentRequest(generated.OrganizationPredefinedRoleAssignmentRequest{
+		Name: req.Role.Name,
+		Type: RoleAssignmentTypePredefined,
+	}); err != nil {
 		return nil, err
 	}
 	body := generated.AddOrganizationUserRequest{

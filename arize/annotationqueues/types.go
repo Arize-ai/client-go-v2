@@ -123,9 +123,9 @@ type UpdateRequest struct {
 	// Name, when non-nil, sets a new queue name; when nil, the existing name is
 	// preserved.
 	Name *string
-	// Instructions, when non-nil, sets new annotator instructions (a pointer to
-	// the empty string clears them); when nil, existing instructions are
-	// preserved.
+	// Instructions, when non-nil, sets new annotator instructions. JSON null
+	// clears them; because nil preserves the existing instructions, pass a
+	// pointer to an empty string to have the SDK send JSON null.
 	Instructions *string
 	// AnnotatorEmails, when non-nil, replaces the full annotator list; when nil,
 	// the existing annotators are preserved.

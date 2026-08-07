@@ -310,15 +310,31 @@ func FindDatasetID(ctx context.Context, gen *generated.ClientWithResponses, data
 	return "", &ResourceNotFoundError{ResourceType: "dataset", Name: dataset, Available: available}
 }
 
-// FindExperimentID resolves an experiment ID or name to an ID. Dataset (ID or
-// name) is required when experiment is a name; space is required when dataset
-// is itself passed as a name.
+// FindExperimentID resolves an experiment ID or name to an ID. Either dataset
+// or space is required when experiment is a name; space is also required when
+// dataset is itself passed as a name.
+//
+// Scoping the search by dataset finds at most one match, because experiment
+// names are unique within a dataset. Scoping by space alone spans both
+// experiments associated with a dataset and those without one, and those are
+// only unique within their own separate scopes — so a space can hold several
+// experiments sharing a name (one per dataset, plus one with no dataset). In
+// that case every match is collected and AmbiguousNameError is returned; pass
+// dataset or an experiment ID to disambiguate.
 func FindExperimentID(ctx context.Context, gen *generated.ClientWithResponses, experiment, dataset, space string) (string, error) {
 	if IsResourceID(experiment) {
 		return experiment, nil
 	}
+	if dataset == "" && space == "" {
+		return "", &ResourceNotFoundError{
+			ResourceType: "experiment",
+			Name:         experiment,
+			Hint: "Provide 'dataset' or 'space' so the experiment name can be " +
+				"resolved, or provide the experiment ID instead of the name.",
+		}
+	}
 	if dataset == "" {
-		return "", requireParent("experiment", experiment, "dataset")
+		return findExperimentIDInSpace(ctx, gen, experiment, space)
 	}
 	if !IsResourceID(dataset) && space == "" {
 		return "", &ResourceNotFoundError{
@@ -349,6 +365,7 @@ func FindExperimentID(ctx context.Context, gen *generated.ClientWithResponses, e
 			return "", err
 		}
 		for _, e := range resp.JSON200.Experiments {
+			// Unique per dataset, so the first exact match is the only one.
 			if e.Name == experiment {
 				return e.Id, nil
 			}
@@ -358,6 +375,50 @@ func FindExperimentID(ctx context.Context, gen *generated.ClientWithResponses, e
 			break
 		}
 		cursor = *resp.JSON200.Pagination.NextCursor
+	}
+	return "", &ResourceNotFoundError{ResourceType: "experiment", Name: experiment, Available: available}
+}
+
+// findExperimentIDInSpace resolves an experiment name within a space, with no
+// dataset to narrow the search. Uniqueness isn't guaranteed at this scope, so
+// every page is read and every exact match collected before deciding.
+func findExperimentIDInSpace(ctx context.Context, gen *generated.ClientWithResponses, experiment, space string) (string, error) {
+	spaceID, err := FindSpaceID(ctx, gen, space)
+	if err != nil {
+		return "", err
+	}
+	var available, matches []string
+	limit := listPageSize
+	var cursor string
+	for {
+		p := &generated.ListExperimentsParams{SpaceId: &spaceID, Name: &experiment, Limit: &limit}
+		if cursor != "" {
+			p.Cursor = &cursor
+		}
+		resp, err := gen.ListExperimentsWithResponse(ctx, p)
+		if err != nil {
+			return "", err
+		}
+		if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+			return "", err
+		}
+		for _, e := range resp.JSON200.Experiments {
+			if e.Name == experiment {
+				matches = append(matches, e.Id)
+				continue
+			}
+			available = append(available, e.Name)
+		}
+		if !resp.JSON200.Pagination.HasMore || resp.JSON200.Pagination.NextCursor == nil {
+			break
+		}
+		cursor = *resp.JSON200.Pagination.NextCursor
+	}
+	if len(matches) > 1 {
+		return "", &AmbiguousNameError{ResourceType: "experiment", Name: experiment, MatchingIDs: matches}
+	}
+	if len(matches) == 1 {
+		return matches[0], nil
 	}
 	return "", &ResourceNotFoundError{ResourceType: "experiment", Name: experiment, Available: available}
 }

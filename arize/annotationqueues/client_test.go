@@ -181,6 +181,18 @@ func TestAnnotationQueues(t *testing.T) {
 		{
 			name: "Update",
 			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body map[string]json.RawMessage
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if got := string(body["name"]); got != `"updated-queue"` {
+					t.Errorf("name: want updated-queue, got %q", got)
+				}
+				for _, field := range []string{"instructions", "annotator_emails", "annotation_config_ids"} {
+					if _, ok := body[field]; ok {
+						t.Errorf("%s should be omitted when nil, got %q", field, body[field])
+					}
+				}
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(annotationqueues.AnnotationQueue{Id: "aq-1", Name: updatedName})
 			},
@@ -197,6 +209,29 @@ func TestAnnotationQueues(t *testing.T) {
 				q := got.(*annotationqueues.AnnotationQueue)
 				if q.Name != updatedName {
 					t.Errorf("unexpected name: %s", q.Name)
+				}
+			},
+		},
+		{
+			name: "Update_ClearInstructions",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body map[string]json.RawMessage
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if got, ok := body["instructions"]; !ok || string(got) != "null" {
+					t.Errorf("instructions: want JSON null, got %q", got)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(annotationqueues.AnnotationQueue{Id: "aq-1", Name: "queue"})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				empty := ""
+				return c.AnnotationQueues.Update(ctx, annotationqueues.UpdateRequest{AnnotationQueue: testID("aq-1"), Instructions: &empty})
+			},
+			check: func(t *testing.T, _ any, err error) {
+				if err != nil {
+					t.Fatal(err)
 				}
 			},
 		},

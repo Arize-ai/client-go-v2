@@ -9,6 +9,7 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/internal/optfields"
 	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
 	"github.com/Arize-ai/client-go-v2/arize/internal/resolve"
+	"github.com/Arize-ai/client-go-v2/arize/internal/roleconv"
 )
 
 // Client provides access to the Arize API Keys API.
@@ -99,9 +100,12 @@ func (c *Client) CreateServiceKey(
 			return nil, fmt.Errorf("apikeys: orgs[%d]: at least one space binding is required", j)
 		}
 
-		var orgRole *generated.OrganizationRoleAssignment
-		if !isZeroRole(orgBinding.Role) {
-			r := orgBinding.Role
+		var orgRole *generated.OrganizationRoleAssignmentRequest
+		if !roleconv.IsZero(orgBinding.Role) {
+			r, err := roleconv.OrgRoleAssignmentRequest(orgBinding.Role)
+			if err != nil {
+				return nil, fmt.Errorf("apikeys: orgs[%d]: build role request: %w", j, err)
+			}
 			orgRole = &r
 		}
 
@@ -117,9 +121,12 @@ func (c *Client) CreateServiceKey(
 				return nil, err
 			}
 
-			var spaceRole *generated.SpaceRoleAssignment
-			if !isZeroRole(sb.Role) {
-				r := sb.Role
+			var spaceRole *generated.SpaceRoleAssignmentRequest
+			if !roleconv.IsZero(sb.Role) {
+				r, err := roleconv.SpaceRoleAssignmentRequest(sb.Role)
+				if err != nil {
+					return nil, fmt.Errorf("apikeys: orgs[%d].spaces[%d]: build role request: %w", j, k, err)
+				}
 				spaceRole = &r
 			}
 
@@ -137,9 +144,12 @@ func (c *Client) CreateServiceKey(
 	}
 
 	// Build the optional account-level role; nil when zero (server applies default).
-	var accountRole *generated.UserRoleAssignment
-	if !isZeroRole(req.AccountRole) {
-		r := req.AccountRole
+	var accountRole *generated.UserRoleAssignmentRequest
+	if !roleconv.IsZero(req.AccountRole) {
+		r, err := roleconv.AccountRoleAssignmentRequest(req.AccountRole)
+		if err != nil {
+			return nil, fmt.Errorf("apikeys: build account role request: %w", err)
+		}
 		accountRole = &r
 	}
 
@@ -203,11 +213,4 @@ func (c *Client) Refresh(
 		return nil, err
 	}
 	return resp.JSON200, nil
-}
-
-// isZeroRole reports whether a union role value is unset (zero). The union types
-// store their data as json.RawMessage; when nil the MarshalJSON returns "null".
-func isZeroRole(r interface{ MarshalJSON() ([]byte, error) }) bool {
-	b, err := r.MarshalJSON()
-	return err == nil && string(b) == "null"
 }

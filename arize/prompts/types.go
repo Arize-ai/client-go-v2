@@ -18,12 +18,18 @@ type (
 
 	// LLMMessage is a single message in a prompt template.
 	LLMMessage = generated.LLMMessage
+	// LLMMessageRequest is a strict message supplied when creating a prompt version.
+	LLMMessageRequest = generated.LLMMessageRequest
 	// MessageRole is the role of a prompt message's author.
 	MessageRole = generated.MessageRole
 	// InvocationParams configures the LLM invocation (temperature, etc.).
 	InvocationParams = generated.InvocationParams
+	// InvocationParamsRequest is the strict invocation configuration used in writes.
+	InvocationParamsRequest = generated.InvocationParamsRequest
 	// ProviderParams configures provider-specific parameters.
 	ProviderParams = generated.ProviderParams
+	// ProviderParamsRequest is the strict provider configuration used in writes.
+	ProviderParamsRequest = generated.ProviderParamsRequest
 
 	// InputVariableFormat declares how prompt variables are interpolated.
 	InputVariableFormat = generated.InputVariableFormat
@@ -114,8 +120,8 @@ type UpdateRequest struct {
 	// ignored when Prompt is an ID.
 	Space string
 	// Description is optional. When non-nil, sets a new description (pass a
-	// pointer to an empty string to clear the existing description); when nil,
-	// the existing description is preserved.
+	// pointer to an empty string to clear the existing description with JSON
+	// null); when nil, the existing description is preserved.
 	Description *string
 }
 
@@ -156,7 +162,7 @@ type CreateVersionRequest struct {
 	// Provider is the LLM provider (e.g. "OPEN_AI"). Required.
 	Provider LlmProvider
 	// Messages is the prompt messages list. Required.
-	Messages []LLMMessage
+	Messages []LLMMessageRequest
 	// InputVariableFormat is optional and declares how prompt variables are
 	// interpolated. When empty, the server defaults to f_string.
 	InputVariableFormat InputVariableFormat
@@ -165,10 +171,10 @@ type CreateVersionRequest struct {
 	Model string
 	// InvocationParams is optional and configures invocation params
 	// (temperature, etc.). When nil, no invocation params are set.
-	InvocationParams *InvocationParams
+	InvocationParams *InvocationParamsRequest
 	// ProviderParams is optional and configures provider-specific params. When
 	// nil, no provider params are set.
-	ProviderParams *ProviderParams
+	ProviderParams *ProviderParamsRequest
 }
 
 // GetVersionRequest identifies a single prompt version by its ID.

@@ -737,6 +737,21 @@ func (e CustomCodeConfigType) Valid() bool {
 	}
 }
 
+// Defines values for CustomCodeConfigRequestType.
+const (
+	CustomCodeConfigRequestTypeCUSTOM CustomCodeConfigRequestType = "CUSTOM"
+)
+
+// Valid indicates whether the value is a known member of the CustomCodeConfigRequestType enum.
+func (e CustomCodeConfigRequestType) Valid() bool {
+	switch e {
+	case CustomCodeConfigRequestTypeCUSTOM:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for CustomConfigProvider.
 const (
 	CustomConfigProviderCUSTOM CustomConfigProvider = "CUSTOM"
@@ -1358,6 +1373,21 @@ const (
 func (e ManagedCodeConfigType) Valid() bool {
 	switch e {
 	case ManagedCodeConfigTypeMANAGED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ManagedCodeConfigRequestType.
+const (
+	ManagedCodeConfigRequestTypeMANAGED ManagedCodeConfigRequestType = "MANAGED"
+)
+
+// Valid indicates whether the value is a known member of the ManagedCodeConfigRequestType enum.
+func (e ManagedCodeConfigRequestType) Valid() bool {
+	switch e {
+	case ManagedCodeConfigRequestTypeMANAGED:
 		return true
 	default:
 		return false
@@ -2749,16 +2779,16 @@ func (e WebhookNotificationConfigType) Valid() bool {
 
 // AddAnnotationQueueRecordsRequest defines model for AddAnnotationQueueRecordsRequest.
 type AddAnnotationQueueRecordsRequest struct {
-	// RecordSources Record sources to add to the annotation queue. At most 2 record sources (projects or datasets) may be provided in a single request.
+	// RecordSources Record sources to add to the annotation queue. At most 2 record sources (projects or datasets) may be provided in a single request. The total number of records resolved from all sources must not exceed 500.
 	RecordSources []AnnotationQueueRecordInput `json:"record_sources"`
 }
 
 // AddOrganizationUserRequest defines model for AddOrganizationUserRequest.
 type AddOrganizationUserRequest struct {
-	// Role A role assignment for an organization membership. Discriminated by `type`:
-	// - `PREDEFINED`: one of the predefined roles (`ADMIN`, `MEMBER`, `READ_ONLY`, `ANNOTATOR`)
-	// - `CUSTOM`: a custom RBAC role identified by its ID
-	Role OrganizationRoleAssignment `json:"role"`
+	// Role Strict request form of OrganizationRoleAssignment. Used in write request bodies.
+	// - `PREDEFINED`: `{ "type": "PREDEFINED", "name": "ADMIN" | "MEMBER" | "READ_ONLY" | "ANNOTATOR" }`
+	// - `CUSTOM`: `{ "type": "CUSTOM", "id": "<encoded-role-id>" }`
+	Role OrganizationRoleAssignmentRequest `json:"role"`
 
 	// UserId The unique identifier of the user to add
 	UserId Id `json:"user_id"`
@@ -2766,12 +2796,10 @@ type AddOrganizationUserRequest struct {
 
 // AddSpaceUserRequest defines model for AddSpaceUserRequest.
 type AddSpaceUserRequest struct {
-	// Role Specifies which role to assign within a space. Discriminated by `type`:
-	// - `PREDEFINED`: a built-in platform role — `{ "type": "PREDEFINED", "name": "ADMIN" | "MEMBER" | "READ_ONLY" | "ANNOTATOR" }`
-	// - `CUSTOM`: a custom RBAC role identified by its ID — `{ "type": "CUSTOM", "id": "<encoded-role-id>" }`
-	//
-	// Used wherever a space-level role assignment is required (memberships, service key bindings, etc.).
-	Role SpaceRoleAssignment `json:"role"`
+	// Role Strict request form of SpaceRoleAssignment. Used in write request bodies.
+	// - `PREDEFINED`: `{ "type": "PREDEFINED", "name": "ADMIN" | "MEMBER" | "READ_ONLY" | "ANNOTATOR" }`
+	// - `CUSTOM`: `{ "type": "CUSTOM", "id": "<encoded-role-id>" }`
+	Role SpaceRoleAssignmentRequest `json:"role"`
 
 	// UserId The unique identifier of the user to add
 	UserId Id `json:"user_id"`
@@ -2818,7 +2846,8 @@ type AgentConfig struct {
 
 	// RequestPresets Named, reusable request payloads. Replace-on-provide on PATCH.
 	// Always present; an integration with no presets returns `[]`.
-	RequestPresets []AgentRequestPreset `json:"request_presets"`
+	RequestPresets       []AgentRequestPreset   `json:"request_presets"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // AgentIntegration An agent integration (type=AGENT): a customer-hosted HTTPS endpoint plus
@@ -2879,8 +2908,9 @@ type AgentRequestPreset struct {
 	Id *string `json:"id,omitempty"`
 
 	// Name Preset name (unique within the integration). Length 1-255.
-	Name      string     `json:"name"`
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	Name                 string                 `json:"name"`
+	UpdatedAt            *time.Time             `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // AiIntegration An AI integration configures access to an external LLM provider (e.g. OpenAI,
@@ -2941,6 +2971,15 @@ type AiIntegrationProvider string
 
 // AiIntegrationScoping Visibility scoping for the integration
 type AiIntegrationScoping struct {
+	// OrganizationId Organization identifier (base64). Null means account-wide.
+	OrganizationId *string `json:"organization_id,omitempty"`
+
+	// SpaceId Space identifier (base64). Null means organization-wide (or account-wide if organization_id is also null).
+	SpaceId *string `json:"space_id,omitempty"`
+}
+
+// AiIntegrationScopingRequest Visibility scoping for the integration in a write request (strict form of AiIntegrationScoping).
+type AiIntegrationScopingRequest struct {
 	// OrganizationId Organization identifier (base64). Null means account-wide.
 	OrganizationId *string `json:"organization_id,omitempty"`
 
@@ -3112,7 +3151,7 @@ type AnnotationQueueExampleRecordInput struct {
 	// DatasetVersionId Optional. The specific dataset version to use. If omitted, the latest version is used.
 	DatasetVersionId *string `json:"dataset_version_id,omitempty"`
 
-	// ExampleIds Optional. List of example IDs within the dataset to add to the queue. If omitted, all examples in the dataset (or dataset version) are added.
+	// ExampleIds Optional. List of example IDs within the dataset to add to the queue. If omitted, all examples in the dataset (or dataset version) are added, provided the total records from all sources does not exceed 500.
 	ExampleIds *[]string `json:"example_ids,omitempty"`
 
 	// RecordType Discriminator identifying this record source as dataset examples. Must be `EXAMPLE` for dataset example records.
@@ -3224,7 +3263,8 @@ type AnthropicConfig struct {
 	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
 
 	// Provider Discriminator identifying the Anthropic provider.
-	Provider AnthropicConfigProvider `json:"provider"`
+	Provider             AnthropicConfigProvider `json:"provider"`
+	AdditionalProperties map[string]interface{}  `json:"-"`
 }
 
 // AnthropicConfigProvider Discriminator identifying the Anthropic provider.
@@ -3232,6 +3272,12 @@ type AnthropicConfigProvider string
 
 // AnthropicHeaders Anthropic-specific headers
 type AnthropicHeaders struct {
+	// AnthropicBeta Anthropic beta feature flags
+	AnthropicBeta *[]*string `json:"anthropic_beta,omitempty"`
+}
+
+// AnthropicHeadersRequest Anthropic-specific headers in a write request (strict form of AnthropicHeaders)
+type AnthropicHeadersRequest struct {
 	// AnthropicBeta Anthropic beta feature flags
 	AnthropicBeta *[]*string `json:"anthropic_beta,omitempty"`
 }
@@ -3376,7 +3422,8 @@ type AwsBedrockConfig struct {
 	ModelNames []string `json:"model_names"`
 
 	// Provider Discriminator identifying the AWS Bedrock provider.
-	Provider AwsBedrockConfigProvider `json:"provider"`
+	Provider             AwsBedrockConfigProvider `json:"provider"`
+	AdditionalProperties map[string]interface{}   `json:"-"`
 }
 
 // AwsBedrockConfigProvider Discriminator identifying the AWS Bedrock provider.
@@ -3430,8 +3477,32 @@ type AwsProviderMetadata struct {
 // AwsProviderMetadataKind Discriminator value identifying AWS Bedrock provider metadata.
 type AwsProviderMetadataKind string
 
+// AwsProviderMetadataRequest AWS Bedrock provider metadata in a write request (strict form of AwsProviderMetadata).
+type AwsProviderMetadataRequest struct {
+	// ExternalId External ID for the assume-role policy
+	ExternalId *string `json:"external_id,omitempty"`
+
+	// Kind Discriminator value identifying AWS Bedrock provider metadata.
+	Kind AwsProviderMetadataKind `json:"kind"`
+
+	// RoleArn AWS IAM role ARN for cross-account access
+	RoleArn string `json:"role_arn"`
+}
+
 // AzureParams Azure OpenAI specific parameters
 type AzureParams struct {
+	// AzureDeploymentName The Azure deployment name
+	AzureDeploymentName *string `json:"azure_deployment_name,omitempty"`
+
+	// AzureOpenaiEndpoint The Azure OpenAI endpoint URL
+	AzureOpenaiEndpoint *string `json:"azure_openai_endpoint,omitempty"`
+
+	// AzureOpenaiVersion The Azure OpenAI API version
+	AzureOpenaiVersion *string `json:"azure_openai_version,omitempty"`
+}
+
+// AzureParamsRequest Azure OpenAI specific parameters in a write request (strict form of AzureParams)
+type AzureParamsRequest struct {
 	// AzureDeploymentName The Azure deployment name
 	AzureDeploymentName *string `json:"azure_deployment_name,omitempty"`
 
@@ -3449,6 +3520,12 @@ type BaselineConfig struct {
 
 // BedrockOptions AWS Bedrock options
 type BedrockOptions struct {
+	// UseConverseEndpoint Whether to use the AWS Bedrock Converse endpoint. Defaults to `false`.
+	UseConverseEndpoint *bool `json:"use_converse_endpoint,omitempty"`
+}
+
+// BedrockOptionsRequest AWS Bedrock options in a write request (strict form of BedrockOptions)
+type BedrockOptionsRequest struct {
 	// UseConverseEndpoint Whether to use the AWS Bedrock Converse endpoint. Defaults to `false`.
 	UseConverseEndpoint *bool `json:"use_converse_endpoint,omitempty"`
 }
@@ -3489,11 +3566,26 @@ type CategoricalAnnotationValue struct {
 	Score *float64 `json:"score,omitempty"`
 }
 
+// CategoricalAnnotationValueRequest A categorical annotation value in a write request (strict form of CategoricalAnnotationValue).
+type CategoricalAnnotationValueRequest struct {
+	// Label The label value
+	Label string `json:"label"`
+
+	// Score A score to associate with the label
+	Score *float64 `json:"score,omitempty"`
+}
+
 // CodeConfig Discriminated union representing either a managed (built-in) or custom
 // (user-supplied Python) code evaluator configuration, resolved by the
 // nested `type` field (`MANAGED` -> `ManagedCodeConfig`, `CUSTOM` -> `CustomCodeConfig`).
 // This inner `type` is independent of the parent evaluator version's `type` (which is always `CODE` here).
 type CodeConfig struct {
+	union json.RawMessage
+}
+
+// CodeConfigRequest Strict request form of CodeConfig. Discriminated union of ManagedCodeConfigRequest and
+// CustomCodeConfigRequest. Use in write request bodies.
+type CodeConfigRequest struct {
 	union json.RawMessage
 }
 
@@ -3553,7 +3645,7 @@ type CreateAgentIntegrationRequest struct {
 	// Scopings Visibility scoping rules. Defaults to account-wide if omitted
 	// or empty. A scoping with `space_id` set MUST also set
 	// `organization_id`.
-	Scopings *[]IntegrationScoping             `json:"scopings,omitempty"`
+	Scopings *[]IntegrationScopingRequest      `json:"scopings,omitempty"`
 	Type     CreateAgentIntegrationRequestType `json:"type"`
 }
 
@@ -3603,11 +3695,11 @@ type CreateAiIntegrationRequest struct {
 	// Provider The AI provider for this integration
 	Provider AiIntegrationProvider `json:"provider"`
 
-	// ProviderMetadata Provider-specific configuration. For AWS_BEDROCK, must include role_arn. For VERTEX_AI, must include project_id, location, and project_access_label.
-	ProviderMetadata *ProviderMetadata `json:"provider_metadata,omitempty"`
+	// ProviderMetadata Strict request form of ProviderMetadata. For AWS_BEDROCK, must include role_arn. For VERTEX_AI, must include project_id, location, and project_access_label.
+	ProviderMetadata *ProviderMetadataRequest `json:"provider_metadata,omitempty"`
 
 	// Scopings Visibility scoping rules. Defaults to account-wide.
-	Scopings *[]AiIntegrationScoping `json:"scopings,omitempty"`
+	Scopings *[]AiIntegrationScopingRequest `json:"scopings,omitempty"`
 }
 
 // CreateAnnotationConfigRequest defines model for CreateAnnotationConfigRequest.
@@ -3643,7 +3735,7 @@ type CreateAnnotationQueueRequest struct {
 	// Name The name of the annotation queue. Must be unique within the space for active queues.
 	Name string `json:"name"`
 
-	// RecordSources Record sources to add to the annotation queue on creation. At most 2 record sources (projects or datasets) may be provided in a single create request. Additional records from other sources can be added after creation.
+	// RecordSources Record sources to add to the annotation queue on creation. At most 2 record sources (projects or datasets) may be provided in a single create request. The total number of records resolved from all sources must not exceed 500. Additional records from other sources can be added after creation.
 	RecordSources *[]AnnotationQueueRecordInput `json:"record_sources,omitempty"`
 
 	// SpaceId The space ID that the annotation queue belongs to
@@ -3765,7 +3857,7 @@ type CreateCategoricalAnnotationConfigRequest struct {
 	SpaceId string `json:"space_id"`
 
 	// Values An array of categorical annotation values
-	Values []CategoricalAnnotationValue `json:"values"`
+	Values []CategoricalAnnotationValueRequest `json:"values"`
 }
 
 // CreateCategoricalAnnotationConfigRequestAnnotationConfigType Discriminator value identifying a categorical annotation config.
@@ -3812,11 +3904,9 @@ type CreateCodeEvaluationTaskRequestType string
 
 // CreateCodeEvaluatorVersionRequest defines model for CreateCodeEvaluatorVersionRequest.
 type CreateCodeEvaluatorVersionRequest struct {
-	// CodeConfig Discriminated union representing either a managed (built-in) or custom
-	// (user-supplied Python) code evaluator configuration, resolved by the
-	// nested `type` field (`MANAGED` -> `ManagedCodeConfig`, `CUSTOM` -> `CustomCodeConfig`).
-	// This inner `type` is independent of the parent evaluator version's `type` (which is always `CODE` here).
-	CodeConfig CodeConfig `json:"code_config"`
+	// CodeConfig Strict request form of CodeConfig. Discriminated union of ManagedCodeConfigRequest and
+	// CustomCodeConfigRequest. Use in write request bodies.
+	CodeConfig CodeConfigRequest `json:"code_config"`
 
 	// CommitMessage Commit message describing the changes
 	CommitMessage string `json:"commit_message"`
@@ -3925,15 +4015,28 @@ type CreateEvaluatorVersionRequest struct {
 }
 
 // CreateExperimentRequest Experiment creation parameters with an initial set of runs.
+//
+// An experiment belongs to a space and may optionally be associated with a
+// dataset. Provide exactly one of:
+//   - `dataset_id` — associate the experiment with a dataset; it's created in
+//     that dataset's space, and its runs may reference the dataset's examples
+//     via `example_id`.
+//   - `space_id` — the space to create the experiment in, when it isn't
+//     associated with a dataset.
+//
+// Providing both, or neither, is a validation error.
 type CreateExperimentRequest struct {
-	// DatasetId ID of the dataset to create the experiment for
-	DatasetId string `json:"dataset_id"`
+	// DatasetId ID of the dataset to associate the experiment with. Provide `space_id` instead when the experiment isn't associated with a dataset.
+	DatasetId *string `json:"dataset_id,omitempty"`
 
 	// ExperimentRuns Array of experiment run data
 	ExperimentRuns []ExperimentRunInput `json:"experiment_runs"`
 
 	// Name Name of the experiment
 	Name string `json:"name"`
+
+	// SpaceId ID of the space to create the experiment in. Provide instead of `dataset_id`.
+	SpaceId *string `json:"space_id,omitempty"`
 }
 
 // CreateFreeformAnnotationConfigRequest defines model for CreateFreeformAnnotationConfigRequest.
@@ -3982,7 +4085,7 @@ type CreateLlmIntegrationRequest struct {
 	Name string `json:"name"`
 
 	// Scopings Visibility scoping rules. Defaults to account-wide.
-	Scopings *[]IntegrationScoping           `json:"scopings,omitempty"`
+	Scopings *[]IntegrationScopingRequest    `json:"scopings,omitempty"`
 	Type     CreateLlmIntegrationRequestType `json:"type"`
 }
 
@@ -4071,11 +4174,11 @@ type CreatePromptVersionRequest struct {
 	// - `NONE`: **Deprecated.** Treated as `F_STRING`. Will be removed in a future version.
 	InputVariableFormat *InputVariableFormat `json:"input_variable_format,omitempty"`
 
-	// InvocationParams Parameters for the LLM invocation
-	InvocationParams *InvocationParams `json:"invocation_params,omitempty"`
+	// InvocationParams Parameters for the LLM invocation in a write request (strict form of InvocationParams; leaf schemas use *Request variants)
+	InvocationParams *InvocationParamsRequest `json:"invocation_params,omitempty"`
 
 	// Messages The messages that make up the prompt template
-	Messages []LLMMessage `json:"messages"`
+	Messages []LLMMessageRequest `json:"messages"`
 
 	// Model The model to use for the call. Optional. If omitted, no default model is set on the version.
 	Model *string `json:"model,omitempty"`
@@ -4083,8 +4186,8 @@ type CreatePromptVersionRequest struct {
 	// Provider The LLM provider to use
 	Provider LlmProvider `json:"provider"`
 
-	// ProviderParams Provider-specific parameters
-	ProviderParams *ProviderParams `json:"provider_params,omitempty"`
+	// ProviderParams Provider-specific parameters in a write request (strict form of ProviderParams; leaf schemas use *Request variants)
+	ProviderParams *ProviderParamsRequest `json:"provider_params,omitempty"`
 }
 
 // CreateResourceRestrictionRequest defines model for CreateResourceRestrictionRequest.
@@ -4152,7 +4255,7 @@ type CreateServiceApiKeyRequest struct {
 	// Defaults to `{ type: PREDEFINED, name: MEMBER }` when omitted.
 	// Must be at or below the caller's own account role.
 	// The `ANNOTATOR` role is not valid for service keys and returns `422`.
-	AccountRole *UserRoleAssignment `json:"account_role,omitempty"`
+	AccountRole *UserRoleAssignmentRequest `json:"account_role,omitempty"`
 
 	// Description Optional user-defined description for the API key.
 	Description *string `json:"description,omitempty"`
@@ -4248,8 +4351,8 @@ type CreateTemplateEvaluationTaskRequestType string
 // CreateTemplateEvaluatorVersionRequest defines model for CreateTemplateEvaluatorVersionRequest.
 type CreateTemplateEvaluatorVersionRequest struct {
 	// CommitMessage Commit message describing the changes
-	CommitMessage  string         `json:"commit_message"`
-	TemplateConfig TemplateConfig `json:"template_config"`
+	CommitMessage  string              `json:"commit_message"`
+	TemplateConfig TemplateConfigInput `json:"template_config"`
 }
 
 // CreateUserApiKeyRequest defines model for CreateUserApiKeyRequest.
@@ -4285,12 +4388,10 @@ type CreateUserRequest struct {
 	// Name Full name of the new user
 	Name string `json:"name"`
 
-	// Role An account-level role assignment. Discriminated by `type`:
-	// - `PREDEFINED`: one of the predefined roles (`admin`, `member`, `annotator`)
-	// - `CUSTOM`: a custom RBAC role identified by its ID
-	//
-	// Note: `CUSTOM` role assignments are not yet supported and are reserved for future use.
-	Role UserRoleAssignment `json:"role"`
+	// Role Strict request form of UserRoleAssignment. Used in write request bodies.
+	// - `PREDEFINED`: `{ "type": "PREDEFINED", "name": "ADMIN" | "MEMBER" | "ANNOTATOR" }`
+	// - `CUSTOM`: `{ "type": "CUSTOM", "id": "<encoded-role-id>" }`
+	Role UserRoleAssignmentRequest `json:"role"`
 }
 
 // CreateUserResponse defines model for CreateUserResponse.
@@ -4406,6 +4507,39 @@ type CustomCodeConfig struct {
 // CustomCodeConfigType Discriminator identifying this as a custom (user-supplied Python) code evaluator
 type CustomCodeConfigType string
 
+// CustomCodeConfigRequest Custom (user-supplied Python) code evaluator configuration in a write request (strict form of CustomCodeConfig)
+type CustomCodeConfigRequest struct {
+	// Code Python source defining the evaluator class
+	Code string `json:"code"`
+
+	// DataGranularity Data granularity level for evaluation. When omitted or null, no granularity
+	// filter is applied (span-level evaluation is used by default on the server).
+	DataGranularity *DataGranularity `json:"data_granularity,omitempty"`
+
+	// Imports Optional package import block prepended when running the evaluator
+	Imports *string `json:"imports,omitempty"`
+
+	// Name Eval column name. Must match ^[a-zA-Z0-9_\s\-&()]+$
+	Name string `json:"name"`
+
+	// QueryFilter Optional filter query over the chosen data granularity. When omitted or null,
+	// no filter is applied.
+	QueryFilter *string `json:"query_filter,omitempty"`
+
+	// StaticParams Optional typed defaults accessible on the evaluator instance. Omit or pass an
+	// empty array when the custom class does not read any static parameters.
+	StaticParams *[]StaticParamRequest `json:"static_params,omitempty"`
+
+	// Type Discriminator identifying this as a custom (user-supplied Python) code evaluator
+	Type CustomCodeConfigRequestType `json:"type"`
+
+	// Variables Dataset columns or span attributes mapped to evaluate() arguments
+	Variables []string `json:"variables"`
+}
+
+// CustomCodeConfigRequestType Discriminator identifying this as a custom (user-supplied Python) code evaluator
+type CustomCodeConfigRequestType string
+
 // CustomConfig Config for a custom OpenAI-compatible endpoint integration. `base_url` is the endpoint Arize sends requests to; it must implement the OpenAI API shape. Secrets are write-only: the API key surfaces as `has_api_key` and custom request headers surface as `header_names` (names only).
 type CustomConfig struct {
 	// BaseUrl Endpoint URL requests are sent to.
@@ -4427,7 +4561,8 @@ type CustomConfig struct {
 	ModelNames []string `json:"model_names"`
 
 	// Provider Discriminator identifying a custom OpenAI-compatible endpoint.
-	Provider CustomConfigProvider `json:"provider"`
+	Provider             CustomConfigProvider   `json:"provider"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // CustomConfigProvider Discriminator identifying a custom OpenAI-compatible endpoint.
@@ -4515,6 +4650,15 @@ type CustomRoleAssignment struct {
 	Type SpaceRoleAssignmentType `json:"type"`
 }
 
+// CustomRoleAssignmentRequest A custom RBAC role assignment in a write request (strict form of CustomRoleAssignment).
+type CustomRoleAssignmentRequest struct {
+	// Id The unique identifier of the custom RBAC role.
+	Id Id `json:"id"`
+
+	// Type Discriminator identifying this as a custom RBAC role assignment. Must be `CUSTOM`.
+	Type SpaceRoleAssignmentType `json:"type"`
+}
+
 // CustomUserRoleAssignment A custom RBAC role assignment.
 type CustomUserRoleAssignment struct {
 	// Id The unique identifier of the custom RBAC role.
@@ -4523,6 +4667,15 @@ type CustomUserRoleAssignment struct {
 	// Name Human-readable name of the custom role.
 	// Returned in responses only; ignored on input.
 	Name *string `json:"name,omitempty"`
+
+	// Type Discriminator identifying this as a custom role assignment. Must be `CUSTOM`.
+	Type UserRoleAssignmentType `json:"type"`
+}
+
+// CustomUserRoleAssignmentRequest A custom RBAC role assignment in a write request (strict form of CustomUserRoleAssignment).
+type CustomUserRoleAssignmentRequest struct {
+	// Id The unique identifier of the custom RBAC role.
+	Id Id `json:"id"`
 
 	// Type Discriminator identifying this as a custom role assignment. Must be `CUSTOM`.
 	Type UserRoleAssignmentType `json:"type"`
@@ -4796,11 +4949,23 @@ type DeleteSpansProblem struct {
 
 // DeleteSpansRequest defines model for DeleteSpansRequest.
 type DeleteSpansRequest struct {
+	// EndTime Scope the delete to spans starting before this timestamp (exclusive).
+	// ISO 8601 format (e.g., `2024-01-02T00:00:00Z`). Each bound is independent:
+	// omitting `start_time` defaults to two years ago; omitting `end_time`
+	// defaults to now. You may provide either or both.
+	EndTime *time.Time `json:"end_time,omitempty"`
+
 	// ProjectId The project ID containing the spans to delete
 	ProjectId string `json:"project_id"`
 
 	// SpanIds List of span IDs to delete (maximum 5000)
 	SpanIds []string `json:"span_ids"`
+
+	// StartTime Scope the delete to spans starting at or after this timestamp (inclusive).
+	// ISO 8601 format (e.g., `2024-01-01T00:00:00Z`). Each bound is independent:
+	// omitting `start_time` defaults to two years ago; omitting `end_time`
+	// defaults to now. You may provide either or both.
+	StartTime *time.Time `json:"start_time,omitempty"`
 }
 
 // DeleteSpansResponse Result of a DELETE /v2/spans request.
@@ -5066,6 +5231,21 @@ type EvaluatorLlmConfig struct {
 	ProviderParameters ProviderParams `json:"provider_parameters"`
 }
 
+// EvaluatorLlmConfigRequest LLM configuration for an evaluator in a write request (strict form of EvaluatorLlmConfig)
+type EvaluatorLlmConfigRequest struct {
+	// AiIntegrationId AI integration identifier (base64)
+	AiIntegrationId string `json:"ai_integration_id"`
+
+	// InvocationParameters Parameters for the LLM invocation in a write request (strict form of InvocationParams; leaf schemas use *Request variants)
+	InvocationParameters InvocationParamsRequest `json:"invocation_parameters"`
+
+	// ModelName Model name (e.g. gpt-4o)
+	ModelName string `json:"model_name"`
+
+	// ProviderParameters Provider-specific parameters in a write request (strict form of ProviderParams; leaf schemas use *Request variants)
+	ProviderParameters ProviderParamsRequest `json:"provider_parameters"`
+}
+
 // EvaluatorType The evaluator type:
 //
 //   - `TEMPLATE` — LLM-based evaluator.
@@ -5307,6 +5487,9 @@ type Experiment struct {
 	// Name Name of the experiment
 	Name string `json:"name"`
 
+	// SpaceId Unique identifier for the space this experiment belongs to
+	SpaceId string `json:"space_id"`
+
 	// UpdatedAt Timestamp for the last update of the experiment
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -5319,7 +5502,7 @@ type ExperimentRun struct {
 	// Error Error message when the task failed. Null on success.
 	Error *string `json:"error,omitempty"`
 
-	// ExampleId ID of the dataset example associated with this experiment run
+	// ExampleId ID of the dataset example associated with this experiment run. Null when the experiment isn't associated with a dataset.
 	ExampleId *string `json:"example_id,omitempty"`
 
 	// Id System-assigned unique ID for the example
@@ -5332,8 +5515,8 @@ type ExperimentRun struct {
 
 // ExperimentRunInput An experiment run with experiment data including outputs, evaluations, and trace metadata
 type ExperimentRunInput struct {
-	// ExampleId ID of the dataset example associated with this experiment run
-	ExampleId string `json:"example_id"`
+	// ExampleId ID of the dataset example associated with this experiment run. Provided when the experiment is associated with a dataset; omitted otherwise.
+	ExampleId *string `json:"example_id,omitempty"`
 
 	// Output output of the task for the matching example
 	Output               string                 `json:"output"`
@@ -5367,6 +5550,9 @@ type ExperimentWithRunIds struct {
 
 	// RunIds IDs of the newly inserted experiment runs, in input order.
 	RunIds []string `json:"run_ids"`
+
+	// SpaceId Unique identifier for the space this experiment belongs to
+	SpaceId string `json:"space_id"`
 
 	// UpdatedAt Timestamp for the last update of the experiment
 	UpdatedAt time.Time `json:"updated_at"`
@@ -5427,6 +5613,21 @@ type GcpProviderMetadata struct {
 // GcpProviderMetadataKind Discriminator value identifying Vertex AI (GCP) provider metadata.
 type GcpProviderMetadataKind string
 
+// GcpProviderMetadataRequest Vertex AI (GCP) provider metadata in a write request (strict form of GcpProviderMetadata).
+type GcpProviderMetadataRequest struct {
+	// Kind Discriminator value identifying Vertex AI (GCP) provider metadata.
+	Kind GcpProviderMetadataKind `json:"kind"`
+
+	// Location GCP region (e.g. us-central1)
+	Location string `json:"location"`
+
+	// ProjectAccessLabel Display label for the project
+	ProjectAccessLabel string `json:"project_access_label"`
+
+	// ProjectId GCP project ID
+	ProjectId string `json:"project_id"`
+}
+
 // GeminiConfig Config for a Google Gemini LLM integration.
 type GeminiConfig struct {
 	// HasApiKey Whether an API key is configured (the key itself is never returned).
@@ -5436,7 +5637,8 @@ type GeminiConfig struct {
 	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
 
 	// Provider Discriminator identifying the Gemini provider.
-	Provider GeminiConfigProvider `json:"provider"`
+	Provider             GeminiConfigProvider   `json:"provider"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // GeminiConfigProvider Discriminator identifying the Gemini provider.
@@ -5480,6 +5682,15 @@ type IntegrationNotificationConfigType string
 
 // IntegrationScoping Visibility scoping for the integration.
 type IntegrationScoping struct {
+	// OrganizationId Organization identifier (base64). Null means account-wide.
+	OrganizationId *string `json:"organization_id,omitempty"`
+
+	// SpaceId Space identifier (base64). Null means organization-wide (or account-wide when organization_id is also null).
+	SpaceId *string `json:"space_id,omitempty"`
+}
+
+// IntegrationScopingRequest Visibility scoping for the integration in a write request (strict form of IntegrationScoping).
+type IntegrationScopingRequest struct {
 	// OrganizationId Organization identifier (base64). Null means account-wide.
 	OrganizationId *string `json:"organization_id,omitempty"`
 
@@ -5546,8 +5757,68 @@ type InvocationParams struct {
 	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
+// InvocationParamsRequest Parameters for the LLM invocation in a write request (strict form of InvocationParams; leaf schemas use *Request variants)
+type InvocationParamsRequest struct {
+	// FrequencyPenalty Frequency penalty (-2.0 to 2.0)
+	FrequencyPenalty *float32 `json:"frequency_penalty,omitempty"`
+
+	// MaxCompletionTokens Maximum number of completion tokens to generate
+	MaxCompletionTokens *int `json:"max_completion_tokens,omitempty"`
+
+	// MaxTokens Maximum number of tokens to generate
+	MaxTokens *int `json:"max_tokens,omitempty"`
+
+	// PresencePenalty Presence penalty (-2.0 to 2.0)
+	PresencePenalty *float32 `json:"presence_penalty,omitempty"`
+
+	// ReasoningEffort Controls how much reasoning the model performs before responding. Supported by OpenAI o-series and GPT-5 models. o-series: 'low' | 'medium' | 'high'. GPT-5: 'none' | 'low' | 'medium' | 'high' | 'xhigh'.
+	ReasoningEffort *string `json:"reasoning_effort,omitempty"`
+
+	// ResponseFormat Response format configuration. Optional. When omitted, no structured output constraint is applied (the provider's default plain-text behavior is used).
+	ResponseFormat *ResponseFormatRequest `json:"response_format,omitempty"`
+
+	// Stop Stop sequences
+	Stop *[]string `json:"stop,omitempty"`
+
+	// Temperature Sampling temperature (higher = more random)
+	Temperature *float32 `json:"temperature,omitempty"`
+
+	// ThinkingBudget Maximum tokens the model may use for internal reasoning. Supported by Gemini 2.5 models. Range: 0-24576 (Flash/Flash-Lite) or 128-32768 (Pro). Set 0 to disable thinking on Flash models.
+	ThinkingBudget *int `json:"thinking_budget,omitempty"`
+
+	// ThinkingLevel Controls how much reasoning the model performs before responding. Supported by Gemini 3.x models. Accepted values: 'low', 'high'.
+	ThinkingLevel *string `json:"thinking_level,omitempty"`
+
+	// ToolConfig Tool configuration for the LLM invocation. Optional. When omitted, no tools are made available to the model.
+	ToolConfig *ToolConfig `json:"tool_config,omitempty"`
+
+	// TopK Top-K sampling parameter. A top-K of 1 means the next selected token is the most probable (greedy decoding).
+	TopK *int `json:"top_k,omitempty"`
+
+	// TopP Nucleus sampling parameter
+	TopP *float32 `json:"top_p,omitempty"`
+
+	// Verbosity Controls the verbosity of model output. Supported by OpenAI GPT-5 series. Accepted values: 'low' | 'medium' | 'high'.
+	Verbosity *string `json:"verbosity,omitempty"`
+}
+
 // JsonSchemaConfig JSON schema configuration (when type is JSON_SCHEMA)
 type JsonSchemaConfig struct {
+	// Description A description of the JSON schema
+	Description *string `json:"description,omitempty"`
+
+	// Name The name of the JSON schema
+	Name *string `json:"name,omitempty"`
+
+	// Schema The JSON schema object
+	Schema *map[string]interface{} `json:"schema,omitempty"`
+
+	// Strict Whether to enforce strict schema validation. Defaults to `false`.
+	Strict *bool `json:"strict,omitempty"`
+}
+
+// JsonSchemaConfigRequest JSON schema configuration in a write request (strict form of JsonSchemaConfig)
+type JsonSchemaConfigRequest struct {
 	// Description A description of the JSON schema
 	Description *string `json:"description,omitempty"`
 
@@ -5574,6 +5845,21 @@ type LLMMessage struct {
 
 	// ToolCalls Tool calls generated by the model
 	ToolCalls *[]ToolCall `json:"tool_calls,omitempty"`
+}
+
+// LLMMessageRequest A message in a prompt write request
+type LLMMessageRequest struct {
+	// Content The content of the message
+	Content *string `json:"content,omitempty"`
+
+	// Role The role of the message author
+	Role MessageRole `json:"role"`
+
+	// ToolCallId The ID of the tool call this message is responding to
+	ToolCallId *string `json:"tool_call_id,omitempty"`
+
+	// ToolCalls Tool calls generated by the model
+	ToolCalls *[]ToolCallRequest `json:"tool_calls,omitempty"`
 }
 
 // ListAiIntegrationsResponse defines model for ListAiIntegrationsResponse.
@@ -5988,6 +6274,39 @@ type ManagedCodeConfig struct {
 // ManagedCodeConfigType Discriminator identifying this as a managed (built-in) code evaluator
 type ManagedCodeConfigType string
 
+// ManagedCodeConfigRequest Managed (built-in) code evaluator configuration in a write request (strict form of ManagedCodeConfig)
+type ManagedCodeConfigRequest struct {
+	// DataGranularity Data granularity level for evaluation. When omitted or null, no granularity
+	// filter is applied (span-level evaluation is used by default on the server).
+	DataGranularity *DataGranularity `json:"data_granularity,omitempty"`
+
+	// ManagedEvaluator Built-in managed code evaluator name
+	ManagedEvaluator ManagedCodeEvaluator `json:"managed_evaluator"`
+
+	// Name Eval column name. Must match ^[a-zA-Z0-9_\s\-&()]+$
+	Name string `json:"name"`
+
+	// QueryFilter Optional filter query over the chosen data granularity. When omitted or null,
+	// no filter is applied.
+	QueryFilter *string `json:"query_filter,omitempty"`
+
+	// StaticParams Static parameters for the managed evaluator (see registry `args`). When omitted,
+	// the registry's required arguments must be satisfied by defaults on the evaluator
+	// class; otherwise validation fails with 400. If the registry has no args, omitting
+	// this field is equivalent to an empty list.
+	StaticParams *[]StaticParamRequest `json:"static_params,omitempty"`
+
+	// Type Discriminator identifying this as a managed (built-in) code evaluator
+	Type ManagedCodeConfigRequestType `json:"type"`
+
+	// Variables Dataset columns or span attributes passed into the evaluator (order and count
+	// must match the managed evaluator's requirements).
+	Variables []string `json:"variables"`
+}
+
+// ManagedCodeConfigRequestType Discriminator identifying this as a managed (built-in) code evaluator
+type ManagedCodeConfigRequestType string
+
 // ManagedCodeEvaluator Built-in managed code evaluator name
 type ManagedCodeEvaluator string
 
@@ -6170,7 +6489,8 @@ type NvidiaNimConfig struct {
 	ModelNames []string `json:"model_names"`
 
 	// Provider Discriminator identifying the NVIDIA NIM provider.
-	Provider NvidiaNimConfigProvider `json:"provider"`
+	Provider             NvidiaNimConfigProvider `json:"provider"`
+	AdditionalProperties map[string]interface{}  `json:"-"`
 }
 
 // NvidiaNimConfigProvider Discriminator identifying the NVIDIA NIM provider.
@@ -6185,7 +6505,8 @@ type OpenAiConfig struct {
 	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
 
 	// Provider Discriminator identifying the OpenAI provider.
-	Provider OpenAiConfigProvider `json:"provider"`
+	Provider             OpenAiConfigProvider   `json:"provider"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // OpenAiConfigProvider Discriminator identifying the OpenAI provider.
@@ -6227,6 +6548,15 @@ type OrganizationCustomRoleAssignment struct {
 	Type OrganizationRoleAssignmentType `json:"type"`
 }
 
+// OrganizationCustomRoleAssignmentRequest A custom RBAC role assignment in a write request (strict form of OrganizationCustomRoleAssignment).
+type OrganizationCustomRoleAssignmentRequest struct {
+	// Id The unique identifier of the custom RBAC role.
+	Id Id `json:"id"`
+
+	// Type Discriminator identifying this as a custom RBAC role assignment. Always `CUSTOM` for this variant.
+	Type OrganizationRoleAssignmentType `json:"type"`
+}
+
 // OrganizationMembership defines model for OrganizationMembership.
 type OrganizationMembership struct {
 	// Id Unique identifier for the membership record
@@ -6257,6 +6587,19 @@ type OrganizationPredefinedRoleAssignment struct {
 	Type OrganizationRoleAssignmentType `json:"type"`
 }
 
+// OrganizationPredefinedRoleAssignmentRequest A predefined organization role assignment in a write request (strict form of OrganizationPredefinedRoleAssignment).
+type OrganizationPredefinedRoleAssignmentRequest struct {
+	// Name Organization-level role for the user.
+	// - `ADMIN`: Full access to the organization and its resources.
+	// - `MEMBER`: Standard access to the organization.
+	// - `READ_ONLY`: Read-only access to the organization.
+	// - `ANNOTATOR`: Limited access for annotation tasks only.
+	Name OrganizationRole `json:"name"`
+
+	// Type Discriminator identifying this as a predefined role assignment. Always `PREDEFINED` for this variant.
+	Type OrganizationRoleAssignmentType `json:"type"`
+}
+
 // OrganizationRole Organization-level role for the user.
 // - `ADMIN`: Full access to the organization and its resources.
 // - `MEMBER`: Standard access to the organization.
@@ -6268,6 +6611,13 @@ type OrganizationRole string
 // - `PREDEFINED`: one of the predefined roles (`ADMIN`, `MEMBER`, `READ_ONLY`, `ANNOTATOR`)
 // - `CUSTOM`: a custom RBAC role identified by its ID
 type OrganizationRoleAssignment struct {
+	union json.RawMessage
+}
+
+// OrganizationRoleAssignmentRequest Strict request form of OrganizationRoleAssignment. Used in write request bodies.
+// - `PREDEFINED`: `{ "type": "PREDEFINED", "name": "ADMIN" | "MEMBER" | "READ_ONLY" | "ANNOTATOR" }`
+// - `CUSTOM`: `{ "type": "CUSTOM", "id": "<encoded-role-id>" }`
+type OrganizationRoleAssignmentRequest struct {
 	union json.RawMessage
 }
 
@@ -6380,8 +6730,30 @@ type PredefinedRoleAssignment struct {
 	Type SpaceRoleAssignmentType `json:"type"`
 }
 
+// PredefinedRoleAssignmentRequest A predefined space role assignment in a write request (strict form of PredefinedRoleAssignment).
+type PredefinedRoleAssignmentRequest struct {
+	// Name Space-level role for the user.
+	// - `ADMIN`: Full access to the space and its resources.
+	// - `MEMBER`: Standard access to the space.
+	// - `READ_ONLY`: Read-only access to the space.
+	// - `ANNOTATOR`: Limited access for annotation tasks only.
+	Name UserSpaceRole `json:"name"`
+
+	// Type Discriminator identifying this as a predefined role assignment. Must be `PREDEFINED`.
+	Type SpaceRoleAssignmentType `json:"type"`
+}
+
 // PredefinedUserRoleAssignment A predefined account-level role assignment.
 type PredefinedUserRoleAssignment struct {
+	// Name Account-level role of the user. These are pre-defined roles in Arize.
+	Name UserRole `json:"name"`
+
+	// Type Discriminator identifying this as a predefined role assignment. Must be `PREDEFINED`.
+	Type UserRoleAssignmentType `json:"type"`
+}
+
+// PredefinedUserRoleAssignmentRequest A predefined account-level role assignment in a write request (strict form of PredefinedUserRoleAssignment).
+type PredefinedUserRoleAssignmentRequest struct {
 	// Name Account-level role of the user. These are pre-defined roles in Arize.
 	Name UserRole `json:"name"`
 
@@ -6504,11 +6876,11 @@ type PromptVersionCreateRequest struct {
 	// InputVariableFormat Format for input variables in the prompt messages. Defaults to `F_STRING` if not provided.
 	InputVariableFormat *InputVariableFormat `json:"input_variable_format,omitempty"`
 
-	// InvocationParams Parameters for the LLM invocation
-	InvocationParams *InvocationParams `json:"invocation_params,omitempty"`
+	// InvocationParams Parameters for the LLM invocation in a write request (strict form of InvocationParams; leaf schemas use *Request variants)
+	InvocationParams *InvocationParamsRequest `json:"invocation_params,omitempty"`
 
 	// Messages The messages that make up the prompt template
-	Messages []LLMMessage `json:"messages"`
+	Messages []LLMMessageRequest `json:"messages"`
 
 	// Model The model to use for the call. Optional. If omitted, no default model is set on the prompt version.
 	Model *string `json:"model,omitempty"`
@@ -6516,8 +6888,8 @@ type PromptVersionCreateRequest struct {
 	// Provider The LLM provider to use
 	Provider LlmProvider `json:"provider"`
 
-	// ProviderParams Provider-specific parameters
-	ProviderParams *ProviderParams `json:"provider_params,omitempty"`
+	// ProviderParams Provider-specific parameters in a write request (strict form of ProviderParams; leaf schemas use *Request variants)
+	ProviderParams *ProviderParamsRequest `json:"provider_params,omitempty"`
 }
 
 // PromptWithVersion defines model for PromptWithVersion.
@@ -6554,6 +6926,11 @@ type ProviderMetadata struct {
 	union json.RawMessage
 }
 
+// ProviderMetadataRequest Strict request form of ProviderMetadata. For AWS_BEDROCK, must include role_arn. For VERTEX_AI, must include project_id, location, and project_access_label.
+type ProviderMetadataRequest struct {
+	union json.RawMessage
+}
+
 // ProviderParams Provider-specific parameters
 type ProviderParams struct {
 	// AnthropicHeaders Anthropic-specific headers
@@ -6571,6 +6948,24 @@ type ProviderParams struct {
 	// Region Region for the model deployment
 	Region               *string                `json:"region,omitempty"`
 	AdditionalProperties map[string]interface{} `json:"-"`
+}
+
+// ProviderParamsRequest Provider-specific parameters in a write request (strict form of ProviderParams; leaf schemas use *Request variants)
+type ProviderParamsRequest struct {
+	// AnthropicHeaders Anthropic-specific headers
+	AnthropicHeaders *AnthropicHeadersRequest `json:"anthropic_headers,omitempty"`
+
+	// AnthropicVersion Anthropic API version
+	AnthropicVersion *string `json:"anthropic_version,omitempty"`
+
+	// AzureParams Azure OpenAI specific parameters
+	AzureParams *AzureParamsRequest `json:"azure_params,omitempty"`
+
+	// BedrockOptions AWS Bedrock options
+	BedrockOptions *BedrockOptionsRequest `json:"bedrock_options,omitempty"`
+
+	// Region Region for the model deployment
+	Region *string `json:"region,omitempty"`
 }
 
 // RecordGranularity Granularity of an annotation queue record.
@@ -6661,6 +7056,15 @@ type ResourceRestrictionType string
 type ResponseFormat struct {
 	// JsonSchema JSON schema configuration (when type is JSON_SCHEMA)
 	JsonSchema *JsonSchemaConfig `json:"json_schema,omitempty"`
+
+	// Type The response format type. Defaults to `TEXT` if not specified.
+	Type *ResponseFormatType `json:"type,omitempty"`
+}
+
+// ResponseFormatRequest Response format configuration in a write request (strict form of ResponseFormat)
+type ResponseFormatRequest struct {
+	// JsonSchema JSON schema configuration (when type is JSON_SCHEMA)
+	JsonSchema *JsonSchemaConfigRequest `json:"json_schema,omitempty"`
 
 	// Type The response format type. Defaults to `TEXT` if not specified.
 	Type *ResponseFormatType `json:"type,omitempty"`
@@ -6834,7 +7238,7 @@ type ServiceKeyOrgAssignment struct {
 	// Defaults to `{ type: PREDEFINED, name: READ_ONLY }` when omitted.
 	// Must be at or below the caller's own effective organization role.
 	// The `ANNOTATOR` role is not valid for service keys and returns `422`.
-	Role *OrganizationRoleAssignment `json:"role,omitempty"`
+	Role *OrganizationRoleAssignmentRequest `json:"role,omitempty"`
 
 	// Spaces Spaces within this organization the service account should have access to. Each entry specifies
 	// a space and optional role. All space IDs must belong to this organization.
@@ -6854,7 +7258,7 @@ type ServiceKeySpaceAssignment struct {
 	// Defaults to `{ "type": "PREDEFINED", "name": "MEMBER" }` when omitted.
 	// Must be at or below the caller's own effective space role.
 	// The `ANNOTATOR` role is not valid for service keys and returns `422`.
-	Role *SpaceRoleAssignment `json:"role,omitempty"`
+	Role *SpaceRoleAssignmentRequest `json:"role,omitempty"`
 
 	// SpaceId ID of the space to grant the service account access to.
 	SpaceId string `json:"space_id"`
@@ -6912,6 +7316,13 @@ type SpaceMembership struct {
 //
 // Used wherever a space-level role assignment is required (memberships, service key bindings, etc.).
 type SpaceRoleAssignment struct {
+	union json.RawMessage
+}
+
+// SpaceRoleAssignmentRequest Strict request form of SpaceRoleAssignment. Used in write request bodies.
+// - `PREDEFINED`: `{ "type": "PREDEFINED", "name": "ADMIN" | "MEMBER" | "READ_ONLY" | "ANNOTATOR" }`
+// - `CUSTOM`: `{ "type": "CUSTOM", "id": "<encoded-role-id>" }`
+type SpaceRoleAssignmentRequest struct {
 	union json.RawMessage
 }
 
@@ -7018,6 +7429,34 @@ type StaticParam_DefaultValue struct {
 	union json.RawMessage
 }
 
+// StaticParamRequest Static evaluator parameter in a write request (strict form of StaticParam)
+type StaticParamRequest struct {
+	// DefaultValue Default value. Must be a string when `type` is STRING or REGEX, and a string
+	// array when `type` is STRING_ARRAY. Mismatches are rejected with 400 by the server.
+	DefaultValue StaticParamRequest_DefaultValue `json:"default_value"`
+
+	// Name Parameter name (matches the managed evaluator's argument name)
+	Name string `json:"name"`
+
+	// Type Argument type for static evaluator parameters.
+	// - STRING - A single string value.
+	// - STRING_ARRAY - An array of string values.
+	// - REGEX - A regular expression string.
+	Type StaticParamType `json:"type"`
+}
+
+// StaticParamRequestDefaultValue0 defines model for .
+type StaticParamRequestDefaultValue0 = string
+
+// StaticParamRequestDefaultValue1 defines model for .
+type StaticParamRequestDefaultValue1 = []string
+
+// StaticParamRequest_DefaultValue Default value. Must be a string when `type` is STRING or REGEX, and a string
+// array when `type` is STRING_ARRAY. Mismatches are rejected with 400 by the server.
+type StaticParamRequest_DefaultValue struct {
+	union json.RawMessage
+}
+
 // StaticParamType Argument type for static evaluator parameters.
 // - STRING - A single string value.
 // - STRING_ARRAY - An array of string values.
@@ -7090,6 +7529,11 @@ type TaskEvaluator struct {
 	// EvaluatorName The name of the attached evaluator.
 	EvaluatorName string `json:"evaluator_name"`
 
+	// EvaluatorVersionId The evaluator version this attachment is pinned to (base64). Null is the
+	// default and means the attachment is not pinned, so it runs the evaluator's
+	// latest version.
+	EvaluatorVersionId *string `json:"evaluator_version_id"`
+
 	// QueryFilter Per-evaluator query filter, combined with the task-level filter (AND).
 	QueryFilter *string `json:"query_filter"`
 }
@@ -7102,6 +7546,12 @@ type TaskEvaluatorInput struct {
 
 	// EvaluatorId Evaluator identifier (base64). Duplicates are not allowed.
 	EvaluatorId string `json:"evaluator_id"`
+
+	// EvaluatorVersionId Pin this evaluator to a specific version (base64). Defaults to null, which
+	// always runs the evaluator's latest version; omitting the field and sending
+	// null are equivalent. Must be a version of the evaluator named by
+	// `evaluator_id`, otherwise the request returns 422.
+	EvaluatorVersionId *string `json:"evaluator_version_id,omitempty"`
 
 	// QueryFilter Per-evaluator query filter. Combined with the task-level filter (AND).
 	QueryFilter *string `json:"query_filter,omitempty"`
@@ -7164,7 +7614,8 @@ type TaskRun struct {
 	Status TaskRunStatus `json:"status"`
 
 	// TaskId The parent task identifier (base64).
-	TaskId string `json:"task_id"`
+	TaskId               string                 `json:"task_id"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // TaskRunStatus Status of a task run.
@@ -7183,10 +7634,10 @@ type TaskType string
 
 // TemplateConfig defines model for TemplateConfig.
 type TemplateConfig struct {
-	// ClassificationChoices Map of choice label to numeric score (e.g. {"relevant": 1, "irrelevant": 0}). When omitted, the evaluator produces freeform (non-classification) output.
+	// ClassificationChoices Map of choice label to numeric score (e.g. {"relevant": 1, "irrelevant": 0}). Null for legacy freeform evaluators that predate required choices.
 	ClassificationChoices *map[string]float32 `json:"classification_choices,omitempty"`
 
-	// DataGranularity Data granularity level. Defaults to null when omitted.
+	// DataGranularity Data granularity level. Null for legacy evaluators with no stored granularity.
 	DataGranularity *DataGranularity `json:"data_granularity,omitempty"`
 
 	// Direction Direction for optimization applied to this template's evaluation scores. Defaults to `MAXIMIZE` when omitted.
@@ -7206,6 +7657,36 @@ type TemplateConfig struct {
 	UseFunctionCallingIfAvailable bool `json:"use_function_calling_if_available"`
 
 	// UseStructuredOutput Whether to use structured output if the model supports it
+	UseStructuredOutput *bool `json:"use_structured_output,omitempty"`
+}
+
+// TemplateConfigInput defines model for TemplateConfigInput.
+type TemplateConfigInput struct {
+	// ClassificationChoices Map of choice label to numeric score (e.g. {"relevant": 1, "irrelevant": 0}). When omitted, the evaluator produces freeform (non-classification) output.
+	ClassificationChoices *map[string]float32 `json:"classification_choices,omitempty"`
+
+	// DataGranularity Data granularity level. Defaults to SPAN when omitted.
+	DataGranularity *DataGranularity `json:"data_granularity,omitempty"`
+
+	// Direction Direction for optimization applied to this template's evaluation scores. Defaults to `MAXIMIZE` when omitted.
+	Direction *OptimizationDirection `json:"direction,omitempty"`
+
+	// IncludeExplanations Whether to include explanations in the evaluation output
+	IncludeExplanations bool `json:"include_explanations"`
+
+	// LlmConfig LLM configuration for an evaluator in a write request (strict form of EvaluatorLlmConfig)
+	LlmConfig EvaluatorLlmConfigRequest `json:"llm_config"`
+
+	// Name Eval column name. Must match ^[a-zA-Z0-9_\s\-&()]+$
+	Name string `json:"name"`
+
+	// Template The prompt template with variable placeholders
+	Template string `json:"template"`
+
+	// UseFunctionCallingIfAvailable Whether to use function calling if the model supports it
+	UseFunctionCallingIfAvailable bool `json:"use_function_calling_if_available"`
+
+	// UseStructuredOutput Whether to use structured output if the model supports it. When omitted the server defaults to true.
 	UseStructuredOutput *bool `json:"use_structured_output,omitempty"`
 }
 
@@ -7280,6 +7761,27 @@ type ToolCallFunction struct {
 	Name string `json:"name"`
 }
 
+// ToolCallFunctionRequest The function to call (strict request form of ToolCallFunction)
+type ToolCallFunctionRequest struct {
+	// Arguments The arguments to the function as a JSON string
+	Arguments string `json:"arguments"`
+
+	// Name The name of the function
+	Name string `json:"name"`
+}
+
+// ToolCallRequest A tool call in a prompt write request (strict request form of ToolCall)
+type ToolCallRequest struct {
+	// Function The function to call (strict request form of ToolCallFunction)
+	Function ToolCallFunctionRequest `json:"function"`
+
+	// Id The ID of the tool call
+	Id *string `json:"id,omitempty"`
+
+	// Type The type of tool call
+	Type ToolCallType `json:"type"`
+}
+
 // ToolCallType The type of tool call
 type ToolCallType string
 
@@ -7289,11 +7791,12 @@ type ToolConfig struct {
 	ToolChoice interface{} `json:"tool_choice,omitempty"`
 
 	// Tools List of tool definitions available to the model
-	Tools *[]ToolDefinition `json:"tools,omitempty"`
+	Tools                *[]ToolDefinition      `json:"tools,omitempty"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // ToolDefinition A tool definition available to the model
-type ToolDefinition = map[string]interface{}
+type ToolDefinition map[string]interface{}
 
 // Trace A Trace is the collection of spans sharing a `trace_id`, anchored on a root
 // span (a span with no parent). It captures a single end-to-end request
@@ -7506,7 +8009,7 @@ type UpdateAgentIntegrationRequest struct {
 	Name        *string            `json:"name,omitempty"`
 
 	// Scopings Replace-on-provide. Empty array reverts to account-wide.
-	Scopings *[]IntegrationScoping `json:"scopings,omitempty"`
+	Scopings *[]IntegrationScopingRequest `json:"scopings,omitempty"`
 
 	// Type Discriminator. Immutable; must match the integration's type.
 	Type UpdateAgentIntegrationRequestType `json:"type"`
@@ -7561,10 +8064,10 @@ type UpdateAiIntegrationRequest struct {
 	Provider *AiIntegrationProvider `json:"provider,omitempty"`
 
 	// ProviderMetadata Provider-specific configuration. For AWS_BEDROCK, must include role_arn. For VERTEX_AI, must include project_id, location, and project_access_label. Pass null to remove.
-	ProviderMetadata *ProviderMetadata `json:"provider_metadata,omitempty"`
+	ProviderMetadata *ProviderMetadataRequest `json:"provider_metadata,omitempty"`
 
 	// Scopings Visibility scoping rules (replaces all existing scopings)
-	Scopings *[]AiIntegrationScoping `json:"scopings,omitempty"`
+	Scopings *[]AiIntegrationScopingRequest `json:"scopings,omitempty"`
 }
 
 // UpdateAnnotationConfigRequest defines model for UpdateAnnotationConfigRequest.
@@ -7590,7 +8093,7 @@ type UpdateAnnotationQueueRequest struct {
 	AnnotatorEmails *[]Email `json:"annotator_emails,omitempty"`
 
 	// Instructions The instructions for annotators working on this queue.
-	// Send an empty string to clear the instructions.
+	// Set to `null` to clear the instructions.
 	Instructions *string `json:"instructions,omitempty"`
 
 	// Name The name of the annotation queue. Must be unique within the space.
@@ -7610,7 +8113,7 @@ type UpdateCategoricalAnnotationConfigRequest struct {
 	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
 
 	// Values The full replacement set of categorical annotation values (2–100 items).
-	Values *[]CategoricalAnnotationValue `json:"values,omitempty"`
+	Values *[]CategoricalAnnotationValueRequest `json:"values,omitempty"`
 }
 
 // UpdateCategoricalAnnotationConfigRequestAnnotationConfigType Discriminator value identifying a categorical annotation config. The config
@@ -7716,7 +8219,7 @@ type UpdateIntegrationRequest struct {
 
 // UpdateLlmConfig Partial LLM config for PATCH. `provider` is immutable; if present it must match the stored value. Field applicability is provider-specific and enforced by the handler with 422: `api_key` and `is_function_calling_enabled` do not apply to `AWS_BEDROCK` or `VERTEX_AI`; `auth` applies to `AWS_BEDROCK` only; `base_url` and `headers` apply to `CUSTOM` and `NVIDIA_NIM` only; `is_default_models_enabled` and `model_names` apply to `AWS_BEDROCK`, `CUSTOM`, and `NVIDIA_NIM` only; `project_id`, `location`, and `project_access_label` apply to `VERTEX_AI` only.
 type UpdateLlmConfig struct {
-	// ApiKey Rotate the API key. Pass null to clear it. Omit to keep unchanged. Not valid for `AWS_BEDROCK` (bearer tokens are rotated via `auth`).
+	// ApiKey Rotate the API key. Pass null to clear it. Omit to keep unchanged. Not valid for `AWS_BEDROCK` (bearer tokens are rotated via `auth`) or `VERTEX_AI`.
 	ApiKey *string `json:"api_key,omitempty"`
 
 	// Auth AWS Bedrock auth settings for create and update, discriminated by `auth_type`. On PATCH this object replaces the stored auth settings wholesale (auth_type may change); omitted fields of the previous auth mode are cleared.
@@ -7731,7 +8234,7 @@ type UpdateLlmConfig struct {
 	// IsDefaultModelsEnabled (`AWS_BEDROCK`, `CUSTOM`, and `NVIDIA_NIM` only) Enable or disable Arize's default model catalog. The effective config must keep at least one model source or the request is rejected with 422. Omit to keep unchanged.
 	IsDefaultModelsEnabled *bool `json:"is_default_models_enabled,omitempty"`
 
-	// IsFunctionCallingEnabled Enable or disable function/tool calling. Omit to keep unchanged. Not valid for `AWS_BEDROCK`.
+	// IsFunctionCallingEnabled Enable or disable function/tool calling. Omit to keep unchanged. Not valid for `AWS_BEDROCK` or `VERTEX_AI`.
 	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
 
 	// Location (`VERTEX_AI` only) New GCP region. Required on the resource, so it may be changed but never cleared; omitted fields keep their stored values (per-scalar deep-merge).
@@ -7759,7 +8262,7 @@ type UpdateLlmIntegrationRequest struct {
 	Name *string `json:"name,omitempty"`
 
 	// Scopings Replaces the existing scoping rules.
-	Scopings *[]IntegrationScoping `json:"scopings,omitempty"`
+	Scopings *[]IntegrationScopingRequest `json:"scopings,omitempty"`
 
 	// Type Discriminator. Immutable; must match the integration's type.
 	Type UpdateLlmIntegrationRequestType `json:"type"`
@@ -7770,7 +8273,7 @@ type UpdateLlmIntegrationRequestType string
 
 // UpdateOrganizationRequest defines model for UpdateOrganizationRequest.
 type UpdateOrganizationRequest struct {
-	// Description Updated description for the organization. Set to an empty string to clear it.
+	// Description Updated description for the organization. Set to `null` to clear it.
 	Description *string `json:"description,omitempty"`
 
 	// Name Updated name for the organization (must be unique within the account)
@@ -7797,7 +8300,7 @@ type UpdateRoleBindingRequest struct {
 
 // UpdateRoleRequest defines model for UpdateRoleRequest.
 type UpdateRoleRequest struct {
-	// Description Updated description of the role.
+	// Description Updated description of the role. Set to `null` to clear it.
 	Description *string `json:"description,omitempty"`
 
 	// Name Updated name for the role. Must be unique within the account.
@@ -7825,7 +8328,7 @@ type UpdateRunExperimentTaskRequest struct {
 
 // UpdateSpaceRequest defines model for UpdateSpaceRequest.
 type UpdateSpaceRequest struct {
-	// Description Updated description of the space
+	// Description Updated description of the space. Set to `null` to clear it.
 	Description *string `json:"description,omitempty"`
 
 	// IsPrivate Updated visibility for the space. Set to `true` to make the space
@@ -7949,6 +8452,13 @@ type UserRoleAssignment struct {
 	union json.RawMessage
 }
 
+// UserRoleAssignmentRequest Strict request form of UserRoleAssignment. Used in write request bodies.
+// - `PREDEFINED`: `{ "type": "PREDEFINED", "name": "ADMIN" | "MEMBER" | "ANNOTATOR" }`
+// - `CUSTOM`: `{ "type": "CUSTOM", "id": "<encoded-role-id>" }`
+type UserRoleAssignmentRequest struct {
+	union json.RawMessage
+}
+
 // UserRoleAssignmentType defines model for UserRoleAssignmentType.
 type UserRoleAssignmentType string
 
@@ -7977,7 +8487,8 @@ type VertexAiConfig struct {
 	ProjectId string `json:"project_id"`
 
 	// Provider Discriminator identifying the Vertex AI provider.
-	Provider VertexAiConfigProvider `json:"provider"`
+	Provider             VertexAiConfigProvider `json:"provider"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // VertexAiConfigProvider Discriminator identifying the Vertex AI provider.
@@ -8273,6 +8784,16 @@ type CreateEvaluatorRequestBody = CreateEvaluatorRequest
 type CreateEvaluatorVersionRequestBody = CreateEvaluatorVersionRequest
 
 // CreateExperimentRequestBody Experiment creation parameters with an initial set of runs.
+//
+// An experiment belongs to a space and may optionally be associated with a
+// dataset. Provide exactly one of:
+//   - `dataset_id` — associate the experiment with a dataset; it's created in
+//     that dataset's space, and its runs may reference the dataset's examples
+//     via `example_id`.
+//   - `space_id` — the space to create the experiment in, when it isn't
+//     associated with a dataset.
+//
+// Providing both, or neither, is a validation error.
 type CreateExperimentRequestBody = CreateExperimentRequest
 
 // CreateIntegrationRequestBody defines model for CreateIntegrationRequestBody.
@@ -8661,6 +9182,9 @@ type ListExperimentsParams struct {
 	// DatasetId Filter to a specific dataset (base64 identifier (base64))
 	DatasetId *DatasetIdQueryParam `form:"dataset_id,omitempty" json:"dataset_id,omitempty"`
 
+	// SpaceId Filter search results to a particular space ID
+	SpaceId *SpaceIdQueryParam `form:"space_id,omitempty" json:"space_id,omitempty"`
+
 	// Name Case-insensitive substring filter on the resource name. Returns only
 	// resources whose name contains the given string. For example,
 	// `name=prod` matches "production", "my-prod-dataset", etc. If omitted,
@@ -8689,8 +9213,8 @@ type ListExperimentRunsParams struct {
 
 // ListIntegrationsParams defines parameters for ListIntegrations.
 type ListIntegrationsParams struct {
-	// Type The integration type to list. Required - the list returns only integrations of this type.
-	Type IntegrationTypeQueryParam `form:"type" json:"type"`
+	// Type Filter the list to a single integration type. When omitted, integrations of every type are returned; each item carries its `type` for client-side discrimination.
+	Type *IntegrationTypeQueryParam `form:"type,omitempty" json:"type,omitempty"`
 
 	// SpaceId Filter search results to a particular space ID
 	SpaceId *SpaceIdQueryParam `form:"space_id,omitempty" json:"space_id,omitempty"`
@@ -9123,6 +9647,256 @@ type CreateUserJSONRequestBody = CreateUserRequest
 // UpdateUserJSONRequestBody defines body for UpdateUser for application/json ContentType.
 type UpdateUserJSONRequestBody = UpdateUserRequest
 
+// Getter for additional properties for AgentConfig. Returns the specified
+// element and whether it was found
+func (a AgentConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for AgentConfig
+func (a *AgentConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for AgentConfig to handle AdditionalProperties
+func (a *AgentConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["endpoint"]; found {
+		err = json.Unmarshal(raw, &a.Endpoint)
+		if err != nil {
+			return fmt.Errorf("error reading 'endpoint': %w", err)
+		}
+		delete(object, "endpoint")
+	}
+
+	if raw, found := object["has_headers"]; found {
+		err = json.Unmarshal(raw, &a.HasHeaders)
+		if err != nil {
+			return fmt.Errorf("error reading 'has_headers': %w", err)
+		}
+		delete(object, "has_headers")
+	}
+
+	if raw, found := object["input_schema"]; found {
+		err = json.Unmarshal(raw, &a.InputSchema)
+		if err != nil {
+			return fmt.Errorf("error reading 'input_schema': %w", err)
+		}
+		delete(object, "input_schema")
+	}
+
+	if raw, found := object["request_presets"]; found {
+		err = json.Unmarshal(raw, &a.RequestPresets)
+		if err != nil {
+			return fmt.Errorf("error reading 'request_presets': %w", err)
+		}
+		delete(object, "request_presets")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for AgentConfig to handle AdditionalProperties
+func (a AgentConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["endpoint"], err = json.Marshal(a.Endpoint)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'endpoint': %w", err)
+	}
+
+	object["has_headers"], err = json.Marshal(a.HasHeaders)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'has_headers': %w", err)
+	}
+
+	if a.InputSchema != nil {
+		object["input_schema"], err = json.Marshal(a.InputSchema)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'input_schema': %w", err)
+		}
+	}
+
+	if a.RequestPresets != nil {
+		object["request_presets"], err = json.Marshal(a.RequestPresets)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'request_presets': %w", err)
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for AgentRequestPreset. Returns the specified
+// element and whether it was found
+func (a AgentRequestPreset) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for AgentRequestPreset
+func (a *AgentRequestPreset) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for AgentRequestPreset to handle AdditionalProperties
+func (a *AgentRequestPreset) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["config"]; found {
+		err = json.Unmarshal(raw, &a.Config)
+		if err != nil {
+			return fmt.Errorf("error reading 'config': %w", err)
+		}
+		delete(object, "config")
+	}
+
+	if raw, found := object["created_at"]; found {
+		err = json.Unmarshal(raw, &a.CreatedAt)
+		if err != nil {
+			return fmt.Errorf("error reading 'created_at': %w", err)
+		}
+		delete(object, "created_at")
+	}
+
+	if raw, found := object["description"]; found {
+		err = json.Unmarshal(raw, &a.Description)
+		if err != nil {
+			return fmt.Errorf("error reading 'description': %w", err)
+		}
+		delete(object, "description")
+	}
+
+	if raw, found := object["id"]; found {
+		err = json.Unmarshal(raw, &a.Id)
+		if err != nil {
+			return fmt.Errorf("error reading 'id': %w", err)
+		}
+		delete(object, "id")
+	}
+
+	if raw, found := object["name"]; found {
+		err = json.Unmarshal(raw, &a.Name)
+		if err != nil {
+			return fmt.Errorf("error reading 'name': %w", err)
+		}
+		delete(object, "name")
+	}
+
+	if raw, found := object["updated_at"]; found {
+		err = json.Unmarshal(raw, &a.UpdatedAt)
+		if err != nil {
+			return fmt.Errorf("error reading 'updated_at': %w", err)
+		}
+		delete(object, "updated_at")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for AgentRequestPreset to handle AdditionalProperties
+func (a AgentRequestPreset) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	if a.Config != nil {
+		object["config"], err = json.Marshal(a.Config)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'config': %w", err)
+		}
+	}
+
+	if a.CreatedAt != nil {
+		object["created_at"], err = json.Marshal(a.CreatedAt)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'created_at': %w", err)
+		}
+	}
+
+	if a.Description != nil {
+		object["description"], err = json.Marshal(a.Description)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'description': %w", err)
+		}
+	}
+
+	if a.Id != nil {
+		object["id"], err = json.Marshal(a.Id)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'id': %w", err)
+		}
+	}
+
+	object["name"], err = json.Marshal(a.Name)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'name': %w", err)
+	}
+
+	if a.UpdatedAt != nil {
+		object["updated_at"], err = json.Marshal(a.UpdatedAt)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'updated_at': %w", err)
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
 // Getter for additional properties for AnnotationConfig. Returns the specified
 // element and whether it was found
 func (a AnnotationConfig) Get(fieldName string) (value interface{}, found bool) {
@@ -9138,6 +9912,353 @@ func (a *AnnotationConfig) Set(fieldName string, value interface{}) {
 		a.AdditionalProperties = make(map[string]interface{})
 	}
 	a.AdditionalProperties[fieldName] = value
+}
+
+// Getter for additional properties for AnthropicConfig. Returns the specified
+// element and whether it was found
+func (a AnthropicConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for AnthropicConfig
+func (a *AnthropicConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for AnthropicConfig to handle AdditionalProperties
+func (a *AnthropicConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["has_api_key"]; found {
+		err = json.Unmarshal(raw, &a.HasApiKey)
+		if err != nil {
+			return fmt.Errorf("error reading 'has_api_key': %w", err)
+		}
+		delete(object, "has_api_key")
+	}
+
+	if raw, found := object["is_function_calling_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsFunctionCallingEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_function_calling_enabled': %w", err)
+		}
+		delete(object, "is_function_calling_enabled")
+	}
+
+	if raw, found := object["provider"]; found {
+		err = json.Unmarshal(raw, &a.Provider)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider': %w", err)
+		}
+		delete(object, "provider")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for AnthropicConfig to handle AdditionalProperties
+func (a AnthropicConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["has_api_key"], err = json.Marshal(a.HasApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'has_api_key': %w", err)
+	}
+
+	object["is_function_calling_enabled"], err = json.Marshal(a.IsFunctionCallingEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_function_calling_enabled': %w", err)
+	}
+
+	object["provider"], err = json.Marshal(a.Provider)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provider': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for AwsBedrockConfig. Returns the specified
+// element and whether it was found
+func (a AwsBedrockConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for AwsBedrockConfig
+func (a *AwsBedrockConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for AwsBedrockConfig to handle AdditionalProperties
+func (a *AwsBedrockConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["auth"]; found {
+		err = json.Unmarshal(raw, &a.Auth)
+		if err != nil {
+			return fmt.Errorf("error reading 'auth': %w", err)
+		}
+		delete(object, "auth")
+	}
+
+	if raw, found := object["is_default_models_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsDefaultModelsEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_default_models_enabled': %w", err)
+		}
+		delete(object, "is_default_models_enabled")
+	}
+
+	if raw, found := object["model_names"]; found {
+		err = json.Unmarshal(raw, &a.ModelNames)
+		if err != nil {
+			return fmt.Errorf("error reading 'model_names': %w", err)
+		}
+		delete(object, "model_names")
+	}
+
+	if raw, found := object["provider"]; found {
+		err = json.Unmarshal(raw, &a.Provider)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider': %w", err)
+		}
+		delete(object, "provider")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for AwsBedrockConfig to handle AdditionalProperties
+func (a AwsBedrockConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["auth"], err = json.Marshal(a.Auth)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'auth': %w", err)
+	}
+
+	object["is_default_models_enabled"], err = json.Marshal(a.IsDefaultModelsEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_default_models_enabled': %w", err)
+	}
+
+	if a.ModelNames != nil {
+		object["model_names"], err = json.Marshal(a.ModelNames)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'model_names': %w", err)
+		}
+	}
+
+	object["provider"], err = json.Marshal(a.Provider)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provider': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for CustomConfig. Returns the specified
+// element and whether it was found
+func (a CustomConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for CustomConfig
+func (a *CustomConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for CustomConfig to handle AdditionalProperties
+func (a *CustomConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["base_url"]; found {
+		err = json.Unmarshal(raw, &a.BaseUrl)
+		if err != nil {
+			return fmt.Errorf("error reading 'base_url': %w", err)
+		}
+		delete(object, "base_url")
+	}
+
+	if raw, found := object["has_api_key"]; found {
+		err = json.Unmarshal(raw, &a.HasApiKey)
+		if err != nil {
+			return fmt.Errorf("error reading 'has_api_key': %w", err)
+		}
+		delete(object, "has_api_key")
+	}
+
+	if raw, found := object["header_names"]; found {
+		err = json.Unmarshal(raw, &a.HeaderNames)
+		if err != nil {
+			return fmt.Errorf("error reading 'header_names': %w", err)
+		}
+		delete(object, "header_names")
+	}
+
+	if raw, found := object["is_default_models_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsDefaultModelsEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_default_models_enabled': %w", err)
+		}
+		delete(object, "is_default_models_enabled")
+	}
+
+	if raw, found := object["is_function_calling_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsFunctionCallingEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_function_calling_enabled': %w", err)
+		}
+		delete(object, "is_function_calling_enabled")
+	}
+
+	if raw, found := object["model_names"]; found {
+		err = json.Unmarshal(raw, &a.ModelNames)
+		if err != nil {
+			return fmt.Errorf("error reading 'model_names': %w", err)
+		}
+		delete(object, "model_names")
+	}
+
+	if raw, found := object["provider"]; found {
+		err = json.Unmarshal(raw, &a.Provider)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider': %w", err)
+		}
+		delete(object, "provider")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for CustomConfig to handle AdditionalProperties
+func (a CustomConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["base_url"], err = json.Marshal(a.BaseUrl)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'base_url': %w", err)
+	}
+
+	object["has_api_key"], err = json.Marshal(a.HasApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'has_api_key': %w", err)
+	}
+
+	if a.HeaderNames != nil {
+		object["header_names"], err = json.Marshal(a.HeaderNames)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'header_names': %w", err)
+		}
+	}
+
+	object["is_default_models_enabled"], err = json.Marshal(a.IsDefaultModelsEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_default_models_enabled': %w", err)
+	}
+
+	object["is_function_calling_enabled"], err = json.Marshal(a.IsFunctionCallingEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_function_calling_enabled': %w", err)
+	}
+
+	if a.ModelNames != nil {
+		object["model_names"], err = json.Marshal(a.ModelNames)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'model_names': %w", err)
+		}
+	}
+
+	object["provider"], err = json.Marshal(a.Provider)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provider': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
 }
 
 // Getter for additional properties for DatasetExample. Returns the specified
@@ -9345,9 +10466,11 @@ func (a ExperimentRun) MarshalJSON() ([]byte, error) {
 		}
 	}
 
-	object["example_id"], err = json.Marshal(a.ExampleId)
-	if err != nil {
-		return nil, fmt.Errorf("error marshaling 'example_id': %w", err)
+	if a.ExampleId != nil {
+		object["example_id"], err = json.Marshal(a.ExampleId)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'example_id': %w", err)
+		}
 	}
 
 	object["id"], err = json.Marshal(a.Id)
@@ -9431,14 +10554,108 @@ func (a ExperimentRunInput) MarshalJSON() ([]byte, error) {
 	var err error
 	object := make(map[string]json.RawMessage)
 
-	object["example_id"], err = json.Marshal(a.ExampleId)
-	if err != nil {
-		return nil, fmt.Errorf("error marshaling 'example_id': %w", err)
+	if a.ExampleId != nil {
+		object["example_id"], err = json.Marshal(a.ExampleId)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'example_id': %w", err)
+		}
 	}
 
 	object["output"], err = json.Marshal(a.Output)
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling 'output': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for GeminiConfig. Returns the specified
+// element and whether it was found
+func (a GeminiConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for GeminiConfig
+func (a *GeminiConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for GeminiConfig to handle AdditionalProperties
+func (a *GeminiConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["has_api_key"]; found {
+		err = json.Unmarshal(raw, &a.HasApiKey)
+		if err != nil {
+			return fmt.Errorf("error reading 'has_api_key': %w", err)
+		}
+		delete(object, "has_api_key")
+	}
+
+	if raw, found := object["is_function_calling_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsFunctionCallingEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_function_calling_enabled': %w", err)
+		}
+		delete(object, "is_function_calling_enabled")
+	}
+
+	if raw, found := object["provider"]; found {
+		err = json.Unmarshal(raw, &a.Provider)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider': %w", err)
+		}
+		delete(object, "provider")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for GeminiConfig to handle AdditionalProperties
+func (a GeminiConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["has_api_key"], err = json.Marshal(a.HasApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'has_api_key': %w", err)
+	}
+
+	object["is_function_calling_enabled"], err = json.Marshal(a.IsFunctionCallingEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_function_calling_enabled': %w", err)
+	}
+
+	object["provider"], err = json.Marshal(a.Provider)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provider': %w", err)
 	}
 
 	for fieldName, field := range a.AdditionalProperties {
@@ -9713,6 +10930,246 @@ func (a InvocationParams) MarshalJSON() ([]byte, error) {
 	return json.Marshal(object)
 }
 
+// Getter for additional properties for NvidiaNimConfig. Returns the specified
+// element and whether it was found
+func (a NvidiaNimConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for NvidiaNimConfig
+func (a *NvidiaNimConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for NvidiaNimConfig to handle AdditionalProperties
+func (a *NvidiaNimConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["base_url"]; found {
+		err = json.Unmarshal(raw, &a.BaseUrl)
+		if err != nil {
+			return fmt.Errorf("error reading 'base_url': %w", err)
+		}
+		delete(object, "base_url")
+	}
+
+	if raw, found := object["has_api_key"]; found {
+		err = json.Unmarshal(raw, &a.HasApiKey)
+		if err != nil {
+			return fmt.Errorf("error reading 'has_api_key': %w", err)
+		}
+		delete(object, "has_api_key")
+	}
+
+	if raw, found := object["header_names"]; found {
+		err = json.Unmarshal(raw, &a.HeaderNames)
+		if err != nil {
+			return fmt.Errorf("error reading 'header_names': %w", err)
+		}
+		delete(object, "header_names")
+	}
+
+	if raw, found := object["is_default_models_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsDefaultModelsEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_default_models_enabled': %w", err)
+		}
+		delete(object, "is_default_models_enabled")
+	}
+
+	if raw, found := object["is_function_calling_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsFunctionCallingEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_function_calling_enabled': %w", err)
+		}
+		delete(object, "is_function_calling_enabled")
+	}
+
+	if raw, found := object["model_names"]; found {
+		err = json.Unmarshal(raw, &a.ModelNames)
+		if err != nil {
+			return fmt.Errorf("error reading 'model_names': %w", err)
+		}
+		delete(object, "model_names")
+	}
+
+	if raw, found := object["provider"]; found {
+		err = json.Unmarshal(raw, &a.Provider)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider': %w", err)
+		}
+		delete(object, "provider")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for NvidiaNimConfig to handle AdditionalProperties
+func (a NvidiaNimConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["base_url"], err = json.Marshal(a.BaseUrl)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'base_url': %w", err)
+	}
+
+	object["has_api_key"], err = json.Marshal(a.HasApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'has_api_key': %w", err)
+	}
+
+	if a.HeaderNames != nil {
+		object["header_names"], err = json.Marshal(a.HeaderNames)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'header_names': %w", err)
+		}
+	}
+
+	object["is_default_models_enabled"], err = json.Marshal(a.IsDefaultModelsEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_default_models_enabled': %w", err)
+	}
+
+	object["is_function_calling_enabled"], err = json.Marshal(a.IsFunctionCallingEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_function_calling_enabled': %w", err)
+	}
+
+	if a.ModelNames != nil {
+		object["model_names"], err = json.Marshal(a.ModelNames)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'model_names': %w", err)
+		}
+	}
+
+	object["provider"], err = json.Marshal(a.Provider)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provider': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for OpenAiConfig. Returns the specified
+// element and whether it was found
+func (a OpenAiConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for OpenAiConfig
+func (a *OpenAiConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for OpenAiConfig to handle AdditionalProperties
+func (a *OpenAiConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["has_api_key"]; found {
+		err = json.Unmarshal(raw, &a.HasApiKey)
+		if err != nil {
+			return fmt.Errorf("error reading 'has_api_key': %w", err)
+		}
+		delete(object, "has_api_key")
+	}
+
+	if raw, found := object["is_function_calling_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsFunctionCallingEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_function_calling_enabled': %w", err)
+		}
+		delete(object, "is_function_calling_enabled")
+	}
+
+	if raw, found := object["provider"]; found {
+		err = json.Unmarshal(raw, &a.Provider)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider': %w", err)
+		}
+		delete(object, "provider")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for OpenAiConfig to handle AdditionalProperties
+func (a OpenAiConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["has_api_key"], err = json.Marshal(a.HasApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'has_api_key': %w", err)
+	}
+
+	object["is_function_calling_enabled"], err = json.Marshal(a.IsFunctionCallingEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_function_calling_enabled': %w", err)
+	}
+
+	object["provider"], err = json.Marshal(a.Provider)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provider': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
 // Getter for additional properties for ProviderParams. Returns the specified
 // element and whether it was found
 func (a ProviderParams) Get(fieldName string) (value interface{}, found bool) {
@@ -9841,6 +11298,326 @@ func (a ProviderParams) MarshalJSON() ([]byte, error) {
 	return json.Marshal(object)
 }
 
+// Getter for additional properties for TaskRun. Returns the specified
+// element and whether it was found
+func (a TaskRun) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for TaskRun
+func (a *TaskRun) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for TaskRun to handle AdditionalProperties
+func (a *TaskRun) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["created_at"]; found {
+		err = json.Unmarshal(raw, &a.CreatedAt)
+		if err != nil {
+			return fmt.Errorf("error reading 'created_at': %w", err)
+		}
+		delete(object, "created_at")
+	}
+
+	if raw, found := object["created_by_user_id"]; found {
+		err = json.Unmarshal(raw, &a.CreatedByUserId)
+		if err != nil {
+			return fmt.Errorf("error reading 'created_by_user_id': %w", err)
+		}
+		delete(object, "created_by_user_id")
+	}
+
+	if raw, found := object["data_end_time"]; found {
+		err = json.Unmarshal(raw, &a.DataEndTime)
+		if err != nil {
+			return fmt.Errorf("error reading 'data_end_time': %w", err)
+		}
+		delete(object, "data_end_time")
+	}
+
+	if raw, found := object["data_start_time"]; found {
+		err = json.Unmarshal(raw, &a.DataStartTime)
+		if err != nil {
+			return fmt.Errorf("error reading 'data_start_time': %w", err)
+		}
+		delete(object, "data_start_time")
+	}
+
+	if raw, found := object["experiment_id"]; found {
+		err = json.Unmarshal(raw, &a.ExperimentId)
+		if err != nil {
+			return fmt.Errorf("error reading 'experiment_id': %w", err)
+		}
+		delete(object, "experiment_id")
+	}
+
+	if raw, found := object["failure_reason"]; found {
+		err = json.Unmarshal(raw, &a.FailureReason)
+		if err != nil {
+			return fmt.Errorf("error reading 'failure_reason': %w", err)
+		}
+		delete(object, "failure_reason")
+	}
+
+	if raw, found := object["id"]; found {
+		err = json.Unmarshal(raw, &a.Id)
+		if err != nil {
+			return fmt.Errorf("error reading 'id': %w", err)
+		}
+		delete(object, "id")
+	}
+
+	if raw, found := object["num_errors"]; found {
+		err = json.Unmarshal(raw, &a.NumErrors)
+		if err != nil {
+			return fmt.Errorf("error reading 'num_errors': %w", err)
+		}
+		delete(object, "num_errors")
+	}
+
+	if raw, found := object["num_skipped"]; found {
+		err = json.Unmarshal(raw, &a.NumSkipped)
+		if err != nil {
+			return fmt.Errorf("error reading 'num_skipped': %w", err)
+		}
+		delete(object, "num_skipped")
+	}
+
+	if raw, found := object["num_successes"]; found {
+		err = json.Unmarshal(raw, &a.NumSuccesses)
+		if err != nil {
+			return fmt.Errorf("error reading 'num_successes': %w", err)
+		}
+		delete(object, "num_successes")
+	}
+
+	if raw, found := object["run_finished_at"]; found {
+		err = json.Unmarshal(raw, &a.RunFinishedAt)
+		if err != nil {
+			return fmt.Errorf("error reading 'run_finished_at': %w", err)
+		}
+		delete(object, "run_finished_at")
+	}
+
+	if raw, found := object["run_started_at"]; found {
+		err = json.Unmarshal(raw, &a.RunStartedAt)
+		if err != nil {
+			return fmt.Errorf("error reading 'run_started_at': %w", err)
+		}
+		delete(object, "run_started_at")
+	}
+
+	if raw, found := object["status"]; found {
+		err = json.Unmarshal(raw, &a.Status)
+		if err != nil {
+			return fmt.Errorf("error reading 'status': %w", err)
+		}
+		delete(object, "status")
+	}
+
+	if raw, found := object["task_id"]; found {
+		err = json.Unmarshal(raw, &a.TaskId)
+		if err != nil {
+			return fmt.Errorf("error reading 'task_id': %w", err)
+		}
+		delete(object, "task_id")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for TaskRun to handle AdditionalProperties
+func (a TaskRun) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["created_at"], err = json.Marshal(a.CreatedAt)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'created_at': %w", err)
+	}
+
+	object["created_by_user_id"], err = json.Marshal(a.CreatedByUserId)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'created_by_user_id': %w", err)
+	}
+
+	object["data_end_time"], err = json.Marshal(a.DataEndTime)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'data_end_time': %w", err)
+	}
+
+	object["data_start_time"], err = json.Marshal(a.DataStartTime)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'data_start_time': %w", err)
+	}
+
+	if a.ExperimentId != nil {
+		object["experiment_id"], err = json.Marshal(a.ExperimentId)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'experiment_id': %w", err)
+		}
+	}
+
+	if a.FailureReason != nil {
+		object["failure_reason"], err = json.Marshal(a.FailureReason)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'failure_reason': %w", err)
+		}
+	}
+
+	object["id"], err = json.Marshal(a.Id)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'id': %w", err)
+	}
+
+	object["num_errors"], err = json.Marshal(a.NumErrors)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'num_errors': %w", err)
+	}
+
+	object["num_skipped"], err = json.Marshal(a.NumSkipped)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'num_skipped': %w", err)
+	}
+
+	object["num_successes"], err = json.Marshal(a.NumSuccesses)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'num_successes': %w", err)
+	}
+
+	object["run_finished_at"], err = json.Marshal(a.RunFinishedAt)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'run_finished_at': %w", err)
+	}
+
+	object["run_started_at"], err = json.Marshal(a.RunStartedAt)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'run_started_at': %w", err)
+	}
+
+	object["status"], err = json.Marshal(a.Status)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'status': %w", err)
+	}
+
+	object["task_id"], err = json.Marshal(a.TaskId)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'task_id': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for ToolConfig. Returns the specified
+// element and whether it was found
+func (a ToolConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for ToolConfig
+func (a *ToolConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for ToolConfig to handle AdditionalProperties
+func (a *ToolConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["tool_choice"]; found {
+		err = json.Unmarshal(raw, &a.ToolChoice)
+		if err != nil {
+			return fmt.Errorf("error reading 'tool_choice': %w", err)
+		}
+		delete(object, "tool_choice")
+	}
+
+	if raw, found := object["tools"]; found {
+		err = json.Unmarshal(raw, &a.Tools)
+		if err != nil {
+			return fmt.Errorf("error reading 'tools': %w", err)
+		}
+		delete(object, "tools")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for ToolConfig to handle AdditionalProperties
+func (a ToolConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["tool_choice"], err = json.Marshal(a.ToolChoice)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'tool_choice': %w", err)
+	}
+
+	if a.Tools != nil {
+		object["tools"], err = json.Marshal(a.Tools)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'tools': %w", err)
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
 // Getter for additional properties for UpdateDatasetExampleInput. Returns the specified
 // element and whether it was found
 func (a UpdateDatasetExampleInput) Get(fieldName string) (value interface{}, found bool) {
@@ -9896,6 +11673,111 @@ func (a UpdateDatasetExampleInput) MarshalJSON() ([]byte, error) {
 	object["id"], err = json.Marshal(a.Id)
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling 'id': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for VertexAiConfig. Returns the specified
+// element and whether it was found
+func (a VertexAiConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for VertexAiConfig
+func (a *VertexAiConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for VertexAiConfig to handle AdditionalProperties
+func (a *VertexAiConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["location"]; found {
+		err = json.Unmarshal(raw, &a.Location)
+		if err != nil {
+			return fmt.Errorf("error reading 'location': %w", err)
+		}
+		delete(object, "location")
+	}
+
+	if raw, found := object["project_access_label"]; found {
+		err = json.Unmarshal(raw, &a.ProjectAccessLabel)
+		if err != nil {
+			return fmt.Errorf("error reading 'project_access_label': %w", err)
+		}
+		delete(object, "project_access_label")
+	}
+
+	if raw, found := object["project_id"]; found {
+		err = json.Unmarshal(raw, &a.ProjectId)
+		if err != nil {
+			return fmt.Errorf("error reading 'project_id': %w", err)
+		}
+		delete(object, "project_id")
+	}
+
+	if raw, found := object["provider"]; found {
+		err = json.Unmarshal(raw, &a.Provider)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider': %w", err)
+		}
+		delete(object, "provider")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for VertexAiConfig to handle AdditionalProperties
+func (a VertexAiConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["location"], err = json.Marshal(a.Location)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'location': %w", err)
+	}
+
+	object["project_access_label"], err = json.Marshal(a.ProjectAccessLabel)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'project_access_label': %w", err)
+	}
+
+	object["project_id"], err = json.Marshal(a.ProjectId)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'project_id': %w", err)
+	}
+
+	object["provider"], err = json.Marshal(a.Provider)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provider': %w", err)
 	}
 
 	for fieldName, field := range a.AdditionalProperties {
@@ -10428,6 +12310,95 @@ func (t CodeConfig) MarshalJSON() ([]byte, error) {
 }
 
 func (t *CodeConfig) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsManagedCodeConfigRequest returns the union data inside the CodeConfigRequest as a ManagedCodeConfigRequest
+func (t CodeConfigRequest) AsManagedCodeConfigRequest() (ManagedCodeConfigRequest, error) {
+	var body ManagedCodeConfigRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromManagedCodeConfigRequest overwrites any union data inside the CodeConfigRequest as the provided ManagedCodeConfigRequest
+func (t *CodeConfigRequest) FromManagedCodeConfigRequest(v ManagedCodeConfigRequest) error {
+	v.Type = "MANAGED"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeManagedCodeConfigRequest performs a merge with any union data inside the CodeConfigRequest, using the provided ManagedCodeConfigRequest
+func (t *CodeConfigRequest) MergeManagedCodeConfigRequest(v ManagedCodeConfigRequest) error {
+	v.Type = "MANAGED"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCustomCodeConfigRequest returns the union data inside the CodeConfigRequest as a CustomCodeConfigRequest
+func (t CodeConfigRequest) AsCustomCodeConfigRequest() (CustomCodeConfigRequest, error) {
+	var body CustomCodeConfigRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCustomCodeConfigRequest overwrites any union data inside the CodeConfigRequest as the provided CustomCodeConfigRequest
+func (t *CodeConfigRequest) FromCustomCodeConfigRequest(v CustomCodeConfigRequest) error {
+	v.Type = "CUSTOM"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCustomCodeConfigRequest performs a merge with any union data inside the CodeConfigRequest, using the provided CustomCodeConfigRequest
+func (t *CodeConfigRequest) MergeCustomCodeConfigRequest(v CustomCodeConfigRequest) error {
+	v.Type = "CUSTOM"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t CodeConfigRequest) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t CodeConfigRequest) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "CUSTOM":
+		return t.AsCustomCodeConfigRequest()
+	case "MANAGED":
+		return t.AsManagedCodeConfigRequest()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t CodeConfigRequest) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *CodeConfigRequest) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -12386,6 +14357,95 @@ func (t *OrganizationRoleAssignment) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsOrganizationPredefinedRoleAssignmentRequest returns the union data inside the OrganizationRoleAssignmentRequest as a OrganizationPredefinedRoleAssignmentRequest
+func (t OrganizationRoleAssignmentRequest) AsOrganizationPredefinedRoleAssignmentRequest() (OrganizationPredefinedRoleAssignmentRequest, error) {
+	var body OrganizationPredefinedRoleAssignmentRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOrganizationPredefinedRoleAssignmentRequest overwrites any union data inside the OrganizationRoleAssignmentRequest as the provided OrganizationPredefinedRoleAssignmentRequest
+func (t *OrganizationRoleAssignmentRequest) FromOrganizationPredefinedRoleAssignmentRequest(v OrganizationPredefinedRoleAssignmentRequest) error {
+	v.Type = "PREDEFINED"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOrganizationPredefinedRoleAssignmentRequest performs a merge with any union data inside the OrganizationRoleAssignmentRequest, using the provided OrganizationPredefinedRoleAssignmentRequest
+func (t *OrganizationRoleAssignmentRequest) MergeOrganizationPredefinedRoleAssignmentRequest(v OrganizationPredefinedRoleAssignmentRequest) error {
+	v.Type = "PREDEFINED"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsOrganizationCustomRoleAssignmentRequest returns the union data inside the OrganizationRoleAssignmentRequest as a OrganizationCustomRoleAssignmentRequest
+func (t OrganizationRoleAssignmentRequest) AsOrganizationCustomRoleAssignmentRequest() (OrganizationCustomRoleAssignmentRequest, error) {
+	var body OrganizationCustomRoleAssignmentRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOrganizationCustomRoleAssignmentRequest overwrites any union data inside the OrganizationRoleAssignmentRequest as the provided OrganizationCustomRoleAssignmentRequest
+func (t *OrganizationRoleAssignmentRequest) FromOrganizationCustomRoleAssignmentRequest(v OrganizationCustomRoleAssignmentRequest) error {
+	v.Type = "CUSTOM"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOrganizationCustomRoleAssignmentRequest performs a merge with any union data inside the OrganizationRoleAssignmentRequest, using the provided OrganizationCustomRoleAssignmentRequest
+func (t *OrganizationRoleAssignmentRequest) MergeOrganizationCustomRoleAssignmentRequest(v OrganizationCustomRoleAssignmentRequest) error {
+	v.Type = "CUSTOM"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OrganizationRoleAssignmentRequest) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t OrganizationRoleAssignmentRequest) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "CUSTOM":
+		return t.AsOrganizationCustomRoleAssignmentRequest()
+	case "PREDEFINED":
+		return t.AsOrganizationPredefinedRoleAssignmentRequest()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t OrganizationRoleAssignmentRequest) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OrganizationRoleAssignmentRequest) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsAwsProviderMetadata returns the union data inside the ProviderMetadata as a AwsProviderMetadata
 func (t ProviderMetadata) AsAwsProviderMetadata() (AwsProviderMetadata, error) {
 	var body AwsProviderMetadata
@@ -12471,6 +14531,95 @@ func (t ProviderMetadata) MarshalJSON() ([]byte, error) {
 }
 
 func (t *ProviderMetadata) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsAwsProviderMetadataRequest returns the union data inside the ProviderMetadataRequest as a AwsProviderMetadataRequest
+func (t ProviderMetadataRequest) AsAwsProviderMetadataRequest() (AwsProviderMetadataRequest, error) {
+	var body AwsProviderMetadataRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAwsProviderMetadataRequest overwrites any union data inside the ProviderMetadataRequest as the provided AwsProviderMetadataRequest
+func (t *ProviderMetadataRequest) FromAwsProviderMetadataRequest(v AwsProviderMetadataRequest) error {
+	v.Kind = "AWS"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAwsProviderMetadataRequest performs a merge with any union data inside the ProviderMetadataRequest, using the provided AwsProviderMetadataRequest
+func (t *ProviderMetadataRequest) MergeAwsProviderMetadataRequest(v AwsProviderMetadataRequest) error {
+	v.Kind = "AWS"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsGcpProviderMetadataRequest returns the union data inside the ProviderMetadataRequest as a GcpProviderMetadataRequest
+func (t ProviderMetadataRequest) AsGcpProviderMetadataRequest() (GcpProviderMetadataRequest, error) {
+	var body GcpProviderMetadataRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGcpProviderMetadataRequest overwrites any union data inside the ProviderMetadataRequest as the provided GcpProviderMetadataRequest
+func (t *ProviderMetadataRequest) FromGcpProviderMetadataRequest(v GcpProviderMetadataRequest) error {
+	v.Kind = "GCP"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGcpProviderMetadataRequest performs a merge with any union data inside the ProviderMetadataRequest, using the provided GcpProviderMetadataRequest
+func (t *ProviderMetadataRequest) MergeGcpProviderMetadataRequest(v GcpProviderMetadataRequest) error {
+	v.Kind = "GCP"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t ProviderMetadataRequest) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"kind"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t ProviderMetadataRequest) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "AWS":
+		return t.AsAwsProviderMetadataRequest()
+	case "GCP":
+		return t.AsGcpProviderMetadataRequest()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t ProviderMetadataRequest) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *ProviderMetadataRequest) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -12683,6 +14832,95 @@ func (t *SpaceRoleAssignment) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsPredefinedRoleAssignmentRequest returns the union data inside the SpaceRoleAssignmentRequest as a PredefinedRoleAssignmentRequest
+func (t SpaceRoleAssignmentRequest) AsPredefinedRoleAssignmentRequest() (PredefinedRoleAssignmentRequest, error) {
+	var body PredefinedRoleAssignmentRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPredefinedRoleAssignmentRequest overwrites any union data inside the SpaceRoleAssignmentRequest as the provided PredefinedRoleAssignmentRequest
+func (t *SpaceRoleAssignmentRequest) FromPredefinedRoleAssignmentRequest(v PredefinedRoleAssignmentRequest) error {
+	v.Type = "PREDEFINED"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePredefinedRoleAssignmentRequest performs a merge with any union data inside the SpaceRoleAssignmentRequest, using the provided PredefinedRoleAssignmentRequest
+func (t *SpaceRoleAssignmentRequest) MergePredefinedRoleAssignmentRequest(v PredefinedRoleAssignmentRequest) error {
+	v.Type = "PREDEFINED"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCustomRoleAssignmentRequest returns the union data inside the SpaceRoleAssignmentRequest as a CustomRoleAssignmentRequest
+func (t SpaceRoleAssignmentRequest) AsCustomRoleAssignmentRequest() (CustomRoleAssignmentRequest, error) {
+	var body CustomRoleAssignmentRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCustomRoleAssignmentRequest overwrites any union data inside the SpaceRoleAssignmentRequest as the provided CustomRoleAssignmentRequest
+func (t *SpaceRoleAssignmentRequest) FromCustomRoleAssignmentRequest(v CustomRoleAssignmentRequest) error {
+	v.Type = "CUSTOM"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCustomRoleAssignmentRequest performs a merge with any union data inside the SpaceRoleAssignmentRequest, using the provided CustomRoleAssignmentRequest
+func (t *SpaceRoleAssignmentRequest) MergeCustomRoleAssignmentRequest(v CustomRoleAssignmentRequest) error {
+	v.Type = "CUSTOM"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t SpaceRoleAssignmentRequest) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t SpaceRoleAssignmentRequest) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "CUSTOM":
+		return t.AsCustomRoleAssignmentRequest()
+	case "PREDEFINED":
+		return t.AsPredefinedRoleAssignmentRequest()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t SpaceRoleAssignmentRequest) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *SpaceRoleAssignmentRequest) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsStaticParamDefaultValue0 returns the union data inside the StaticParam_DefaultValue as a StaticParamDefaultValue0
 func (t StaticParam_DefaultValue) AsStaticParamDefaultValue0() (StaticParamDefaultValue0, error) {
 	var body StaticParamDefaultValue0
@@ -12741,6 +14979,68 @@ func (t StaticParam_DefaultValue) MarshalJSON() ([]byte, error) {
 }
 
 func (t *StaticParam_DefaultValue) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsStaticParamRequestDefaultValue0 returns the union data inside the StaticParamRequest_DefaultValue as a StaticParamRequestDefaultValue0
+func (t StaticParamRequest_DefaultValue) AsStaticParamRequestDefaultValue0() (StaticParamRequestDefaultValue0, error) {
+	var body StaticParamRequestDefaultValue0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromStaticParamRequestDefaultValue0 overwrites any union data inside the StaticParamRequest_DefaultValue as the provided StaticParamRequestDefaultValue0
+func (t *StaticParamRequest_DefaultValue) FromStaticParamRequestDefaultValue0(v StaticParamRequestDefaultValue0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeStaticParamRequestDefaultValue0 performs a merge with any union data inside the StaticParamRequest_DefaultValue, using the provided StaticParamRequestDefaultValue0
+func (t *StaticParamRequest_DefaultValue) MergeStaticParamRequestDefaultValue0(v StaticParamRequestDefaultValue0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsStaticParamRequestDefaultValue1 returns the union data inside the StaticParamRequest_DefaultValue as a StaticParamRequestDefaultValue1
+func (t StaticParamRequest_DefaultValue) AsStaticParamRequestDefaultValue1() (StaticParamRequestDefaultValue1, error) {
+	var body StaticParamRequestDefaultValue1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromStaticParamRequestDefaultValue1 overwrites any union data inside the StaticParamRequest_DefaultValue as the provided StaticParamRequestDefaultValue1
+func (t *StaticParamRequest_DefaultValue) FromStaticParamRequestDefaultValue1(v StaticParamRequestDefaultValue1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeStaticParamRequestDefaultValue1 performs a merge with any union data inside the StaticParamRequest_DefaultValue, using the provided StaticParamRequestDefaultValue1
+func (t *StaticParamRequest_DefaultValue) MergeStaticParamRequestDefaultValue1(v StaticParamRequestDefaultValue1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t StaticParamRequest_DefaultValue) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *StaticParamRequest_DefaultValue) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -13350,6 +15650,95 @@ func (t UserRoleAssignment) MarshalJSON() ([]byte, error) {
 }
 
 func (t *UserRoleAssignment) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsPredefinedUserRoleAssignmentRequest returns the union data inside the UserRoleAssignmentRequest as a PredefinedUserRoleAssignmentRequest
+func (t UserRoleAssignmentRequest) AsPredefinedUserRoleAssignmentRequest() (PredefinedUserRoleAssignmentRequest, error) {
+	var body PredefinedUserRoleAssignmentRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPredefinedUserRoleAssignmentRequest overwrites any union data inside the UserRoleAssignmentRequest as the provided PredefinedUserRoleAssignmentRequest
+func (t *UserRoleAssignmentRequest) FromPredefinedUserRoleAssignmentRequest(v PredefinedUserRoleAssignmentRequest) error {
+	v.Type = "PREDEFINED"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePredefinedUserRoleAssignmentRequest performs a merge with any union data inside the UserRoleAssignmentRequest, using the provided PredefinedUserRoleAssignmentRequest
+func (t *UserRoleAssignmentRequest) MergePredefinedUserRoleAssignmentRequest(v PredefinedUserRoleAssignmentRequest) error {
+	v.Type = "PREDEFINED"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCustomUserRoleAssignmentRequest returns the union data inside the UserRoleAssignmentRequest as a CustomUserRoleAssignmentRequest
+func (t UserRoleAssignmentRequest) AsCustomUserRoleAssignmentRequest() (CustomUserRoleAssignmentRequest, error) {
+	var body CustomUserRoleAssignmentRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCustomUserRoleAssignmentRequest overwrites any union data inside the UserRoleAssignmentRequest as the provided CustomUserRoleAssignmentRequest
+func (t *UserRoleAssignmentRequest) FromCustomUserRoleAssignmentRequest(v CustomUserRoleAssignmentRequest) error {
+	v.Type = "CUSTOM"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCustomUserRoleAssignmentRequest performs a merge with any union data inside the UserRoleAssignmentRequest, using the provided CustomUserRoleAssignmentRequest
+func (t *UserRoleAssignmentRequest) MergeCustomUserRoleAssignmentRequest(v CustomUserRoleAssignmentRequest) error {
+	v.Type = "CUSTOM"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t UserRoleAssignmentRequest) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t UserRoleAssignmentRequest) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "CUSTOM":
+		return t.AsCustomUserRoleAssignmentRequest()
+	case "PREDEFINED":
+		return t.AsPredefinedUserRoleAssignmentRequest()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t UserRoleAssignmentRequest) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *UserRoleAssignmentRequest) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -18448,6 +20837,18 @@ func NewListExperimentsRequest(server string, params *ListExperimentsParams) (*h
 
 		}
 
+		if params.SpaceId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "space_id", *params.SpaceId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.Name != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "name", *params.Name, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -18801,12 +21202,16 @@ func NewListIntegrationsRequest(server string, params *ListIntegrationsParams) (
 		// per the OpenAPI spec (e.g. "color=blue,black,brown").
 		var rawQueryFragments []string
 
-		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "type", params.Type, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
-			return nil, err
-		} else {
-			for _, qp := range strings.Split(queryFrag, "&") {
-				rawQueryFragments = append(rawQueryFragments, qp)
+		if params.Type != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "type", *params.Type, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
 			}
+
 		}
 
 		if params.SpaceId != nil {
@@ -22993,6 +25398,7 @@ type DeleteAnnotationConfigResp struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -28908,6 +31314,13 @@ func ParseDeleteAnnotationConfigResp(rsp *http.Response) (*DeleteAnnotationConfi
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded

@@ -267,7 +267,7 @@ func TestPrompts(t *testing.T) {
 					Version: prompts.PromptVersionCreate{
 						CommitMessage: "init",
 						Provider:      prompts.LlmProviderOpenAi,
-						Messages:      []prompts.LLMMessage{},
+						Messages:      []prompts.LLMMessageRequest{},
 					},
 				})
 			},
@@ -331,6 +331,29 @@ func TestPrompts(t *testing.T) {
 				return c.Prompts.Update(ctx, prompts.UpdateRequest{Prompt: promptID("p-1")})
 			},
 			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "Update_ClearDescription",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body map[string]json.RawMessage
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if got, ok := body["description"]; !ok || string(got) != "null" {
+					t.Errorf("description: want JSON null, got %q", got)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(prompts.Prompt{Id: "p-1"})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				empty := ""
+				return c.Prompts.Update(ctx, prompts.UpdateRequest{Prompt: promptID("p-1"), Description: &empty})
+			},
+			check: func(t *testing.T, _ any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
@@ -412,7 +435,7 @@ func TestPrompts(t *testing.T) {
 					Prompt:              promptID("p-1"),
 					CommitMessage:       "v2",
 					Provider:            prompts.LlmProviderOpenAi,
-					Messages:            []prompts.LLMMessage{},
+					Messages:            []prompts.LLMMessageRequest{},
 					InputVariableFormat: prompts.InputVariableFormatFString,
 					Model:               "gpt-4",
 				})

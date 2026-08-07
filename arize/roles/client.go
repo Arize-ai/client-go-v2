@@ -1,7 +1,10 @@
 package roles
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
@@ -93,12 +96,25 @@ func (c *Client) Update(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.UpdateRoleRequest{
-		Name:        req.Name,
-		Description: req.Description,
-		Permissions: req.Permissions,
+	body := map[string]any{}
+	if req.Name != nil {
+		body["name"] = *req.Name
 	}
-	resp, err := c.gen.UpdateRoleWithResponse(ctx, id, body)
+	if req.Description != nil {
+		if *req.Description == "" {
+			body["description"] = nil
+		} else {
+			body["description"] = *req.Description
+		}
+	}
+	if req.Permissions != nil {
+		body["permissions"] = *req.Permissions
+	}
+	raw, err := json.Marshal(body)
+	if err != nil {
+		return nil, fmt.Errorf("roles: marshal update body: %w", err)
+	}
+	resp, err := c.gen.UpdateRoleWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(raw))
 	if err != nil {
 		return nil, err
 	}

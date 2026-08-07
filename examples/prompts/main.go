@@ -74,7 +74,7 @@ func createPrompt(ctx context.Context, client *arize.Client, name, space string)
 		Version: prompts.PromptVersionCreate{
 			CommitMessage: "initial version",
 			Provider:      prompts.LlmProviderOpenAi,
-			Messages: []prompts.LLMMessage{
+			Messages: []prompts.LLMMessageRequest{
 				{Role: prompts.MessageRoleSystem, Content: &content},
 			},
 		},
@@ -94,7 +94,7 @@ func addVersion(ctx context.Context, client *arize.Client, prompt, space string)
 		Space:         space,
 		CommitMessage: "make answers concise",
 		Provider:      prompts.LlmProviderOpenAi,
-		Messages: []prompts.LLMMessage{
+		Messages: []prompts.LLMMessageRequest{
 			{Role: prompts.MessageRoleSystem, Content: &content},
 		},
 	})

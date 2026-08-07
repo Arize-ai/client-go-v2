@@ -188,12 +188,15 @@ func TestOrganizations(t *testing.T) {
 				if r.Method != http.MethodPatch {
 					t.Errorf("expected PATCH, got %s", r.Method)
 				}
-				var body wireOrganization
+				var body map[string]json.RawMessage
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				if body.Name != "renamed" {
-					t.Errorf("body name: want renamed, got %q", body.Name)
+				if got := string(body["name"]); got != `"renamed"` {
+					t.Errorf("name: want renamed, got %q", got)
+				}
+				if _, ok := body["description"]; ok {
+					t.Errorf("description should be omitted when nil, got %q", body["description"])
 				}
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(organizations.Organization{Id: testID("org-1"), Name: "renamed", CreatedAt: time.Now()})
@@ -212,6 +215,29 @@ func TestOrganizations(t *testing.T) {
 				org := got.(*organizations.Organization)
 				if org.Name != "renamed" {
 					t.Errorf("unexpected name: %s", org.Name)
+				}
+			},
+		},
+		{
+			name: "Update_ClearDescription",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body map[string]json.RawMessage
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if got, ok := body["description"]; !ok || string(got) != "null" {
+					t.Errorf("description: want JSON null, got %q", got)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(organizations.Organization{Id: testID("org-1"), Name: "org", CreatedAt: time.Now()})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				empty := ""
+				return c.Organizations.Update(ctx, organizations.UpdateRequest{Organization: testID("org-1"), Description: &empty})
+			},
+			check: func(t *testing.T, _ any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
 				}
 			},
 		},

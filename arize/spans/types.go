@@ -84,6 +84,13 @@ type DeleteRequest struct {
 
 	// SpanIDs is the list of span IDs to delete (maximum 5000).
 	SpanIDs []string
+
+	// Start is the optional inclusive lower bound on span start time. When
+	// zero, the server searches the full 2-year lookback window.
+	Start time.Time
+	// End is the optional exclusive upper bound on span start time. When zero,
+	// the server searches up to the current time.
+	End time.Time
 }
 
 // AnnotateRequest is the request shape for Client.Annotate.

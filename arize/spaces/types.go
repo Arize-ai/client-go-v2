@@ -81,8 +81,8 @@ type UpdateRequest struct {
 	// the existing name is preserved.
 	Name *string
 	// Description is optional. When non-nil, sets a new description (pass a
-	// pointer to an empty string to clear the existing description); when nil,
-	// the existing description is preserved.
+	// pointer to an empty string to clear the existing description with JSON
+	// null); when nil, the existing description is preserved.
 	Description *string
 	// IsPrivate is optional. When non-nil, sets the space visibility: true makes
 	// it private (visible only to members and admins), false makes it public.

@@ -80,6 +80,11 @@ type EvaluatorInput struct {
 	// EvaluatorID is the evaluator's ID (base64). Required; duplicates are
 	// not allowed within one task.
 	EvaluatorID string
+	// EvaluatorVersionID optionally pins this evaluator to one version
+	// (base64). When empty, the evaluator runs its latest version. Must be a
+	// version of EvaluatorID. Because an update replaces the whole evaluator
+	// list, leaving this empty on an update unpins the evaluator.
+	EvaluatorVersionID string
 	// QueryFilter is an optional per-evaluator query filter, combined with
 	// the task-level filter (AND). When empty, no per-evaluator filter is
 	// applied.
@@ -205,8 +210,8 @@ type UpdateRequest struct {
 	// existing value is preserved.
 	IsContinuous *bool
 	// QueryFilter is optional (evaluation tasks only). When non-nil, sets a
-	// new task-level query filter (pass a pointer to an empty string to
-	// clear the existing filter); when nil, the existing filter is
+	// new task-level query filter (pass a pointer to an empty string to clear
+	// the existing filter with JSON null); when nil, the existing filter is
 	// preserved.
 	QueryFilter *string
 	// Evaluators is optional (evaluation tasks only). When non-empty,

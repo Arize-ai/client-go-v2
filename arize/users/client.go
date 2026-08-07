@@ -11,6 +11,7 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/internal/optfields"
 	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
 	"github.com/Arize-ai/client-go-v2/arize/internal/resolve"
+	"github.com/Arize-ai/client-go-v2/arize/internal/roleconv"
 )
 
 // Client provides access to the Arize Users API.
@@ -76,10 +77,14 @@ func (c *Client) Update(ctx context.Context, req UpdateRequest) (*User, error) {
 // surfaced by this method.
 func (c *Client) Create(ctx context.Context, req CreateRequest) (*User, error) {
 	prerelease.Warn("users.create", prerelease.Beta)
+	role, err := roleconv.AccountRoleAssignmentRequest(req.Role)
+	if err != nil {
+		return nil, fmt.Errorf("users: build role request: %w", err)
+	}
 	body := generated.CreateUserRequest{
 		Name:        req.Name,
 		Email:       generated.Email(req.Email),
-		Role:        req.Role,
+		Role:        role,
 		InviteMode:  req.InviteMode,
 		IsDeveloper: req.IsDeveloper,
 	}

@@ -105,11 +105,12 @@ func (c *Client) CreateCategorical(ctx context.Context, req CreateCategoricalReq
 	body := generated.CreateAnnotationConfigJSONRequestBody{
 		AnnotationConfigType: generated.AnnotationConfigTypeCATEGORICAL,
 	}
+	values := categoricalValuesRequest(req.Values)
 	if err := body.FromCreateCategoricalAnnotationConfigRequest(generated.CreateCategoricalAnnotationConfigRequest{
 		AnnotationConfigType:  generated.CreateCategoricalAnnotationConfigRequestAnnotationConfigTypeCATEGORICAL,
 		Name:                  req.Name,
 		SpaceId:               spaceID,
-		Values:                req.Values,
+		Values:                values,
 		OptimizationDirection: optfields.PtrIfSet(req.OptimizationDirection),
 	}); err != nil {
 		return nil, fmt.Errorf("annotationconfigs: build categorical body: %w", err)
@@ -168,7 +169,7 @@ func (c *Client) UpdateCategorical(ctx context.Context, req UpdateCategoricalReq
 		AnnotationConfigType:  generated.UpdateCategoricalAnnotationConfigRequestAnnotationConfigTypeCATEGORICAL,
 		Name:                  req.Name,
 		OptimizationDirection: req.OptimizationDirection,
-		Values:                req.Values,
+		Values:                categoricalValuesRequestOpt(req.Values),
 	}); err != nil {
 		return nil, fmt.Errorf("annotationconfigs: build categorical body: %w", err)
 	}
@@ -180,6 +181,25 @@ func (c *Client) UpdateCategorical(ctx context.Context, req UpdateCategoricalReq
 		return nil, err
 	}
 	return resp.JSON200, nil
+}
+
+func categoricalValuesRequest(values []CategoricalAnnotationValue) []generated.CategoricalAnnotationValueRequest {
+	requests := make([]generated.CategoricalAnnotationValueRequest, len(values))
+	for i, value := range values {
+		requests[i] = generated.CategoricalAnnotationValueRequest{
+			Label: value.Label,
+			Score: value.Score,
+		}
+	}
+	return requests
+}
+
+func categoricalValuesRequestOpt(values *[]CategoricalAnnotationValue) *[]generated.CategoricalAnnotationValueRequest {
+	if values == nil {
+		return nil
+	}
+	converted := categoricalValuesRequest(*values)
+	return &converted
 }
 
 // UpdateContinuous modifies an existing continuous annotation config,

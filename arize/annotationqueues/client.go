@@ -1,7 +1,9 @@
 package annotationqueues
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
@@ -93,12 +95,28 @@ func (c *Client) Update(ctx context.Context, req UpdateRequest) (*AnnotationQueu
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.UpdateAnnotationQueueWithResponse(ctx, id, generated.UpdateAnnotationQueueJSONRequestBody{
-		Name:                req.Name,
-		Instructions:        req.Instructions,
-		AnnotatorEmails:     req.AnnotatorEmails,
-		AnnotationConfigIds: req.AnnotationConfigIDs,
-	})
+	body := map[string]any{}
+	if req.Name != nil {
+		body["name"] = *req.Name
+	}
+	if req.Instructions != nil {
+		if *req.Instructions == "" {
+			body["instructions"] = nil
+		} else {
+			body["instructions"] = *req.Instructions
+		}
+	}
+	if req.AnnotatorEmails != nil {
+		body["annotator_emails"] = *req.AnnotatorEmails
+	}
+	if req.AnnotationConfigIDs != nil {
+		body["annotation_config_ids"] = *req.AnnotationConfigIDs
+	}
+	raw, err := json.Marshal(body)
+	if err != nil {
+		return nil, fmt.Errorf("annotationqueues: marshal update body: %w", err)
+	}
+	resp, err := c.gen.UpdateAnnotationQueueWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(raw))
 	if err != nil {
 		return nil, err
 	}

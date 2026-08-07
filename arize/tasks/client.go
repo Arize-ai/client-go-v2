@@ -237,44 +237,47 @@ func (c *Client) Update(
 		return nil, err
 	}
 
-	var body generated.UpdateTaskRequestBody
+	body := map[string]any{}
 	switch task.Type {
 	case TaskTypeTemplateEvaluation, TaskTypeCodeEvaluation:
 		if req.RunConfiguration != nil {
 			return nil, fmt.Errorf("tasks: RunConfiguration only applies to %q tasks, task %q is %q",
 				TaskTypeRunExperiment, task.Name, task.Type)
 		}
-		patch := generated.UpdateEvaluationTaskRequest{
-			Name:         req.Name,
-			SamplingRate: req.SamplingRate,
-			IsContinuous: req.IsContinuous,
-			QueryFilter:  req.QueryFilter,
+		if req.Name != nil {
+			body["name"] = *req.Name
+		}
+		if req.SamplingRate != nil {
+			body["sampling_rate"] = *req.SamplingRate
+		}
+		if req.IsContinuous != nil {
+			body["is_continuous"] = *req.IsContinuous
+		}
+		if req.QueryFilter != nil {
+			if *req.QueryFilter == "" {
+				body["query_filter"] = nil
+			} else {
+				body["query_filter"] = *req.QueryFilter
+			}
 		}
 		if len(req.Evaluators) > 0 {
-			evals := evaluatorInputs(req.Evaluators)
-			patch.Evaluators = &evals
-		}
-		if err := body.FromUpdateEvaluationTaskRequest(patch); err != nil {
-			return nil, fmt.Errorf("tasks: build evaluation update body: %w", err)
+			body["evaluators"] = evaluatorInputs(req.Evaluators)
 		}
 	case TaskTypeRunExperiment:
 		if req.SamplingRate != nil || req.IsContinuous != nil || req.QueryFilter != nil || len(req.Evaluators) > 0 {
 			return nil, fmt.Errorf("tasks: SamplingRate, IsContinuous, QueryFilter, and Evaluators only apply to evaluation tasks, task %q is %q",
 				task.Name, task.Type)
 		}
-		if err := body.FromUpdateRunExperimentTaskRequest(generated.UpdateRunExperimentTaskRequest{
-			Name:             req.Name,
-			RunConfiguration: req.RunConfiguration,
-		}); err != nil {
-			return nil, fmt.Errorf("tasks: build run_experiment update body: %w", err)
+		if req.Name != nil {
+			body["name"] = *req.Name
+		}
+		if req.RunConfiguration != nil {
+			body["run_configuration"] = req.RunConfiguration
 		}
 	default:
 		return nil, fmt.Errorf("tasks: unknown task type %q", task.Type)
 	}
 
-	// Marshal the union by hand: the generated UpdateTaskJSONRequestBody
-	// named type does not carry the union's MarshalJSON method and would
-	// serialize as {}.
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, fmt.Errorf("tasks: marshal update body: %w", err)
@@ -564,9 +567,10 @@ func evaluatorInputs(in []EvaluatorInput) []generated.TaskEvaluatorInput {
 			columnMappings = &m
 		}
 		out = append(out, generated.TaskEvaluatorInput{
-			EvaluatorId:    e.EvaluatorID,
-			QueryFilter:    optfields.PtrIfSet(e.QueryFilter),
-			ColumnMappings: columnMappings,
+			EvaluatorId:        e.EvaluatorID,
+			EvaluatorVersionId: optfields.PtrIfSet(e.EvaluatorVersionID),
+			QueryFilter:        optfields.PtrIfSet(e.QueryFilter),
+			ColumnMappings:     columnMappings,
 		})
 	}
 	return out

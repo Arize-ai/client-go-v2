@@ -62,10 +62,11 @@ func createEvaluator(ctx context.Context, client *arize.Client, name, space, aiI
 		Description: "scores answer relevance",
 		Version: evaluators.VersionConfig{
 			CommitMessage: "initial version",
-			Template: &evaluators.TemplateConfig{
-				Name:     "relevance",
-				Template: "Is the answer relevant to the question?\n{{input}}",
-				LlmConfig: evaluators.EvaluatorLlmConfig{
+			Template: &evaluators.TemplateConfigInput{
+				Name:                  "relevance",
+				Template:              "Is the answer relevant to the question?\n{{input}}",
+				ClassificationChoices: &map[string]float32{"relevant": 1, "irrelevant": 0},
+				LlmConfig: evaluators.EvaluatorLlmConfigRequest{
 					AiIntegrationId: aiIntegration,
 					ModelName:       "gpt-4o",
 				},
@@ -126,10 +127,11 @@ func addVersion(ctx context.Context, client *arize.Client, evaluator, space, aiI
 		Space:     space,
 		Version: evaluators.VersionConfig{
 			CommitMessage: "tighten the rubric",
-			Template: &evaluators.TemplateConfig{
-				Name:     "relevance",
-				Template: "Rate 0-1 how relevant the answer is.\n{{input}}",
-				LlmConfig: evaluators.EvaluatorLlmConfig{
+			Template: &evaluators.TemplateConfigInput{
+				Name:                  "relevance",
+				Template:              "Rate 0-1 how relevant the answer is.\n{{input}}",
+				ClassificationChoices: &map[string]float32{"relevant": 1, "irrelevant": 0},
+				LlmConfig: evaluators.EvaluatorLlmConfigRequest{
 					AiIntegrationId: aiIntegration,
 					ModelName:       "gpt-4o",
 				},

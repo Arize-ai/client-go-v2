@@ -1,7 +1,10 @@
 package spaces
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
 	"log/slog"
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
@@ -9,6 +12,7 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/internal/optfields"
 	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
 	"github.com/Arize-ai/client-go-v2/arize/internal/resolve"
+	"github.com/Arize-ai/client-go-v2/arize/internal/roleconv"
 )
 
 // Client provides access to the Arize Spaces API.
@@ -117,12 +121,25 @@ func (c *Client) Update(
 	if err != nil {
 		return nil, err
 	}
-	body := generated.UpdateSpaceJSONRequestBody{
-		Name:        req.Name,
-		Description: req.Description,
-		IsPrivate:   req.IsPrivate,
+	body := map[string]any{}
+	if req.Name != nil {
+		body["name"] = *req.Name
 	}
-	resp, err := c.gen.UpdateSpaceWithResponse(ctx, id, body)
+	if req.Description != nil {
+		if *req.Description == "" {
+			body["description"] = nil
+		} else {
+			body["description"] = *req.Description
+		}
+	}
+	if req.IsPrivate != nil {
+		body["is_private"] = *req.IsPrivate
+	}
+	raw, err := json.Marshal(body)
+	if err != nil {
+		return nil, fmt.Errorf("spaces: marshal update body: %w", err)
+	}
+	resp, err := c.gen.UpdateSpaceWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(raw))
 	if err != nil {
 		return nil, err
 	}
@@ -163,9 +180,16 @@ func (c *Client) AddUser(
 	if err != nil {
 		return nil, err
 	}
+	if roleconv.IsZero(req.Role) {
+		return nil, fmt.Errorf("spaces: Role is required; use AssignPredefinedRole or AssignCustomRole")
+	}
+	role, err := roleconv.SpaceRoleAssignmentRequest(req.Role)
+	if err != nil {
+		return nil, fmt.Errorf("spaces: build role request: %w", err)
+	}
 	body := generated.AddSpaceUserJSONRequestBody{
 		UserId: req.UserID,
-		Role:   req.Role,
+		Role:   role,
 	}
 	resp, err := c.gen.AddSpaceUserWithResponse(ctx, id, body)
 	if err != nil {

@@ -1,7 +1,9 @@
 package evaluators
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
@@ -102,10 +104,22 @@ func (c *Client) Update(ctx context.Context, req UpdateRequest) (*Evaluator, err
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.gen.UpdateEvaluatorWithResponse(ctx, id, generated.UpdateEvaluatorJSONRequestBody{
-		Name:        req.Name,
-		Description: req.Description,
-	})
+	body := map[string]any{}
+	if req.Name != nil {
+		body["name"] = *req.Name
+	}
+	if req.Description != nil {
+		if *req.Description == "" {
+			body["description"] = nil
+		} else {
+			body["description"] = *req.Description
+		}
+	}
+	raw, err := json.Marshal(body)
+	if err != nil {
+		return nil, fmt.Errorf("evaluators: marshal update body: %w", err)
+	}
+	resp, err := c.gen.UpdateEvaluatorWithBodyWithResponse(ctx, id, "application/json", bytes.NewReader(raw))
 	if err != nil {
 		return nil, err
 	}
@@ -219,20 +233,80 @@ func buildVersionCreate(v VersionConfig) (generated.CreateEvaluatorVersionReques
 // buildCodeConfig translates a public CodeConfig oneOf into the generated
 // code-config union, setting the inner type discriminator. Exactly one of
 // Managed or Custom must be set.
-func buildCodeConfig(c CodeConfig) (generated.CodeConfig, error) {
-	var out generated.CodeConfig
+func buildCodeConfig(c CodeConfig) (generated.CodeConfigRequest, error) {
+	var out generated.CodeConfigRequest
 	switch {
 	case c.Managed != nil && c.Custom != nil:
 		return out, ErrConflictingCodeConfig
 	case c.Managed != nil:
-		managed := *c.Managed
-		managed.Type = generated.ManagedCodeConfigTypeMANAGED
-		return out, out.FromManagedCodeConfig(managed)
+		request, err := managedCodeConfigRequest(*c.Managed)
+		if err != nil {
+			return out, fmt.Errorf("evaluators: build managed code request: %w", err)
+		}
+		return out, out.FromManagedCodeConfigRequest(request)
 	case c.Custom != nil:
-		custom := *c.Custom
-		custom.Type = generated.CustomCodeConfigTypeCUSTOM
-		return out, out.FromCustomCodeConfig(custom)
+		request, err := customCodeConfigRequest(*c.Custom)
+		if err != nil {
+			return out, fmt.Errorf("evaluators: build custom code request: %w", err)
+		}
+		return out, out.FromCustomCodeConfigRequest(request)
 	default:
 		return out, fmt.Errorf("evaluators: CodeConfig requires exactly one of Managed or Custom")
 	}
+}
+
+func managedCodeConfigRequest(c generated.ManagedCodeConfig) (generated.ManagedCodeConfigRequest, error) {
+	params, err := staticParamsRequest(c.StaticParams)
+	if err != nil {
+		return generated.ManagedCodeConfigRequest{}, err
+	}
+	return generated.ManagedCodeConfigRequest{
+		DataGranularity:  c.DataGranularity,
+		ManagedEvaluator: c.ManagedEvaluator,
+		Name:             c.Name,
+		QueryFilter:      c.QueryFilter,
+		StaticParams:     params,
+		Type:             generated.ManagedCodeConfigRequestTypeMANAGED,
+		Variables:        c.Variables,
+	}, nil
+}
+
+func customCodeConfigRequest(c generated.CustomCodeConfig) (generated.CustomCodeConfigRequest, error) {
+	params, err := staticParamsRequest(c.StaticParams)
+	if err != nil {
+		return generated.CustomCodeConfigRequest{}, err
+	}
+	return generated.CustomCodeConfigRequest{
+		Code:            c.Code,
+		DataGranularity: c.DataGranularity,
+		Imports:         c.Imports,
+		Name:            c.Name,
+		QueryFilter:     c.QueryFilter,
+		StaticParams:    params,
+		Type:            generated.CustomCodeConfigRequestTypeCUSTOM,
+		Variables:       c.Variables,
+	}, nil
+}
+
+func staticParamsRequest(params *[]generated.StaticParam) (*[]generated.StaticParamRequest, error) {
+	if params == nil {
+		return nil, nil
+	}
+	requests := make([]generated.StaticParamRequest, len(*params))
+	for i, p := range *params {
+		b, err := json.Marshal(p.DefaultValue)
+		if err != nil {
+			return nil, err
+		}
+		var dv generated.StaticParamRequest_DefaultValue
+		if err := json.Unmarshal(b, &dv); err != nil {
+			return nil, err
+		}
+		requests[i] = generated.StaticParamRequest{
+			DefaultValue: dv,
+			Name:         p.Name,
+			Type:         p.Type,
+		}
+	}
+	return &requests, nil
 }

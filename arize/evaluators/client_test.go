@@ -7,6 +7,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"github.com/Arize-ai/client-go-v2/arize"
@@ -31,15 +32,24 @@ func newTestClient(t *testing.T, handler http.HandlerFunc) *arize.Client {
 }
 
 // wireEvaluatorCreate mirrors the JSON shape of the Create request body so
-// tests can assert on the type discriminator without importing
-// internal/generated.
+// tests can assert on the type discriminator and template config without
+// importing internal/generated.
 type wireEvaluatorCreate struct {
 	Type    string `json:"type"`
 	Version struct {
 		CodeConfig struct {
 			Type string `json:"type"`
 		} `json:"code_config"`
+		TemplateConfig wireTemplateConfig `json:"template_config"`
 	} `json:"version"`
+}
+
+// wireTemplateConfig captures the template_config fields the SDK is expected to
+// serialize. classification_choices is required on write, so tests assert the
+// SDK sends the caller's map rather than a nil map (which encodes as null and
+// the API rejects).
+type wireTemplateConfig struct {
+	ClassificationChoices map[string]float64 `json:"classification_choices"`
 }
 
 func TestEvaluators(t *testing.T) {
@@ -138,6 +148,10 @@ func TestEvaluators(t *testing.T) {
 				if body.Type != "TEMPLATE" {
 					t.Errorf("body type: want template, got %q", body.Type)
 				}
+				wantChoices := map[string]float64{"good": 1, "bad": 0}
+				if got := body.Version.TemplateConfig.ClassificationChoices; !reflect.DeepEqual(got, wantChoices) {
+					t.Errorf("classification_choices: want %v, got %v", wantChoices, got)
+				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusCreated)
 				_, _ = w.Write([]byte(`{"id":"ev-2","name":"new-eval"}`))
@@ -148,7 +162,11 @@ func TestEvaluators(t *testing.T) {
 					Name:  "new-eval",
 					Version: evaluators.VersionConfig{
 						CommitMessage: "initial",
-						Template:      &evaluators.TemplateConfig{Name: "score", Template: "{{input}}"},
+						Template: &evaluators.TemplateConfigInput{
+							Name:                  "score",
+							Template:              "{{input}}",
+							ClassificationChoices: &map[string]float32{"good": 1, "bad": 0},
+						},
 					},
 				})
 			},
@@ -263,7 +281,7 @@ func TestEvaluators(t *testing.T) {
 					Name:  "x",
 					Version: evaluators.VersionConfig{
 						CommitMessage: "initial",
-						Template:      &evaluators.TemplateConfig{Name: "score", Template: "{{input}}"},
+						Template:      &evaluators.TemplateConfigInput{Name: "score", Template: "{{input}}"},
 						Code: &evaluators.CodeConfig{
 							Managed: &evaluators.ManagedCodeConfig{
 								Name:             "hallucination",
@@ -313,6 +331,16 @@ func TestEvaluators(t *testing.T) {
 		{
 			name: "Update",
 			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body map[string]json.RawMessage
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if got := string(body["name"]); got != `"updated-eval"` {
+					t.Errorf("name: want updated-eval, got %q", got)
+				}
+				if _, ok := body["description"]; ok {
+					t.Errorf("description should be omitted when nil, got %q", body["description"])
+				}
 				w.Header().Set("Content-Type", "application/json")
 				_, _ = w.Write([]byte(`{"id":"ev-1","name":"updated-eval"}`))
 			},
@@ -325,6 +353,29 @@ func TestEvaluators(t *testing.T) {
 				}
 				if ev := got.(*evaluators.Evaluator); ev.Name != updateName {
 					t.Errorf("unexpected name: %s", ev.Name)
+				}
+			},
+		},
+		{
+			name: "Update_ClearDescription",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body map[string]json.RawMessage
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if got, ok := body["description"]; !ok || string(got) != "null" {
+					t.Errorf("description: want JSON null, got %q", got)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				_, _ = w.Write([]byte(`{"id":"ev-1"}`))
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				empty := ""
+				return c.Evaluators.Update(ctx, evaluators.UpdateRequest{Evaluator: testID("ev-1"), Description: &empty})
+			},
+			check: func(t *testing.T, _ any, err error) {
+				if err != nil {
+					t.Fatal(err)
 				}
 			},
 		},
@@ -375,6 +426,16 @@ func TestEvaluators(t *testing.T) {
 		{
 			name: "CreateVersion",
 			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body struct {
+					TemplateConfig wireTemplateConfig `json:"template_config"`
+				}
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				wantChoices := map[string]float64{"good": 1, "bad": 0}
+				if got := body.TemplateConfig.ClassificationChoices; !reflect.DeepEqual(got, wantChoices) {
+					t.Errorf("classification_choices: want %v, got %v", wantChoices, got)
+				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusCreated)
 				_, _ = w.Write([]byte(`{"id":"ver-2","evaluator_id":"ev-1","type":"TEMPLATE"}`))
@@ -384,7 +445,11 @@ func TestEvaluators(t *testing.T) {
 					Evaluator: testID("ev-1"),
 					Version: evaluators.VersionConfig{
 						CommitMessage: "v2",
-						Template:      &evaluators.TemplateConfig{Name: "score", Template: "{{input}}"},
+						Template: &evaluators.TemplateConfigInput{
+							Name:                  "score",
+							Template:              "{{input}}",
+							ClassificationChoices: &map[string]float32{"good": 1, "bad": 0},
+						},
 					},
 				})
 			},

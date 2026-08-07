@@ -14,10 +14,14 @@ type (
 )
 
 // TaskFields names the columns in each Run map that hold the dataset example
-// ID and the task output. Both are required.
+// ID and the task output. Output is always required; ExampleID is required only
+// for a dataset-backed experiment.
 type TaskFields struct {
 	// ExampleID is the column name in each run record holding the dataset
 	// example ID (a string matching an example in the dataset/version).
+	// Required when the experiment is associated with a dataset. Leave empty
+	// for an experiment created in a space, whose runs reference no example;
+	// no example_id is then sent.
 	ExampleID string
 	// Output is the column name in each run record holding the task output.
 	// String values are sent as-is; any other type is JSON-encoded.
@@ -51,11 +55,13 @@ type EvaluatorFields struct {
 // ListRequest holds optional filters for listing experiments.
 type ListRequest struct {
 	// Dataset is an optional name-or-ID filter. When non-empty, only
-	// experiments belonging to this dataset are returned; when empty,
-	// experiments across all accessible datasets are returned.
+	// experiments belonging to this dataset are returned.
 	Dataset string
-	// Space accepts either a space name or ID. It is only used to resolve
-	// Dataset when Dataset is a name; ignored when Dataset is an ID or empty.
+	// Space is an optional name-or-ID filter. When non-empty and Dataset is
+	// empty, only experiments in this space are returned — both those
+	// associated with a dataset and those without one. When Dataset is also
+	// set, Space only resolves Dataset when Dataset is a name. When both are
+	// empty, experiments across all accessible spaces are returned.
 	Space string
 	// Name is an optional case-insensitive substring filter on the experiment
 	// name. When empty, results are not filtered by name.
@@ -73,11 +79,16 @@ type ListRequest struct {
 type GetRequest struct {
 	// Experiment accepts either an experiment name or ID.
 	Experiment string
-	// Dataset accepts either a dataset name or ID. Required when Experiment is
-	// a name; ignored when Experiment is an ID.
+	// Dataset accepts either a dataset name or ID and scopes the search for
+	// Experiment to that dataset. Provide Dataset or Space when Experiment is a
+	// name; both are ignored when Experiment is an ID.
 	Dataset string
-	// Space accepts either a space name or ID. Required when Dataset is also
-	// passed as a name; ignored otherwise.
+	// Space accepts either a space name or ID. When Dataset is empty, it scopes
+	// the search for Experiment to that space — the only way to resolve the name
+	// of an experiment with no dataset. A name matching more than one experiment
+	// in the space yields AmbiguousNameError, since names are unique per dataset
+	// and, separately, per space among experiments with no dataset. Also
+	// required when Dataset is passed as a name.
 	Space string
 }
 
@@ -86,17 +97,23 @@ type GetRequest struct {
 // example_id and output. EvaluatorColumns optionally remaps evaluator result
 // columns to the wire format (e.g. `eval.<name>.score`).
 type CreateRequest struct {
-	// Dataset accepts either a dataset name or ID. Required.
+	// Dataset accepts either a dataset name or ID, and associates the
+	// experiment with that dataset. Provide Space instead to create the
+	// experiment directly in a space with no dataset; passing neither returns
+	// ErrNoDatasetOrSpace.
 	Dataset string
-	// Space accepts either a space name or ID. Required when Dataset is a name;
-	// ignored when Dataset is an ID.
+	// Space accepts either a space name or ID. When Dataset is empty, this is
+	// the space to create the experiment in. When Dataset is a name, this
+	// resolves it; ignored when Dataset is an ID.
 	Space string
-	// Name is the experiment's name. Required.
+	// Name is the experiment's name. Required. Must be unique within the
+	// dataset, or within the space when there is no dataset.
 	Name string
 	// Runs is the list of raw experiment run records. Required (one or more);
 	// an empty Runs returns ErrNoRuns.
 	Runs []map[string]any
 	// TaskFields names the example_id and output columns in Runs. Required.
+	// TaskFields.ExampleID itself is required only when Dataset is set.
 	TaskFields TaskFields
 	// EvaluatorColumns optionally maps evaluator name → its result column
 	// names in Runs. Mapped columns are renamed to `eval.<evaluator>.score`
@@ -108,11 +125,16 @@ type CreateRequest struct {
 type DeleteRequest struct {
 	// Experiment accepts either an experiment name or ID.
 	Experiment string
-	// Dataset accepts either a dataset name or ID. Required when Experiment is
-	// a name; ignored when Experiment is an ID.
+	// Dataset accepts either a dataset name or ID and scopes the search for
+	// Experiment to that dataset. Provide Dataset or Space when Experiment is a
+	// name; both are ignored when Experiment is an ID.
 	Dataset string
-	// Space accepts either a space name or ID. Required when Dataset is also
-	// passed as a name; ignored otherwise.
+	// Space accepts either a space name or ID. When Dataset is empty, it scopes
+	// the search for Experiment to that space — the only way to resolve the name
+	// of an experiment with no dataset. A name matching more than one experiment
+	// in the space yields AmbiguousNameError, since names are unique per dataset
+	// and, separately, per space among experiments with no dataset. Also
+	// required when Dataset is passed as a name.
 	Space string
 }
 
@@ -121,11 +143,16 @@ type DeleteRequest struct {
 type ListRunsRequest struct {
 	// Experiment accepts either an experiment name or ID.
 	Experiment string
-	// Dataset accepts either a dataset name or ID. Required when Experiment is
-	// a name; ignored when Experiment is an ID.
+	// Dataset accepts either a dataset name or ID and scopes the search for
+	// Experiment to that dataset. Provide Dataset or Space when Experiment is a
+	// name; both are ignored when Experiment is an ID.
 	Dataset string
-	// Space accepts either a space name or ID. Required when Dataset is also
-	// passed as a name; ignored otherwise.
+	// Space accepts either a space name or ID. When Dataset is empty, it scopes
+	// the search for Experiment to that space — the only way to resolve the name
+	// of an experiment with no dataset. A name matching more than one experiment
+	// in the space yields AmbiguousNameError, since names are unique per dataset
+	// and, separately, per space among experiments with no dataset. Also
+	// required when Dataset is passed as a name.
 	Space string
 	// Limit is the optional maximum number of runs to return (max 500). When
 	// zero, the server applies its default page size.
@@ -142,6 +169,8 @@ type AppendRunsRequest struct {
 	ExperimentID string
 
 	// ExperimentRuns is the list of runs to append. Between 1 and 1000 runs
-	// per request. Each run must include ExampleId and Output.
+	// per request. Each run must include Output. ExampleId is required only
+	// when the target experiment is associated with a dataset; leave it nil
+	// for an experiment that has none. The server rejects the mismatch.
 	ExperimentRuns []ExperimentRunInput
 }

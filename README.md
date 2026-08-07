@@ -827,10 +827,11 @@ ev, err := client.Evaluators.Create(ctx, evaluators.CreateRequest{
     Space: "<space-id-or-name>",
     Version: evaluators.VersionConfig{
         CommitMessage: "initial version",
-        Template: &evaluators.TemplateConfig{
-            Name:      "relevance",
-            Template:  "Is the answer relevant?\n{{input}}",
-            LlmConfig: evaluators.EvaluatorLlmConfig{AiIntegrationId: "<ai-integration-id>", ModelName: "gpt-4o"},
+        Template: &evaluators.TemplateConfigInput{
+            Name:                  "relevance",
+            Template:              "Is the answer relevant?\n{{input}}",
+            ClassificationChoices: map[string]float32{"relevant": 1, "irrelevant": 0},
+            LlmConfig:             evaluators.EvaluatorLlmConfig{AiIntegrationId: "<ai-integration-id>", ModelName: "gpt-4o"},
         },
     },
 })
@@ -864,7 +865,7 @@ The new version's kind must match the parent evaluator's type.
 ```go
 ver, err := client.Evaluators.CreateVersion(ctx, evaluators.CreateVersionRequest{
     Evaluator: "<evaluator-id-or-name>", Space: "<space-id-or-name>",
-    Version: evaluators.VersionConfig{CommitMessage: "tighten rubric", Template: &evaluators.TemplateConfig{ /* ... */ }},
+    Version: evaluators.VersionConfig{CommitMessage: "tighten rubric", Template: &evaluators.TemplateConfigInput{ /* ... */ }},
 })
 ```
 

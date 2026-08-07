@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.22.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.21.0...arize-go-sdk-v2/v0.22.0) (2026-08-07)
+
+
+### 🎁 New Features
+
+* **api/v2:** pin eval tasks to a specific evaluator version ([#82056](https://github.com/Arize-ai/arize/issues/82056)) ([e3778c1](https://github.com/Arize-ai/arize/commit/e3778c1bcb3e95a546972470825bd4a672311361))
+* **openapi:** [3/6] separate identity request and response schemas ([#82012](https://github.com/Arize-ai/arize/issues/82012)) ([5516255](https://github.com/Arize-ai/arize/commit/5516255a0a7e578634a281584fb6618155b96bc9))
+* **openapi:** [4/6] separate prompt and integration request schemas ([#82013](https://github.com/Arize-ai/arize/issues/82013)) ([494f3d7](https://github.com/Arize-ai/arize/commit/494f3d733bfc634b25347d0e0548e2577518c7d0))
+* **openapi:** [5/6] separate annotation and evaluator request schemas ([#82014](https://github.com/Arize-ai/arize/issues/82014)) ([cc76196](https://github.com/Arize-ai/arize/commit/cc76196e5391852a5396a75debbef5c5e469f07d))
+* **spans:** add start_time/end_time to DELETE /v2/spans ([#82009](https://github.com/Arize-ai/arize/issues/82009)) ([e8f963b](https://github.com/Arize-ai/arize/commit/e8f963baf1a5cf69417891af493c814e7dbffcc1))
+
+
+### 🐛 Bug Fixes
+
+* **api/v2:** require classification_choices & default data_granularity on REST eval, regen SDKs [4/4] ([#79714](https://github.com/Arize-ai/arize/issues/79714)) ([9bd254d](https://github.com/Arize-ai/arize/commit/9bd254d978fb5c8dd8e17fdaab23158426a694db))
+
+## [0.21.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.20.0...arize-go-sdk-v2/v0.21.0) (2026-08-04)
+
+
+### 🎁 New Features
+
+* Enable standalone experiments in the REST write and read paths ([#80940](https://github.com/Arize-ai/arize/issues/80940)) ([c017acd](https://github.com/Arize-ai/arize/commit/c017acd7a227a48d597f805ad45e8a0d9b9a0b51))
+
+### 🐛 Bug Fixes
+
+*  fix nullable field clearing in PATCH update wrappers ([#80972](https://github.com/Arize-ai/arize/issues/80972)) ([b4acc5e](https://github.com/Arize-ai/arize/commit/b4acc5ecdebbc92fc941a41158dbe072ce10615a))
+
 ## [0.20.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.19.0...arize-go-sdk-v2/v0.20.0) (2026-07-27)
 
 

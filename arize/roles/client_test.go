@@ -305,18 +305,17 @@ func TestRoles(t *testing.T) {
 				if r.Method != http.MethodPatch {
 					t.Errorf("expected PATCH, got %s", r.Method)
 				}
-				var body wireRoleUpdate
+				var body map[string]json.RawMessage
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				if body.Name == nil || *body.Name != "renamed-role" {
-					t.Errorf("body name: want renamed-role, got %v", body.Name)
+				if got := string(body["name"]); got != `"renamed-role"` {
+					t.Errorf("name: want renamed-role, got %q", got)
 				}
-				if body.Description != nil {
-					t.Errorf("body description: want nil, got %v", body.Description)
-				}
-				if body.Permissions != nil {
-					t.Errorf("body permissions: want nil, got %v", body.Permissions)
+				for _, field := range []string{"description", "permissions"} {
+					if _, ok := body[field]; ok {
+						t.Errorf("%s should be omitted when nil, got %q", field, body[field])
+					}
 				}
 				w.Header().Set("Content-Type", "application/json")
 				_ = json.NewEncoder(w).Encode(roles.Role{
@@ -345,13 +344,12 @@ func TestRoles(t *testing.T) {
 		{
 			name: "Update clears Description",
 			handler: func(w http.ResponseWriter, r *http.Request) {
-				var body wireRoleUpdate
+				var body map[string]json.RawMessage
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
 				}
-				// nil vs "" must be distinguishable on the wire: passing &"" clears.
-				if body.Description == nil || *body.Description != "" {
-					t.Errorf("body description: want &\"\", got %v", body.Description)
+				if got, ok := body["description"]; !ok || string(got) != "null" {
+					t.Errorf("description: want JSON null, got %q", got)
 				}
 				w.Header().Set("Content-Type", "application/json")
 				_ = json.NewEncoder(w).Encode(roles.Role{

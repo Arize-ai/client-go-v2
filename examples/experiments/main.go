@@ -35,6 +35,11 @@ func main() {
 	appendRuns(ctx, client, exp.Id)
 	listRuns(ctx, client, experimentName, datasetName, space)
 	deleteExperiment(ctx, client, exp.Id)
+
+	// An experiment can also live directly in a space, with no dataset.
+	standalone := createExperimentInSpace(ctx, client, experimentName+"-standalone", space)
+	listExperimentsInSpace(ctx, client, space)
+	deleteExperiment(ctx, client, standalone.Id)
 }
 
 // listExperiments lists experiments, optionally filtered to a single dataset.
@@ -99,8 +104,51 @@ func createExperiment(ctx context.Context, client *arize.Client, name, dataset, 
 	return exp
 }
 
-// getExperiment accepts an experiment name or ID. Dataset is required when
-// experiment is a name; Space is required when Dataset is also a name.
+// createExperimentInSpace creates an experiment that isn't associated with a
+// dataset, by passing Space in place of Dataset. Its runs reference no dataset
+// example, so TaskFields.ExampleID is left unset and each run carries only an
+// output.
+func createExperimentInSpace(ctx context.Context, client *arize.Client, name, space string) *experiments.Experiment {
+	exp, err := client.Experiments.Create(ctx, experiments.CreateRequest{
+		Name:  name,
+		Space: space,
+		Runs: []map[string]any{
+			{"answer": "An AI observability platform.", "quality": 0.9, "verdict": "good"},
+			{"answer": "A unit of work in a trace.", "quality": 0.7, "verdict": "ok"},
+		},
+		TaskFields: experiments.TaskFields{Output: "answer"},
+		EvaluatorColumns: map[string]experiments.EvaluatorFields{
+			"correctness": {Score: "quality", Label: "verdict"},
+		},
+	})
+	if err != nil {
+		log.Fatalf("create experiment in space: %v", err)
+	}
+	fmt.Printf("created experiment %s (%s) in space, no dataset\n", exp.Name, exp.Id)
+	return exp
+}
+
+// listExperimentsInSpace lists every experiment in a space — both those
+// associated with a dataset and those without one. Passing Space without
+// Dataset is the only way to see the latter in a list.
+func listExperimentsInSpace(ctx context.Context, client *arize.Client, space string) {
+	resp, err := client.Experiments.List(ctx, experiments.ListRequest{Space: space, Limit: 25})
+	if err != nil {
+		log.Fatalf("list experiments in space: %v", err)
+	}
+	for _, e := range resp.Experiments {
+		scope := "no dataset"
+		if e.DatasetId != nil {
+			scope = "dataset " + *e.DatasetId
+		}
+		fmt.Printf("  %s\t%s\t(%s)\n", e.Id, e.Name, scope)
+	}
+}
+
+// getExperiment accepts an experiment name or ID. Either Dataset or Space is
+// required when experiment is a name; Space is also required when Dataset is
+// itself a name. Resolving by Space alone returns *arize.AmbiguousNameError if
+// the name matches more than one experiment in that space.
 func getExperiment(ctx context.Context, client *arize.Client, experiment, dataset, space string) {
 	exp, err := client.Experiments.Get(ctx, experiments.GetRequest{
 		Experiment: experiment,
@@ -120,11 +168,12 @@ func getExperiment(ctx context.Context, client *arize.Client, experiment, datase
 
 // appendRuns appends new runs to an existing experiment by ID.
 func appendRuns(ctx context.Context, client *arize.Client, experimentID string) {
+	exampleID1, exampleID2 := "example-1", "example-2"
 	result, err := client.Experiments.AppendRuns(ctx, experiments.AppendRunsRequest{
 		ExperimentID: experimentID,
 		ExperimentRuns: []experiments.ExperimentRunInput{
-			{ExampleId: "example-1", Output: "An AI observability platform."},
-			{ExampleId: "example-2", Output: "A unit of work in a trace."},
+			{ExampleId: &exampleID1, Output: "An AI observability platform."},
+			{ExampleId: &exampleID2, Output: "A unit of work in a trace."},
 		},
 	})
 	if err != nil {

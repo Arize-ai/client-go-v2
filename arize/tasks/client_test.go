@@ -45,9 +45,10 @@ func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *a
 // wireEvaluator mirrors the JSON shape of an evaluator entry in create and
 // update request bodies.
 type wireEvaluator struct {
-	EvaluatorId    string            `json:"evaluator_id"`
-	QueryFilter    *string           `json:"query_filter"`
-	ColumnMappings map[string]string `json:"column_mappings"`
+	EvaluatorId        string            `json:"evaluator_id"`
+	EvaluatorVersionId *string           `json:"evaluator_version_id"`
+	QueryFilter        *string           `json:"query_filter"`
+	ColumnMappings     map[string]string `json:"column_mappings"`
 }
 
 // wireCreateEval mirrors the JSON shape of the CreateEvaluationTask request
@@ -334,6 +335,9 @@ func TestTasks(t *testing.T) {
 				if body.Evaluators[0].ColumnMappings["question"] != "attributes.input" {
 					t.Errorf("unexpected evaluator column_mappings: %v", body.Evaluators[0].ColumnMappings)
 				}
+				if body.Evaluators[0].EvaluatorVersionId != nil {
+					t.Errorf("evaluator_version_id should be omitted when unset, got %v", *body.Evaluators[0].EvaluatorVersionId)
+				}
 				if body.SamplingRate == nil || *body.SamplingRate != 0.5 {
 					t.Errorf("body sampling_rate: want 0.5, got %v", body.SamplingRate)
 				}
@@ -368,6 +372,40 @@ func TestTasks(t *testing.T) {
 				}
 				if got.(*tasks.Task).Id != tID {
 					t.Errorf("unexpected id: %s", got.(*tasks.Task).Id)
+				}
+			},
+		},
+		{
+			name: "CreateEvaluationTask_PinnedEvaluatorVersion",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body wireCreateEval
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if len(body.Evaluators) != 1 {
+					t.Fatalf("unexpected evaluators: %+v", body.Evaluators)
+				}
+				if body.Evaluators[0].EvaluatorVersionId == nil || *body.Evaluators[0].EvaluatorVersionId != "evv-9" {
+					t.Errorf("body evaluator_version_id: want evv-9, got %v", body.Evaluators[0].EvaluatorVersionId)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(201)
+				serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Tasks.CreateEvaluationTask(ctx, tasks.CreateEvaluationTaskRequest{
+					Name: "pinned-task",
+					Type: tasks.TaskTypeTemplateEvaluation,
+					Evaluators: []tasks.EvaluatorInput{{
+						EvaluatorID:        "ev-1",
+						EvaluatorVersionID: "evv-9",
+					}},
+					Project: projectID("p-1"),
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
 				}
 			},
 		},
@@ -464,23 +502,28 @@ func TestTasks(t *testing.T) {
 				case r.Method == http.MethodGet && r.URL.Path == "/v2/tasks/"+tID:
 					serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
 				case r.Method == http.MethodPatch && r.URL.Path == "/v2/tasks/"+tID:
-					var body wireUpdateEval
+					var body map[string]json.RawMessage
 					if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 						t.Fatalf("decode body: %v", err)
 					}
-					if body.Name == nil || *body.Name != "renamed" {
-						t.Errorf("body name: want renamed, got %v", body.Name)
+					if got := string(body["name"]); got != `"renamed"` {
+						t.Errorf("name: want renamed, got %q", got)
 					}
-					if body.SamplingRate == nil || *body.SamplingRate != 0.25 {
-						t.Errorf("body sampling_rate: want 0.25, got %v", body.SamplingRate)
+					if got := string(body["sampling_rate"]); got != "0.25" {
+						t.Errorf("sampling_rate: want 0.25, got %q", got)
 					}
-					// A pointer to "" clears the filter: it must be present
-					// (and empty) on the wire, not omitted.
-					if body.QueryFilter == nil || *body.QueryFilter != "" {
-						t.Errorf("body query_filter: want present and empty, got %v", body.QueryFilter)
+					if got, ok := body["query_filter"]; !ok || string(got) != "null" {
+						t.Errorf("query_filter: want JSON null, got %q", got)
 					}
-					if body.Evaluators == nil || len(*body.Evaluators) != 1 || (*body.Evaluators)[0].EvaluatorId != "ev-2" {
-						t.Errorf("unexpected evaluators: %v", body.Evaluators)
+					var evaluators []wireEvaluator
+					if err := json.Unmarshal(body["evaluators"], &evaluators); err != nil {
+						t.Fatalf("decode evaluators: %v", err)
+					}
+					if len(evaluators) != 1 || evaluators[0].EvaluatorId != "ev-2" {
+						t.Errorf("evaluators: want [ev-2], got %+v", evaluators)
+					}
+					if _, ok := body["is_continuous"]; ok {
+						t.Errorf("is_continuous should be omitted when nil, got %q", body["is_continuous"])
 					}
 					serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
 				default:

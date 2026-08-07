@@ -45,12 +45,26 @@ type (
 	// EvaluatorType is the evaluator kind: TEMPLATE, CODE, HARNESS, or REMOTE.
 	EvaluatorType = generated.EvaluatorType
 
-	// TemplateConfig is the configuration for a template (LLM-based)
-	// evaluator version. Assign it to VersionConfig.Template.
+	// TemplateConfig is the template configuration read back on a template
+	// evaluator version (EvaluatorVersionTemplate.TemplateConfig). It is the
+	// response entity and stays nullable for legacy freeform evaluators; use
+	// TemplateConfigInput to create or version an evaluator.
 	TemplateConfig = generated.TemplateConfig
 
-	// EvaluatorLlmConfig is the LLM configuration nested inside a TemplateConfig.
+	// TemplateConfigInput is the configuration for a template (LLM-based)
+	// evaluator version. Assign it to VersionConfig.Template.
+	// ClassificationChoices is required and must be a non-empty map of choice
+	// label to numeric score (e.g. {"relevant": 1, "irrelevant": 0}).
+	TemplateConfigInput = generated.TemplateConfigInput
+
+	// EvaluatorLlmConfig is the LLM configuration returned on read responses
+	// (e.g. TemplateConfig.LlmConfig). For write requests use EvaluatorLlmConfigRequest.
 	EvaluatorLlmConfig = generated.EvaluatorLlmConfig
+
+	// EvaluatorLlmConfigRequest is the LLM configuration for write requests
+	// (TemplateConfigInput.LlmConfig). It is the strict (non-nullable) form of
+	// EvaluatorLlmConfig.
+	EvaluatorLlmConfigRequest = generated.EvaluatorLlmConfigRequest
 
 	// InvocationParams holds LLM invocation parameters (temperature, etc.).
 	InvocationParams = generated.InvocationParams
@@ -101,7 +115,7 @@ type VersionConfig struct {
 	CommitMessage string
 	// Template configures a template (LLM-based) version. Set exactly one of
 	// Template or Code.
-	Template *TemplateConfig
+	Template *TemplateConfigInput
 	// Code configures a code version. Set exactly one of Template or Code;
 	// within Code set exactly one of Managed or Custom.
 	Code *CodeConfig
@@ -165,8 +179,9 @@ type CreateRequest struct {
 }
 
 // UpdateRequest is the request shape for Client.Update. Only non-nil patch
-// fields are sent; nil fields are left unchanged on the server. Update returns
-// ErrNoUpdateFields without contacting the server when no patch field is set.
+// fields are sent; nil fields are left unchanged on the server. A pointer to
+// an empty Description clears it. Update returns ErrNoUpdateFields without
+// contacting the server when no patch field is set.
 type UpdateRequest struct {
 	// Evaluator is the target evaluator's name or ID. Required.
 	Evaluator string
@@ -175,7 +190,8 @@ type UpdateRequest struct {
 	Space string
 	// Name, when non-nil, updates the evaluator's name.
 	Name *string
-	// Description, when non-nil, updates the evaluator's description.
+	// Description, when non-nil, updates the evaluator's description. Pass a
+	// pointer to an empty string to clear it; nil preserves the current value.
 	Description *string
 }
 

@@ -48,8 +48,8 @@ type UpdateRequest struct {
 	// the existing name is preserved.
 	Name *string
 	// Description is optional. When non-nil, sets a new description (pass a
-	// pointer to an empty string to clear the existing description); when nil,
-	// the existing description is preserved.
+	// pointer to an empty string to clear the existing description with JSON
+	// null); when nil, the existing description is preserved.
 	Description *string
 	// Permissions is optional. When non-nil, replaces the existing permission
 	// set with the provided slice (which must contain at least one

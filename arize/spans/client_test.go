@@ -46,8 +46,10 @@ type wireSpansList struct {
 // wireDeleteSpans mirrors the JSON shape the API receives for spans.Delete
 // request bodies.
 type wireDeleteSpans struct {
-	ProjectId string   `json:"project_id"`
-	SpanIds   []string `json:"span_ids"`
+	ProjectId string     `json:"project_id"`
+	SpanIds   []string   `json:"span_ids"`
+	StartTime *time.Time `json:"start_time,omitempty"`
+	EndTime   *time.Time `json:"end_time,omitempty"`
 }
 
 // wireAnnotateSpans mirrors the JSON shape the API receives for
@@ -181,6 +183,49 @@ func TestSpans(t *testing.T) {
 				}
 				if len(result.NotDeletedSpanIds) != 0 {
 					t.Errorf("expected empty NotDeletedSpanIds, got %v", result.NotDeletedSpanIds)
+				}
+			},
+		},
+		{
+			name: "Delete_WithTimeBounds",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body wireDeleteSpans
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				wantStart := time.Date(2024, 6, 1, 0, 0, 0, 0, time.UTC)
+				wantEnd := time.Date(2024, 6, 2, 0, 0, 0, 0, time.UTC)
+				if body.StartTime == nil || !body.StartTime.Equal(wantStart) {
+					t.Errorf("body start_time: want %v, got %v", wantStart, body.StartTime)
+				}
+				if body.EndTime == nil || !body.EndTime.Equal(wantEnd) {
+					t.Errorf("body end_time: want %v, got %v", wantEnd, body.EndTime)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(spans.DeleteSpans{
+					Completed:         true,
+					DeletedSpanIds:    []string{"span-1"},
+					NotDeletedSpanIds: []string{},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Spans.Delete(ctx, spans.DeleteRequest{
+					Project: projectID("proj-1"),
+					SpanIDs: []string{"span-1"},
+					Start:   time.Date(2024, 6, 1, 0, 0, 0, 0, time.UTC),
+					End:     time.Date(2024, 6, 2, 0, 0, 0, 0, time.UTC),
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				result, ok := got.(*spans.DeleteSpans)
+				if !ok || result == nil {
+					t.Fatalf("expected *DeleteSpans, got %T", got)
+				}
+				if !result.Completed {
+					t.Errorf("expected Completed=true, got false")
 				}
 			},
 		},
