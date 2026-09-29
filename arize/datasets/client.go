@@ -3,6 +3,7 @@ package datasets
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
@@ -141,7 +142,11 @@ func (c *Client) Delete(
 	return apierrors.CheckResponse(resp.HTTPResponse, resp.Body)
 }
 
-// ListExamples returns a paginated list of examples for a dataset.
+// ListExamples returns a paginated list of examples for a dataset, optionally
+// filtered by req.Filter. It always goes through the examples/search endpoint
+// (POST) because the filter DSL can be too large for a query string; Limit,
+// Cursor, and DatasetVersionID travel in the body alongside it.
+//
 // req.Dataset accepts a name or ID; req.Space is required when req.Dataset is
 // a name.
 func (c *Client) ListExamples(
@@ -153,12 +158,13 @@ func (c *Client) ListExamples(
 	if err != nil {
 		return nil, err
 	}
-	params := generated.ListDatasetExamplesParams{
-		Limit:            optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
-		DatasetVersionId: optfields.PtrIfSet(req.DatasetVersionID),
+	body := generated.SearchDatasetExamplesJSONRequestBody{
+		Filter:           optfields.PtrIfSet(strings.TrimSpace(req.Filter)),
+		Limit:            optfields.PtrWithDefault(int32(req.Limit), int32(optfields.DefaultListLimit)),
 		Cursor:           optfields.PtrIfSet(req.Cursor),
+		DatasetVersionId: optfields.PtrIfSet(req.DatasetVersionID),
 	}
-	resp, err := c.gen.ListDatasetExamplesWithResponse(ctx, id, &params)
+	resp, err := c.gen.SearchDatasetExamplesWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}

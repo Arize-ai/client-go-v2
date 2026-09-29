@@ -28,19 +28,35 @@ type (
 	// Email is an RFC-5322 email address (alias of openapi_types.Email).
 	Email = generated.Email
 
-	// AnnotateRecordInput is a single record (span) to annotate in a batch,
-	// carrying the span ID and one or more annotation values.
+	// AnnotateRecordInput is a single record (span, trace root span, or
+	// session, depending on AnnotateRequest.Granularity) to annotate in a
+	// batch, carrying the record ID and one or more annotation values.
 	AnnotateRecordInput = generated.AnnotateRecordInput
 	// AnnotationInput is an annotation value to set on a record, identified by
 	// its annotation config name. Omitting Label/Score/Text leaves the
 	// existing value unchanged.
 	AnnotationInput = generated.AnnotationInput
+
+	// Granularity selects what an AnnotateRecordInput.RecordId identifies:
+	// a span, a trace (by its root span), or a session.
+	Granularity = generated.RecordGranularity
 )
 
 const (
 	SpanStatusCodeERROR SpanStatusCode = generated.SpanStatusCodeERROR
 	SpanStatusCodeOK    SpanStatusCode = generated.SpanStatusCodeOK
 	SpanStatusCodeUNSET SpanStatusCode = generated.SpanStatusCodeUNSET
+
+	// GranularitySPAN annotates a record identified by its span ID. This is
+	// the default when AnnotateRequest.Granularity is left zero.
+	GranularitySPAN Granularity = generated.RecordGranularitySPAN
+	// GranularityTRACE annotates a record identified by a trace's root span
+	// ID. Annotating a non-root span is rejected.
+	GranularityTRACE Granularity = generated.RecordGranularityTRACE
+	// GranularitySESSION annotates a record identified by a session ID. The
+	// annotation is written to the root span of the session's earliest trace
+	// found within the lookup window.
+	GranularitySESSION Granularity = generated.RecordGranularitySESSION
 )
 
 // ListRequest is the request shape for Client.List. Unlike other list methods
@@ -63,6 +79,14 @@ type ListRequest struct {
 	// Filter is an optional filter expression (SQL-like syntax, e.g.
 	// `status_code = 'ERROR'`). When empty, no filter is applied.
 	Filter string
+	// IncludedColumns is an optional list of full dotted column paths to return
+	// for each span. Fixed span fields are always returned. When nil, all
+	// available columns are returned. Cannot be used with ExcludedColumns.
+	IncludedColumns []string
+	// ExcludedColumns is an optional list of full dotted column paths to omit
+	// from each span. Fixed span fields are always returned. When nil, no
+	// columns are omitted. Cannot be used with IncludedColumns.
+	ExcludedColumns []string
 
 	// Limit is the optional maximum number of items to return (max 500). When
 	// zero, the SDK applies a default of 50.
@@ -102,19 +126,25 @@ type AnnotateRequest struct {
 	// name; ignored when Project is an ID.
 	Space string
 
-	// Annotations is the batch of span annotations to write. Up to 1000 spans
-	// per request. Each entry identifies a span by its RecordId and carries
-	// one or more AnnotationInput values; resubmitting the same annotation
-	// config name for the same span overwrites the previous value, so retries
-	// do not create duplicates.
+	// Annotations is the batch of record annotations to write. Up to 1000
+	// records per request for GranularitySPAN/GranularityTRACE; up to 100 for
+	// GranularitySESSION. Each entry identifies a record by its RecordId
+	// (interpreted per Granularity) and carries one or more AnnotationInput
+	// values; resubmitting the same annotation config name for the same
+	// record overwrites the previous value, so retries do not create
+	// duplicates.
 	Annotations []AnnotateRecordInput
 
-	// Start is the optional inclusive lower bound on span start time used when
-	// looking up the spans to annotate. When zero, the server defaults to 31
-	// days ago.
+	// Start is the optional inclusive lower bound on record lookup time. When
+	// zero, the server defaults to 31 days ago, or 7 days ago when
+	// Granularity is GranularitySESSION.
 	Start time.Time
-	// End is the optional exclusive upper bound on span start time used when
-	// looking up the spans to annotate. When zero, the server defaults to the
-	// current time.
+	// End is the optional exclusive upper bound on record lookup time. When
+	// zero, the server defaults to the current time.
 	End time.Time
+
+	// Granularity selects what each RecordId identifies: a span, a trace (by
+	// its root span), or a session. When zero, the server defaults to
+	// GranularitySPAN.
+	Granularity Granularity
 }

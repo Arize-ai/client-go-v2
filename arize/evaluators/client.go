@@ -164,6 +164,31 @@ func (c *Client) ListVersions(ctx context.Context, req ListVersionsRequest) (*Li
 	return resp.JSON200, nil
 }
 
+// DeleteVersions deletes a batch of versions belonging to an evaluator,
+// resolving the evaluator by name or ID. The delete is partial-tolerant:
+// versions that exist and belong to the evaluator are deleted; requested IDs
+// that were not deleted are returned in NotDeletedVersionIds. A successful
+// response has Completed true because the request finished; that does not
+// mean every requested ID was found and deleted.
+func (c *Client) DeleteVersions(ctx context.Context, req DeleteVersionsRequest) (*DeleteEvaluatorVersions, error) {
+	prerelease.Warn("evaluators.delete_versions", prerelease.Beta)
+	id, err := resolve.FindEvaluatorID(ctx, c.gen, req.Evaluator, req.Space)
+	if err != nil {
+		return nil, err
+	}
+	body := generated.DeleteEvaluatorVersionsJSONRequestBody{
+		VersionIds: req.VersionIDs,
+	}
+	resp, err := c.gen.DeleteEvaluatorVersionsWithResponse(ctx, id, body)
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON200, nil
+}
+
 // CreateVersion appends a new version to an existing evaluator, resolving the
 // evaluator by name or ID. The version's kind (set via req.Version) must match
 // the parent evaluator's type.
@@ -201,14 +226,203 @@ func (c *Client) GetVersion(ctx context.Context, req GetVersionRequest) (*Evalua
 	return resp.JSON200, nil
 }
 
+// CreateTemplateEvaluator creates a TEMPLATE evaluator with its initial
+// version in one call. It is equivalent to Create with Version.Template set.
+func (c *Client) CreateTemplateEvaluator(ctx context.Context, req CreateTemplateEvaluatorRequest) (*EvaluatorWithVersion, error) {
+	prerelease.Warn("evaluators.create_template_evaluator", prerelease.Beta)
+	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
+	if err != nil {
+		return nil, err
+	}
+	var version generated.CreateEvaluatorVersionRequest
+	if err := version.FromCreateTemplateEvaluatorVersionRequest(generated.CreateTemplateEvaluatorVersionRequest{
+		CommitMessage:  req.CommitMessage,
+		TemplateConfig: req.Config,
+	}); err != nil {
+		return nil, err
+	}
+	resp, err := c.gen.CreateEvaluatorWithResponse(ctx, generated.CreateEvaluatorJSONRequestBody{
+		Name:        req.Name,
+		Description: optfields.PtrIfSet(req.Description),
+		SpaceId:     spaceID,
+		Type:        generated.EvaluatorTypeTEMPLATE,
+		Version:     version,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON201, nil
+}
+
+// CreateCodeEvaluator creates a CODE evaluator with its initial version in one
+// call. It is equivalent to Create with Version.Code set.
+func (c *Client) CreateCodeEvaluator(ctx context.Context, req CreateCodeEvaluatorRequest) (*EvaluatorWithVersion, error) {
+	prerelease.Warn("evaluators.create_code_evaluator", prerelease.Beta)
+	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
+	if err != nil {
+		return nil, err
+	}
+	code, err := buildCodeConfig(req.Config)
+	if err != nil {
+		return nil, err
+	}
+	var version generated.CreateEvaluatorVersionRequest
+	if err := version.FromCreateCodeEvaluatorVersionRequest(generated.CreateCodeEvaluatorVersionRequest{
+		CommitMessage: req.CommitMessage,
+		CodeConfig:    code,
+	}); err != nil {
+		return nil, err
+	}
+	resp, err := c.gen.CreateEvaluatorWithResponse(ctx, generated.CreateEvaluatorJSONRequestBody{
+		Name:        req.Name,
+		Description: optfields.PtrIfSet(req.Description),
+		SpaceId:     spaceID,
+		Type:        generated.EvaluatorTypeCODE,
+		Version:     version,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON201, nil
+}
+
+// CreateRemoteEvaluator creates a REMOTE evaluator backed by an existing
+// EVALUATOR integration. It is equivalent to Create with Version.Remote set.
+// Requires the enableRemoteEvalTasks feature flag on the account.
+func (c *Client) CreateRemoteEvaluator(ctx context.Context, req CreateRemoteEvaluatorRequest) (*EvaluatorWithVersion, error) {
+	prerelease.Warn("evaluators.create_remote_evaluator", prerelease.Beta)
+	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
+	if err != nil {
+		return nil, err
+	}
+	var version generated.CreateEvaluatorVersionRequest
+	if err := version.FromCreateRemoteEvaluatorVersionRequest(generated.CreateRemoteEvaluatorVersionRequest{
+		CommitMessage: req.CommitMessage,
+		RemoteConfig:  generated.RemoteConfigInput{IntegrationId: req.IntegrationID},
+	}); err != nil {
+		return nil, err
+	}
+	resp, err := c.gen.CreateEvaluatorWithResponse(ctx, generated.CreateEvaluatorJSONRequestBody{
+		Name:        req.Name,
+		Description: optfields.PtrIfSet(req.Description),
+		SpaceId:     spaceID,
+		Type:        generated.EvaluatorTypeREMOTE,
+		Version:     version,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON201, nil
+}
+
+// CreateTemplateVersion appends a new TEMPLATE version to an existing
+// evaluator. It is equivalent to CreateVersion with Version.Template set.
+func (c *Client) CreateTemplateVersion(ctx context.Context, req CreateTemplateVersionRequest) (*EvaluatorVersion, error) {
+	prerelease.Warn("evaluators.create_template_version", prerelease.Beta)
+	id, err := resolve.FindEvaluatorID(ctx, c.gen, req.Evaluator, req.Space)
+	if err != nil {
+		return nil, err
+	}
+	var version generated.CreateEvaluatorVersionRequest
+	if err := version.FromCreateTemplateEvaluatorVersionRequest(generated.CreateTemplateEvaluatorVersionRequest{
+		CommitMessage:  req.CommitMessage,
+		TemplateConfig: req.Config,
+	}); err != nil {
+		return nil, err
+	}
+	resp, err := c.gen.CreateEvaluatorVersionWithResponse(ctx, id, version)
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON201, nil
+}
+
+// CreateCodeVersion appends a new CODE version to an existing evaluator. It is
+// equivalent to CreateVersion with Version.Code set.
+func (c *Client) CreateCodeVersion(ctx context.Context, req CreateCodeVersionRequest) (*EvaluatorVersion, error) {
+	prerelease.Warn("evaluators.create_code_version", prerelease.Beta)
+	id, err := resolve.FindEvaluatorID(ctx, c.gen, req.Evaluator, req.Space)
+	if err != nil {
+		return nil, err
+	}
+	code, err := buildCodeConfig(req.Config)
+	if err != nil {
+		return nil, err
+	}
+	var version generated.CreateEvaluatorVersionRequest
+	if err := version.FromCreateCodeEvaluatorVersionRequest(generated.CreateCodeEvaluatorVersionRequest{
+		CommitMessage: req.CommitMessage,
+		CodeConfig:    code,
+	}); err != nil {
+		return nil, err
+	}
+	resp, err := c.gen.CreateEvaluatorVersionWithResponse(ctx, id, version)
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON201, nil
+}
+
+// CreateRemoteVersion appends a new REMOTE version to an existing evaluator,
+// optionally switching to a different EVALUATOR integration. It is equivalent
+// to CreateVersion with Version.Remote set.
+func (c *Client) CreateRemoteVersion(ctx context.Context, req CreateRemoteVersionRequest) (*EvaluatorVersion, error) {
+	prerelease.Warn("evaluators.create_remote_version", prerelease.Beta)
+	id, err := resolve.FindEvaluatorID(ctx, c.gen, req.Evaluator, req.Space)
+	if err != nil {
+		return nil, err
+	}
+	var version generated.CreateEvaluatorVersionRequest
+	if err := version.FromCreateRemoteEvaluatorVersionRequest(generated.CreateRemoteEvaluatorVersionRequest{
+		CommitMessage: req.CommitMessage,
+		RemoteConfig:  generated.RemoteConfigInput{IntegrationId: req.IntegrationID},
+	}); err != nil {
+		return nil, err
+	}
+	resp, err := c.gen.CreateEvaluatorVersionWithResponse(ctx, id, version)
+	if err != nil {
+		return nil, err
+	}
+	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+		return nil, err
+	}
+	return resp.JSON201, nil
+}
+
 // buildVersionCreate translates a public VersionConfig into the generated
 // version-create union and reports the derived evaluator type. Exactly one of
-// Template or Code must be set.
+// Template, Code, or Remote must be set.
 func buildVersionCreate(v VersionConfig) (generated.CreateEvaluatorVersionRequest, generated.EvaluatorType, error) {
 	var out generated.CreateEvaluatorVersionRequest
-	switch {
-	case v.Template != nil && v.Code != nil:
+	setCount := 0
+	if v.Template != nil {
+		setCount++
+	}
+	if v.Code != nil {
+		setCount++
+	}
+	if v.Remote != nil {
+		setCount++
+	}
+	if setCount > 1 {
 		return out, "", ErrConflictingVersionConfig
+	}
+	switch {
 	case v.Template != nil:
 		err := out.FromCreateTemplateEvaluatorVersionRequest(generated.CreateTemplateEvaluatorVersionRequest{
 			CommitMessage:  v.CommitMessage,
@@ -225,8 +439,14 @@ func buildVersionCreate(v VersionConfig) (generated.CreateEvaluatorVersionReques
 			CodeConfig:    code,
 		})
 		return out, generated.EvaluatorTypeCODE, err
+	case v.Remote != nil:
+		err := out.FromCreateRemoteEvaluatorVersionRequest(generated.CreateRemoteEvaluatorVersionRequest{
+			CommitMessage: v.CommitMessage,
+			RemoteConfig:  *v.Remote,
+		})
+		return out, generated.EvaluatorTypeREMOTE, err
 	default:
-		return out, "", fmt.Errorf("evaluators: VersionConfig requires exactly one of Template or Code")
+		return out, "", fmt.Errorf("evaluators: VersionConfig requires exactly one of Template, Code, or Remote")
 	}
 }
 

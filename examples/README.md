@@ -11,7 +11,7 @@ examples/
 ├── annotationqueues/     client.AnnotationQueues.{List, Get, Create, Update, Delete, ListRecords, AddRecords, DeleteRecords, Annotate, Assign}
 ├── apikeys/              client.APIKeys.{List, Create, CreateServiceKey, Refresh, Revoke}
 ├── datasets/             client.Datasets.{List, Get, Create, Update, Delete, ListExamples, AppendExamples, UpdateExamples, DeleteExamples, AnnotateExamples}
-├── evaluators/           client.Evaluators.{List, Get, Create, Update, Delete, ListVersions, CreateVersion, GetVersion}
+├── evaluators/           client.Evaluators.{List, Get, Create, Update, Delete, ListVersions, CreateVersion, GetVersion, DeleteVersions}
 ├── experiments/          client.Experiments.{List, Get, Create, ListRuns, Delete}
 ├── organizations/        client.Organizations.{List, Get, Create, Update, Delete, AddUser, RemoveUser}
 ├── projects/             client.Projects.{List, Get, Create, Delete}
@@ -22,7 +22,9 @@ examples/
 ├── spaces/               client.Spaces.{List, Get, Create, Update, Delete, AddUser, RemoveUser}
 ├── spans/                client.Spans.{List, Delete, Annotate}
 ├── tasks/                client.Tasks.{List, Get, CreateEvaluationTask, CreateRunExperimentTask, Update, Delete, TriggerRun, ListRuns, GetRun, CancelRun, WaitForRun}
-└── users/                client.Users.{List, Get, Create, Update, Delete, ResendInvitation, ResetPassword, BulkDelete}
+├── traces/               client.Traces.{List}
+├── users/                client.Users.{List, Get, Create, Update, Delete, ResendInvitation, ResetPassword, BulkDelete}
+└── webhooks/             client.Webhooks.{List, Get, Create, Update, Delete, Test, ListDeliveryAttempts, ListSubscriptions, CreateSubscription, GetSubscription, DeleteSubscription}
 ```
 
 ## Running

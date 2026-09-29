@@ -19,6 +19,17 @@ import (
 // fields. At least one field must be set.
 var ErrNoUpdateFields = errors.New("tasks: update requires at least one field to change")
 
+func toQueryFiltersInput(qf *TaskQueryFilters) *generated.TaskQueryFiltersInput {
+	if qf == nil {
+		return nil
+	}
+	filters := make([]generated.TaskQueryFilterInput, len(qf.Filters))
+	for i, f := range qf.Filters {
+		filters[i] = generated.TaskQueryFilterInput{Id: f.Id, Filter: f.Filter}
+	}
+	return &generated.TaskQueryFiltersInput{Filters: filters, Expression: qf.Expression}
+}
+
 // ErrWaitTimeout is returned (wrapped) by WaitForRun when the run does not
 // reach a terminal state within the configured timeout.
 var ErrWaitTimeout = errors.New("tasks: timed out waiting for run to reach a terminal state")
@@ -36,6 +47,24 @@ type Client struct {
 // New constructs a Client from a generated ClientWithResponses.
 func New(gen *generated.ClientWithResponses) *Client {
 	return &Client{gen: gen}
+}
+
+func runConfigurationRequest(
+	config RunConfiguration,
+) (generated.RunConfigurationRequest, error) {
+	// Both RunConfiguration and RunConfigurationRequest store their oneOf
+	// variant as a json.RawMessage in an unexported field. Go cannot convert
+	// between them directly (unexported fields, separate scopes), so we copy
+	// via the shared JSON wire format using each type's own marshal methods.
+	raw, err := config.MarshalJSON()
+	if err != nil {
+		return generated.RunConfigurationRequest{}, err
+	}
+	var req generated.RunConfigurationRequest
+	if err := req.UnmarshalJSON(raw); err != nil {
+		return generated.RunConfigurationRequest{}, err
+	}
+	return req, nil
 }
 
 // List returns a paginated list of tasks. req.Space, when non-empty, accepts
@@ -125,6 +154,9 @@ func (c *Client) CreateEvaluationTask(
 	if req.Dataset != "" && (req.SamplingRate != 0 || req.IsContinuous) {
 		return nil, errors.New("tasks: SamplingRate and IsContinuous only apply to project-based tasks")
 	}
+	if req.QueryFilter != "" && req.QueryFilters != nil {
+		return nil, errors.New("tasks: QueryFilter and QueryFilters are mutually exclusive")
+	}
 
 	var projectID, datasetID *string
 	if req.Project != "" {
@@ -147,33 +179,45 @@ func (c *Client) CreateEvaluationTask(
 		experimentIDs = &req.ExperimentIDs
 	}
 
+	queryFiltersInput := toQueryFiltersInput(req.QueryFilters)
+
 	var body generated.CreateTaskRequestBody
 	switch req.Type {
 	case TaskTypeTemplateEvaluation:
+		evals, err := evaluatorInputs(req.Evaluators)
+		if err != nil {
+			return nil, err
+		}
 		if err := body.FromCreateTemplateEvaluationTaskRequest(generated.CreateTemplateEvaluationTaskRequest{
 			Type:          generated.CreateTemplateEvaluationTaskRequestTypeTEMPLATEEVALUATION,
 			Name:          req.Name,
 			ProjectId:     projectID,
 			DatasetId:     datasetID,
 			ExperimentIds: experimentIDs,
-			Evaluators:    evaluatorInputs(req.Evaluators),
+			Evaluators:    evals,
 			SamplingRate:  optfields.PtrIfSet(req.SamplingRate),
 			IsContinuous:  optfields.PtrIfSet(req.IsContinuous),
 			QueryFilter:   optfields.PtrIfSet(req.QueryFilter),
+			QueryFilters:  queryFiltersInput,
 		}); err != nil {
 			return nil, fmt.Errorf("tasks: build template_evaluation body: %w", err)
 		}
 	case TaskTypeCodeEvaluation:
+		evals, err := evaluatorInputs(req.Evaluators)
+		if err != nil {
+			return nil, err
+		}
 		if err := body.FromCreateCodeEvaluationTaskRequest(generated.CreateCodeEvaluationTaskRequest{
 			Type:          generated.CreateCodeEvaluationTaskRequestTypeCODEEVALUATION,
 			Name:          req.Name,
 			ProjectId:     projectID,
 			DatasetId:     datasetID,
 			ExperimentIds: experimentIDs,
-			Evaluators:    evaluatorInputs(req.Evaluators),
+			Evaluators:    evals,
 			SamplingRate:  optfields.PtrIfSet(req.SamplingRate),
 			IsContinuous:  optfields.PtrIfSet(req.IsContinuous),
 			QueryFilter:   optfields.PtrIfSet(req.QueryFilter),
+			QueryFilters:  queryFiltersInput,
 		}); err != nil {
 			return nil, fmt.Errorf("tasks: build code_evaluation body: %w", err)
 		}
@@ -184,7 +228,8 @@ func (c *Client) CreateEvaluationTask(
 // CreateRunExperimentTask creates a new run_experiment task and returns it.
 // req.Dataset accepts a name or ID; req.Space is required when req.Dataset
 // is a name. req.RunConfiguration must hold exactly one variant, populated
-// via FromLlmGenerationRunConfig or FromTemplateEvaluationRunConfig.
+// via FromLlmGenerationRunConfig, FromTemplateEvaluationRunConfig, or
+// FromAgentCallRunConfig.
 func (c *Client) CreateRunExperimentTask(
 	ctx context.Context,
 	req CreateRunExperimentTaskRequest,
@@ -194,7 +239,11 @@ func (c *Client) CreateRunExperimentTask(
 		return nil, errors.New("tasks: Name is required")
 	}
 	if _, err := req.RunConfiguration.Discriminator(); err != nil {
-		return nil, errors.New("tasks: RunConfiguration is required; populate it with FromLlmGenerationRunConfig or FromTemplateEvaluationRunConfig")
+		return nil, errors.New("tasks: RunConfiguration is required; populate it with FromLlmGenerationRunConfig, FromTemplateEvaluationRunConfig, or FromAgentCallRunConfig")
+	}
+	requestConfig, err := runConfigurationRequest(req.RunConfiguration)
+	if err != nil {
+		return nil, fmt.Errorf("tasks: invalid RunConfiguration: %w", err)
 	}
 	datasetID, err := resolve.FindDatasetID(ctx, c.gen, req.Dataset, req.Space)
 	if err != nil {
@@ -205,7 +254,7 @@ func (c *Client) CreateRunExperimentTask(
 		Type:             generated.CreateRunExperimentTaskRequestTypeRUNEXPERIMENT,
 		Name:             req.Name,
 		DatasetId:        datasetID,
-		RunConfiguration: req.RunConfiguration,
+		RunConfiguration: requestConfig,
 	}); err != nil {
 		return nil, fmt.Errorf("tasks: build run_experiment body: %w", err)
 	}
@@ -225,7 +274,8 @@ func (c *Client) Update(
 ) (*Task, error) {
 	prerelease.Warn("tasks.update", prerelease.Beta)
 	if req.Name == nil && req.SamplingRate == nil && req.IsContinuous == nil &&
-		req.QueryFilter == nil && len(req.Evaluators) == 0 && req.RunConfiguration == nil {
+		req.QueryFilter == nil && req.QueryFilters == nil &&
+		len(req.Evaluators) == 0 && req.RunConfiguration == nil {
 		return nil, ErrNoUpdateFields
 	}
 	id, err := resolve.FindTaskID(ctx, c.gen, req.Task, req.Space)
@@ -244,6 +294,12 @@ func (c *Client) Update(
 			return nil, fmt.Errorf("tasks: RunConfiguration only applies to %q tasks, task %q is %q",
 				TaskTypeRunExperiment, task.Name, task.Type)
 		}
+		queryFiltersCarriesValue := req.QueryFilters != nil &&
+			(len(req.QueryFilters.Filters) > 0 ||
+				(req.QueryFilters.Expression != nil && *req.QueryFilters.Expression != ""))
+		if req.QueryFilter != nil && *req.QueryFilter != "" && queryFiltersCarriesValue {
+			return nil, errors.New("tasks: QueryFilter and QueryFilters are mutually exclusive")
+		}
 		if req.Name != nil {
 			body["name"] = *req.Name
 		}
@@ -260,19 +316,35 @@ func (c *Client) Update(
 				body["query_filter"] = *req.QueryFilter
 			}
 		}
+		if req.QueryFilters != nil {
+			if len(req.QueryFilters.Filters) == 0 {
+				body["query_filters"] = nil
+			} else {
+				body["query_filters"] = *toQueryFiltersInput(req.QueryFilters)
+			}
+		}
 		if len(req.Evaluators) > 0 {
-			body["evaluators"] = evaluatorInputs(req.Evaluators)
+			evals, err := evaluatorInputs(req.Evaluators)
+			if err != nil {
+				return nil, err
+			}
+			body["evaluators"] = evals
 		}
 	case TaskTypeRunExperiment:
-		if req.SamplingRate != nil || req.IsContinuous != nil || req.QueryFilter != nil || len(req.Evaluators) > 0 {
-			return nil, fmt.Errorf("tasks: SamplingRate, IsContinuous, QueryFilter, and Evaluators only apply to evaluation tasks, task %q is %q",
+		if req.SamplingRate != nil || req.IsContinuous != nil || req.QueryFilter != nil ||
+			req.QueryFilters != nil || len(req.Evaluators) > 0 {
+			return nil, fmt.Errorf("tasks: SamplingRate, IsContinuous, QueryFilter, QueryFilters, and Evaluators only apply to evaluation tasks, task %q is %q",
 				task.Name, task.Type)
 		}
 		if req.Name != nil {
 			body["name"] = *req.Name
 		}
 		if req.RunConfiguration != nil {
-			body["run_configuration"] = req.RunConfiguration
+			value, err := runConfigurationRequest(*req.RunConfiguration)
+			if err != nil {
+				return nil, fmt.Errorf("tasks: invalid RunConfiguration: %w", err)
+			}
+			body["run_configuration"] = value
 		}
 	default:
 		return nil, fmt.Errorf("tasks: unknown task type %q", task.Type)
@@ -556,22 +628,49 @@ func (c *Client) create(ctx context.Context, body generated.CreateTaskRequestBod
 }
 
 // evaluatorInputs translates the public EvaluatorInput slice into the
-// generated TaskEvaluatorInput shape shared by the create and update
+// generated TaskEvaluatorInput union shape shared by the create and update
 // evaluation-task requests.
-func evaluatorInputs(in []EvaluatorInput) []generated.TaskEvaluatorInput {
+func evaluatorInputs(in []EvaluatorInput) ([]generated.TaskEvaluatorInput, error) {
 	out := make([]generated.TaskEvaluatorInput, 0, len(in))
 	for _, e := range in {
-		var columnMappings *map[string]string
-		if e.ColumnMappings != nil {
-			m := e.ColumnMappings
-			columnMappings = &m
+		var union generated.TaskEvaluatorInput
+		switch ev := e.(type) {
+		case TraceOrSessionEvaluatorInput:
+			mappings := make([]generated.TaskQueryMappingInput, len(ev.QueryMappings))
+			for i, m := range ev.QueryMappings {
+				mappings[i] = generated.TaskQueryMappingInput{
+					VariableName:  m.VariableName,
+					QueryIds:      m.QueryIds,
+					AttributePath: m.AttributePath,
+				}
+			}
+			trace := generated.TraceOrSessionEvaluatorInput{
+				EvaluatorId:        ev.EvaluatorID,
+				EvaluatorVersionId: optfields.PtrIfSet(ev.EvaluatorVersionID),
+				QueryMappings:      mappings,
+			}
+			if err := union.FromTraceOrSessionEvaluatorInput(trace); err != nil {
+				return nil, fmt.Errorf("tasks: evaluatorInputs: marshal trace/session evaluator: %w", err)
+			}
+		case SpanEvaluatorInput:
+			var columnMappings *map[string]string
+			if ev.ColumnMappings != nil {
+				m := ev.ColumnMappings
+				columnMappings = &m
+			}
+			span := generated.SpanEvaluatorInput{
+				EvaluatorId:        ev.EvaluatorID,
+				EvaluatorVersionId: optfields.PtrIfSet(ev.EvaluatorVersionID),
+				QueryFilter:        optfields.PtrIfSet(ev.QueryFilter),
+				ColumnMappings:     columnMappings,
+			}
+			if err := union.FromSpanEvaluatorInput(span); err != nil {
+				return nil, fmt.Errorf("tasks: evaluatorInputs: marshal span evaluator: %w", err)
+			}
+		default:
+			return nil, fmt.Errorf("tasks: evaluatorInputs: unknown EvaluatorInput type %T", e)
 		}
-		out = append(out, generated.TaskEvaluatorInput{
-			EvaluatorId:        e.EvaluatorID,
-			EvaluatorVersionId: optfields.PtrIfSet(e.EvaluatorVersionID),
-			QueryFilter:        optfields.PtrIfSet(e.QueryFilter),
-			ColumnMappings:     columnMappings,
-		})
+		out = append(out, union)
 	}
-	return out
+	return out, nil
 }

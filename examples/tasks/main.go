@@ -31,6 +31,7 @@ func main() {
 		evaluator     = "ZXZhbHVhdG9yOjE6MQ=="
 		aiIntegration = "YWlfaW50ZWdyYXRpb246MTox"
 		evalTaskName  = "example-eval-task"
+		msqTaskName   = "example-msq-task"
 		expTaskName   = "example-experiment-task"
 	)
 
@@ -43,6 +44,10 @@ func main() {
 	waitForRun(ctx, client, run.Id)
 	listRuns(ctx, client, evalTaskName, space)
 	deleteTask(ctx, client, evalTask.Id)
+
+	msqTask := createMSQEvaluationTask(ctx, client, msqTaskName, project, space, evaluator)
+	updateMSQTask(ctx, client, msqTaskName, space)
+	deleteTask(ctx, client, msqTask.Id)
 
 	expTask := createRunExperimentTask(ctx, client, expTaskName, dataset, space, aiIntegration)
 	triggerExperimentRun(ctx, client, expTaskName, space)
@@ -71,9 +76,13 @@ func createEvaluationTask(ctx context.Context, client *arize.Client, name, proje
 		Type:    tasks.TaskTypeTemplateEvaluation,
 		Project: project,
 		Space:   space,
-		Evaluators: []tasks.EvaluatorInput{{
-			EvaluatorID: evaluator,
-		}},
+		Evaluators: []tasks.EvaluatorInput{
+			tasks.SpanEvaluatorInput{
+				EvaluatorID:    evaluator,
+				QueryFilter:    "attributes.openinference.span.kind = 'LLM'",
+				ColumnMappings: map[string]string{"input": "attributes.input.value", "output": "attributes.output.value"},
+			},
+		},
 		SamplingRate: 0.5,
 		QueryFilter:  "attributes.openinference.span.kind = 'LLM'",
 	})
@@ -81,6 +90,40 @@ func createEvaluationTask(ctx context.Context, client *arize.Client, name, proje
 		log.Fatalf("create evaluation task: %v", err)
 	}
 	fmt.Printf("created task %s (%s)\n", tk.Name, tk.Id)
+	return tk
+}
+
+// createMSQEvaluationTask creates a project-based template_evaluation task
+// using the multi-span-query (trace/session) shape: task-level QueryFilters
+// plus per-evaluator QueryMappings.
+func createMSQEvaluationTask(ctx context.Context, client *arize.Client, name, project, space, evaluator string) *tasks.Task {
+	expr := "A AND B"
+	tk, err := client.Tasks.CreateEvaluationTask(ctx, tasks.CreateEvaluationTaskRequest{
+		Name:    name,
+		Type:    tasks.TaskTypeTemplateEvaluation,
+		Project: project,
+		Space:   space,
+		Evaluators: []tasks.EvaluatorInput{
+			tasks.TraceOrSessionEvaluatorInput{
+				EvaluatorID: evaluator,
+				QueryMappings: []tasks.TaskQueryMapping{
+					{VariableName: "input", QueryIds: []string{"A"}, AttributePath: "attributes.input.value"},
+					{VariableName: "output", QueryIds: []string{"B"}, AttributePath: "attributes.output.value"},
+				},
+			},
+		},
+		QueryFilters: &tasks.TaskQueryFilters{
+			Filters: []tasks.TaskQueryFilter{
+				{Id: "A", Filter: "span_kind = 'LLM'"},
+				{Id: "B", Filter: "span_kind = 'RETRIEVER'"},
+			},
+			Expression: &expr,
+		},
+	})
+	if err != nil {
+		log.Fatalf("create MSQ evaluation task: %v", err)
+	}
+	fmt.Printf("created MSQ task %s (%s)\n", tk.Name, tk.Id)
 	return tk
 }
 
@@ -124,8 +167,8 @@ func getTask(ctx context.Context, client *arize.Client, task, space string) {
 	fmt.Printf("found task %s (%s), type %s, %d evaluator(s)\n", tk.Name, tk.Id, tk.Type, len(tk.Evaluators))
 }
 
-// updateTask patches an evaluation task. Only non-nil patch fields are sent;
-// the SDK fetches the task first to validate the fields against its type.
+// updateTask patches a span-shape evaluation task. Only non-nil patch fields
+// are sent; the SDK fetches the task first to validate fields against its type.
 // Passing a pointer to an empty string clears the query filter.
 func updateTask(ctx context.Context, client *arize.Client, task, space string) {
 	rate := float32(0.25)
@@ -140,6 +183,32 @@ func updateTask(ctx context.Context, client *arize.Client, task, space string) {
 		log.Fatalf("update task: %v", err)
 	}
 	fmt.Printf("updated task %s (sampling rate now %v)\n", tk.Name, tk.SamplingRate)
+}
+
+// updateMSQTask patches a trace/session-shape evaluation task by replacing its
+// task-level QueryFilters and per-evaluator QueryMappings.
+func updateMSQTask(ctx context.Context, client *arize.Client, task, space string) {
+	expr := "A"
+	tk, err := client.Tasks.Update(ctx, tasks.UpdateRequest{
+		Task:  task,
+		Space: space,
+		QueryFilters: &tasks.TaskQueryFilters{
+			Filters:    []tasks.TaskQueryFilter{{Id: "A", Filter: "span_kind = 'LLM'"}},
+			Expression: &expr,
+		},
+		Evaluators: []tasks.EvaluatorInput{
+			tasks.TraceOrSessionEvaluatorInput{
+				EvaluatorID: "ZXZhbHVhdG9yOjE6MQ==",
+				QueryMappings: []tasks.TaskQueryMapping{
+					{VariableName: "input", QueryIds: []string{"A"}, AttributePath: "attributes.input.value"},
+				},
+			},
+		},
+	})
+	if err != nil {
+		log.Fatalf("update MSQ task: %v", err)
+	}
+	fmt.Printf("updated MSQ task %s\n", tk.Name)
 }
 
 // triggerEvaluationRun starts an async run of an evaluation task over the

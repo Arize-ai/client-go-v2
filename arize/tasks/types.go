@@ -36,9 +36,10 @@ type (
 
 	// RunConfiguration is the experiment execution configuration for a
 	// RUN_EXPERIMENT task. It is a oneOf: populate exactly one variant with
-	// FromLlmGenerationRunConfig / FromTemplateEvaluationRunConfig and read
-	// the active variant with ValueByDiscriminator and a type switch over
-	// LLMGenerationRunConfig / TemplateEvaluationRunConfig.
+	// FromLlmGenerationRunConfig / FromTemplateEvaluationRunConfig /
+	// FromAgentCallRunConfig and read the active variant with
+	// ValueByDiscriminator and a type switch over LLMGenerationRunConfig /
+	// TemplateEvaluationRunConfig / AgentCallRunConfig.
 	RunConfiguration = generated.RunConfiguration
 
 	// LLMGenerationRunConfig is the llm_generation variant of a
@@ -48,6 +49,10 @@ type (
 	// TemplateEvaluationRunConfig is the TEMPLATE_EVALUATION variant of a
 	// RunConfiguration: evaluates dataset examples with a prompt template.
 	TemplateEvaluationRunConfig = generated.TemplateEvaluationRunConfig
+
+	// AgentCallRunConfig is the agent_call variant of a RunConfiguration:
+	// invokes an agent integration against each dataset example.
+	AgentCallRunConfig = generated.AgentCallRunConfig
 
 	// LLMMessage is a single message in an LLMGenerationRunConfig.
 	LLMMessage = generated.LLMMessage
@@ -61,6 +66,20 @@ type (
 
 	// ToolConfig holds the tool configuration for an LLMGenerationRunConfig.
 	ToolConfig = generated.ToolConfig
+
+	// TaskQueryFilter is a named query filter entry for reads and writes
+	// (trace/session shape). The Id is a single letter A–E; Filter is the
+	// query expression. Use with TaskQueryFilters.Filters.
+	TaskQueryFilter = generated.TaskQueryFilter
+
+	// TaskQueryFilters combines named query filters with an optional boolean
+	// expression for the trace/session shape. Use with Task.QueryFilters.
+	TaskQueryFilters = generated.TaskQueryFilters
+
+	// TaskQueryMapping maps an evaluator variable to one or more query ids
+	// and an attribute path for reads and writes (trace/session evaluator
+	// shape). Use with TaskEvaluator.QueryMappings.
+	TaskQueryMapping = generated.TaskQueryMapping
 )
 
 const (
@@ -75,15 +94,22 @@ const (
 	TaskRunStatusCancelled TaskRunStatus = generated.TaskRunStatusCANCELLED
 )
 
-// EvaluatorInput attaches an evaluator to an evaluation task.
-type EvaluatorInput struct {
+// EvaluatorInput is the sealed interface for per-evaluator attachment shapes.
+// Supply either [SpanEvaluatorInput] (span-granularity) or
+// [TraceOrSessionEvaluatorInput] (trace/session-granularity).
+type EvaluatorInput interface {
+	evaluatorInput()
+}
+
+// SpanEvaluatorInput attaches an evaluator to a span-granularity evaluation
+// task. Mutually exclusive with [TraceOrSessionEvaluatorInput].
+type SpanEvaluatorInput struct {
 	// EvaluatorID is the evaluator's ID (base64). Required; duplicates are
 	// not allowed within one task.
 	EvaluatorID string
 	// EvaluatorVersionID optionally pins this evaluator to one version
 	// (base64). When empty, the evaluator runs its latest version. Must be a
-	// version of EvaluatorID. Because an update replaces the whole evaluator
-	// list, leaving this empty on an update unpins the evaluator.
+	// version of EvaluatorID.
 	EvaluatorVersionID string
 	// QueryFilter is an optional per-evaluator query filter, combined with
 	// the task-level filter (AND). When empty, no per-evaluator filter is
@@ -93,6 +119,25 @@ type EvaluatorInput struct {
 	// data source column names. When nil, no mappings are sent.
 	ColumnMappings map[string]string
 }
+
+func (SpanEvaluatorInput) evaluatorInput() {}
+
+// TraceOrSessionEvaluatorInput attaches an evaluator to a trace/session-
+// granularity evaluation task. Mutually exclusive with [SpanEvaluatorInput].
+type TraceOrSessionEvaluatorInput struct {
+	// EvaluatorID is the evaluator's ID (base64). Required; duplicates are
+	// not allowed within one task.
+	EvaluatorID string
+	// EvaluatorVersionID optionally pins this evaluator to one version
+	// (base64). When empty, the evaluator runs its latest version. Must be a
+	// version of EvaluatorID.
+	EvaluatorVersionID string
+	// QueryMappings maps each evaluator variable to one or more declared
+	// query ids plus an attribute path. At least one entry is required.
+	QueryMappings []TaskQueryMapping
+}
+
+func (TraceOrSessionEvaluatorInput) evaluatorInput() {}
 
 // ListRequest holds optional filters for listing tasks.
 type ListRequest struct {
@@ -166,9 +211,14 @@ type CreateEvaluationTaskRequest struct {
 	// omitted and the server default (false) applies.
 	IsContinuous bool
 	// QueryFilter is an optional task-level query filter applied to all
-	// evaluated data (AND-ed with per-evaluator filters). When empty, no
-	// filter is applied.
+	// evaluated data (span shape; AND-ed with per-evaluator filters). When
+	// empty, no filter is applied. Mutually exclusive with QueryFilters.
 	QueryFilter string
+	// QueryFilters combines named query filters and an optional boolean
+	// expression for trace/session evaluators (the multi-span-query shape).
+	// When non-nil, 1–5 filters with unique A–E ids must be provided.
+	// Mutually exclusive with QueryFilter. When nil, no query filters are sent.
+	QueryFilters *TaskQueryFilters
 }
 
 // CreateRunExperimentTaskRequest describes a new RUN_EXPERIMENT task.
@@ -182,16 +232,17 @@ type CreateRunExperimentTaskRequest struct {
 	// name; ignored when Dataset is an ID.
 	Space string
 	// RunConfiguration is the experiment execution configuration. Populate
-	// exactly one variant via its FromLlmGenerationRunConfig or
-	// FromTemplateEvaluationRunConfig method.
+	// exactly one variant via its FromLlmGenerationRunConfig,
+	// FromTemplateEvaluationRunConfig, or FromAgentCallRunConfig method.
 	RunConfiguration RunConfiguration
 }
 
 // UpdateRequest carries the target task and the patch fields. The SDK first
 // fetches the task to determine its type and rejects fields that don't apply
 // to it: Name applies to all tasks; SamplingRate, IsContinuous, QueryFilter,
-// and Evaluators apply only to evaluation tasks; RunConfiguration applies
-// only to RUN_EXPERIMENT tasks. At least one patch field must be set.
+// QueryFilters, and Evaluators apply only to evaluation tasks;
+// RunConfiguration applies only to RUN_EXPERIMENT tasks. At least one patch
+// field must be set.
 type UpdateRequest struct {
 	// Task accepts either a task name or ID.
 	Task string
@@ -209,11 +260,17 @@ type UpdateRequest struct {
 	// non-nil, sets whether the task runs continuously; when nil, the
 	// existing value is preserved.
 	IsContinuous *bool
-	// QueryFilter is optional (evaluation tasks only). When non-nil, sets a
-	// new task-level query filter (pass a pointer to an empty string to clear
-	// the existing filter with JSON null); when nil, the existing filter is
-	// preserved.
+	// QueryFilter is optional (evaluation tasks, span shape only). When
+	// non-nil, sets a new task-level query filter (pass a pointer to an
+	// empty string to clear the existing filter with JSON null); when nil,
+	// the existing filter is preserved. Mutually exclusive with QueryFilters.
 	QueryFilter *string
+	// QueryFilters is optional (evaluation tasks, trace/session shape). When
+	// non-nil, replaces the task-level named query filters and expression.
+	// Pass a pointer to a zero-value TaskQueryFilters (empty Filters slice)
+	// to clear; when nil, the existing filters are preserved.
+	// Mutually exclusive with QueryFilter.
+	QueryFilters *TaskQueryFilters
 	// Evaluators is optional (evaluation tasks only). When non-empty,
 	// replaces the entire evaluator list (at least one evaluator is
 	// required by the API); when nil, the existing evaluators are

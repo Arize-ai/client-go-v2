@@ -641,6 +641,77 @@ func FindAIIntegrationID(ctx context.Context, gen *generated.ClientWithResponses
 	return "", &ResourceNotFoundError{ResourceType: "AI integration", Name: integration, Available: available}
 }
 
+// FindIntegrationID resolves an integration ID or name to an ID for the
+// /v2/integrations endpoint. Integration names are unique per (account, type),
+// so integrationType is required when integration is a name; it selects which
+// backing collection the list endpoint searches. Space (ID or name) is
+// optional and, when provided, narrows the search to integrations visible in
+// that space. Integrations are returned by the API as a oneof discriminated
+// union; this helper re-marshals each entry to extract its base Id/Name fields.
+func FindIntegrationID(ctx context.Context, gen *generated.ClientWithResponses, integration, space string, integrationType generated.IntegrationType) (string, error) {
+	if IsResourceID(integration) {
+		return integration, nil
+	}
+	if integrationType == "" {
+		return "", &ResourceNotFoundError{
+			ResourceType: "integration",
+			Name:         integration,
+			Hint: "Provide 'type' so the integration name can be resolved " +
+				"(names are unique per account and type), or provide the " +
+				"integration ID instead of the name.",
+		}
+	}
+	sf := resolveSpaceFilter(space)
+	var available []string
+	limit := listPageSize
+	var cursor string
+	for {
+		p := &generated.ListIntegrationsParams{Type: &integrationType, Name: &integration, Limit: &limit, SpaceId: sf.spaceID, SpaceName: sf.spaceName}
+		if cursor != "" {
+			p.Cursor = &cursor
+		}
+		resp, err := gen.ListIntegrationsWithResponse(ctx, p)
+		if err != nil {
+			return "", err
+		}
+		if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+			return "", err
+		}
+		for _, it := range resp.JSON200.Integrations {
+			id, name, ok := integrationIDAndName(it)
+			if !ok {
+				continue
+			}
+			if name == integration {
+				return id, nil
+			}
+			available = append(available, name)
+		}
+		if !resp.JSON200.Pagination.HasMore || resp.JSON200.Pagination.NextCursor == nil {
+			break
+		}
+		cursor = *resp.JSON200.Pagination.NextCursor
+	}
+	return "", &ResourceNotFoundError{ResourceType: "integration", Name: integration, Available: available}
+}
+
+// integrationIDAndName extracts (id, name) from a oneof Integration by
+// re-marshalling to JSON and unmarshalling only the shared id/name fields.
+func integrationIDAndName(it generated.Integration) (string, string, bool) {
+	b, err := json.Marshal(it)
+	if err != nil {
+		return "", "", false
+	}
+	var base struct {
+		Id   string `json:"id"`
+		Name string `json:"name"`
+	}
+	if err := json.Unmarshal(b, &base); err != nil {
+		return "", "", false
+	}
+	return base.Id, base.Name, true
+}
+
 // FindTaskID resolves a task ID or name to an ID. Space (ID or name) is
 // required when task is a name.
 func FindTaskID(ctx context.Context, gen *generated.ClientWithResponses, task, space string) (string, error) {
@@ -717,4 +788,47 @@ func FindUserID(ctx context.Context, gen *generated.ClientWithResponses, user st
 		cursor = *resp.JSON200.Pagination.NextCursor
 	}
 	return "", &ResourceNotFoundError{ResourceType: "user", Name: user}
+}
+
+// FindWebhookID resolves a webhook ID or name to an ID. Organization (ID or
+// name) is required when webhook is a name, since webhook names are unique
+// only within an organization.
+func FindWebhookID(ctx context.Context, gen *generated.ClientWithResponses, webhook, organization string) (string, error) {
+	if IsResourceID(webhook) {
+		return webhook, nil
+	}
+	if organization == "" {
+		return "", requireParent("webhook", webhook, "organization")
+	}
+	orgID, err := FindOrganizationID(ctx, gen, organization)
+	if err != nil {
+		return "", err
+	}
+	var available []string
+	limit := listPageSize
+	var cursor string
+	for {
+		p := &generated.ListWebhooksParams{OrgId: &orgID, Name: &webhook, Limit: &limit}
+		if cursor != "" {
+			p.Cursor = &cursor
+		}
+		resp, err := gen.ListWebhooksWithResponse(ctx, p)
+		if err != nil {
+			return "", err
+		}
+		if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
+			return "", err
+		}
+		for _, w := range resp.JSON200.Webhooks {
+			if w.Name == webhook {
+				return w.Id, nil
+			}
+			available = append(available, w.Name)
+		}
+		if !resp.JSON200.Pagination.HasMore || resp.JSON200.Pagination.NextCursor == nil {
+			break
+		}
+		cursor = *resp.JSON200.Pagination.NextCursor
+	}
+	return "", &ResourceNotFoundError{ResourceType: "webhook", Name: webhook, Available: available}
 }

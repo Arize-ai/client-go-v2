@@ -1,6 +1,6 @@
 module github.com/Arize-ai/client-go-v2
 
-go 1.25.7
+go 1.25.13
 
 require github.com/oapi-codegen/runtime v1.4.0
 

@@ -294,20 +294,28 @@ func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
 	return apierrors.CheckResponse(resp.HTTPResponse, resp.Body)
 }
 
-// ListRuns returns a paginated list of runs for an experiment, resolving the
-// experiment by name or ID. Either Dataset or Space is required when Experiment
-// is a name. Runs of an experiment with no dataset carry no example ID.
+// ListRuns returns a paginated list of an experiment's runs, optionally
+// narrowed by an SQL-like filter, resolving the experiment by name or ID.
+// Either Dataset or Space is required when Experiment is a name. Runs come
+// back in stable id ascending order; runs of an experiment with no dataset
+// carry no example ID.
+//
+// Filter can reference id, output, example_id, custom run columns, and
+// eval.<name>.score/label/explanation/metadata.* or annotation.<name>.*
+// fields; leave it empty to return all runs. Limit defaults to 50 (max 500);
+// Cursor is opaque, so keep Filter unchanged while paging.
 func (c *Client) ListRuns(ctx context.Context, req ListRunsRequest) (*ListExperimentRuns, error) {
-	prerelease.Warn("experiments.list_runs", prerelease.Beta)
+	prerelease.Warn("experiments.list_runs", prerelease.Alpha)
 	id, err := resolve.FindExperimentID(ctx, c.gen, req.Experiment, req.Dataset, req.Space)
 	if err != nil {
 		return nil, err
 	}
-	params := generated.ListExperimentRunsParams{
-		Limit:  optfields.PtrIfSet(req.Limit),
+	body := generated.SearchExperimentRunsRequest{
+		Filter: optfields.PtrIfSet(req.Filter),
+		Limit:  optfields.PtrIfSet(int32(req.Limit)),
 		Cursor: optfields.PtrIfSet(req.Cursor),
 	}
-	resp, err := c.gen.ListExperimentRunsWithResponse(ctx, id, &params)
+	resp, err := c.gen.SearchExperimentRunsWithResponse(ctx, id, body)
 	if err != nil {
 		return nil, err
 	}

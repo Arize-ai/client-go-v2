@@ -71,22 +71,26 @@ func (c *Client) Update(ctx context.Context, req UpdateRequest) (*User, error) {
 // Create creates a new account user and returns it.
 //
 // The endpoint returns the created user on 201, or the existing user on a 200
-// idempotency hit (same email, when InviteMode is not InviteModeNone). Both are
-// returned as *User. The 201 response also carries a one-time temporary
-// password when InviteMode is InviteModeTemporaryPassword; that value is not
-// surfaced by this method.
-func (c *Client) Create(ctx context.Context, req CreateRequest) (*User, error) {
+// idempotency hit (same email, when InviteMode is not InviteModeNone). Both
+// are returned as *CreatedUser. CreatedUser.TemporaryPassword carries the
+// one-time temporary password when InviteMode is InviteModeTemporaryPassword
+// and the 201 path was taken; it is nil on the 200 idempotency-hit path,
+// since no new password is issued for an already-existing user. On the 200
+// path, CreatedUser.InviteMode is echoed from req.InviteMode rather than the
+// server — the existing-user response carries no invite_mode of its own, so
+// this does not necessarily reflect how the existing user was originally
+// created.
+func (c *Client) Create(ctx context.Context, req CreateRequest) (*CreatedUser, error) {
 	prerelease.Warn("users.create", prerelease.Beta)
 	role, err := roleconv.AccountRoleAssignmentRequest(req.Role)
 	if err != nil {
 		return nil, fmt.Errorf("users: build role request: %w", err)
 	}
 	body := generated.CreateUserRequest{
-		Name:        req.Name,
-		Email:       generated.Email(req.Email),
-		Role:        role,
-		InviteMode:  req.InviteMode,
-		IsDeveloper: req.IsDeveloper,
+		Name:       req.Name,
+		Email:      generated.Email(req.Email),
+		Role:       role,
+		InviteMode: req.InviteMode,
 	}
 	resp, err := c.gen.CreateUserWithResponse(ctx, body)
 	if err != nil {
@@ -96,19 +100,29 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*User, error) {
 		return nil, err
 	}
 	if resp.JSON200 != nil {
-		return resp.JSON200, nil
+		// resp.JSON200 is *generated.User (the User alias), which has no
+		// InviteMode or TemporaryPassword fields at all, so it must be mapped
+		// field-by-field into a CreatedUser rather than returned directly.
+		existing := resp.JSON200
+		return &CreatedUser{
+			Id:          existing.Id,
+			Name:        existing.Name,
+			Email:       existing.Email,
+			CreatedAt:   existing.CreatedAt,
+			Status:      existing.Status,
+			Role:        existing.Role,
+			IsDeveloper: existing.IsDeveloper,
+			InviteMode:  req.InviteMode,
+		}, nil
 	}
 	if resp.JSON201 != nil {
-		created := resp.JSON201
-		return &User{
-			Id:          created.Id,
-			Name:        created.Name,
-			Email:       created.Email,
-			CreatedAt:   created.CreatedAt,
-			Status:      created.Status,
-			Role:        created.Role,
-			IsDeveloper: created.IsDeveloper,
-		}, nil
+		// No mapping needed here: CreatedUser is a type alias for
+		// generated.CreateUserResponse, so resp.JSON201 already has type
+		// *CreatedUser. It also already carries InviteMode — the 201 response
+		// body includes invite_mode on the wire, unmarshaled straight into
+		// this field — unlike the 200 case above, which has to backfill it
+		// from the request.
+		return resp.JSON201, nil
 	}
 	return nil, fmt.Errorf("users: create returned unexpected status %d", resp.StatusCode())
 }

@@ -39,10 +39,12 @@ func (c *Client) List(
 		return nil, err
 	}
 	body := generated.ListSpansRequest{
-		ProjectId: projectID,
-		StartTime: optfields.PtrIfSet(req.Start),
-		EndTime:   optfields.PtrIfSet(req.End),
-		Filter:    optfields.PtrIfSet(req.Filter),
+		ProjectId:       projectID,
+		StartTime:       optfields.PtrIfSet(req.Start),
+		EndTime:         optfields.PtrIfSet(req.End),
+		Filter:          optfields.PtrIfSet(req.Filter),
+		IncludedColumns: optfields.PtrSliceIfSet(req.IncludedColumns),
+		ExcludedColumns: optfields.PtrSliceIfSet(req.ExcludedColumns),
 	}
 	params := generated.ListSpansParams{
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
@@ -94,15 +96,25 @@ func (c *Client) Delete(
 	return resp.JSON200, nil
 }
 
-// Annotate writes human annotations to a batch of spans. Annotations are
-// upserted by annotation config name per span: resubmitting the same config
-// name for the same span overwrites the previous value, so retries do not
+// Annotate writes human annotations to a batch of records. Annotations are
+// upserted by annotation config name per record: resubmitting the same config
+// name for the same record overwrites the previous value, so retries do not
 // create duplicates.
 //
-// Up to 1000 spans may be annotated per request. Spans are looked up within
-// the configured time window (defaulting to the last 31 days). If any span ID
-// in the batch is not found within the window, the entire request is
-// rejected.
+// req.Granularity selects what each record's RecordId identifies:
+//
+//   - GranularitySPAN (default): RecordId is a span ID.
+//   - GranularityTRACE: RecordId must be a trace's root span ID; annotating a
+//     non-root span is rejected.
+//   - GranularitySESSION: RecordId is a session ID. The annotation is written
+//     to the root span of the session's earliest trace found within the
+//     lookup window.
+//
+// Up to 1000 records may be annotated per request for GranularitySPAN and
+// GranularityTRACE; up to 100 for GranularitySESSION. Records are looked up
+// within the configured time window (defaulting to the last 31 days, or 7
+// days for GranularitySESSION). If any record in the batch is not found
+// within the window, the entire request is rejected.
 //
 // The write completes synchronously before the function returns (HTTP 202
 // Accepted). Visibility in read queries may lag by a short interval.
@@ -123,6 +135,7 @@ func (c *Client) Annotate(
 		Annotations: req.Annotations,
 		StartTime:   optfields.PtrIfSet(req.Start),
 		EndTime:     optfields.PtrIfSet(req.End),
+		Granularity: optfields.PtrIfSet(req.Granularity),
 	}
 	resp, err := c.gen.AnnotateSpansWithResponse(ctx, body)
 	if err != nil {

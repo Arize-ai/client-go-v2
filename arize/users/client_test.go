@@ -193,11 +193,10 @@ func TestUsersCreate(t *testing.T) {
 		Id   string `json:"id"`
 	}
 	type wireCreateUser struct {
-		Name        string   `json:"name"`
-		Email       string   `json:"email"`
-		Role        wireRole `json:"role"`
-		InviteMode  string   `json:"invite_mode"`
-		IsDeveloper *bool    `json:"is_developer"`
+		Name       string   `json:"name"`
+		Email      string   `json:"email"`
+		Role       wireRole `json:"role"`
+		InviteMode string   `json:"invite_mode"`
 	}
 
 	tests := []struct {
@@ -238,9 +237,37 @@ func TestUsersCreate(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				u := got.(*users.User)
+				u := got.(*users.CreatedUser)
 				if u.Id != "usr-3" || u.Name != "Carol" {
 					t.Errorf("unexpected user: %+v", u)
+				}
+			},
+		},
+		{
+			name: "201 created with TEMPORARY_PASSWORD invite surfaces the one-time password",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusCreated)
+				_, _ = w.Write([]byte(`{"id":"usr-4","name":"Dana","email":"dana@example.com","created_at":"2026-01-01T00:00:00Z","status":"INVITED","is_developer":true,"invite_mode":"TEMPORARY_PASSWORD","temporary_password":"tmp-pw-xyz","role":{"type":"PREDEFINED","name":"MEMBER"}}`))
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Users.Create(ctx, users.CreateRequest{
+					Name:       "Dana",
+					Email:      "dana@example.com",
+					Role:       users.AssignPredefinedRole(users.UserRoleMember),
+					InviteMode: users.InviteModeTemporaryPassword,
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				u := got.(*users.CreatedUser)
+				if u.TemporaryPassword == nil || *u.TemporaryPassword != "tmp-pw-xyz" {
+					t.Errorf("expected temporary password %q, got %+v", "tmp-pw-xyz", u.TemporaryPassword)
+				}
+				if u.InviteMode != users.InviteModeTemporaryPassword {
+					t.Errorf("InviteMode = %q, want %q", u.InviteMode, users.InviteModeTemporaryPassword)
 				}
 			},
 		},
@@ -263,8 +290,15 @@ func TestUsersCreate(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				if got.(*users.User).Id != "usr-existing" {
+				u := got.(*users.CreatedUser)
+				if u.Id != "usr-existing" {
 					t.Errorf("unexpected user: %+v", got)
+				}
+				if u.TemporaryPassword != nil {
+					t.Errorf("expected no temporary password on idempotency hit, got %q", *u.TemporaryPassword)
+				}
+				if u.InviteMode != users.InviteModeEmailLink {
+					t.Errorf("InviteMode = %q, want %q (echoed from the request, not the server)", u.InviteMode, users.InviteModeEmailLink)
 				}
 			},
 		},

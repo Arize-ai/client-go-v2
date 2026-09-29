@@ -7,6 +7,7 @@ import "github.com/Arize-ai/client-go-v2/arize/internal/generated"
 // internal/generated.
 type (
 	User                   = generated.User
+	CreatedUser            = generated.CreateUserResponse
 	ListUsers              = generated.ListUsersResponse
 	UserStatus             = generated.UserStatus
 	UserRole               = generated.UserRole
@@ -127,10 +128,6 @@ type CreateRequest struct {
 	// InviteMode controls whether and how an invitation is sent
 	// (InviteModeNone, InviteModeEmailLink, or InviteModeTemporaryPassword).
 	InviteMode InviteMode
-	// IsDeveloper optionally sets developer permissions. When nil, the server
-	// applies its role-based default (true for admin/member, false for
-	// annotator). Non-nil sets the value explicitly.
-	IsDeveloper *bool
 }
 
 // UpdateRequest is the request body for Client.Update. At least one of Name or

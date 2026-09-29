@@ -26,7 +26,6 @@ func New(gen *generated.ClientWithResponses) *Client {
 // List returns a paginated list of annotation queues. req.Space, when
 // non-empty, accepts a space name or ID and restricts results to that space.
 func (c *Client) List(ctx context.Context, req ListRequest) (*ListAnnotationQueues, error) {
-	prerelease.Warn("annotationqueues.list", prerelease.Beta)
 	params := generated.ListAnnotationQueuesParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrIfSet(req.Limit),
@@ -45,7 +44,6 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*ListAnnotationQueu
 
 // Get returns a single annotation queue, resolving by name or ID.
 func (c *Client) Get(ctx context.Context, req GetRequest) (*AnnotationQueue, error) {
-	prerelease.Warn("annotationqueues.get", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {
 		return nil, err
@@ -62,7 +60,6 @@ func (c *Client) Get(ctx context.Context, req GetRequest) (*AnnotationQueue, err
 
 // Create creates a new annotation queue, resolving the parent space by name or ID.
 func (c *Client) Create(ctx context.Context, req CreateRequest) (*AnnotationQueue, error) {
-	prerelease.Warn("annotationqueues.create", prerelease.Beta)
 	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
@@ -90,7 +87,6 @@ func (c *Client) Create(ctx context.Context, req CreateRequest) (*AnnotationQueu
 
 // Update updates an existing annotation queue, resolving by name or ID.
 func (c *Client) Update(ctx context.Context, req UpdateRequest) (*AnnotationQueue, error) {
-	prerelease.Warn("annotationqueues.update", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {
 		return nil, err
@@ -128,7 +124,6 @@ func (c *Client) Update(ctx context.Context, req UpdateRequest) (*AnnotationQueu
 
 // Delete removes an annotation queue, resolving by name or ID.
 func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
-	prerelease.Warn("annotationqueues.delete", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {
 		return err
@@ -143,7 +138,6 @@ func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
 // ListRecords returns a paginated list of records for an annotation queue,
 // resolving the queue by name or ID.
 func (c *Client) ListRecords(ctx context.Context, req ListRecordsRequest) (*ListAnnotationQueueRecords, error) {
-	prerelease.Warn("annotationqueues.list_records", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {
 		return nil, err
@@ -165,7 +159,6 @@ func (c *Client) ListRecords(ctx context.Context, req ListRecordsRequest) (*List
 // AddRecords adds records to an annotation queue (resolved by name or ID) and
 // returns the created records.
 func (c *Client) AddRecords(ctx context.Context, req AddRecordsRequest) (*CreateAnnotationQueueRecord, error) {
-	prerelease.Warn("annotationqueues.add_records", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {
 		return nil, err
@@ -192,7 +185,6 @@ func (c *Client) AddRecords(ctx context.Context, req AddRecordsRequest) (*Create
 // DeleteRecords removes records from an annotation queue, resolving the queue
 // by name or ID.
 func (c *Client) DeleteRecords(ctx context.Context, req DeleteRecordsRequest) error {
-	prerelease.Warn("annotationqueues.delete_records", prerelease.Beta)
 	id, err := resolve.FindAnnotationQueueID(ctx, c.gen, req.AnnotationQueue, req.Space)
 	if err != nil {
 		return err

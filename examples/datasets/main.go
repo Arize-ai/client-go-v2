@@ -88,7 +88,8 @@ func createDataset(ctx context.Context, client *arize.Client, name, space string
 }
 
 // listExamples accepts a dataset name or ID. Space is required when dataset is
-// a name.
+// a name. Filter is optional; when set, ListExamples narrows results with a
+// SQL-like expression over example fields.
 func listExamples(ctx context.Context, client *arize.Client, dataset, space string) {
 	resp, err := client.Datasets.ListExamples(ctx, datasets.ListExamplesRequest{
 		Dataset: dataset,
@@ -99,6 +100,17 @@ func listExamples(ctx context.Context, client *arize.Client, dataset, space stri
 		log.Fatalf("list examples: %v", err)
 	}
 	fmt.Printf("dataset %q has %d example(s) on this page\n", dataset, len(resp.Examples))
+
+	filtered, err := client.Datasets.ListExamples(ctx, datasets.ListExamplesRequest{
+		Dataset: dataset,
+		Space:   space,
+		Filter:  "input = 'What is Arize?'",
+		Limit:   50,
+	})
+	if err != nil {
+		log.Fatalf("list examples with filter: %v", err)
+	}
+	fmt.Printf("dataset %q filter matched %d example(s) on this page\n", dataset, len(filtered.Examples))
 }
 
 // appendExamples appends an example to the dataset's latest version and prints

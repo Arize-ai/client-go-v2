@@ -138,8 +138,8 @@ type DeleteRequest struct {
 	Space string
 }
 
-// ListRunsRequest identifies the experiment (resolved by name or ID) and
-// pagination options for listing its runs.
+// ListRunsRequest identifies the experiment (resolved by name or ID) and the
+// filter and pagination options for listing its runs.
 type ListRunsRequest struct {
 	// Experiment accepts either an experiment name or ID.
 	Experiment string
@@ -154,12 +154,16 @@ type ListRunsRequest struct {
 	// and, separately, per space among experiments with no dataset. Also
 	// required when Dataset is passed as a name.
 	Space string
-	// Limit is the optional maximum number of runs to return (max 500). When
-	// zero, the server applies its default page size.
+	// Filter is an optional SQL-like filter expression. When empty, no filter
+	// is applied. Whitespace-only values are rejected with 400; malformed
+	// expressions are rejected with 422.
+	Filter string
+	// Limit is the optional maximum number of runs to return (1-500). When
+	// zero, the server applies its default of 50.
 	Limit int
 	// Cursor is the optional opaque pagination cursor from a previous
 	// response's pagination.next_cursor. When empty, results start from the
-	// first page.
+	// first page. Keep Filter unchanged while paging with a cursor.
 	Cursor string
 }
 

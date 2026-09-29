@@ -11,12 +11,13 @@ import (
 
 	"github.com/Arize-ai/client-go-v2/arize/aiintegrations"
 	"github.com/Arize-ai/client-go-v2/arize/annotationconfigs"
-	"github.com/Arize-ai/client-go-v2/arize/auditlogs"
 	"github.com/Arize-ai/client-go-v2/arize/annotationqueues"
 	"github.com/Arize-ai/client-go-v2/arize/apikeys"
+	"github.com/Arize-ai/client-go-v2/arize/auditlogs"
 	"github.com/Arize-ai/client-go-v2/arize/datasets"
 	"github.com/Arize-ai/client-go-v2/arize/evaluators"
 	"github.com/Arize-ai/client-go-v2/arize/experiments"
+	"github.com/Arize-ai/client-go-v2/arize/integrations"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/organizations"
 	"github.com/Arize-ai/client-go-v2/arize/projects"
@@ -27,7 +28,9 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/spaces"
 	"github.com/Arize-ai/client-go-v2/arize/spans"
 	"github.com/Arize-ai/client-go-v2/arize/tasks"
+	"github.com/Arize-ai/client-go-v2/arize/traces"
 	"github.com/Arize-ai/client-go-v2/arize/users"
+	"github.com/Arize-ai/client-go-v2/arize/webhooks"
 )
 
 // Client is the top-level client for the Arize REST API.
@@ -43,6 +46,7 @@ type Client struct {
 	Datasets             *datasets.Client
 	Evaluators           *evaluators.Client
 	Experiments          *experiments.Client
+	Integrations         *integrations.Client
 	Organizations        *organizations.Client
 	Projects             *projects.Client
 	Prompts              *prompts.Client
@@ -52,7 +56,9 @@ type Client struct {
 	Spaces               *spaces.Client
 	Spans                *spans.Client
 	Tasks                *tasks.Client
+	Traces               *traces.Client
 	Users                *users.Client
+	Webhooks             *webhooks.Client
 }
 
 // NewClient constructs a Client from the provided Config.
@@ -101,6 +107,7 @@ func NewClient(cfg Config) (*Client, error) {
 		Datasets:             datasets.New(gen),
 		Evaluators:           evaluators.New(gen),
 		Experiments:          experiments.New(gen),
+		Integrations:         integrations.New(gen),
 		Organizations:        organizations.New(gen),
 		Projects:             projects.New(gen),
 		Prompts:              prompts.New(gen),
@@ -110,7 +117,9 @@ func NewClient(cfg Config) (*Client, error) {
 		Spaces:               spaces.New(gen),
 		Spans:                spans.New(gen),
 		Tasks:                tasks.New(gen),
+		Traces:               traces.New(gen),
 		Users:                users.New(gen),
+		Webhooks:             webhooks.New(gen),
 	}, nil
 }
 

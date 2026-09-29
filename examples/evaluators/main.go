@@ -34,7 +34,8 @@ func main() {
 	ev := createEvaluator(ctx, client, evaluatorName, space, aiIntegration)
 	getEvaluator(ctx, client, evaluatorName, space)
 	listVersions(ctx, client, evaluatorName, space)
-	addVersion(ctx, client, evaluatorName, space, aiIntegration)
+	versionID := addVersion(ctx, client, evaluatorName, space, aiIntegration)
+	deleteVersions(ctx, client, evaluatorName, space, []string{versionID})
 	renameEvaluator(ctx, client, evaluatorName, space)
 	deleteEvaluator(ctx, client, ev.Id)
 }
@@ -120,8 +121,8 @@ func listVersions(ctx context.Context, client *arize.Client, evaluator, space st
 
 // addVersion appends a new template version to an existing evaluator, resolved
 // by name. The new version's kind must match the parent evaluator's type. It
-// then fetches the new version by its ID.
-func addVersion(ctx context.Context, client *arize.Client, evaluator, space, aiIntegration string) {
+// then fetches the new version by its ID and returns the version ID.
+func addVersion(ctx context.Context, client *arize.Client, evaluator, space, aiIntegration string) string {
 	v, err := client.Evaluators.CreateVersion(ctx, evaluators.CreateVersionRequest{
 		Evaluator: evaluator,
 		Space:     space,
@@ -163,6 +164,24 @@ func addVersion(ctx context.Context, client *arize.Client, evaluator, space, aiI
 	case evaluators.EvaluatorVersionTemplate:
 		fmt.Printf("fetched version %s: %q\n", v.Id, v.TemplateConfig.Template)
 	}
+	return tmpl.Id
+}
+
+// deleteVersions removes a batch of versions from an evaluator. The delete is
+// partial-tolerant: the result reports which IDs were deleted and which were
+// not. On HTTP 200, Completed is true because the request finished; that does
+// not mean every requested ID was found and deleted.
+func deleteVersions(ctx context.Context, client *arize.Client, evaluator, space string, versionIDs []string) {
+	resp, err := client.Evaluators.DeleteVersions(ctx, evaluators.DeleteVersionsRequest{
+		Evaluator:  evaluator,
+		Space:      space,
+		VersionIDs: versionIDs,
+	})
+	if err != nil {
+		log.Fatalf("delete versions: %v", err)
+	}
+	fmt.Printf("deleted %d version(s) from evaluator %q (completed=%t, not deleted: %d)\n",
+		len(resp.DeletedVersionIds), evaluator, resp.Completed, len(resp.NotDeletedVersionIds))
 }
 
 // renameEvaluator updates the evaluator's name. Only non-nil patch fields are

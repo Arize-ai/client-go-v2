@@ -56,7 +56,7 @@ func (c *Client) List(
 func (c *Client) Create(
 	ctx context.Context,
 	req CreateRequest,
-) (*UserApiKeyCreated, error) {
+) (*CreatedUserApiKey, error) {
 	prerelease.Warn("apikeys.create", prerelease.Beta)
 	var body generated.CreateApiKeyRequest
 	if err := body.FromCreateUserApiKeyRequest(generated.CreateUserApiKeyRequest{
@@ -74,7 +74,7 @@ func (c *Client) Create(
 	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
 		return nil, err
 	}
-	created, err := resp.JSON201.AsUserApiKeyCreated()
+	created, err := resp.JSON201.AsCreatedUserApiKey()
 	if err != nil {
 		return nil, fmt.Errorf("apikeys: decode user key response: %w", err)
 	}
@@ -85,7 +85,7 @@ func (c *Client) Create(
 func (c *Client) CreateServiceKey(
 	ctx context.Context,
 	req CreateServiceKeyRequest,
-) (*ServiceApiKeyCreated, error) {
+) (*CreatedServiceApiKey, error) {
 	prerelease.Warn("apikeys.create_service_key", prerelease.Beta)
 	if len(req.Orgs) == 0 {
 		return nil, fmt.Errorf("apikeys: at least one organization binding with at least one space is required")
@@ -174,7 +174,7 @@ func (c *Client) CreateServiceKey(
 	if err := apierrors.CheckResponse(resp.HTTPResponse, resp.Body); err != nil {
 		return nil, err
 	}
-	created, err := resp.JSON201.AsServiceApiKeyCreated()
+	created, err := resp.JSON201.AsCreatedServiceApiKey()
 	if err != nil {
 		return nil, fmt.Errorf("apikeys: decode service key response: %w", err)
 	}

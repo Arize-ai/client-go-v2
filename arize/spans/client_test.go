@@ -37,10 +37,12 @@ func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *a
 // bodies. Tests use it so they can decode request bodies without importing
 // internal/generated.
 type wireSpansList struct {
-	ProjectId string     `json:"project_id"`
-	StartTime *time.Time `json:"start_time,omitempty"`
-	EndTime   *time.Time `json:"end_time,omitempty"`
-	Filter    *string    `json:"filter,omitempty"`
+	ProjectId       string     `json:"project_id"`
+	StartTime       *time.Time `json:"start_time,omitempty"`
+	EndTime         *time.Time `json:"end_time,omitempty"`
+	Filter          *string    `json:"filter,omitempty"`
+	IncludedColumns *[]string  `json:"included_columns,omitempty"`
+	ExcludedColumns *[]string  `json:"excluded_columns,omitempty"`
 }
 
 // wireDeleteSpans mirrors the JSON shape the API receives for spans.Delete
@@ -59,6 +61,7 @@ type wireAnnotateSpans struct {
 	Annotations []wireAnnotateRecord `json:"annotations"`
 	StartTime   *time.Time           `json:"start_time,omitempty"`
 	EndTime     *time.Time           `json:"end_time,omitempty"`
+	Granularity *string              `json:"granularity,omitempty"`
 }
 
 type wireAnnotateRecord struct {
@@ -96,6 +99,9 @@ func TestSpans(t *testing.T) {
 				if body.Filter == nil || *body.Filter != "status_code = 'ERROR'" {
 					t.Errorf("body filter: %v", body.Filter)
 				}
+				if body.IncludedColumns == nil || len(*body.IncludedColumns) != 1 || (*body.IncludedColumns)[0] != "attributes.llm.model_name" {
+					t.Errorf("body included_columns: %v", body.IncludedColumns)
+				}
 				if r.URL.Query().Get("limit") != "25" {
 					t.Errorf("query limit: %q", r.URL.Query().Get("limit"))
 				}
@@ -107,9 +113,10 @@ func TestSpans(t *testing.T) {
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
 				return c.Spans.List(ctx, spans.ListRequest{
-					Project: projectID("proj-1"),
-					Filter:  "status_code = 'ERROR'",
-					Limit:   25,
+					Project:         projectID("proj-1"),
+					Filter:          "status_code = 'ERROR'",
+					IncludedColumns: []string{"attributes.llm.model_name"},
+					Limit:           25,
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -339,8 +346,9 @@ func TestSpans(t *testing.T) {
 		{
 			name: "Annotate_DefaultWindow",
 			handler: func(w http.ResponseWriter, r *http.Request) {
-				// When Start/End are nil the SDK must omit them so the
-				// server applies its default 31-day lookup window.
+				// When Start/End/Granularity are zero the SDK must omit them
+				// so the server applies its defaults (31-day lookup window,
+				// SPAN granularity).
 				var body wireAnnotateSpans
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Errorf("decode body: %v", err)
@@ -351,6 +359,9 @@ func TestSpans(t *testing.T) {
 				if body.EndTime != nil {
 					t.Errorf("expected end_time omitted, got %v", body.EndTime)
 				}
+				if body.Granularity != nil {
+					t.Errorf("expected granularity omitted, got %v", *body.Granularity)
+				}
 				w.WriteHeader(202)
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
@@ -359,6 +370,36 @@ func TestSpans(t *testing.T) {
 					Annotations: []spans.AnnotateRecordInput{
 						{RecordId: "span-1", Values: []spans.AnnotationInput{{Name: "Correctness"}}},
 					},
+				})
+			},
+			check: func(t *testing.T, _ any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "Annotate_SessionGranularity",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body wireAnnotateSpans
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if len(body.Annotations) != 1 || body.Annotations[0].RecordId != "session-1" {
+					t.Errorf("body annotations: %+v", body.Annotations)
+				}
+				if body.Granularity == nil || *body.Granularity != "SESSION" {
+					t.Errorf("body granularity: %v", body.Granularity)
+				}
+				w.WriteHeader(202)
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return nil, c.Spans.Annotate(ctx, spans.AnnotateRequest{
+					Project: projectID("proj-1"),
+					Annotations: []spans.AnnotateRecordInput{
+						{RecordId: "session-1", Values: []spans.AnnotationInput{{Name: "Correctness"}}},
+					},
+					Granularity: spans.GranularitySESSION,
 				})
 			},
 			check: func(t *testing.T, _ any, err error) {
@@ -397,5 +438,33 @@ func TestSpans(t *testing.T) {
 			got, err := tt.invoke(context.Background(), client)
 			tt.check(t, got, err)
 		})
+	}
+}
+
+func TestListExcludedColumns(t *testing.T) {
+	_, client := newTestServer(t, func(w http.ResponseWriter, r *http.Request) {
+		var body wireSpansList
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Errorf("decode body: %v", err)
+		}
+		if body.ExcludedColumns == nil || len(*body.ExcludedColumns) != 1 || (*body.ExcludedColumns)[0] != "attributes.embedding.vectors" {
+			t.Errorf("body excluded_columns: %v", body.ExcludedColumns)
+		}
+		if body.IncludedColumns != nil {
+			t.Errorf("body included_columns: want nil, got %v", body.IncludedColumns)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(spans.ListSpans{
+			Spans:      []spans.Span{},
+			Pagination: arize.PaginationMetadata{HasMore: false},
+		})
+	})
+
+	_, err := client.Spans.List(context.Background(), spans.ListRequest{
+		Project:         projectID("proj-1"),
+		ExcludedColumns: []string{"attributes.embedding.vectors"},
+	})
+	if err != nil {
+		t.Fatalf("list spans: %v", err)
 	}
 }

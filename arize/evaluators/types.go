@@ -22,6 +22,9 @@ type (
 	// ListEvaluatorVersions is the cursor-paginated version list response shape.
 	ListEvaluatorVersions = generated.ListEvaluatorVersionsResponse
 
+	// DeleteEvaluatorVersions is the result of Client.DeleteVersions.
+	DeleteEvaluatorVersions = generated.DeleteEvaluatorVersionsResponse
+
 	// EvaluatorVersionTemplate is the template (LLM-based) variant of an
 	// EvaluatorVersion, returned by EvaluatorVersion.AsEvaluatorVersionTemplate.
 	EvaluatorVersionTemplate = generated.EvaluatorVersionTemplate
@@ -37,9 +40,9 @@ type (
 	EvaluatorVersionHarness = generated.EvaluatorVersionHarness
 
 	// EvaluatorVersionRemote is the remote variant of an EvaluatorVersion,
-	// returned by EvaluatorVersion.AsEvaluatorVersionRemote. Only common
-	// version metadata is exposed — the remote configuration is not yet
-	// accessible via the REST API.
+	// returned by EvaluatorVersion.AsEvaluatorVersionRemote. Use
+	// RemoteConfig.IntegrationId to find the EVALUATOR integration that
+	// defines the endpoint for this version.
 	EvaluatorVersionRemote = generated.EvaluatorVersionRemote
 
 	// EvaluatorType is the evaluator kind: TEMPLATE, CODE, HARNESS, or REMOTE.
@@ -94,6 +97,15 @@ type (
 
 	// StaticParam is a typed static parameter passed to a code evaluator.
 	StaticParam = generated.StaticParam
+
+	// RemoteConfig holds the integration reference for a remote evaluator
+	// version returned by the API. IntegrationId is nil when the caller does not
+	// have permission to read the backing integration.
+	RemoteConfig = generated.RemoteConfig
+
+	// RemoteConfigInput holds the integration reference for a remote evaluator
+	// version write request. Assign it to VersionConfig.Remote.
+	RemoteConfigInput = generated.RemoteConfigInput
 )
 
 const (
@@ -109,16 +121,21 @@ const (
 
 // VersionConfig is the configuration payload for a new evaluator version,
 // used by both Create (initial version) and CreateVersion. Set exactly one of
-// Template or Code; the evaluator's type is derived from which is set.
+// Template, Code, or Remote; the evaluator's type is derived from which is set.
 type VersionConfig struct {
 	// CommitMessage describes the change introduced by this version. Required.
 	CommitMessage string
 	// Template configures a template (LLM-based) version. Set exactly one of
-	// Template or Code.
+	// Template, Code, or Remote.
 	Template *TemplateConfigInput
-	// Code configures a code version. Set exactly one of Template or Code;
-	// within Code set exactly one of Managed or Custom.
+	// Code configures a code version. Set exactly one of Template, Code, or
+	// Remote; within Code set exactly one of Managed or Custom.
 	Code *CodeConfig
+	// Remote configures a remote version that calls a customer-hosted HTTP
+	// endpoint. Set IntegrationId to the global ID of an EVALUATOR integration
+	// created via the Integrations API. Set exactly one of Template, Code, or
+	// Remote. Requires the enableRemoteEvalTasks feature flag on the account.
+	Remote *RemoteConfigInput
 }
 
 // CodeConfig is the oneOf input for a code evaluator version. Set exactly one
@@ -174,7 +191,7 @@ type CreateRequest struct {
 	// Description is an optional description. When empty, no description is set.
 	Description string
 	// Version is the initial version's configuration. Required; set exactly
-	// one of Version.Template or Version.Code.
+	// one of Version.Template, Version.Code, or Version.Remote.
 	Version VersionConfig
 }
 
@@ -228,7 +245,7 @@ type CreateVersionRequest struct {
 	// name; ignored when Evaluator is an ID.
 	Space string
 	// Version is the new version's configuration. Required; set exactly one of
-	// Version.Template or Version.Code.
+	// Version.Template, Version.Code, or Version.Remote.
 	Version VersionConfig
 }
 
@@ -237,4 +254,113 @@ type GetVersionRequest struct {
 	// VersionID is the evaluator version's ID. Required. Version IDs are pure
 	// IDs with no name resolution.
 	VersionID string
+}
+
+// CreateTemplateEvaluatorRequest is the request shape for
+// Client.CreateTemplateEvaluator. It creates a TEMPLATE evaluator with its
+// initial version in one call.
+type CreateTemplateEvaluatorRequest struct {
+	// Space is the parent space's name or ID. Required.
+	Space string
+	// Name is the evaluator's name; must be unique within the space. Required.
+	Name string
+	// Description is an optional description. When empty, no description is set.
+	Description string
+	// CommitMessage describes the change introduced by the initial version. Required.
+	CommitMessage string
+	// Config is the template version configuration. Required.
+	Config TemplateConfigInput
+}
+
+// CreateCodeEvaluatorRequest is the request shape for
+// Client.CreateCodeEvaluator. It creates a CODE evaluator with its initial
+// version in one call.
+type CreateCodeEvaluatorRequest struct {
+	// Space is the parent space's name or ID. Required.
+	Space string
+	// Name is the evaluator's name; must be unique within the space. Required.
+	Name string
+	// Description is an optional description. When empty, no description is set.
+	Description string
+	// CommitMessage describes the change introduced by the initial version. Required.
+	CommitMessage string
+	// Config is the code version configuration. Set exactly one of Config.Managed
+	// or Config.Custom; the SDK sets the inner type discriminator automatically.
+	Config CodeConfig
+}
+
+// CreateRemoteEvaluatorRequest is the request shape for
+// Client.CreateRemoteEvaluator. It creates a REMOTE evaluator backed by an
+// existing EVALUATOR integration.
+type CreateRemoteEvaluatorRequest struct {
+	// Space is the parent space's name or ID. Required.
+	Space string
+	// Name is the evaluator's name; must be unique within the space. Required.
+	Name string
+	// Description is an optional description. When empty, no description is set.
+	Description string
+	// CommitMessage describes the change introduced by the initial version. Required.
+	CommitMessage string
+	// IntegrationID is the global ID of an EVALUATOR integration (created via
+	// the Integrations API). Required. Requires the enableRemoteEvalTasks
+	// feature flag on the account.
+	IntegrationID string
+}
+
+// CreateTemplateVersionRequest is the request shape for
+// Client.CreateTemplateVersion. It appends a new TEMPLATE version to an
+// existing evaluator.
+type CreateTemplateVersionRequest struct {
+	// Evaluator is the evaluator's name or ID. Required.
+	Evaluator string
+	// Space is the parent space's name or ID. Required when Evaluator is a
+	// name; ignored when Evaluator is an ID.
+	Space string
+	// CommitMessage describes the change introduced by this version. Required.
+	CommitMessage string
+	// Config is the template version configuration. Required.
+	Config TemplateConfigInput
+}
+
+// CreateCodeVersionRequest is the request shape for Client.CreateCodeVersion.
+// It appends a new CODE version to an existing evaluator.
+type CreateCodeVersionRequest struct {
+	// Evaluator is the evaluator's name or ID. Required.
+	Evaluator string
+	// Space is the parent space's name or ID. Required when Evaluator is a
+	// name; ignored when Evaluator is an ID.
+	Space string
+	// CommitMessage describes the change introduced by this version. Required.
+	CommitMessage string
+	// Config is the code version configuration. Set exactly one of Config.Managed
+	// or Config.Custom; the SDK sets the inner type discriminator automatically.
+	Config CodeConfig
+}
+
+// CreateRemoteVersionRequest is the request shape for
+// Client.CreateRemoteVersion. It appends a new REMOTE version to an existing
+// evaluator, optionally switching to a different EVALUATOR integration.
+type CreateRemoteVersionRequest struct {
+	// Evaluator is the evaluator's name or ID. Required.
+	Evaluator string
+	// Space is the parent space's name or ID. Required when Evaluator is a
+	// name; ignored when Evaluator is an ID.
+	Space string
+	// CommitMessage describes the change introduced by this version. Required.
+	CommitMessage string
+	// IntegrationID is the global ID of an EVALUATOR integration. Required.
+	IntegrationID string
+}
+
+// DeleteVersionsRequest is the request shape for Client.DeleteVersions.
+type DeleteVersionsRequest struct {
+	// Evaluator is the evaluator's name or ID. Required.
+	Evaluator string
+	// Space is the parent space's name or ID. Required when Evaluator is a
+	// name; ignored when Evaluator is an ID.
+	Space string
+	// VersionIDs are the evaluator version IDs to delete (1-100 per request).
+	// Required. Duplicate IDs are accepted; the server collapses them.
+	// Version IDs are pure IDs with no name resolution.
+	VersionIDs []string
 }

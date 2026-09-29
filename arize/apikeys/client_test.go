@@ -191,7 +191,7 @@ func TestAPIKeys(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*apikeys.UserApiKeyCreated)
+				resp := got.(*apikeys.CreatedUserApiKey)
 				if resp.Id != "key-2" {
 					t.Errorf("expected Id %q, got %q", "key-2", resp.Id)
 				}
@@ -297,7 +297,7 @@ func TestAPIKeys(t *testing.T) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
 				}
-				resp := got.(*apikeys.ServiceApiKeyCreated)
+				resp := got.(*apikeys.CreatedServiceApiKey)
 				if string(resp.KeyType) != "SERVICE" {
 					t.Errorf("expected service key type, got %v", resp.KeyType)
 				}

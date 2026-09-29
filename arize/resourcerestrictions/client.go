@@ -3,10 +3,8 @@
 //
 // Resource restrictions prevent roles bound at higher hierarchy levels (space,
 // org, account) from granting access to the restricted resource. Only space
-// admins or users with the PROJECT_RESTRICT permission can restrict or
-// unrestrict a resource.
-//
-// Currently only PROJECT resources are supported.
+// admins or users with the required permissions can restrict or unrestrict 
+// a resource.
 package resourcerestrictions
 
 import (
@@ -31,9 +29,8 @@ func New(gen *generated.ClientWithResponses) *Client {
 // List returns a paginated list of resource restrictions. Defaults to a page
 // size of 50.
 //
-// Currently only PROJECT resources are supported. Set ResourceType to filter to
-// a single resource type; leave it empty to return restrictions of all
-// supported types.
+// Set ResourceType to filter
+// to a single type; leave it empty to return restrictions of all supported types.
 func (c *Client) List(
 	ctx context.Context,
 	req ListRequest,
@@ -58,12 +55,10 @@ func (c *Client) List(
 //
 // Restricting a resource prevents roles bound at higher hierarchy levels
 // (space, org, account) from granting access. Only space admins or users with
-// the PROJECT_RESTRICT permission can perform this action.
+// the required permissions can perform this action.
 //
 // This operation is idempotent — restricting an already-restricted resource
 // returns the existing restriction without error.
-//
-// Currently only PROJECT resources are supported.
 func (c *Client) Restrict(
 	ctx context.Context,
 	req RestrictRequest,
@@ -86,7 +81,7 @@ func (c *Client) Restrict(
 // Removing a restriction means that roles bound at other levels of the
 // hierarchy (space, org, account) can once again grant access to the resource.
 //
-// ResourceID is the ID of the restricted resource (e.g. a project ID), not the
+// ResourceID is the ID of the restricted resource, not the
 // ID of the restriction record itself — the API dereferences from the
 // restricted resource to the restriction it holds.
 func (c *Client) Unrestrict(

@@ -29,3 +29,25 @@ func PtrWithDefault[T comparable](v, fallback T) *T {
 	}
 	return &v
 }
+
+// PtrSliceIfSet returns &s when s is non-nil, else nil, forwarding an optional
+// slice request field into a generated body that uses a pointer. A non-nil
+// empty slice is preserved; nil is omitted. Slices are not comparable, so this
+// cannot use PtrIfSet.
+func PtrSliceIfSet[T any](s []T) *[]T {
+	if s == nil {
+		return nil
+	}
+	return &s
+}
+
+// PtrMapIfSet returns &m when m is non-nil, else nil, forwarding an optional
+// map request field into a generated body that uses a pointer. A non-nil empty
+// map is preserved (sent as {}); nil is omitted. Maps are not comparable, so
+// this cannot use PtrIfSet.
+func PtrMapIfSet[K comparable, V any](m map[K]V) *map[K]V {
+	if m == nil {
+		return nil
+	}
+	return &m
+}

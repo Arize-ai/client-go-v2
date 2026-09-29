@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/Arize-ai/client-go-v2/arize"
 	"github.com/Arize-ai/client-go-v2/arize/annotationqueues"
@@ -42,6 +43,82 @@ type wireCreate struct {
 	AnnotatorEmails     []string          `json:"annotator_emails"`
 	AnnotationConfigIds []string          `json:"annotation_config_ids"`
 	RecordSources       []json.RawMessage `json:"record_sources"`
+}
+
+func TestProjectRecordSourceConstructors(t *testing.T) {
+	start := time.Date(2026, time.August, 1, 0, 0, 0, 0, time.UTC)
+	end := start.Add(24 * time.Hour)
+	tests := []struct {
+		name       string
+		build      func() (annotationqueues.AnnotationQueueRecordInput, error)
+		recordType string
+		ids        func(wireProjectRecordSource) []string
+	}{
+		{
+			name: "trace",
+			build: func() (annotationqueues.AnnotationQueueRecordInput, error) {
+				return annotationqueues.NewTraceRecordSource(annotationqueues.AnnotationQueueTraceRecordInput{
+					ProjectId: "project-1",
+					StartTime: start,
+					EndTime:   end,
+					TraceIds:  []string{"trace-1"},
+				})
+			},
+			recordType: "TRACE",
+			ids:        func(source wireProjectRecordSource) []string { return source.TraceIDs },
+		},
+		{
+			name: "session",
+			build: func() (annotationqueues.AnnotationQueueRecordInput, error) {
+				return annotationqueues.NewSessionRecordSource(annotationqueues.AnnotationQueueSessionRecordInput{
+					ProjectId:  "project-1",
+					StartTime:  start,
+					EndTime:    end,
+					SessionIds: []string{"session-1"},
+				})
+			},
+			recordType: "SESSION",
+			ids:        func(source wireProjectRecordSource) []string { return source.SessionIDs },
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			source, err := tt.build()
+			if err != nil {
+				t.Fatal(err)
+			}
+			body, err := json.Marshal(source)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var wire wireProjectRecordSource
+			if err := json.Unmarshal(body, &wire); err != nil {
+				t.Fatal(err)
+			}
+			if wire.RecordType != tt.recordType {
+				t.Errorf("record_type: want %q, got %q", tt.recordType, wire.RecordType)
+			}
+			if wire.ProjectID != "project-1" {
+				t.Errorf("project_id: want %q, got %q", "project-1", wire.ProjectID)
+			}
+			if !wire.StartTime.Equal(start) || !wire.EndTime.Equal(end) {
+				t.Errorf("time range: want %s-%s, got %s-%s", start, end, wire.StartTime, wire.EndTime)
+			}
+			ids := tt.ids(wire)
+			if len(ids) != 1 || ids[0] != tt.name+"-1" {
+				t.Errorf("IDs: want [%q], got %v", tt.name+"-1", ids)
+			}
+		})
+	}
+}
+
+type wireProjectRecordSource struct {
+	RecordType string    `json:"record_type"`
+	ProjectID  string    `json:"project_id"`
+	StartTime  time.Time `json:"start_time"`
+	EndTime    time.Time `json:"end_time"`
+	TraceIDs   []string  `json:"trace_ids"`
+	SessionIDs []string  `json:"session_ids"`
 }
 
 func TestAnnotationQueues(t *testing.T) {

@@ -38,6 +38,21 @@ func (e AgentCallRunConfigExperimentType) Valid() bool {
 	}
 }
 
+// Defines values for AgentCallRunConfigRequestExperimentType.
+const (
+	AgentCallRunConfigRequestExperimentTypeAGENTCALL AgentCallRunConfigRequestExperimentType = "AGENT_CALL"
+)
+
+// Valid indicates whether the value is a known member of the AgentCallRunConfigRequestExperimentType enum.
+func (e AgentCallRunConfigRequestExperimentType) Valid() bool {
+	switch e {
+	case AgentCallRunConfigRequestExperimentTypeAGENTCALL:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AgentIntegrationType.
 const (
 	AgentIntegrationTypeAGENT AgentIntegrationType = "AGENT"
@@ -55,9 +70,10 @@ func (e AgentIntegrationType) Valid() bool {
 
 // Defines values for AiIntegrationAuthType.
 const (
-	AiIntegrationAuthTypeBEARERTOKEN      AiIntegrationAuthType = "BEARER_TOKEN"
-	AiIntegrationAuthTypeDEFAULT          AiIntegrationAuthType = "DEFAULT"
-	AiIntegrationAuthTypePROXYWITHHEADERS AiIntegrationAuthType = "PROXY_WITH_HEADERS"
+	AiIntegrationAuthTypeBEARERTOKEN             AiIntegrationAuthType = "BEARER_TOKEN"
+	AiIntegrationAuthTypeDEFAULT                 AiIntegrationAuthType = "DEFAULT"
+	AiIntegrationAuthTypeOAUTH2CLIENTCREDENTIALS AiIntegrationAuthType = "OAUTH2_CLIENT_CREDENTIALS"
+	AiIntegrationAuthTypePROXYWITHHEADERS        AiIntegrationAuthType = "PROXY_WITH_HEADERS"
 )
 
 // Valid indicates whether the value is a known member of the AiIntegrationAuthType enum.
@@ -66,6 +82,8 @@ func (e AiIntegrationAuthType) Valid() bool {
 	case AiIntegrationAuthTypeBEARERTOKEN:
 		return true
 	case AiIntegrationAuthTypeDEFAULT:
+		return true
+	case AiIntegrationAuthTypeOAUTH2CLIENTCREDENTIALS:
 		return true
 	case AiIntegrationAuthTypePROXYWITHHEADERS:
 		return true
@@ -80,9 +98,12 @@ const (
 	AiIntegrationProviderAWSBEDROCK  AiIntegrationProvider = "AWS_BEDROCK"
 	AiIntegrationProviderAZUREOPENAI AiIntegrationProvider = "AZURE_OPEN_AI"
 	AiIntegrationProviderCUSTOM      AiIntegrationProvider = "CUSTOM"
+	AiIntegrationProviderFIREWORKS   AiIntegrationProvider = "FIREWORKS"
 	AiIntegrationProviderGEMINI      AiIntegrationProvider = "GEMINI"
+	AiIntegrationProviderLITELLM     AiIntegrationProvider = "LITELLM"
 	AiIntegrationProviderNVIDIANIM   AiIntegrationProvider = "NVIDIA_NIM"
 	AiIntegrationProviderOPENAI      AiIntegrationProvider = "OPEN_AI"
+	AiIntegrationProviderTOGETHERAI  AiIntegrationProvider = "TOGETHER_AI"
 	AiIntegrationProviderVERTEXAI    AiIntegrationProvider = "VERTEX_AI"
 )
 
@@ -97,11 +118,17 @@ func (e AiIntegrationProvider) Valid() bool {
 		return true
 	case AiIntegrationProviderCUSTOM:
 		return true
+	case AiIntegrationProviderFIREWORKS:
+		return true
 	case AiIntegrationProviderGEMINI:
+		return true
+	case AiIntegrationProviderLITELLM:
 		return true
 	case AiIntegrationProviderNVIDIANIM:
 		return true
 	case AiIntegrationProviderOPENAI:
+		return true
+	case AiIntegrationProviderTOGETHERAI:
 		return true
 	case AiIntegrationProviderVERTEXAI:
 		return true
@@ -158,6 +185,21 @@ const (
 func (e AnnotationQueueExampleRecordInputRecordType) Valid() bool {
 	switch e {
 	case AnnotationQueueExampleRecordInputRecordTypeEXAMPLE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AnnotationQueueSessionRecordInputRecordType.
+const (
+	AnnotationQueueSessionRecordInputRecordTypeSESSION AnnotationQueueSessionRecordInputRecordType = "SESSION"
+)
+
+// Valid indicates whether the value is a known member of the AnnotationQueueSessionRecordInputRecordType enum.
+func (e AnnotationQueueSessionRecordInputRecordType) Valid() bool {
+	switch e {
+	case AnnotationQueueSessionRecordInputRecordTypeSESSION:
 		return true
 	default:
 		return false
@@ -557,6 +599,66 @@ func (e CreateCustomConfigProvider) Valid() bool {
 	}
 }
 
+// Defines values for CreateCustomDefaultAuthAuthType.
+const (
+	CreateCustomDefaultAuthAuthTypeDEFAULT CreateCustomDefaultAuthAuthType = "DEFAULT"
+)
+
+// Valid indicates whether the value is a known member of the CreateCustomDefaultAuthAuthType enum.
+func (e CreateCustomDefaultAuthAuthType) Valid() bool {
+	switch e {
+	case CreateCustomDefaultAuthAuthTypeDEFAULT:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateCustomOauth2ClientCredentialsAuthAuthType.
+const (
+	CreateCustomOauth2ClientCredentialsAuthAuthTypeOAUTH2CLIENTCREDENTIALS CreateCustomOauth2ClientCredentialsAuthAuthType = "OAUTH2_CLIENT_CREDENTIALS"
+)
+
+// Valid indicates whether the value is a known member of the CreateCustomOauth2ClientCredentialsAuthAuthType enum.
+func (e CreateCustomOauth2ClientCredentialsAuthAuthType) Valid() bool {
+	switch e {
+	case CreateCustomOauth2ClientCredentialsAuthAuthTypeOAUTH2CLIENTCREDENTIALS:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateEvaluatorIntegrationRequestType.
+const (
+	CreateEvaluatorIntegrationRequestTypeEVALUATOR CreateEvaluatorIntegrationRequestType = "EVALUATOR"
+)
+
+// Valid indicates whether the value is a known member of the CreateEvaluatorIntegrationRequestType enum.
+func (e CreateEvaluatorIntegrationRequestType) Valid() bool {
+	switch e {
+	case CreateEvaluatorIntegrationRequestTypeEVALUATOR:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateFireworksConfigProvider.
+const (
+	CreateFireworksConfigProviderFIREWORKS CreateFireworksConfigProvider = "FIREWORKS"
+)
+
+// Valid indicates whether the value is a known member of the CreateFireworksConfigProvider enum.
+func (e CreateFireworksConfigProvider) Valid() bool {
+	switch e {
+	case CreateFireworksConfigProviderFIREWORKS:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for CreateFreeformAnnotationConfigRequestAnnotationConfigType.
 const (
 	CreateFreeformAnnotationConfigRequestAnnotationConfigTypeFREEFORM CreateFreeformAnnotationConfigRequestAnnotationConfigType = "FREEFORM"
@@ -581,6 +683,21 @@ const (
 func (e CreateGeminiConfigProvider) Valid() bool {
 	switch e {
 	case CreateGeminiConfigProviderGEMINI:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateLiteLlmConfigProvider.
+const (
+	CreateLiteLlmConfigProviderLITELLM CreateLiteLlmConfigProvider = "LITELLM"
+)
+
+// Valid indicates whether the value is a known member of the CreateLiteLlmConfigProvider enum.
+func (e CreateLiteLlmConfigProvider) Valid() bool {
+	switch e {
+	case CreateLiteLlmConfigProviderLITELLM:
 		return true
 	default:
 		return false
@@ -677,6 +794,21 @@ func (e CreateTemplateEvaluationTaskRequestType) Valid() bool {
 	}
 }
 
+// Defines values for CreateTogetherAiConfigProvider.
+const (
+	CreateTogetherAiConfigProviderTOGETHERAI CreateTogetherAiConfigProvider = "TOGETHER_AI"
+)
+
+// Valid indicates whether the value is a known member of the CreateTogetherAiConfigProvider enum.
+func (e CreateTogetherAiConfigProvider) Valid() bool {
+	switch e {
+	case CreateTogetherAiConfigProviderTOGETHERAI:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for CreateUserApiKeyRequestKeyType.
 const (
 	CreateUserApiKeyRequestKeyTypeUSER CreateUserApiKeyRequestKeyType = "USER"
@@ -701,6 +833,36 @@ const (
 func (e CreateVertexAiConfigProvider) Valid() bool {
 	switch e {
 	case CreateVertexAiConfigProviderVERTEXAI:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreatedServiceApiKeyKeyType.
+const (
+	CreatedServiceApiKeyKeyTypeSERVICE CreatedServiceApiKeyKeyType = "SERVICE"
+)
+
+// Valid indicates whether the value is a known member of the CreatedServiceApiKeyKeyType enum.
+func (e CreatedServiceApiKeyKeyType) Valid() bool {
+	switch e {
+	case CreatedServiceApiKeyKeyTypeSERVICE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreatedUserApiKeyKeyType.
+const (
+	CreatedUserApiKeyKeyTypeUSER CreatedUserApiKeyKeyType = "USER"
+)
+
+// Valid indicates whether the value is a known member of the CreatedUserApiKeyKeyType enum.
+func (e CreatedUserApiKeyKeyType) Valid() bool {
+	switch e {
+	case CreatedUserApiKeyKeyTypeUSER:
 		return true
 	default:
 		return false
@@ -767,6 +929,21 @@ func (e CustomConfigProvider) Valid() bool {
 	}
 }
 
+// Defines values for CustomDefaultAuthAuthType.
+const (
+	CustomDefaultAuthAuthTypeDEFAULT CustomDefaultAuthAuthType = "DEFAULT"
+)
+
+// Valid indicates whether the value is a known member of the CustomDefaultAuthAuthType enum.
+func (e CustomDefaultAuthAuthType) Valid() bool {
+	switch e {
+	case CustomDefaultAuthAuthTypeDEFAULT:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for CustomMetricMonitorType.
 const (
 	CustomMetricMonitorTypeCUSTOMMETRIC CustomMetricMonitorType = "CUSTOM_METRIC"
@@ -776,6 +953,21 @@ const (
 func (e CustomMetricMonitorType) Valid() bool {
 	switch e {
 	case CustomMetricMonitorTypeCUSTOMMETRIC:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CustomOauth2ClientCredentialsAuthAuthType.
+const (
+	CustomOauth2ClientCredentialsAuthAuthTypeOAUTH2CLIENTCREDENTIALS CustomOauth2ClientCredentialsAuthAuthType = "OAUTH2_CLIENT_CREDENTIALS"
+)
+
+// Valid indicates whether the value is a known member of the CustomOauth2ClientCredentialsAuthAuthType enum.
+func (e CustomOauth2ClientCredentialsAuthAuthType) Valid() bool {
+	switch e {
+	case CustomOauth2ClientCredentialsAuthAuthTypeOAUTH2CLIENTCREDENTIALS:
 		return true
 	default:
 		return false
@@ -1010,6 +1202,21 @@ func (e EmailNotificationConfigType) Valid() bool {
 	}
 }
 
+// Defines values for EvaluatorIntegrationType.
+const (
+	EvaluatorIntegrationTypeEVALUATOR EvaluatorIntegrationType = "EVALUATOR"
+)
+
+// Valid indicates whether the value is a known member of the EvaluatorIntegrationType enum.
+func (e EvaluatorIntegrationType) Valid() bool {
+	switch e {
+	case EvaluatorIntegrationTypeEVALUATOR:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for EvaluatorType.
 const (
 	EvaluatorTypeCODE     EvaluatorType = "CODE"
@@ -1136,6 +1343,21 @@ func (e FilterOperator) Valid() bool {
 	}
 }
 
+// Defines values for FireworksConfigProvider.
+const (
+	FireworksConfigProviderFIREWORKS FireworksConfigProvider = "FIREWORKS"
+)
+
+// Valid indicates whether the value is a known member of the FireworksConfigProvider enum.
+func (e FireworksConfigProvider) Valid() bool {
+	switch e {
+	case FireworksConfigProviderFIREWORKS:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for FixedCustomBaselineWindowType.
 const (
 	FixedCustomBaselineWindowTypeFIXED FixedCustomBaselineWindowType = "FIXED"
@@ -1234,14 +1456,17 @@ func (e IntegrationNotificationConfigType) Valid() bool {
 
 // Defines values for IntegrationType.
 const (
-	IntegrationTypeAGENT IntegrationType = "AGENT"
-	IntegrationTypeLLM   IntegrationType = "LLM"
+	IntegrationTypeAGENT     IntegrationType = "AGENT"
+	IntegrationTypeEVALUATOR IntegrationType = "EVALUATOR"
+	IntegrationTypeLLM       IntegrationType = "LLM"
 )
 
 // Valid indicates whether the value is a known member of the IntegrationType enum.
 func (e IntegrationType) Valid() bool {
 	switch e {
 	case IntegrationTypeAGENT:
+		return true
+	case IntegrationTypeEVALUATOR:
 		return true
 	case IntegrationTypeLLM:
 		return true
@@ -1271,6 +1496,21 @@ func (e InviteMode) Valid() bool {
 	}
 }
 
+// Defines values for LiteLlmConfigProvider.
+const (
+	LiteLlmConfigProviderLITELLM LiteLlmConfigProvider = "LITELLM"
+)
+
+// Valid indicates whether the value is a known member of the LiteLlmConfigProvider enum.
+func (e LiteLlmConfigProvider) Valid() bool {
+	switch e {
+	case LiteLlmConfigProviderLITELLM:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for LlmGenerationRunConfigExperimentType.
 const (
 	LlmGenerationRunConfigExperimentTypeLLMGENERATION LlmGenerationRunConfigExperimentType = "LLM_GENERATION"
@@ -1280,6 +1520,21 @@ const (
 func (e LlmGenerationRunConfigExperimentType) Valid() bool {
 	switch e {
 	case LlmGenerationRunConfigExperimentTypeLLMGENERATION:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for LlmGenerationRunConfigRequestExperimentType.
+const (
+	LlmGenerationRunConfigRequestExperimentTypeLLMGENERATION LlmGenerationRunConfigRequestExperimentType = "LLM_GENERATION"
+)
+
+// Valid indicates whether the value is a known member of the LlmGenerationRunConfigRequestExperimentType enum.
+func (e LlmGenerationRunConfigRequestExperimentType) Valid() bool {
+	switch e {
+	case LlmGenerationRunConfigRequestExperimentTypeLLMGENERATION:
 		return true
 	default:
 		return false
@@ -1306,9 +1561,12 @@ const (
 	LlmIntegrationProviderANTHROPIC  LlmIntegrationProvider = "ANTHROPIC"
 	LlmIntegrationProviderAWSBEDROCK LlmIntegrationProvider = "AWS_BEDROCK"
 	LlmIntegrationProviderCUSTOM     LlmIntegrationProvider = "CUSTOM"
+	LlmIntegrationProviderFIREWORKS  LlmIntegrationProvider = "FIREWORKS"
 	LlmIntegrationProviderGEMINI     LlmIntegrationProvider = "GEMINI"
+	LlmIntegrationProviderLITELLM    LlmIntegrationProvider = "LITELLM"
 	LlmIntegrationProviderNVIDIANIM  LlmIntegrationProvider = "NVIDIA_NIM"
 	LlmIntegrationProviderOPENAI     LlmIntegrationProvider = "OPEN_AI"
+	LlmIntegrationProviderTOGETHERAI LlmIntegrationProvider = "TOGETHER_AI"
 	LlmIntegrationProviderVERTEXAI   LlmIntegrationProvider = "VERTEX_AI"
 )
 
@@ -1321,11 +1579,17 @@ func (e LlmIntegrationProvider) Valid() bool {
 		return true
 	case LlmIntegrationProviderCUSTOM:
 		return true
+	case LlmIntegrationProviderFIREWORKS:
+		return true
 	case LlmIntegrationProviderGEMINI:
+		return true
+	case LlmIntegrationProviderLITELLM:
 		return true
 	case LlmIntegrationProviderNVIDIANIM:
 		return true
 	case LlmIntegrationProviderOPENAI:
+		return true
+	case LlmIntegrationProviderTOGETHERAI:
 		return true
 	case LlmIntegrationProviderVERTEXAI:
 		return true
@@ -1792,12 +2056,20 @@ func (e PerformanceMonitorType) Valid() bool {
 
 // Defines values for Permission.
 const (
+	PermissionAGENTROLECREATE                 Permission = "AGENT_ROLE_CREATE"
+	PermissionAGENTROLEDELETE                 Permission = "AGENT_ROLE_DELETE"
+	PermissionAGENTROLEREAD                   Permission = "AGENT_ROLE_READ"
+	PermissionAGENTROLEUPDATE                 Permission = "AGENT_ROLE_UPDATE"
 	PermissionAIPROVIDERREAD                  Permission = "AI_PROVIDER_READ"
 	PermissionALYXRUN                         Permission = "ALYX_RUN"
 	PermissionANNOTATIONCONFIGCREATE          Permission = "ANNOTATION_CONFIG_CREATE"
 	PermissionANNOTATIONCONFIGDELETE          Permission = "ANNOTATION_CONFIG_DELETE"
 	PermissionANNOTATIONCONFIGREAD            Permission = "ANNOTATION_CONFIG_READ"
 	PermissionANNOTATIONCONFIGUPDATE          Permission = "ANNOTATION_CONFIG_UPDATE"
+	PermissionCOSTCONFIGCREATE                Permission = "COST_CONFIG_CREATE"
+	PermissionCOSTCONFIGDELETE                Permission = "COST_CONFIG_DELETE"
+	PermissionCOSTCONFIGREAD                  Permission = "COST_CONFIG_READ"
+	PermissionCOSTCONFIGUPDATE                Permission = "COST_CONFIG_UPDATE"
 	PermissionCUSTOMMETRICCREATE              Permission = "CUSTOM_METRIC_CREATE"
 	PermissionCUSTOMMETRICDELETE              Permission = "CUSTOM_METRIC_DELETE"
 	PermissionCUSTOMMETRICREAD                Permission = "CUSTOM_METRIC_READ"
@@ -1805,6 +2077,7 @@ const (
 	PermissionDASHBOARDCREATE                 Permission = "DASHBOARD_CREATE"
 	PermissionDASHBOARDDELETE                 Permission = "DASHBOARD_DELETE"
 	PermissionDASHBOARDREAD                   Permission = "DASHBOARD_READ"
+	PermissionDASHBOARDRESTRICT               Permission = "DASHBOARD_RESTRICT"
 	PermissionDASHBOARDUPDATE                 Permission = "DASHBOARD_UPDATE"
 	PermissionDATAFABRICCONNECTORCREATE       Permission = "DATA_FABRIC_CONNECTOR_CREATE"
 	PermissionDATAFABRICCONNECTORDELETE       Permission = "DATA_FABRIC_CONNECTOR_DELETE"
@@ -1904,6 +2177,10 @@ const (
 	PermissionROLEBINDINGCREATE               Permission = "ROLE_BINDING_CREATE"
 	PermissionROLEBINDINGDELETE               Permission = "ROLE_BINDING_DELETE"
 	PermissionROLEBINDINGREAD                 Permission = "ROLE_BINDING_READ"
+	PermissionROLECREATE                      Permission = "ROLE_CREATE"
+	PermissionROLEDELETE                      Permission = "ROLE_DELETE"
+	PermissionROLEREAD                        Permission = "ROLE_READ"
+	PermissionROLEUPDATE                      Permission = "ROLE_UPDATE"
 	PermissionSERVICEKEYCREATE                Permission = "SERVICE_KEY_CREATE"
 	PermissionSERVICEKEYREAD                  Permission = "SERVICE_KEY_READ"
 	PermissionSERVICEKEYREVOKE                Permission = "SERVICE_KEY_REVOKE"
@@ -1929,6 +2206,14 @@ const (
 // Valid indicates whether the value is a known member of the Permission enum.
 func (e Permission) Valid() bool {
 	switch e {
+	case PermissionAGENTROLECREATE:
+		return true
+	case PermissionAGENTROLEDELETE:
+		return true
+	case PermissionAGENTROLEREAD:
+		return true
+	case PermissionAGENTROLEUPDATE:
+		return true
 	case PermissionAIPROVIDERREAD:
 		return true
 	case PermissionALYXRUN:
@@ -1940,6 +2225,14 @@ func (e Permission) Valid() bool {
 	case PermissionANNOTATIONCONFIGREAD:
 		return true
 	case PermissionANNOTATIONCONFIGUPDATE:
+		return true
+	case PermissionCOSTCONFIGCREATE:
+		return true
+	case PermissionCOSTCONFIGDELETE:
+		return true
+	case PermissionCOSTCONFIGREAD:
+		return true
+	case PermissionCOSTCONFIGUPDATE:
 		return true
 	case PermissionCUSTOMMETRICCREATE:
 		return true
@@ -1954,6 +2247,8 @@ func (e Permission) Valid() bool {
 	case PermissionDASHBOARDDELETE:
 		return true
 	case PermissionDASHBOARDREAD:
+		return true
+	case PermissionDASHBOARDRESTRICT:
 		return true
 	case PermissionDASHBOARDUPDATE:
 		return true
@@ -2153,6 +2448,14 @@ func (e Permission) Valid() bool {
 		return true
 	case PermissionROLEBINDINGREAD:
 		return true
+	case PermissionROLECREATE:
+		return true
+	case PermissionROLEDELETE:
+		return true
+	case PermissionROLEREAD:
+		return true
+	case PermissionROLEUPDATE:
+		return true
 	case PermissionSERVICEKEYCREATE:
 		return true
 	case PermissionSERVICEKEYREAD:
@@ -2198,15 +2501,39 @@ func (e Permission) Valid() bool {
 	}
 }
 
+// Defines values for ProjectType.
+const (
+	ProjectTypeAPPLICATION ProjectType = "APPLICATION"
+	ProjectTypeEXPERIMENT  ProjectType = "EXPERIMENT"
+	ProjectTypeHARNESS     ProjectType = "HARNESS"
+)
+
+// Valid indicates whether the value is a known member of the ProjectType enum.
+func (e ProjectType) Valid() bool {
+	switch e {
+	case ProjectTypeAPPLICATION:
+		return true
+	case ProjectTypeEXPERIMENT:
+		return true
+	case ProjectTypeHARNESS:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for RecordGranularity.
 const (
-	RecordGranularitySPAN  RecordGranularity = "SPAN"
-	RecordGranularityTRACE RecordGranularity = "TRACE"
+	RecordGranularitySESSION RecordGranularity = "SESSION"
+	RecordGranularitySPAN    RecordGranularity = "SPAN"
+	RecordGranularityTRACE   RecordGranularity = "TRACE"
 )
 
 // Valid indicates whether the value is a known member of the RecordGranularity enum.
 func (e RecordGranularity) Valid() bool {
 	switch e {
+	case RecordGranularitySESSION:
+		return true
 	case RecordGranularitySPAN:
 		return true
 	case RecordGranularityTRACE:
@@ -2218,12 +2545,15 @@ func (e RecordGranularity) Valid() bool {
 
 // Defines values for ResourceRestrictionType.
 const (
-	ResourceRestrictionTypePROJECT ResourceRestrictionType = "PROJECT"
+	ResourceRestrictionTypeDASHBOARD ResourceRestrictionType = "DASHBOARD"
+	ResourceRestrictionTypePROJECT   ResourceRestrictionType = "PROJECT"
 )
 
 // Valid indicates whether the value is a known member of the ResourceRestrictionType enum.
 func (e ResourceRestrictionType) Valid() bool {
 	switch e {
+	case ResourceRestrictionTypeDASHBOARD:
+		return true
 	case ResourceRestrictionTypePROJECT:
 		return true
 	default:
@@ -2264,21 +2594,6 @@ func (e RoleBindingResourceType) Valid() bool {
 	case RoleBindingResourceTypePROJECT:
 		return true
 	case RoleBindingResourceTypeSPACE:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for ServiceApiKeyCreatedKeyType.
-const (
-	ServiceApiKeyCreatedKeyTypeSERVICE ServiceApiKeyCreatedKeyType = "SERVICE"
-)
-
-// Valid indicates whether the value is a known member of the ServiceApiKeyCreatedKeyType enum.
-func (e ServiceApiKeyCreatedKeyType) Valid() bool {
-	switch e {
-	case ServiceApiKeyCreatedKeyTypeSERVICE:
 		return true
 	default:
 		return false
@@ -2390,6 +2705,75 @@ func (e StaticParamType) Valid() bool {
 	}
 }
 
+// Defines values for TagColor.
+const (
+	TagColorAUBURN TagColor = "AUBURN"
+	TagColorBLUE   TagColor = "BLUE"
+	TagColorBROWN  TagColor = "BROWN"
+	TagColorCORAL  TagColor = "CORAL"
+	TagColorCYAN   TagColor = "CYAN"
+	TagColorGRAY   TagColor = "GRAY"
+	TagColorGREEN  TagColor = "GREEN"
+	TagColorINDIGO TagColor = "INDIGO"
+	TagColorLEMON  TagColor = "LEMON"
+	TagColorLIME   TagColor = "LIME"
+	TagColorOLIVE  TagColor = "OLIVE"
+	TagColorORANGE TagColor = "ORANGE"
+	TagColorPINE   TagColor = "PINE"
+	TagColorPINK   TagColor = "PINK"
+	TagColorPLUM   TagColor = "PLUM"
+	TagColorPURPLE TagColor = "PURPLE"
+	TagColorRED    TagColor = "RED"
+	TagColorTEAL   TagColor = "TEAL"
+	TagColorYELLOW TagColor = "YELLOW"
+)
+
+// Valid indicates whether the value is a known member of the TagColor enum.
+func (e TagColor) Valid() bool {
+	switch e {
+	case TagColorAUBURN:
+		return true
+	case TagColorBLUE:
+		return true
+	case TagColorBROWN:
+		return true
+	case TagColorCORAL:
+		return true
+	case TagColorCYAN:
+		return true
+	case TagColorGRAY:
+		return true
+	case TagColorGREEN:
+		return true
+	case TagColorINDIGO:
+		return true
+	case TagColorLEMON:
+		return true
+	case TagColorLIME:
+		return true
+	case TagColorOLIVE:
+		return true
+	case TagColorORANGE:
+		return true
+	case TagColorPINE:
+		return true
+	case TagColorPINK:
+		return true
+	case TagColorPLUM:
+		return true
+	case TagColorPURPLE:
+		return true
+	case TagColorRED:
+		return true
+	case TagColorTEAL:
+		return true
+	case TagColorYELLOW:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for TaskRunStatus.
 const (
 	TaskRunStatusCANCELLED TaskRunStatus = "CANCELLED"
@@ -2453,6 +2837,21 @@ func (e TemplateEvaluationRunConfigExperimentType) Valid() bool {
 	}
 }
 
+// Defines values for TemplateEvaluationRunConfigRequestExperimentType.
+const (
+	TemplateEvaluationRunConfigRequestExperimentTypeTEMPLATEEVALUATION TemplateEvaluationRunConfigRequestExperimentType = "TEMPLATE_EVALUATION"
+)
+
+// Valid indicates whether the value is a known member of the TemplateEvaluationRunConfigRequestExperimentType enum.
+func (e TemplateEvaluationRunConfigRequestExperimentType) Valid() bool {
+	switch e {
+	case TemplateEvaluationRunConfigRequestExperimentTypeTEMPLATEEVALUATION:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ThresholdCalculation.
 const (
 	ThresholdCalculationMAD   ThresholdCalculation = "MAD"
@@ -2495,6 +2894,21 @@ func (e ThresholdOperator) Valid() bool {
 	case ThresholdOperatorLESSTHANOREQUAL:
 		return true
 	case ThresholdOperatorNOTEQUALS:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for TogetherAiConfigProvider.
+const (
+	TogetherAiConfigProviderTOGETHERAI TogetherAiConfigProvider = "TOGETHER_AI"
+)
+
+// Valid indicates whether the value is a known member of the TogetherAiConfigProvider enum.
+func (e TogetherAiConfigProvider) Valid() bool {
+	switch e {
+	case TogetherAiConfigProviderTOGETHERAI:
 		return true
 	default:
 		return false
@@ -2618,6 +3032,21 @@ func (e UpdateContinuousAnnotationConfigRequestAnnotationConfigType) Valid() boo
 	}
 }
 
+// Defines values for UpdateEvaluatorIntegrationRequestType.
+const (
+	UpdateEvaluatorIntegrationRequestTypeEVALUATOR UpdateEvaluatorIntegrationRequestType = "EVALUATOR"
+)
+
+// Valid indicates whether the value is a known member of the UpdateEvaluatorIntegrationRequestType enum.
+func (e UpdateEvaluatorIntegrationRequestType) Valid() bool {
+	switch e {
+	case UpdateEvaluatorIntegrationRequestTypeEVALUATOR:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for UpdateFreeformAnnotationConfigRequestAnnotationConfigType.
 const (
 	UpdateFreeformAnnotationConfigRequestAnnotationConfigTypeFREEFORM UpdateFreeformAnnotationConfigRequestAnnotationConfigType = "FREEFORM"
@@ -2642,21 +3071,6 @@ const (
 func (e UpdateLlmIntegrationRequestType) Valid() bool {
 	switch e {
 	case UpdateLlmIntegrationRequestTypeLLM:
-		return true
-	default:
-		return false
-	}
-}
-
-// Defines values for UserApiKeyCreatedKeyType.
-const (
-	UserApiKeyCreatedKeyTypeUSER UserApiKeyCreatedKeyType = "USER"
-)
-
-// Valid indicates whether the value is a known member of the UserApiKeyCreatedKeyType enum.
-func (e UserApiKeyCreatedKeyType) Valid() bool {
-	switch e {
-	case UserApiKeyCreatedKeyTypeUSER:
 		return true
 	default:
 		return false
@@ -2762,6 +3176,48 @@ func (e VertexAiConfigProvider) Valid() bool {
 	}
 }
 
+// Defines values for WebhookAuthType.
+const (
+	WebhookAuthTypeBEARER     WebhookAuthType = "BEARER"
+	WebhookAuthTypeHMACSHA256 WebhookAuthType = "HMAC_SHA256"
+)
+
+// Valid indicates whether the value is a known member of the WebhookAuthType enum.
+func (e WebhookAuthType) Valid() bool {
+	switch e {
+	case WebhookAuthTypeBEARER:
+		return true
+	case WebhookAuthTypeHMACSHA256:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for WebhookEventType.
+const (
+	WebhookEventTypeEVALUATORVERSIONCREATED WebhookEventType = "EVALUATOR_VERSION_CREATED"
+	WebhookEventTypePROMPTVERSIONCREATED    WebhookEventType = "PROMPT_VERSION_CREATED"
+	WebhookEventTypePROMPTVERSIONLABELED    WebhookEventType = "PROMPT_VERSION_LABELED"
+	WebhookEventTypePROMPTVERSIONUNLABELED  WebhookEventType = "PROMPT_VERSION_UNLABELED"
+)
+
+// Valid indicates whether the value is a known member of the WebhookEventType enum.
+func (e WebhookEventType) Valid() bool {
+	switch e {
+	case WebhookEventTypeEVALUATORVERSIONCREATED:
+		return true
+	case WebhookEventTypePROMPTVERSIONCREATED:
+		return true
+	case WebhookEventTypePROMPTVERSIONLABELED:
+		return true
+	case WebhookEventTypePROMPTVERSIONUNLABELED:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for WebhookNotificationConfigType.
 const (
 	WebhookNotificationConfigTypeWEBHOOK WebhookNotificationConfigType = "WEBHOOK"
@@ -2777,9 +3233,27 @@ func (e WebhookNotificationConfigType) Valid() bool {
 	}
 }
 
+// Defines values for WebhookSourceType.
+const (
+	WebhookSourceTypeEVALUATOR WebhookSourceType = "EVALUATOR"
+	WebhookSourceTypePROMPT    WebhookSourceType = "PROMPT"
+)
+
+// Valid indicates whether the value is a known member of the WebhookSourceType enum.
+func (e WebhookSourceType) Valid() bool {
+	switch e {
+	case WebhookSourceTypeEVALUATOR:
+		return true
+	case WebhookSourceTypePROMPT:
+		return true
+	default:
+		return false
+	}
+}
+
 // AddAnnotationQueueRecordsRequest defines model for AddAnnotationQueueRecordsRequest.
 type AddAnnotationQueueRecordsRequest struct {
-	// RecordSources Record sources to add to the annotation queue. At most 2 record sources (projects or datasets) may be provided in a single request. The total number of records resolved from all sources must not exceed 500.
+	// RecordSources Record sources to add to the annotation queue. At most 2 record sources (projects or datasets) may be provided in a single request. The total number of records resolved from all sources must not exceed 500. The total number of session records across all sources must not exceed 100.
 	RecordSources []AnnotationQueueRecordInput `json:"record_sources"`
 }
 
@@ -2805,6 +3279,15 @@ type AddSpaceUserRequest struct {
 	UserId Id `json:"user_id"`
 }
 
+// AddTagsRequest defines model for AddTagsRequest.
+type AddTagsRequest struct {
+	// TagIds IDs of the tags to attach. Up to 100 per request. Tags must belong to
+	// the same space as the resource. Attaching a tag that is already
+	// attached is idempotent rather than an error, so the same request can be
+	// retried safely.
+	TagIds []Id `json:"tag_ids"`
+}
+
 // AgentCallRunConfig Configuration for running an agent integration against each dataset
 // example. The `input_template` is sent to the agent after Mustache
 // substitution.
@@ -2824,11 +3307,32 @@ type AgentCallRunConfig struct {
 	// IntegrationId Agent integration identifier (base64). The agent invoked for each
 	// dataset example. Must reference an integration of `type` `AGENT`;
 	// other integration types are rejected.
-	IntegrationId string `json:"integration_id"`
+	IntegrationId        string                 `json:"integration_id"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // AgentCallRunConfigExperimentType Discriminator. Must be `"AGENT_CALL"`.
 type AgentCallRunConfigExperimentType string
+
+// AgentCallRunConfigRequest Strict request configuration for running an agent integration.
+type AgentCallRunConfigRequest struct {
+	// ExperimentType Discriminator. Must be `"AGENT_CALL"`.
+	ExperimentType AgentCallRunConfigRequestExperimentType `json:"experiment_type"`
+
+	// InputTemplate JSON request body sent to the agent for each dataset example. Must be a
+	// JSON object whose values conform to the agent integration's input
+	// schema. Mustache placeholders (`{{column}}`) are substituted with each
+	// dataset row's values before the request is sent.
+	InputTemplate map[string]interface{} `json:"input_template"`
+
+	// IntegrationId Agent integration identifier (base64). The agent invoked for each
+	// dataset example. Must reference an integration of `type` `AGENT`;
+	// other integration types are rejected.
+	IntegrationId string `json:"integration_id"`
+}
+
+// AgentCallRunConfigRequestExperimentType Discriminator. Must be `"AGENT_CALL"`.
+type AgentCallRunConfigRequestExperimentType string
 
 // AgentConfig Configuration for `type: AGENT` integrations: a customer-hosted HTTPS
 // endpoint plus a JSON Schema describing the request payload.
@@ -2869,7 +3373,7 @@ type AgentIntegration struct {
 	// Id The unique identifier for the integration.
 	Id string `json:"id"`
 
-	// Name The integration name. Unique per (account, type).
+	// Name The integration name. Unique among active AGENT and EVALUATOR integrations in the account.
 	Name string `json:"name"`
 
 	// Scopings Visibility scoping rules. Account-wide when empty.
@@ -2898,8 +3402,10 @@ type AgentIntegrationType string
 type AgentRequestPreset struct {
 	// Config Partial request body. Validated against the parent integration's
 	// `input_schema` with `required` dropped.
-	Config    map[string]interface{} `json:"config"`
-	CreatedAt *time.Time             `json:"created_at,omitempty"`
+	Config map[string]interface{} `json:"config"`
+
+	// CreatedAt When the preset was created. Read-only.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
 
 	// Description Optional preset description (length 0-1024).
 	Description *string `json:"description,omitempty"`
@@ -2908,7 +3414,9 @@ type AgentRequestPreset struct {
 	Id *string `json:"id,omitempty"`
 
 	// Name Preset name (unique within the integration). Length 1-255.
-	Name                 string                 `json:"name"`
+	Name string `json:"name"`
+
+	// UpdatedAt When the preset was last updated. Read-only.
 	UpdatedAt            *time.Time             `json:"updated_at,omitempty"`
 	AdditionalProperties map[string]interface{} `json:"-"`
 }
@@ -2917,7 +3425,7 @@ type AgentRequestPreset struct {
 // Azure OpenAI, AWS Bedrock, Vertex AI). Integrations can be scoped to the entire
 // account, a specific organization, or a specific space.
 type AiIntegration struct {
-	// AuthType The authentication method for this integration
+	// AuthType The authentication method for this integration. `OAUTH2_CLIENT_CREDENTIALS` is returned for integrations configured with OAuth 2.0 client credentials in the Arize UI. Setting it through this API is not yet supported.
 	AuthType AiIntegrationAuthType `json:"auth_type"`
 
 	// BaseUrl Custom base URL for the provider
@@ -2963,7 +3471,7 @@ type AiIntegration struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// AiIntegrationAuthType The authentication method for this integration
+// AiIntegrationAuthType The authentication method for this integration. `OAUTH2_CLIENT_CREDENTIALS` is returned for integrations configured with OAuth 2.0 client credentials in the Arize UI. Setting it through this API is not yet supported.
 type AiIntegrationAuthType string
 
 // AiIntegrationProvider The AI provider for this integration
@@ -3027,7 +3535,7 @@ type AnnotateExperimentRunsRequest struct {
 
 // AnnotateRecordInput A single record to annotate in a batch, identified by its record ID.
 type AnnotateRecordInput struct {
-	// RecordId The record identifier (span ID, dataset example ID, or experiment run ID, depending on the endpoint).
+	// RecordId The record identifier — a span ID, session ID, dataset example ID, or experiment run ID, depending on the endpoint and (for spans) the `granularity` field.
 	RecordId string `json:"record_id"`
 
 	// Values One or more annotation values to set on this record.
@@ -3036,19 +3544,19 @@ type AnnotateRecordInput struct {
 
 // AnnotateSpansRequest Batch annotation request for project spans.
 type AnnotateSpansRequest struct {
-	// Annotations Batch of span annotations to write. Up to 1000 spans per request.
+	// Annotations Batch of annotations to write. Up to 1000 records per request for SPAN or TRACE granularity; up to 100 records per request for SESSION granularity.
 	Annotations []AnnotateRecordInput `json:"annotations"`
 
 	// EndTime End of the time range for span lookup. Optional; defaults to now.
 	EndTime *time.Time `json:"end_time,omitempty"`
 
-	// Granularity Whether the record is a span or a trace, which affects whether annotations are written as span annotations or trace annotations. Attempts to write trace annotations on spans will be rejected. Optional; defaults to 'SPAN'.
+	// Granularity Whether the record is a span, a trace, or a session, which affects whether annotations are written as span, trace, or session annotations. For TRACE, each `record_id` must be a trace's root span; attempts to write trace annotations on non-root spans will be rejected. For SESSION, each `record_id` is a session ID; the annotation is written to the root span of the session's earliest trace within the lookup window. Optional; defaults to 'SPAN'.
 	Granularity *RecordGranularity `json:"granularity,omitempty"`
 
 	// ProjectId The project (model) ID whose spans are being annotated.
 	ProjectId string `json:"project_id"`
 
-	// StartTime Start of the time range for span lookup. Optional; defaults to 31 days ago.
+	// StartTime Start of the time range for span lookup. Optional; defaults to 31 days before end_time, or 7 days before end_time when granularity is SESSION.
 	StartTime *time.Time `json:"start_time,omitempty"`
 }
 
@@ -3107,6 +3615,10 @@ type AnnotationQueue struct {
 
 	// Annotators Users assigned as annotators to this queue
 	Annotators []AnnotatorUser `json:"annotators"`
+
+	// ColumnAllowlist The record column names annotators assigned to this queue are allowed to see.
+	// Absent or `null` means the queue is unrestricted and annotators see every column.
+	ColumnAllowlist *[]string `json:"column_allowlist,omitempty"`
 
 	// CreatedAt The timestamp for when the annotation queue was created
 	CreatedAt time.Time `json:"created_at"`
@@ -3184,6 +3696,9 @@ type AnnotationQueueRecord struct {
 	// Id The unique identifier for the record
 	Id string `json:"id"`
 
+	// SessionAnnotations Session annotations on this record.
+	SessionAnnotations []Annotation `json:"session_annotations"`
+
 	// SourceType Source type of the annotation queue record.
 	// - SPANS - The record originates from span data.
 	// - DATASET - The record originates from a dataset example.
@@ -3197,6 +3712,27 @@ type AnnotationQueueRecord struct {
 type AnnotationQueueRecordInput struct {
 	union json.RawMessage
 }
+
+// AnnotationQueueSessionRecordInput defines model for AnnotationQueueSessionRecordInput.
+type AnnotationQueueSessionRecordInput struct {
+	// EndTime End of the time range. Must be after start_time.
+	EndTime time.Time `json:"end_time"`
+
+	// ProjectId The project ID these sessions belong to.
+	ProjectId string `json:"project_id"`
+
+	// RecordType Discriminator identifying this record as a session record.
+	RecordType AnnotationQueueSessionRecordInputRecordType `json:"record_type"`
+
+	// SessionIds List of session IDs to add to the queue. A request may contain at most 100 session IDs in total across all record sources.
+	SessionIds []string `json:"session_ids"`
+
+	// StartTime Start of the time range used to resolve each session's first trace. The range (end_time - start_time) must not exceed 7 days.
+	StartTime time.Time `json:"start_time"`
+}
+
+// AnnotationQueueSessionRecordInputRecordType Discriminator identifying this record as a session record.
+type AnnotationQueueSessionRecordInputRecordType string
 
 // AnnotationQueueSourceType Source type of the annotation queue record.
 // - SPANS - The record originates from span data.
@@ -3256,6 +3792,9 @@ type AnnotatorUser struct {
 
 // AnthropicConfig Config for an Anthropic LLM integration.
 type AnthropicConfig struct {
+	// BaseUrl Endpoint URL serving the Anthropic Messages API, including the version path. Null when not set.
+	BaseUrl *string `json:"base_url"`
+
 	// HasApiKey Whether an API key is configured (the key itself is never returned).
 	HasApiKey bool `json:"has_api_key"`
 
@@ -3636,20 +4175,24 @@ type CreateAgentConfig struct {
 
 // CreateAgentIntegrationRequest defines model for CreateAgentIntegrationRequest.
 type CreateAgentIntegrationRequest struct {
-	Config      CreateAgentConfig `json:"config"`
-	Description *string           `json:"description,omitempty"`
+	Config CreateAgentConfig `json:"config"`
 
-	// Name Integration name (unique within the account).
+	// Description Optional human-readable description of the integration.
+	Description *string `json:"description,omitempty"`
+
+	// Name Integration name. Must be unique among active AGENT and EVALUATOR integrations in the account.
 	Name string `json:"name"`
 
 	// Scopings Visibility scoping rules. Defaults to account-wide if omitted
 	// or empty. A scoping with `space_id` set MUST also set
 	// `organization_id`.
-	Scopings *[]IntegrationScopingRequest      `json:"scopings,omitempty"`
-	Type     CreateAgentIntegrationRequestType `json:"type"`
+	Scopings *[]IntegrationScopingRequest `json:"scopings,omitempty"`
+
+	// Type Discriminator identifying this request as an agent integration.
+	Type CreateAgentIntegrationRequestType `json:"type"`
 }
 
-// CreateAgentIntegrationRequestType defines model for CreateAgentIntegrationRequest.Type.
+// CreateAgentIntegrationRequestType Discriminator identifying this request as an agent integration.
 type CreateAgentIntegrationRequestType string
 
 // CreateAgentRequestPresetInput Write shape for an agent request preset on create. Server-generated fields
@@ -3671,7 +4214,7 @@ type CreateAiIntegrationRequest struct {
 	// ApiKey API key for the provider (write-only, never returned)
 	ApiKey *string `json:"api_key,omitempty"`
 
-	// AuthType The authentication method for this integration
+	// AuthType The authentication method for this integration. `OAUTH2_CLIENT_CREDENTIALS` is returned for integrations configured with OAuth 2.0 client credentials in the Arize UI. Setting it through this API is not yet supported.
 	AuthType *AiIntegrationAuthType `json:"auth_type,omitempty"`
 
 	// BaseUrl Custom base URL for the provider
@@ -3729,30 +4272,41 @@ type CreateAnnotationQueueRequest struct {
 	// AssignmentMethod How records are assigned to annotators. Defaults to `ALL` when omitted.
 	AssignmentMethod *AssignmentMethod `json:"assignment_method,omitempty"`
 
+	// ColumnAllowlist The record column names annotators assigned to this queue are allowed to see.
+	// Omit or send an empty list to leave the queue unrestricted, so annotators see every
+	// column. Because this is an allowlist, columns introduced by records added to the
+	// queue later stay hidden until an admin allows them.
+	ColumnAllowlist *[]string `json:"column_allowlist,omitempty"`
+
 	// Instructions Instructions for annotators working on this queue
 	Instructions *string `json:"instructions,omitempty"`
 
 	// Name The name of the annotation queue. Must be unique within the space for active queues.
 	Name string `json:"name"`
 
-	// RecordSources Record sources to add to the annotation queue on creation. At most 2 record sources (projects or datasets) may be provided in a single create request. The total number of records resolved from all sources must not exceed 500. Additional records from other sources can be added after creation.
+	// RecordSources Record sources to add to the annotation queue on creation. At most 2 record sources (projects or datasets) may be provided in a single create request. The total number of records resolved from all sources must not exceed 500. The total number of session records across all sources must not exceed 100. Additional records from other sources can be added after creation.
 	RecordSources *[]AnnotationQueueRecordInput `json:"record_sources,omitempty"`
 
 	// SpaceId The space ID that the annotation queue belongs to
 	SpaceId string `json:"space_id"`
 }
 
-// CreateAnthropicConfig Create config for an Anthropic LLM integration. `api_key` is required and is write-only (never returned in responses).
+// CreateAnthropicConfig Create config for an Anthropic LLM integration. `api_key` is required and is write-only (never returned in responses). `base_url` is optional; omit it to use the public Anthropic API.
 type CreateAnthropicConfig struct {
 	// ApiKey API key for the provider (write-only, never returned).
 	ApiKey string `json:"api_key"`
 
+	// BaseUrl Endpoint URL (HTTPS) serving the Anthropic Messages API, including the version path (e.g. `https://api.anthropic.com/v1`). Do not include `/messages`, which is appended automatically. Defaults to the public Anthropic API.
+	BaseUrl *string `json:"base_url,omitempty"`
+
 	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
-	IsFunctionCallingEnabled *bool                         `json:"is_function_calling_enabled,omitempty"`
-	Provider                 CreateAnthropicConfigProvider `json:"provider"`
+	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
+
+	// Provider Discriminator identifying the Anthropic provider.
+	Provider CreateAnthropicConfigProvider `json:"provider"`
 }
 
-// CreateAnthropicConfigProvider defines model for CreateAnthropicConfig.Provider.
+// CreateAnthropicConfigProvider Discriminator identifying the Anthropic provider.
 type CreateAnthropicConfigProvider string
 
 // CreateApiKeyRequest Request body for creating an API key. Set `key_type` to select the kind of key:
@@ -3785,14 +4339,16 @@ type CreateAwsBedrockAuth struct {
 // CreateAwsBedrockBearerTokenAuth Create bearer-token auth. `api_key` is required and write-only (never returned; surfaces as `has_api_key` on read).
 type CreateAwsBedrockBearerTokenAuth struct {
 	// ApiKey Bearer token for Bedrock (write-only, never returned).
-	ApiKey   string                                  `json:"api_key"`
+	ApiKey string `json:"api_key"`
+
+	// AuthType Discriminator identifying bearer-token auth.
 	AuthType CreateAwsBedrockBearerTokenAuthAuthType `json:"auth_type"`
 
 	// BaseUrl Custom Bedrock endpoint URL. Defaults to the provider default endpoint.
 	BaseUrl *string `json:"base_url,omitempty"`
 }
 
-// CreateAwsBedrockBearerTokenAuthAuthType defines model for CreateAwsBedrockBearerTokenAuth.AuthType.
+// CreateAwsBedrockBearerTokenAuthAuthType Discriminator identifying bearer-token auth.
 type CreateAwsBedrockBearerTokenAuthAuthType string
 
 // CreateAwsBedrockConfig Create config for an AWS Bedrock LLM integration. `auth` selects one of three auth modes via `auth_type`. The integration must have at least one model available: enable `is_default_models_enabled` or provide at least one entry in `model_names`, otherwise the request is rejected with 422.
@@ -3804,15 +4360,18 @@ type CreateAwsBedrockConfig struct {
 	IsDefaultModelsEnabled *bool `json:"is_default_models_enabled,omitempty"`
 
 	// ModelNames Custom model names to make available. Defaults to none.
-	ModelNames *[]string                      `json:"model_names,omitempty"`
-	Provider   CreateAwsBedrockConfigProvider `json:"provider"`
+	ModelNames *[]string `json:"model_names,omitempty"`
+
+	// Provider Discriminator identifying the AWS Bedrock provider.
+	Provider CreateAwsBedrockConfigProvider `json:"provider"`
 }
 
-// CreateAwsBedrockConfigProvider defines model for CreateAwsBedrockConfig.Provider.
+// CreateAwsBedrockConfigProvider Discriminator identifying the AWS Bedrock provider.
 type CreateAwsBedrockConfigProvider string
 
 // CreateAwsBedrockDefaultAuth Create role-assumption auth. `role_arn` is required.
 type CreateAwsBedrockDefaultAuth struct {
+	// AuthType Discriminator identifying role-assumption auth.
 	AuthType CreateAwsBedrockDefaultAuthAuthType `json:"auth_type"`
 
 	// BaseUrl Custom Bedrock endpoint URL. Defaults to the provider default endpoint.
@@ -3825,11 +4384,12 @@ type CreateAwsBedrockDefaultAuth struct {
 	RoleArn string `json:"role_arn"`
 }
 
-// CreateAwsBedrockDefaultAuthAuthType defines model for CreateAwsBedrockDefaultAuth.AuthType.
+// CreateAwsBedrockDefaultAuthAuthType Discriminator identifying role-assumption auth.
 type CreateAwsBedrockDefaultAuthAuthType string
 
 // CreateAwsBedrockProxyWithHeadersAuth Create proxy auth. `base_url` is required. `headers` is write-only; names are returned as `header_names` on read.
 type CreateAwsBedrockProxyWithHeadersAuth struct {
+	// AuthType Discriminator identifying proxy auth.
 	AuthType CreateAwsBedrockProxyWithHeadersAuthAuthType `json:"auth_type"`
 
 	// BaseUrl Proxy URL requests are forwarded to (HTTPS).
@@ -3839,7 +4399,7 @@ type CreateAwsBedrockProxyWithHeadersAuth struct {
 	Headers *map[string]string `json:"headers,omitempty"`
 }
 
-// CreateAwsBedrockProxyWithHeadersAuthAuthType defines model for CreateAwsBedrockProxyWithHeadersAuth.AuthType.
+// CreateAwsBedrockProxyWithHeadersAuthAuthType Discriminator identifying proxy auth.
 type CreateAwsBedrockProxyWithHeadersAuthAuthType string
 
 // CreateCategoricalAnnotationConfigRequest defines model for CreateCategoricalAnnotationConfigRequest.
@@ -3865,13 +4425,19 @@ type CreateCategoricalAnnotationConfigRequestAnnotationConfigType string
 
 // CreateCodeEvaluationTaskRequest Request body for creating a `CODE_EVALUATION` task. Requires `evaluators`
 // and exactly one of `project_id` or `dataset_id`. When `dataset_id` is provided,
-// `experiment_ids` must contain at least one entry.
+// `experiment_ids` must contain at least one entry. Supports the same span and
+// trace/session evaluator shapes as `CreateTemplateEvaluationTaskRequest`.
 type CreateCodeEvaluationTaskRequest struct {
 	// DatasetId Dataset identifier (base64). Required when `project_id` is not provided.
 	// Mutually exclusive with `project_id`.
 	DatasetId *string `json:"dataset_id,omitempty"`
 
-	// Evaluators Evaluators to attach (at least one required).
+	// Evaluators Evaluators to attach (at least one required). Evaluators use one of two
+	// mutually exclusive shapes by data granularity. Span evaluators use
+	// `query_filter` + per-evaluator `column_mappings`/`query_filter`.
+	// Trace/session evaluators use task-level `query_filters` plus
+	// per-evaluator `query_mappings`. Mixing the two shapes returns 400. The
+	// granularity must match the chosen shape (enforced server-side).
 	Evaluators []TaskEvaluatorInput `json:"evaluators"`
 
 	// ExperimentIds Experiment identifiers (base64). Required when `dataset_id` is provided
@@ -3889,8 +4455,13 @@ type CreateCodeEvaluationTaskRequest struct {
 	// Mutually exclusive with `dataset_id`.
 	ProjectId *string `json:"project_id,omitempty"`
 
-	// QueryFilter Task-level query filter applied to all evaluated data.
+	// QueryFilter Task-level query filter applied to all evaluated data (span shape).
+	// Mutually exclusive with `query_filters`.
 	QueryFilter *string `json:"query_filter,omitempty"`
+
+	// QueryFilters Named query filters plus optional expression for trace/session
+	// evaluators. Mutually exclusive with `query_filter`.
+	QueryFilters *TaskQueryFiltersInput `json:"query_filters,omitempty"`
 
 	// SamplingRate Sampling rate between 0 and 1. Only supported on project-based tasks.
 	SamplingRate *float32 `json:"sampling_rate,omitempty"`
@@ -3936,10 +4507,18 @@ type CreateContinuousAnnotationConfigRequest struct {
 // CreateContinuousAnnotationConfigRequestAnnotationConfigType Discriminator value identifying a continuous annotation config.
 type CreateContinuousAnnotationConfigRequestAnnotationConfigType string
 
+// CreateCustomAuth Custom endpoint auth settings for create and update, discriminated by `auth_type`. On PATCH this object replaces the stored auth settings wholesale (auth_type may change); credentials belonging to the auth mode being switched away from are cleared.
+type CreateCustomAuth struct {
+	union json.RawMessage
+}
+
 // CreateCustomConfig Create config for a custom OpenAI-compatible endpoint integration. `base_url` is required and must implement the OpenAI API shape (it is validated server-side and must resolve to a public address). `api_key` and `headers` are write-only (never returned; headers surface as `header_names` on read). The integration must have at least one model source: enable `is_default_models_enabled` or provide at least one entry in `model_names`, otherwise the request is rejected with 422.
 type CreateCustomConfig struct {
-	// ApiKey API key for the endpoint (write-only, never returned).
+	// ApiKey API key for the endpoint (write-only, never returned). Equivalent to an `auth` block with `auth_type: DEFAULT`; supplying both this and `auth` is rejected with 422.
 	ApiKey *string `json:"api_key,omitempty"`
+
+	// Auth Custom endpoint auth settings for create and update, discriminated by `auth_type`. On PATCH this object replaces the stored auth settings wholesale (auth_type may change); credentials belonging to the auth mode being switched away from are cleared.
+	Auth *CreateCustomAuth `json:"auth,omitempty"`
 
 	// BaseUrl Endpoint URL requests are sent to (HTTPS).
 	BaseUrl string `json:"base_url"`
@@ -3954,12 +4533,50 @@ type CreateCustomConfig struct {
 	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
 
 	// ModelNames Custom model names to make available. Defaults to none.
-	ModelNames *[]string                  `json:"model_names,omitempty"`
-	Provider   CreateCustomConfigProvider `json:"provider"`
+	ModelNames *[]string `json:"model_names,omitempty"`
+
+	// Provider Discriminator identifying a custom OpenAI-compatible endpoint.
+	Provider CreateCustomConfigProvider `json:"provider"`
 }
 
-// CreateCustomConfigProvider defines model for CreateCustomConfig.Provider.
+// CreateCustomConfigProvider Discriminator identifying a custom OpenAI-compatible endpoint.
 type CreateCustomConfigProvider string
+
+// CreateCustomDefaultAuth API-key auth. `api_key` is optional — a custom endpoint may require no credential at all. On PATCH this block replaces the stored auth wholesale, so omitting `api_key` clears any stored key rather than leaving it unchanged; send the key again to keep it.
+type CreateCustomDefaultAuth struct {
+	// ApiKey API key for the endpoint (write-only, never returned).
+	ApiKey *string `json:"api_key,omitempty"`
+
+	// AuthType Discriminator identifying API-key auth.
+	AuthType CreateCustomDefaultAuthAuthType `json:"auth_type"`
+}
+
+// CreateCustomDefaultAuthAuthType Discriminator identifying API-key auth.
+type CreateCustomDefaultAuthAuthType string
+
+// CreateCustomOauth2ClientCredentialsAuth Create OAuth 2.0 client-credentials auth (RFC 6749 section 4.4). Arize exchanges these credentials at `token_url` for a short-lived bearer token on each request to the endpoint. Mutually exclusive with a static `api_key`: supplying this auth block clears any stored API key.
+type CreateCustomOauth2ClientCredentialsAuth struct {
+	// Audience Audience to request at the token endpoint, required by some authorization servers. Defaults to not set.
+	Audience *string `json:"audience,omitempty"`
+
+	// AuthType Discriminator identifying OAuth 2.0 client-credentials auth.
+	AuthType CreateCustomOauth2ClientCredentialsAuthAuthType `json:"auth_type"`
+
+	// ClientId OAuth client ID. Not a secret, so it is returned on read. Must not contain a colon, which is ambiguous in HTTP Basic authentication.
+	ClientId string `json:"client_id"`
+
+	// ClientSecret OAuth client secret (write-only, never returned).
+	ClientSecret string `json:"client_secret"`
+
+	// Scopes Space-separated scopes to request at the token endpoint. Defaults to not set.
+	Scopes *string `json:"scopes,omitempty"`
+
+	// TokenUrl Token endpoint Arize exchanges the client credentials at (HTTPS; validated server-side and must resolve to a public address).
+	TokenUrl string `json:"token_url"`
+}
+
+// CreateCustomOauth2ClientCredentialsAuthAuthType Discriminator identifying OAuth 2.0 client-credentials auth.
+type CreateCustomOauth2ClientCredentialsAuthAuthType string
 
 // CreateDatasetExampleInput A dataset example with arbitrary user-defined fields. System-managed
 // fields are excluded for creation requests.
@@ -3977,9 +4594,47 @@ type CreateDatasetRequest struct {
 	SpaceId string `json:"space_id"`
 }
 
+// CreateEvaluatorIntegrationConfigInput Write shape for the evaluator config on create. `headers` is encrypted at
+// rest and never returned in responses; reads surface `has_headers`.
+type CreateEvaluatorIntegrationConfigInput struct {
+	// Endpoint HTTPS endpoint requests are sent to. Validated server-side and must resolve to a public address.
+	Endpoint string `json:"endpoint"`
+
+	// Headers Cleartext header map. Encrypted at rest; never returned in responses.
+	// Omitting this field on create means no headers are configured.
+	Headers *map[string]string `json:"headers,omitempty"`
+
+	// InputSchema JSON Schema (Draft-07) the endpoint's request body conforms to. The
+	// root schema must have `type: object`, must not define the reserved
+	// top-level `arize_metadata` field, and must not exceed 64 KiB.
+	InputSchema map[string]interface{} `json:"input_schema"`
+}
+
+// CreateEvaluatorIntegrationRequest defines model for CreateEvaluatorIntegrationRequest.
+type CreateEvaluatorIntegrationRequest struct {
+	// Config Write shape for the evaluator config on create. `headers` is encrypted at
+	// rest and never returned in responses; reads surface `has_headers`.
+	Config CreateEvaluatorIntegrationConfigInput `json:"config"`
+
+	// Description Optional human-readable description of the integration.
+	Description *string `json:"description,omitempty"`
+
+	// Name Integration name. Must be unique among active AGENT and EVALUATOR integrations in the account.
+	Name string `json:"name"`
+
+	// Scopings Visibility scoping rules. Defaults to account-wide if omitted
+	// or empty. A scoping with `space_id` set MUST also set
+	// `organization_id`.
+	Scopings *[]IntegrationScopingRequest `json:"scopings,omitempty"`
+
+	// Type Discriminator identifying this request as an evaluator integration.
+	Type CreateEvaluatorIntegrationRequestType `json:"type"`
+}
+
+// CreateEvaluatorIntegrationRequestType Discriminator identifying this request as an evaluator integration.
+type CreateEvaluatorIntegrationRequestType string
+
 // CreateEvaluatorRequest Body containing evaluator creation parameters with an initial version.
-//
-// Only `type: TEMPLATE` and `type: CODE` are currently accepted on creation.
 type CreateEvaluatorRequest struct {
 	// Description Evaluator description
 	Description *string `json:"description,omitempty"`
@@ -4003,13 +4658,15 @@ type CreateEvaluatorRequest struct {
 	// discriminator — a version's `type` must always match its parent evaluator's `type`.
 	Type EvaluatorType `json:"type"`
 
-	// Version Payload for an evaluator version: exactly one of `template_config` or `code_config`.
-	// Used both when creating an evaluator (initial `version`) and when appending a version.
+	// Version Payload for an evaluator version: exactly one of `template_config`, `code_config`,
+	// or `remote_config`. Used both when creating an evaluator (initial `version`) and when
+	// appending a version.
 	Version CreateEvaluatorVersionRequest `json:"version"`
 }
 
-// CreateEvaluatorVersionRequest Payload for an evaluator version: exactly one of `template_config` or `code_config`.
-// Used both when creating an evaluator (initial `version`) and when appending a version.
+// CreateEvaluatorVersionRequest Payload for an evaluator version: exactly one of `template_config`, `code_config`,
+// or `remote_config`. Used both when creating an evaluator (initial `version`) and when
+// appending a version.
 type CreateEvaluatorVersionRequest struct {
 	union json.RawMessage
 }
@@ -4029,15 +4686,37 @@ type CreateExperimentRequest struct {
 	// DatasetId ID of the dataset to associate the experiment with. Provide `space_id` instead when the experiment isn't associated with a dataset.
 	DatasetId *string `json:"dataset_id,omitempty"`
 
-	// ExperimentRuns Array of experiment run data
+	// ExperimentRuns Array of experiment run data. Between 1 and 1000 runs per request.
 	ExperimentRuns []ExperimentRunInput `json:"experiment_runs"`
 
-	// Name Name of the experiment
+	// Name Name of the experiment. Must be 1–255 characters and must not contain
+	// double quotes (`"`) or backslashes (`\`).
 	Name string `json:"name"`
 
 	// SpaceId ID of the space to create the experiment in. Provide instead of `dataset_id`.
 	SpaceId *string `json:"space_id,omitempty"`
 }
+
+// CreateFireworksConfig Create config for a Fireworks AI integration. `api_key` is required and is write-only (never returned; it surfaces as `has_api_key` on read). Fireworks is a single hosted service, so there is no endpoint field and no custom request headers. Neither `is_default_models_enabled` nor `model_names` is required: Arize resolves the models the key can reach from the Fireworks account, so an integration created with neither still has a selectable model list.
+type CreateFireworksConfig struct {
+	// ApiKey Fireworks AI API key (write-only, never returned).
+	ApiKey string `json:"api_key"`
+
+	// IsDefaultModelsEnabled Enable Arize's default model catalog. Defaults to false.
+	IsDefaultModelsEnabled *bool `json:"is_default_models_enabled,omitempty"`
+
+	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
+	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
+
+	// ModelNames Custom model names to make available. Defaults to an empty list.
+	ModelNames *[]string `json:"model_names,omitempty"`
+
+	// Provider Discriminator identifying the Fireworks AI provider.
+	Provider CreateFireworksConfigProvider `json:"provider"`
+}
+
+// CreateFireworksConfigProvider Discriminator identifying the Fireworks AI provider.
+type CreateFireworksConfigProvider string
 
 // CreateFreeformAnnotationConfigRequest defines model for CreateFreeformAnnotationConfigRequest.
 type CreateFreeformAnnotationConfigRequest struct {
@@ -4060,11 +4739,13 @@ type CreateGeminiConfig struct {
 	ApiKey string `json:"api_key"`
 
 	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
-	IsFunctionCallingEnabled *bool                      `json:"is_function_calling_enabled,omitempty"`
-	Provider                 CreateGeminiConfigProvider `json:"provider"`
+	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
+
+	// Provider Discriminator identifying the Gemini provider.
+	Provider CreateGeminiConfigProvider `json:"provider"`
 }
 
-// CreateGeminiConfigProvider defines model for CreateGeminiConfig.Provider.
+// CreateGeminiConfigProvider Discriminator identifying the Gemini provider.
 type CreateGeminiConfigProvider string
 
 // CreateIntegrationRequest defines model for CreateIntegrationRequest.
@@ -4072,9 +4753,34 @@ type CreateIntegrationRequest struct {
 	union json.RawMessage
 }
 
+// CreateLiteLlmConfig Create config for a LiteLLM integration. `base_url` is required and points at the LiteLLM endpoint (validated server-side); LiteLLM is self-hosted, so there is no default endpoint. `api_key` is required: the virtual key scopes the models Arize can resolve and call. `api_key` and `headers` are write-only (never returned; headers surface as `header_names` on read).
+type CreateLiteLlmConfig struct {
+	// ApiKey LiteLLM virtual key (write-only, never returned).
+	ApiKey string `json:"api_key"`
+
+	// BaseUrl LiteLLM endpoint URL requests are sent to (HTTPS).
+	BaseUrl string `json:"base_url"`
+
+	// Headers Custom request headers sent to the endpoint, as a name-to-value map. Write-only: values are never returned; names are exposed as `header_names` on read. Defaults to no headers. The serialized header map must not exceed 8,175 bytes.
+	Headers *map[string]string `json:"headers,omitempty"`
+
+	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
+	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
+
+	// ModelNames Custom model names to make available. Defaults to an empty list.
+	ModelNames *[]string `json:"model_names,omitempty"`
+
+	// Provider Discriminator identifying the LiteLLM provider.
+	Provider CreateLiteLlmConfigProvider `json:"provider"`
+}
+
+// CreateLiteLlmConfigProvider Discriminator identifying the LiteLLM provider.
+type CreateLiteLlmConfigProvider string
+
 // CreateLlmConfig defines model for CreateLlmConfig.
 type CreateLlmConfig struct {
-	union json.RawMessage
+	AdditionalProperties map[string]interface{} `json:"-"`
+	union                json.RawMessage
 }
 
 // CreateLlmIntegrationRequest defines model for CreateLlmIntegrationRequest.
@@ -4085,11 +4791,13 @@ type CreateLlmIntegrationRequest struct {
 	Name string `json:"name"`
 
 	// Scopings Visibility scoping rules. Defaults to account-wide.
-	Scopings *[]IntegrationScopingRequest    `json:"scopings,omitempty"`
-	Type     CreateLlmIntegrationRequestType `json:"type"`
+	Scopings *[]IntegrationScopingRequest `json:"scopings,omitempty"`
+
+	// Type Discriminator identifying this request as an LLM integration.
+	Type CreateLlmIntegrationRequestType `json:"type"`
 }
 
-// CreateLlmIntegrationRequestType defines model for CreateLlmIntegrationRequest.Type.
+// CreateLlmIntegrationRequestType Discriminator identifying this request as an LLM integration.
 type CreateLlmIntegrationRequestType string
 
 // CreateNvidiaNimConfig Create config for an NVIDIA NIM integration. Every connection field is optional: omit `base_url` to use the provider default endpoint, or set it to a self-hosted NIM endpoint (validated server-side). `api_key` and `headers` are write-only (never returned; headers surface as `header_names` on read). The integration must have at least one model source: enable `is_default_models_enabled` or provide at least one entry in `model_names`, otherwise the request is rejected with 422.
@@ -4110,11 +4818,13 @@ type CreateNvidiaNimConfig struct {
 	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
 
 	// ModelNames Custom model names to make available. Defaults to none.
-	ModelNames *[]string                     `json:"model_names,omitempty"`
-	Provider   CreateNvidiaNimConfigProvider `json:"provider"`
+	ModelNames *[]string `json:"model_names,omitempty"`
+
+	// Provider Discriminator identifying the NVIDIA NIM provider.
+	Provider CreateNvidiaNimConfigProvider `json:"provider"`
 }
 
-// CreateNvidiaNimConfigProvider defines model for CreateNvidiaNimConfig.Provider.
+// CreateNvidiaNimConfigProvider Discriminator identifying the NVIDIA NIM provider.
 type CreateNvidiaNimConfigProvider string
 
 // CreateOpenAiConfig Create config for an OpenAI LLM integration. `api_key` is required and is write-only (never returned in responses).
@@ -4123,11 +4833,13 @@ type CreateOpenAiConfig struct {
 	ApiKey string `json:"api_key"`
 
 	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
-	IsFunctionCallingEnabled *bool                      `json:"is_function_calling_enabled,omitempty"`
-	Provider                 CreateOpenAiConfigProvider `json:"provider"`
+	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
+
+	// Provider Discriminator identifying the OpenAI provider.
+	Provider CreateOpenAiConfigProvider `json:"provider"`
 }
 
-// CreateOpenAiConfigProvider defines model for CreateOpenAiConfig.Provider.
+// CreateOpenAiConfigProvider Discriminator identifying the OpenAI provider.
 type CreateOpenAiConfigProvider string
 
 // CreateOrganizationRequest defines model for CreateOrganizationRequest.
@@ -4190,6 +4902,17 @@ type CreatePromptVersionRequest struct {
 	ProviderParams *ProviderParamsRequest `json:"provider_params,omitempty"`
 }
 
+// CreateRemoteEvaluatorVersionRequest defines model for CreateRemoteEvaluatorVersionRequest.
+type CreateRemoteEvaluatorVersionRequest struct {
+	// CommitMessage Commit message describing the changes
+	CommitMessage string `json:"commit_message"`
+
+	// RemoteConfig Remote configuration for a `REMOTE` evaluator version in write requests.
+	// The referenced integration may also be used by other versions; editing it
+	// affects every version that references it.
+	RemoteConfig RemoteConfigInput `json:"remote_config"`
+}
+
 // CreateResourceRestrictionRequest defines model for CreateResourceRestrictionRequest.
 type CreateResourceRestrictionRequest struct {
 	// ResourceId The ID of the resource to restrict
@@ -4208,7 +4931,12 @@ type CreateRoleBindingRequest struct {
 	// RoleId A universally unique identifier (base64-encoded opaque string).
 	RoleId Id `json:"role_id"`
 
-	// UserId A universally unique identifier (base64-encoded opaque string).
+	// UserId ID of the user to bind the role to.
+	//
+	// For a **service key**, this is the ID of the key's bot user — not the ID of
+	// the person who created the key. Read it from `bot_user.id` on the
+	// `POST /v2/api-keys` response, or from `bot_user.id` on the matching service
+	// key entry returned by `GET /v2/api-keys`.
 	UserId Id `json:"user_id"`
 }
 
@@ -4235,10 +4963,9 @@ type CreateRunExperimentTaskRequest struct {
 	// Name Task name
 	Name string `json:"name"`
 
-	// RunConfiguration Experiment execution configuration for a `RUN_EXPERIMENT` task. Exactly one
-	// variant must be supplied, identified by `experiment_type`. All fields sit at
-	// the top level alongside `experiment_type` (flat — no wrapper sub-object).
-	RunConfiguration RunConfiguration `json:"run_configuration"`
+	// RunConfiguration Strict request form of an experiment execution configuration. Exactly one
+	// variant must be supplied, identified by `experiment_type`.
+	RunConfiguration RunConfigurationRequest `json:"run_configuration"`
 
 	// Type Task type discriminator. Must be `"RUN_EXPERIMENT"`.
 	Type CreateRunExperimentTaskRequestType `json:"type"`
@@ -4295,6 +5022,24 @@ type CreateSpaceRequest struct {
 	OrganizationId Id `json:"organization_id"`
 }
 
+// CreateTagRequest defines model for CreateTagRequest.
+type CreateTagRequest struct {
+	// Color Display color for the tag. Defaults to `null` when omitted, meaning no
+	// color is assigned.
+	Color *TagColor `json:"color,omitempty"`
+
+	// Description Description of what the tag is for. Defaults to `null` when omitted.
+	Description *string `json:"description,omitempty"`
+
+	// Name Name of the tag. Must be unique within the space, compared
+	// case-insensitively — a space containing `Production` cannot also contain
+	// `production`. Maximum 100 characters.
+	Name string `json:"name"`
+
+	// SpaceId The unique identifier of the space to create the tag in
+	SpaceId Id `json:"space_id"`
+}
+
 // CreateTaskRequest Request body for creating a task. The `type` field is the discriminator.
 //
 // | `type` | Schema |
@@ -4317,7 +5062,12 @@ type CreateTemplateEvaluationTaskRequest struct {
 	// Mutually exclusive with `project_id`.
 	DatasetId *string `json:"dataset_id,omitempty"`
 
-	// Evaluators Evaluators to attach (at least one required).
+	// Evaluators Evaluators to attach (at least one required). Evaluators use one of two
+	// mutually exclusive shapes by data granularity. Span evaluators use
+	// `query_filter` + per-evaluator `column_mappings`/`query_filter`.
+	// Trace/session evaluators use task-level `query_filters` plus
+	// per-evaluator `query_mappings`. Mixing the two shapes returns 400. The
+	// granularity must match the chosen shape (enforced server-side).
 	Evaluators []TaskEvaluatorInput `json:"evaluators"`
 
 	// ExperimentIds Experiment identifiers (base64). Required when `dataset_id` is provided
@@ -4335,8 +5085,13 @@ type CreateTemplateEvaluationTaskRequest struct {
 	// Mutually exclusive with `dataset_id`.
 	ProjectId *string `json:"project_id,omitempty"`
 
-	// QueryFilter Task-level query filter applied to all evaluated data.
+	// QueryFilter Task-level query filter applied to all evaluated data (span shape).
+	// Mutually exclusive with `query_filters`.
 	QueryFilter *string `json:"query_filter,omitempty"`
+
+	// QueryFilters Named query filters plus optional expression for trace/session
+	// evaluators. Mutually exclusive with `query_filter`.
+	QueryFilters *TaskQueryFiltersInput `json:"query_filters,omitempty"`
 
 	// SamplingRate Sampling rate between 0 and 1. Only supported on project-based tasks.
 	SamplingRate *float32 `json:"sampling_rate,omitempty"`
@@ -4354,6 +5109,27 @@ type CreateTemplateEvaluatorVersionRequest struct {
 	CommitMessage  string              `json:"commit_message"`
 	TemplateConfig TemplateConfigInput `json:"template_config"`
 }
+
+// CreateTogetherAiConfig Create config for a Together AI integration. `api_key` is required and is write-only (never returned; it surfaces as `has_api_key` on read). Together AI is a single hosted service, so there is no endpoint field and no custom request headers. Neither `is_default_models_enabled` nor `model_names` is required: Arize resolves the models the key can reach from the Together AI account, so an integration created with neither still has a selectable model list.
+type CreateTogetherAiConfig struct {
+	// ApiKey Together AI API key (write-only, never returned).
+	ApiKey string `json:"api_key"`
+
+	// IsDefaultModelsEnabled Enable Arize's default model catalog. Defaults to false.
+	IsDefaultModelsEnabled *bool `json:"is_default_models_enabled,omitempty"`
+
+	// IsFunctionCallingEnabled Enable function/tool calling. Defaults to true.
+	IsFunctionCallingEnabled *bool `json:"is_function_calling_enabled,omitempty"`
+
+	// ModelNames Custom model names to make available. Defaults to an empty list.
+	ModelNames *[]string `json:"model_names,omitempty"`
+
+	// Provider Discriminator identifying the Together AI provider.
+	Provider CreateTogetherAiConfigProvider `json:"provider"`
+}
+
+// CreateTogetherAiConfigProvider Discriminator identifying the Together AI provider.
+type CreateTogetherAiConfigProvider string
 
 // CreateUserApiKeyRequest defines model for CreateUserApiKeyRequest.
 type CreateUserApiKeyRequest struct {
@@ -4373,17 +5149,13 @@ type CreateUserApiKeyRequest struct {
 // CreateUserApiKeyRequestKeyType Must be `"USER"`.
 type CreateUserApiKeyRequestKeyType string
 
-// CreateUserRequest defines model for CreateUserRequest.
+// CreateUserRequest User-level developer permissions are determined by the assigned account role.
 type CreateUserRequest struct {
 	// Email Email address of the user to invite
 	Email Email `json:"email"`
 
 	// InviteMode Controls whether and how an invitation is sent
 	InviteMode InviteMode `json:"invite_mode"`
-
-	// IsDeveloper Whether the user should have developer permissions (can use the Arize API).
-	// Defaults to `true` for `ADMIN` and `MEMBER` roles, and `false` for `ANNOTATOR`.
-	IsDeveloper *bool `json:"is_developer,omitempty"`
 
 	// Name Full name of the new user
 	Name string `json:"name"`
@@ -4446,12 +5218,203 @@ type CreateVertexAiConfig struct {
 	ProjectAccessLabel string `json:"project_access_label"`
 
 	// ProjectId GCP project ID Arize accesses Vertex through.
-	ProjectId string                       `json:"project_id"`
-	Provider  CreateVertexAiConfigProvider `json:"provider"`
+	ProjectId string `json:"project_id"`
+
+	// Provider Discriminator identifying the Vertex AI provider.
+	Provider CreateVertexAiConfigProvider `json:"provider"`
 }
 
-// CreateVertexAiConfigProvider defines model for CreateVertexAiConfig.Provider.
+// CreateVertexAiConfigProvider Discriminator identifying the Vertex AI provider.
 type CreateVertexAiConfigProvider string
+
+// CreateWebhookRequest defines model for CreateWebhookRequest.
+type CreateWebhookRequest struct {
+	// AuthToken The complete `Authorization` header value sent with each delivery
+	// request, e.g. `Bearer my-token`. Sent verbatim — include the
+	// `Bearer ` prefix if your endpoint expects one. Only valid when
+	// `auth_type` is `BEARER`. Write-only: never returned in any response.
+	AuthToken *string `json:"auth_token,omitempty"`
+
+	// AuthType How deliveries from this webhook are authenticated. Defaults to
+	// `BEARER` if omitted, and cannot be changed after creation. For
+	// `HMAC_SHA256`, a signing secret is generated for you and returned
+	// once in the create response.
+	AuthType *WebhookAuthType `json:"auth_type,omitempty"`
+
+	// Description A brief description of the webhook's purpose. Defaults to an empty string if omitted.
+	Description *string `json:"description,omitempty"`
+
+	// Headers Custom HTTP headers sent with each delivery request, as a map of at
+	// most 20 header names to values. Header names must be valid HTTP
+	// header names; connection-management headers (e.g. `Host`,
+	// `Content-Length`) are rejected. Write-only: never returned in any
+	// response.
+	Headers *map[string]string `json:"headers,omitempty"`
+
+	// Name Name of the webhook (must be unique within the organization)
+	Name string `json:"name"`
+
+	// OrganizationId The unique identifier of the organization to create the webhook in
+	OrganizationId Id `json:"organization_id"`
+
+	// TimeoutMs How long a delivery request may run before it is abandoned, in milliseconds. Defaults to 30000 if omitted.
+	TimeoutMs *int `json:"timeout_ms,omitempty"`
+
+	// Url The HTTPS endpoint events are delivered to
+	Url string `json:"url"`
+}
+
+// CreateWebhookResponse The created webhook, plus `signing_secret` for `HMAC_SHA256` webhooks —
+// the only time the secret is ever returned.
+type CreateWebhookResponse struct {
+	// AuthType How deliveries from this webhook are authenticated. Fixed at creation.
+	AuthType WebhookAuthType `json:"auth_type"`
+
+	// CreatedAt Timestamp for when the webhook was created
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId The unique identifier of the user who created the webhook. Absent when that user has since been removed from the account.
+	CreatedByUserId *Id `json:"created_by_user_id,omitempty"`
+
+	// Description A brief description of the webhook's purpose. Defaults to an empty string.
+	Description string `json:"description"`
+
+	// Id Unique identifier for the webhook
+	Id Id `json:"id"`
+
+	// Name Name of the webhook (unique within the organization)
+	Name string `json:"name"`
+
+	// OrganizationId The unique identifier of the organization that owns the webhook
+	OrganizationId Id `json:"organization_id"`
+
+	// SigningSecret The secret used to verify delivery signatures. **Only returned
+	// once**, in this response, when `auth_type` is `HMAC_SHA256`.
+	// Store it securely — it cannot be retrieved again; only a redacted
+	// hint (`signing_secret_hint`) is readable afterwards. Absent for
+	// `BEARER` webhooks.
+	SigningSecret *string `json:"signing_secret,omitempty"`
+
+	// SigningSecretHint Redacted hint of the signing secret (e.g. `whsec_…abcd`), useful for
+	// identifying which secret the webhook uses. Present only for
+	// `HMAC_SHA256` webhooks.
+	SigningSecretHint *string `json:"signing_secret_hint,omitempty"`
+
+	// TimeoutMs How long a delivery request may run before it is abandoned, in milliseconds. Defaults to 30000.
+	TimeoutMs int `json:"timeout_ms"`
+
+	// UpdatedAt Timestamp for when the webhook was last updated
+	UpdatedAt time.Time `json:"updated_at"`
+
+	// Url The HTTPS endpoint events are delivered to
+	Url string `json:"url"`
+}
+
+// CreateWebhookSubscriptionRequest defines model for CreateWebhookSubscriptionRequest.
+type CreateWebhookSubscriptionRequest struct {
+	// Event The event to deliver. Must belong to the source type.
+	Event WebhookEventType `json:"event"`
+
+	// SourceId The unique identifier of the prompt or evaluator to attach the webhook to
+	SourceId Id `json:"source_id"`
+
+	// SourceType The kind of resource to attach the webhook to
+	SourceType WebhookSourceType `json:"source_type"`
+
+	// WebhookId The unique identifier of the webhook to deliver the event to. Must belong to the source's organization.
+	WebhookId Id `json:"webhook_id"`
+}
+
+// CreatedServiceApiKey defines model for CreatedServiceApiKey.
+type CreatedServiceApiKey struct {
+	BotUser ServiceKeyBotUser `json:"bot_user"`
+
+	// CreatedAt Timestamp when the key was created.
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId ID of the user who created the key.
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// Description Optional user-defined description for the API key.
+	Description *string `json:"description,omitempty"`
+
+	// ExpiresAt Optional timestamp when the key will expire.
+	ExpiresAt *time.Time `json:"expires_at,omitempty"`
+
+	// Id Unique identifier for the API key.
+	Id string `json:"id"`
+
+	// Key The full API key value. **Only returned once** at creation or refresh time.
+	// Store it securely — it cannot be retrieved again.
+	Key string `json:"key"`
+
+	// KeyType Discriminator value for service keys.
+	KeyType CreatedServiceApiKeyKeyType `json:"key_type"`
+
+	// LastUsedAt Approximate timestamp when the key was last used for authentication. This value is periodically updated and may not reflect the most recent usage.
+	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
+
+	// Name User-defined name for the API key.
+	Name string `json:"name"`
+
+	// RedactedKey Redacted version of the key suitable for display (e.g., "ak-abc...xyz").
+	RedactedKey string `json:"redacted_key"`
+
+	// Status Current status of the API key.
+	// - ACTIVE - The key is valid for use.
+	// - REVOKED - The key has been revoked and is no longer valid.
+	Status ApiKeyStatus `json:"status"`
+}
+
+// CreatedServiceApiKeyKeyType Discriminator value for service keys.
+type CreatedServiceApiKeyKeyType string
+
+// CreatedUserApiKey defines model for CreatedUserApiKey.
+type CreatedUserApiKey struct {
+	// CreatedAt Timestamp when the key was created.
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId ID of the user who created the key.
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// Description Optional user-defined description for the API key.
+	Description *string `json:"description,omitempty"`
+
+	// ExpiresAt Optional timestamp when the key will expire.
+	ExpiresAt *time.Time `json:"expires_at,omitempty"`
+
+	// Id Unique identifier for the API key.
+	Id string `json:"id"`
+
+	// Key The full API key value. **Only returned once** at creation or refresh time.
+	// Store it securely — it cannot be retrieved again.
+	Key string `json:"key"`
+
+	// KeyType Discriminator value for user keys.
+	KeyType CreatedUserApiKeyKeyType `json:"key_type"`
+
+	// LastUsedAt Approximate timestamp when the key was last used for authentication. This value is periodically updated and may not reflect the most recent usage.
+	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
+
+	// Name User-defined name for the API key.
+	Name string `json:"name"`
+
+	// RedactedKey Redacted version of the key suitable for display (e.g., "ak-abc...xyz").
+	RedactedKey string `json:"redacted_key"`
+
+	// Status Current status of the API key.
+	// - ACTIVE - The key is valid for use.
+	// - REVOKED - The key has been revoked and is no longer valid.
+	Status ApiKeyStatus `json:"status"`
+}
+
+// CreatedUserApiKeyKeyType Discriminator value for user keys.
+type CreatedUserApiKeyKeyType string
+
+// CustomAuth Custom endpoint auth settings, discriminated by `auth_type`.
+type CustomAuth struct {
+	union json.RawMessage
+}
 
 // CustomBaselineConfig Uses a custom fixed or moving window as the comparison dataset.
 type CustomBaselineConfig struct {
@@ -4459,14 +5422,16 @@ type CustomBaselineConfig struct {
 	Filters []MonitorFilter `json:"filters"`
 
 	// ModelVersions Model versions included in the comparison dataset. An empty array means all model versions.
-	ModelVersions []string                 `json:"model_versions"`
-	Type          CustomBaselineConfigType `json:"type"`
+	ModelVersions []string `json:"model_versions"`
+
+	// Type Identifies this comparison dataset as a custom fixed or moving window.
+	Type CustomBaselineConfigType `json:"type"`
 
 	// Window The custom comparison window. The `type` field determines whether the window is fixed or moving.
 	Window CustomBaselineWindow `json:"window"`
 }
 
-// CustomBaselineConfigType defines model for CustomBaselineConfig.Type.
+// CustomBaselineConfigType Identifies this comparison dataset as a custom fixed or moving window.
 type CustomBaselineConfigType string
 
 // CustomBaselineWindow The custom comparison window. The `type` field determines whether the window is fixed or moving.
@@ -4540,12 +5505,15 @@ type CustomCodeConfigRequest struct {
 // CustomCodeConfigRequestType Discriminator identifying this as a custom (user-supplied Python) code evaluator
 type CustomCodeConfigRequestType string
 
-// CustomConfig Config for a custom OpenAI-compatible endpoint integration. `base_url` is the endpoint Arize sends requests to; it must implement the OpenAI API shape. Secrets are write-only: the API key surfaces as `has_api_key` and custom request headers surface as `header_names` (names only).
+// CustomConfig Config for a custom OpenAI-compatible endpoint integration. `base_url` is the endpoint Arize sends requests to; it must implement the OpenAI API shape. Secrets are write-only: the API key surfaces as `has_api_key` and custom request headers surface as `header_names` (names only). `auth` is how the endpoint is authenticated.
 type CustomConfig struct {
+	// Auth Custom endpoint auth settings, discriminated by `auth_type`.
+	Auth CustomAuth `json:"auth"`
+
 	// BaseUrl Endpoint URL requests are sent to.
 	BaseUrl string `json:"base_url"`
 
-	// HasApiKey Whether an API key is configured (the key itself is never returned).
+	// HasApiKey Whether an API key is configured (the key itself is never returned). An API key and OAuth credentials are mutually exclusive, and switching to `OAUTH2_CLIENT_CREDENTIALS` clears any stored key, so this reads false on an integration authenticated that way.
 	HasApiKey bool `json:"has_api_key"`
 
 	// HeaderNames Names of the custom request headers configured on this integration. Empty when none are configured. Header values are write-only and never returned.
@@ -4567,6 +5535,18 @@ type CustomConfig struct {
 
 // CustomConfigProvider Discriminator identifying a custom OpenAI-compatible endpoint.
 type CustomConfigProvider string
+
+// CustomDefaultAuth API-key auth for a custom endpoint. The key surfaces as `has_api_key`; the key itself is never returned. A custom endpoint may require no credential at all, in which case `has_api_key` is false.
+type CustomDefaultAuth struct {
+	// AuthType Discriminator identifying API-key auth.
+	AuthType CustomDefaultAuthAuthType `json:"auth_type"`
+
+	// HasApiKey Whether an API key is configured (the key itself is never returned).
+	HasApiKey bool `json:"has_api_key"`
+}
+
+// CustomDefaultAuthAuthType Discriminator identifying API-key auth.
+type CustomDefaultAuthAuthType string
 
 // CustomMetricMonitor defines model for CustomMetricMonitor.
 type CustomMetricMonitor struct {
@@ -4624,8 +5604,10 @@ type CustomMetricMonitor struct {
 	Status MonitorStatus `json:"status"`
 
 	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
-	Threshold ThresholdConfig         `json:"threshold"`
-	Type      CustomMetricMonitorType `json:"type"`
+	Threshold ThresholdConfig `json:"threshold"`
+
+	// Type Identifies this monitor as a custom metric monitor.
+	Type CustomMetricMonitorType `json:"type"`
 
 	// UpdatedAt When the monitor was last updated.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
@@ -4634,8 +5616,32 @@ type CustomMetricMonitor struct {
 	Uri *string `json:"uri,omitempty"`
 }
 
-// CustomMetricMonitorType defines model for CustomMetricMonitor.Type.
+// CustomMetricMonitorType Identifies this monitor as a custom metric monitor.
 type CustomMetricMonitorType string
+
+// CustomOauth2ClientCredentialsAuth OAuth 2.0 client-credentials auth (RFC 6749 section 4.4). Arize exchanges the stored credentials at `token_url` for a short-lived bearer token and sends it as `Authorization: Bearer` on every request to the endpoint. The client secret is write-only and surfaces as `has_client_secret`.
+type CustomOauth2ClientCredentialsAuth struct {
+	// Audience Audience requested at the token endpoint. Null when not set.
+	Audience *string `json:"audience"`
+
+	// AuthType Discriminator identifying OAuth 2.0 client-credentials auth.
+	AuthType CustomOauth2ClientCredentialsAuthAuthType `json:"auth_type"`
+
+	// ClientId OAuth client ID. Not a secret, so it is returned on read.
+	ClientId string `json:"client_id"`
+
+	// HasClientSecret Whether a client secret is configured (the secret itself is never returned).
+	HasClientSecret bool `json:"has_client_secret"`
+
+	// Scopes Space-separated scopes requested at the token endpoint. Null when not set.
+	Scopes *string `json:"scopes"`
+
+	// TokenUrl Token endpoint Arize exchanges the client credentials at.
+	TokenUrl string `json:"token_url"`
+}
+
+// CustomOauth2ClientCredentialsAuthAuthType Discriminator identifying OAuth 2.0 client-credentials auth.
+type CustomOauth2ClientCredentialsAuthAuthType string
 
 // CustomRoleAssignment A custom RBAC role assignment.
 type CustomRoleAssignment struct {
@@ -4750,8 +5756,10 @@ type DataQualityMonitor struct {
 	Status MonitorStatus `json:"status"`
 
 	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
-	Threshold ThresholdConfig        `json:"threshold"`
-	Type      DataQualityMonitorType `json:"type"`
+	Threshold ThresholdConfig `json:"threshold"`
+
+	// Type Identifies this monitor as a data quality monitor.
+	Type DataQualityMonitorType `json:"type"`
 
 	// UpdatedAt When the monitor was last updated.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
@@ -4760,7 +5768,7 @@ type DataQualityMonitor struct {
 	Uri *string `json:"uri,omitempty"`
 }
 
-// DataQualityMonitorType defines model for DataQualityMonitor.Type.
+// DataQualityMonitorType Identifies this monitor as a data quality monitor.
 type DataQualityMonitorType string
 
 // Dataset A dataset is a structured collection of examples used to test and evaluate
@@ -4919,6 +5927,44 @@ type DeleteDatasetExamplesResponse struct {
 	// selected version (never added, or already deleted), or whose deletion did
 	// not complete when `completed` is `false`.
 	NotDeletedExampleIds []string `json:"not_deleted_example_ids"`
+}
+
+// DeleteEvaluatorVersionsRequest Body identifying the versions to delete from the evaluator named by the
+// `evaluator_id` path parameter.
+type DeleteEvaluatorVersionsRequest struct {
+	// VersionIds IDs of the evaluator versions to delete (up to 100 per request). IDs that
+	// do not belong to `evaluator_id` are reported as not deleted. Duplicate IDs
+	// are accepted and silently collapsed so each version is processed at most once.
+	VersionIds []string `json:"version_ids"`
+}
+
+// DeleteEvaluatorVersionsResponse Result of a DELETE /v2/evaluators/{evaluator_id}/versions request.
+//
+// The delete is partial-tolerant: requested versions that exist and belong to
+// `evaluator_id` are deleted; every requested ID that was not deleted is reported
+// in `not_deleted_version_ids`. An ID may be not-deleted because it does not exist
+// or belongs to a different evaluator.
+//
+// `completed` is `true` when this response is returned because the synchronous
+// delete has fully processed the request. It does not mean every requested
+// version was found and deleted: each requested ID appears in exactly one of
+// `deleted_version_ids` or `not_deleted_version_ids`.
+//
+// The delete operation is idempotent — re-submitting already-deleted IDs is safe
+// and simply reports them as not deleted.
+//
+// Deleting a version that is currently pinned to a running online task un-pins
+// that task, which then falls back to resolving the evaluator's latest version.
+type DeleteEvaluatorVersionsResponse struct {
+	// Completed Always `true` in a successful response, indicating both result lists are
+	// complete. This does not indicate whether all requested versions existed.
+	Completed bool `json:"completed"`
+
+	// DeletedVersionIds Evaluator version IDs confirmed deleted in this request.
+	DeletedVersionIds []string `json:"deleted_version_ids"`
+
+	// NotDeletedVersionIds Requested evaluator version IDs that were not deleted.
+	NotDeletedVersionIds []string `json:"not_deleted_version_ids"`
 }
 
 // DeleteSpansProblem defines model for DeleteSpansProblem.
@@ -5090,8 +6136,10 @@ type DriftMonitor struct {
 	Status MonitorStatus `json:"status"`
 
 	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
-	Threshold ThresholdConfig  `json:"threshold"`
-	Type      DriftMonitorType `json:"type"`
+	Threshold ThresholdConfig `json:"threshold"`
+
+	// Type Identifies this monitor as a drift monitor.
+	Type DriftMonitorType `json:"type"`
 
 	// UpdatedAt When the monitor was last updated.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
@@ -5100,7 +6148,7 @@ type DriftMonitor struct {
 	Uri *string `json:"uri,omitempty"`
 }
 
-// DriftMonitorType defines model for DriftMonitor.Type.
+// DriftMonitorType Identifies this monitor as a drift monitor.
 type DriftMonitorType string
 
 // DynamicRangeThreshold defines model for DynamicRangeThreshold.
@@ -5111,14 +6159,16 @@ type DynamicRangeThreshold struct {
 	Calculation ThresholdCalculation `json:"calculation"`
 
 	// Lower The lower bound of the range. Its `operator` must be `GREATER_THAN` or `GREATER_THAN_OR_EQUAL`.
-	Lower DynamicThresholdBound     `json:"lower"`
-	Type  DynamicRangeThresholdType `json:"type"`
+	Lower DynamicThresholdBound `json:"lower"`
+
+	// Type Identifies this threshold as a lower/upper bound range derived from a statistical calculation.
+	Type DynamicRangeThresholdType `json:"type"`
 
 	// Upper The upper bound of the range. Its `operator` must be `LESS_THAN` or `LESS_THAN_OR_EQUAL`.
 	Upper DynamicThresholdBound `json:"upper"`
 }
 
-// DynamicRangeThresholdType defines model for DynamicRangeThreshold.Type.
+// DynamicRangeThresholdType Identifies this threshold as a lower/upper bound range derived from a statistical calculation.
 type DynamicRangeThresholdType string
 
 // DynamicSingleThreshold defines model for DynamicSingleThreshold.
@@ -5133,11 +6183,13 @@ type DynamicSingleThreshold struct {
 	Multiplier float32 `json:"multiplier"`
 
 	// Operator Numeric comparison operators used when evaluating a computed metric value against a threshold.
-	Operator ThresholdOperator          `json:"operator"`
-	Type     DynamicSingleThresholdType `json:"type"`
+	Operator ThresholdOperator `json:"operator"`
+
+	// Type Identifies this threshold as a single value derived from a statistical calculation.
+	Type DynamicSingleThresholdType `json:"type"`
 }
 
-// DynamicSingleThresholdType defines model for DynamicSingleThreshold.Type.
+// DynamicSingleThresholdType Identifies this threshold as a single value derived from a statistical calculation.
 type DynamicSingleThresholdType string
 
 // DynamicThresholdBound defines model for DynamicThresholdBound.
@@ -5155,11 +6207,13 @@ type Email = openapi_types.Email
 // EmailNotificationConfig defines model for EmailNotificationConfig.
 type EmailNotificationConfig struct {
 	// EmailAddress Email address notified on a triggered transition.
-	EmailAddress openapi_types.Email         `json:"email_address"`
-	Type         EmailNotificationConfigType `json:"type"`
+	EmailAddress openapi_types.Email `json:"email_address"`
+
+	// Type Identifies this notification channel as an email address.
+	Type EmailNotificationConfigType `json:"type"`
 }
 
-// EmailNotificationConfigType defines model for EmailNotificationConfig.Type.
+// EmailNotificationConfigType Identifies this notification channel as an email address.
 type EmailNotificationConfigType string
 
 // Evaluation An evaluation result on a record.
@@ -5179,7 +6233,8 @@ type Evaluation struct {
 
 // Evaluator An evaluator defines reusable evaluation logic that can be attached to
 // evaluation tasks. The type field determines the kind of evaluation:
-// TEMPLATE (LLM-based template evaluation) or CODE (custom code evaluation).
+// TEMPLATE (LLM-based template evaluation), CODE (custom code evaluation),
+// or REMOTE (externally hosted evaluation).
 type Evaluator struct {
 	// CreatedAt When the evaluator was created
 	CreatedAt time.Time `json:"created_at"`
@@ -5216,6 +6271,59 @@ type Evaluator struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// EvaluatorIntegration An evaluator integration (type=EVALUATOR): a customer-hosted HTTPS endpoint
+// plus a JSON Schema describing the request payload. Used to run remote
+// evaluators against LLM outputs.
+type EvaluatorIntegration struct {
+	// Config Configuration for `type: EVALUATOR` integrations: a customer-hosted HTTPS
+	// endpoint plus a JSON Schema describing the request payload.
+	Config EvaluatorIntegrationConfig `json:"config"`
+
+	// CreatedAt When the integration was created.
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId Unique identifier of the user who created the integration. Null if that user has since been deleted.
+	CreatedByUserId *string `json:"created_by_user_id"`
+
+	// Description Optional human-readable description of the integration.
+	Description *string `json:"description,omitempty"`
+
+	// Id The unique identifier for the integration.
+	Id string `json:"id"`
+
+	// Name The integration name. Unique among active AGENT and EVALUATOR integrations in the account.
+	Name string `json:"name"`
+
+	// Scopings Visibility scoping rules. Account-wide when empty.
+	Scopings []IntegrationScoping `json:"scopings"`
+
+	// Type Discriminator identifying an evaluator integration.
+	Type EvaluatorIntegrationType `json:"type"`
+
+	// UpdatedAt When the integration was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// EvaluatorIntegrationType Discriminator identifying an evaluator integration.
+type EvaluatorIntegrationType string
+
+// EvaluatorIntegrationConfig Configuration for `type: EVALUATOR` integrations: a customer-hosted HTTPS
+// endpoint plus a JSON Schema describing the request payload.
+type EvaluatorIntegrationConfig struct {
+	// Endpoint HTTPS endpoint URL Arize calls for remote evaluation. Validated
+	// server-side for SSRF (must resolve to a public address).
+	Endpoint string `json:"endpoint"`
+
+	// HasHeaders Whether any headers are configured. Read-only — derived from
+	// `headers` on write. Header values are never returned.
+	HasHeaders *bool `json:"has_headers,omitempty"`
+
+	// InputSchema JSON Schema (Draft-07) the endpoint's request body conforms to. The
+	// root schema must have `type: object`, must not define the reserved
+	// top-level `arize_metadata` field, and must not exceed 64 KiB.
+	InputSchema map[string]interface{} `json:"input_schema"`
+}
+
 // EvaluatorLlmConfig defines model for EvaluatorLlmConfig.
 type EvaluatorLlmConfig struct {
 	// AiIntegrationId AI integration identifier (base64)
@@ -5244,6 +6352,52 @@ type EvaluatorLlmConfigRequest struct {
 
 	// ProviderParameters Provider-specific parameters in a write request (strict form of ProviderParams; leaf schemas use *Request variants)
 	ProviderParameters ProviderParamsRequest `json:"provider_parameters"`
+}
+
+// EvaluatorTemplate A built-in LLM-as-a-judge evaluator template. Templates are the same
+// catalog offered in the product's create-evaluator flow, and are identical
+// for every caller. They carry no space, account, or user data.
+//
+// A template is a starting point for an evaluator. To create one from it, map
+// its fields onto `POST /v2/evaluators`. See the field-by-field mapping and a
+// complete example on `GET /v2/evaluator-templates`.
+type EvaluatorTemplate struct {
+	// ClassificationChoices Maps each label to its numeric score. Pass this through unchanged when
+	// creating an evaluator, since the labels must match those named in the
+	// template.
+	ClassificationChoices map[string]float32 `json:"classification_choices"`
+
+	// ColumnName Stable identifier for the template, and the eval column name it writes
+	// to by default (e.g. `hallucination`). Unique across all templates.
+	ColumnName string `json:"column_name"`
+
+	// DataGranularity The unit this template evaluates. `null` means span level, which is the
+	// default for most response-quality, RAG, and security templates.
+	// `SESSION` templates score a whole conversation and require spans that
+	// carry a session identifier.
+	DataGranularity *DataGranularity `json:"data_granularity"`
+
+	// Direction Whether a higher score is better (`MAXIMIZE`), worse (`MINIMIZE`), or
+	// neither (`NONE`). Controls how trends are rendered. Pass it through
+	// unchanged, since it must agree with `classification_choices`. If the two
+	// disagree, the product renders the trend backwards.
+	Direction OptimizationDirection `json:"direction"`
+
+	// DisplayName Human-readable name shown in the product.
+	DisplayName string `json:"display_name"`
+
+	// Rails The labels the judge is allowed to return, in the order the product
+	// displays them.
+	Rails []string `json:"rails"`
+
+	// Template The judge prompt. Variables are single-brace, f-string style (e.g.
+	// `{input}`, `{output}`, `{context}`) and are bound to real data by a
+	// task's column mappings when the evaluator runs.
+	//
+	// This is the only prompt you need. To have the judge explain its label,
+	// set `include_explanations` on `POST /v2/evaluators`. The explanation
+	// request is added at run time, not by editing this prompt.
+	Template string `json:"template"`
 }
 
 // EvaluatorType The evaluator type:
@@ -5379,11 +6533,21 @@ type EvaluatorVersionRemote struct {
 	// Id The unique identifier for this version
 	Id string `json:"id"`
 
-	// Type Discriminator identifying this as a remote evaluator version.
+	// RemoteConfig Remote configuration for a `REMOTE` evaluator version. The backing
+	// `EVALUATOR` integration is referenced by this version and may also be
+	// referenced by other versions. Updating it affects every version that
+	// references it.
+	//
+	// `integration_id` is included only when the caller has permission to read
+	// the backing integration. Callers without that permission still receive the
+	// remote version metadata, but the integration reference is omitted.
+	RemoteConfig RemoteConfig `json:"remote_config"`
+
+	// Type Discriminator identifying this as a remote evaluator version. Always `REMOTE` for this variant.
 	Type EvaluatorVersionRemoteType `json:"type"`
 }
 
-// EvaluatorVersionRemoteType Discriminator identifying this as a remote evaluator version.
+// EvaluatorVersionRemoteType Discriminator identifying this as a remote evaluator version. Always `REMOTE` for this variant.
 type EvaluatorVersionRemoteType string
 
 // EvaluatorVersionTemplate defines model for EvaluatorVersionTemplate.
@@ -5561,17 +6725,41 @@ type ExperimentWithRunIds struct {
 // FilterOperator Operators used by a monitor's data filters. Includes string operators as well as numeric ones.
 type FilterOperator string
 
+// FireworksConfig Config for a Fireworks AI integration. Fireworks is a single hosted service, so there is no endpoint field and no custom request headers. The API key is write-only and surfaces as `has_api_key`. `model_names` lists only the model names configured on this integration; models resolved live from the Fireworks account are served through the Arize UI and are not returned here.
+type FireworksConfig struct {
+	// HasApiKey Whether an API key is configured (the key itself is never returned).
+	HasApiKey bool `json:"has_api_key"`
+
+	// IsDefaultModelsEnabled Whether Arize's default model catalog is enabled.
+	IsDefaultModelsEnabled bool `json:"is_default_models_enabled"`
+
+	// IsFunctionCallingEnabled Whether function/tool calling is enabled.
+	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
+
+	// ModelNames Custom model names configured on this integration. Empty when none.
+	ModelNames []string `json:"model_names"`
+
+	// Provider Discriminator identifying the Fireworks AI provider.
+	Provider             FireworksConfigProvider `json:"provider"`
+	AdditionalProperties map[string]interface{}  `json:"-"`
+}
+
+// FireworksConfigProvider Discriminator identifying the Fireworks AI provider.
+type FireworksConfigProvider string
+
 // FixedCustomBaselineWindow A custom comparison dataset using data between a fixed start and end date.
 type FixedCustomBaselineWindow struct {
 	// FixedEndDate The end of the fixed comparison window.
 	FixedEndDate time.Time `json:"fixed_end_date"`
 
 	// FixedStartDate The start of the fixed comparison window.
-	FixedStartDate time.Time                     `json:"fixed_start_date"`
-	Type           FixedCustomBaselineWindowType `json:"type"`
+	FixedStartDate time.Time `json:"fixed_start_date"`
+
+	// Type Identifies this comparison window as a fixed date range.
+	Type FixedCustomBaselineWindowType `json:"type"`
 }
 
-// FixedCustomBaselineWindowType defines model for FixedCustomBaselineWindow.Type.
+// FixedCustomBaselineWindowType Identifies this comparison window as a fixed date range.
 type FixedCustomBaselineWindowType string
 
 // FreeformAnnotationConfig defines model for FreeformAnnotationConfig.
@@ -5667,17 +6855,20 @@ type InsertExperimentRunsRequest struct {
 
 // Integration A polymorphic integration resource. The `type` field selects the `config` shape; for `LLM`, `config.provider` selects the per-provider config.
 type Integration struct {
-	union json.RawMessage
+	AdditionalProperties map[string]interface{} `json:"-"`
+	union                json.RawMessage
 }
 
 // IntegrationNotificationConfig defines model for IntegrationNotificationConfig.
 type IntegrationNotificationConfig struct {
 	// IntegrationId The integration to notify (base64 global ID).
-	IntegrationId string                            `json:"integration_id"`
-	Type          IntegrationNotificationConfigType `json:"type"`
+	IntegrationId string `json:"integration_id"`
+
+	// Type Identifies this notification channel as a connected integration.
+	Type IntegrationNotificationConfigType `json:"type"`
 }
 
-// IntegrationNotificationConfigType defines model for IntegrationNotificationConfig.Type.
+// IntegrationNotificationConfigType Identifies this notification channel as a connected integration.
 type IntegrationNotificationConfigType string
 
 // IntegrationScoping Visibility scoping for the integration.
@@ -5701,8 +6892,12 @@ type IntegrationScopingRequest struct {
 // IntegrationType The integration category. Selects the shape of `config`. Additive — new
 // types (alerting, webhook, ...) are added non-breakingly.
 //
-// - `LLM`   — a model-provider integration (e.g. OpenAI).
-// - `AGENT` — connects your own agent, exposed at an HTTP endpoint.
+//   - `LLM`       — a model-provider integration (e.g. OpenAI).
+//   - `AGENT`     — connects your own agent, exposed at an HTTP endpoint.
+//   - `EVALUATOR` — connects a remote evaluator endpoint. Only returned when
+//     `?type=EVALUATOR` is passed explicitly; excluded from the
+//     default (`LLM` + `AGENT`) list to keep the cursor contract
+//     stable. Requires the remote evaluators feature to be enabled.
 type IntegrationType string
 
 // InviteMode Controls how the user is invited to the account.
@@ -5730,6 +6925,9 @@ type InvocationParams struct {
 
 	// ResponseFormat Response format configuration. Optional. When omitted, no structured output constraint is applied (the provider's default plain-text behavior is used).
 	ResponseFormat *ResponseFormat `json:"response_format,omitempty"`
+
+	// ServiceTier Processing tier for the request. Supported by OpenAI only, and only for models eligible for Priority processing. Accepted value: 'priority'. Omit to use the project default.
+	ServiceTier *string `json:"service_tier,omitempty"`
 
 	// Stop Stop sequences
 	Stop *[]string `json:"stop,omitempty"`
@@ -5790,7 +6988,7 @@ type InvocationParamsRequest struct {
 	ThinkingLevel *string `json:"thinking_level,omitempty"`
 
 	// ToolConfig Tool configuration for the LLM invocation. Optional. When omitted, no tools are made available to the model.
-	ToolConfig *ToolConfig `json:"tool_config,omitempty"`
+	ToolConfig *ToolConfigRequest `json:"tool_config,omitempty"`
 
 	// TopK Top-K sampling parameter. A top-K of 1 means the next selected token is the most probable (greedy decoding).
 	TopK *int `json:"top_k,omitempty"`
@@ -5844,7 +7042,8 @@ type LLMMessage struct {
 	ToolCallId *string `json:"tool_call_id,omitempty"`
 
 	// ToolCalls Tool calls generated by the model
-	ToolCalls *[]ToolCall `json:"tool_calls,omitempty"`
+	ToolCalls            *[]ToolCall            `json:"tool_calls,omitempty"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // LLMMessageRequest A message in a prompt write request
@@ -5942,6 +7141,14 @@ type ListDatasetsResponse struct {
 	Pagination PaginationMetadata `json:"pagination"`
 }
 
+// ListEvaluatorTemplatesResponse defines model for ListEvaluatorTemplatesResponse.
+type ListEvaluatorTemplatesResponse struct {
+	// EvaluatorTemplates Every built-in template, ordered by category as the product presents
+	// them (response quality, code quality, trajectory, RAG, security,
+	// session).
+	EvaluatorTemplates []EvaluatorTemplate `json:"evaluator_templates"`
+}
+
 // ListEvaluatorVersionsResponse defines model for ListEvaluatorVersionsResponse.
 type ListEvaluatorVersionsResponse struct {
 	// EvaluatorVersions A list of evaluator versions
@@ -5986,6 +7193,16 @@ type ListExperimentsResponse struct {
 type ListIntegrationsResponse struct {
 	// Integrations A polymorphic, type-tagged list of integrations.
 	Integrations []Integration `json:"integrations"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
+// ListMonitorsResponse defines model for ListMonitorsResponse.
+type ListMonitorsResponse struct {
+	// Monitors A list of monitors.
+	Monitors []Monitor `json:"monitors"`
 
 	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
 	// request's `cursor` query parameter.
@@ -6078,11 +7295,38 @@ type ListSpansRequest struct {
 	// ISO 8601 format (e.g., `2024-01-02T00:00:00Z`). Defaults to the current time.
 	EndTime *time.Time `json:"end_time,omitempty"`
 
+	// ExcludedColumns Columns to exclude from each span. When set, all columns except these
+	// are returned. Mutually exclusive with `included_columns` — providing
+	// both returns 422.
+	//
+	// Values must be full dotted column paths
+	// (e.g., `attributes.embedding.vectors`, `eval.toxicity.score`).
+	// Unknown column names are silently ignored. Attempts to exclude fixed
+	// span fields (name, context, kind, parent_id, start_time, end_time,
+	// status_code, status_message, latency_ms, events) are silently ignored.
+	//
+	// Excluding an `attributes.*` column removes that attribute from the
+	// returned `attributes` object.
+	ExcludedColumns *[]string `json:"excluded_columns,omitempty"`
+
 	// Filter Filter expression to apply to the query. Supports SQL-like syntax
 	// for filtering spans by attributes (e.g., `status_code = 'ERROR'`).
 	// Optional; omit it to apply no filter. If provided, it must not be
 	// empty or whitespace-only.
 	Filter *string `json:"filter,omitempty"`
+
+	// IncludedColumns Columns to include in each span. When set, only these columns (plus
+	// fixed span fields) are returned. Mutually exclusive with
+	// `excluded_columns` — providing both returns 422.
+	//
+	// Values must be full dotted column paths
+	// (e.g., `attributes.llm.model_name`, `eval.hallucination.score`).
+	// Unknown column names are silently ignored.
+	//
+	// Fixed span fields — name, context (trace_id, span_id), kind, parent_id,
+	// start_time, end_time, status_code, status_message, latency_ms, and
+	// events — are always returned regardless of this parameter.
+	IncludedColumns *[]string `json:"included_columns,omitempty"`
 
 	// ProjectId The project ID to list spans for
 	ProjectId string `json:"project_id"`
@@ -6100,6 +7344,18 @@ type ListSpansResponse struct {
 
 	// Spans A list of spans
 	Spans []Span `json:"spans"`
+}
+
+// ListTagsResponse defines model for ListTagsResponse.
+type ListTagsResponse struct {
+	// Pagination Pagination metadata. Tag lists are not paginated yet, so `has_more` is
+	// always `false` and `next_cursor` is always omitted. The field is present
+	// so that adding pagination later does not change the response shape.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Tags The tags attached to the resource, most recently updated first. Empty
+	// when the resource has no tags.
+	Tags []Tag `json:"tags"`
 }
 
 // ListTaskRunsResponse defines model for ListTaskRunsResponse.
@@ -6164,9 +7420,65 @@ type ListUsersResponse struct {
 	Users []User `json:"users"`
 }
 
+// ListWebhookDeliveryAttemptsResponse defines model for ListWebhookDeliveryAttemptsResponse.
+type ListWebhookDeliveryAttemptsResponse struct {
+	// DeliveryAttempts A list of delivery attempts, most recent first
+	DeliveryAttempts []WebhookDeliveryAttempt `json:"delivery_attempts"`
+
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+}
+
+// ListWebhookSubscriptionsResponse defines model for ListWebhookSubscriptionsResponse.
+type ListWebhookSubscriptionsResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Subscriptions A list of webhook subscriptions, most recently created first
+	Subscriptions []WebhookSubscription `json:"subscriptions"`
+}
+
+// ListWebhooksResponse defines model for ListWebhooksResponse.
+type ListWebhooksResponse struct {
+	// Pagination Cursor-based pagination metadata. Use `next_cursor` in the subsequent
+	// request's `cursor` query parameter.
+	Pagination PaginationMetadata `json:"pagination"`
+
+	// Webhooks A list of webhooks
+	Webhooks []Webhook `json:"webhooks"`
+}
+
+// LiteLlmConfig Config for a LiteLLM integration. `base_url` is the LiteLLM endpoint Arize sends requests to and is always set — LiteLLM is self-hosted, so there is no default endpoint. Secrets are write-only: the virtual key surfaces as `has_api_key` and custom request headers surface as `header_names` (names only). `model_names` lists only the model names configured on this integration; models resolved live from the LiteLLM deployment are served through the Arize UI and are not returned here.
+type LiteLlmConfig struct {
+	// BaseUrl LiteLLM endpoint URL requests are sent to.
+	BaseUrl string `json:"base_url"`
+
+	// HasApiKey Whether an API key is configured (the key itself is never returned).
+	HasApiKey bool `json:"has_api_key"`
+
+	// HeaderNames Names of the custom request headers configured on this integration. Empty when none are configured. Header values are write-only and never returned.
+	HeaderNames []string `json:"header_names"`
+
+	// IsFunctionCallingEnabled Whether function/tool calling is enabled.
+	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
+
+	// ModelNames Custom model names configured on this integration. Empty when none.
+	ModelNames []string `json:"model_names"`
+
+	// Provider Discriminator identifying the LiteLLM provider.
+	Provider             LiteLlmConfigProvider  `json:"provider"`
+	AdditionalProperties map[string]interface{} `json:"-"`
+}
+
+// LiteLlmConfigProvider Discriminator identifying the LiteLLM provider.
+type LiteLlmConfigProvider string
+
 // LlmConfig Per-provider LLM config, discriminated by `provider`.
 type LlmConfig struct {
-	union json.RawMessage
+	AdditionalProperties map[string]interface{} `json:"-"`
+	union                json.RawMessage
 }
 
 // LlmGenerationRunConfig Configuration for running an LLM prompt against each dataset example.
@@ -6199,11 +7511,48 @@ type LlmGenerationRunConfig struct {
 	ProviderParameters *map[string]interface{} `json:"provider_parameters,omitempty"`
 
 	// ToolConfig Tool configuration for the LLM invocation
-	ToolConfig *ToolConfig `json:"tool_config,omitempty"`
+	ToolConfig           *ToolConfig            `json:"tool_config,omitempty"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // LlmGenerationRunConfigExperimentType Discriminator. Must be `"LLM_GENERATION"`.
 type LlmGenerationRunConfigExperimentType string
+
+// LlmGenerationRunConfigRequest Strict request configuration for running an LLM prompt against each dataset example.
+type LlmGenerationRunConfigRequest struct {
+	// AiIntegrationId AI integration identifier (base64).
+	AiIntegrationId string `json:"ai_integration_id"`
+
+	// ExperimentType Discriminator. Must be `"LLM_GENERATION"`.
+	ExperimentType LlmGenerationRunConfigRequestExperimentType `json:"experiment_type"`
+
+	// InputVariableFormat The format for input variables in the prompt messages. Defaults to `F_STRING` if not provided.
+	// - `F_STRING`: Single curly braces ({variable_name})
+	// - `MUSTACHE`: Double curly braces ({{variable_name}})
+	// - `NONE`: **Deprecated.** Treated as `F_STRING`. Will be removed in a future version.
+	InputVariableFormat InputVariableFormat `json:"input_variable_format"`
+
+	// InvocationParameters Parameters for the LLM invocation in a write request (strict form of InvocationParams; leaf schemas use *Request variants)
+	InvocationParameters *InvocationParamsRequest `json:"invocation_parameters,omitempty"`
+
+	// Messages Array of message objects (at least one).
+	Messages []LLMMessageRequest `json:"messages"`
+
+	// ModelName Model name (e.g. `gpt-4o`). Falls back to the integration's default if omitted.
+	ModelName *string `json:"model_name,omitempty"`
+
+	// PromptVersionId Prompt version identifier (base64). Links to a Prompt Hub version for traceability.
+	PromptVersionId *string `json:"prompt_version_id,omitempty"`
+
+	// ProviderParameters Provider-specific parameters. Defaults to `{}` (no overrides) if omitted.
+	ProviderParameters *map[string]interface{} `json:"provider_parameters,omitempty"`
+
+	// ToolConfig Tool configuration in a write request (strict form of ToolConfig)
+	ToolConfig *ToolConfigRequest `json:"tool_config,omitempty"`
+}
+
+// LlmGenerationRunConfigRequestExperimentType Discriminator. Must be `"LLM_GENERATION"`.
+type LlmGenerationRunConfigRequestExperimentType string
 
 // LlmIntegration An LLM integration (type=LLM).
 type LlmIntegration struct {
@@ -6235,7 +7584,7 @@ type LlmIntegration struct {
 // LlmIntegrationType Discriminator identifying an LLM integration.
 type LlmIntegrationType string
 
-// LlmIntegrationProvider The LLM vendor for an `LLM` integration. Selects the per-provider `config` member. `OPEN_AI`, `ANTHROPIC`, `GEMINI`, `AWS_BEDROCK`, `CUSTOM`, `VERTEX_AI`, and `NVIDIA_NIM` are implemented; additional providers are added non-breakingly.
+// LlmIntegrationProvider The LLM vendor for an `LLM` integration. Selects the per-provider `config` member. `OPEN_AI`, `ANTHROPIC`, `GEMINI`, `AWS_BEDROCK`, `CUSTOM`, `VERTEX_AI`, `NVIDIA_NIM`, `LITELLM`, `FIREWORKS`, and `TOGETHER_AI` are implemented; additional providers are added non-breakingly.
 type LlmIntegrationProvider string
 
 // LlmProvider The LLM provider to use
@@ -6313,27 +7662,31 @@ type ManagedCodeEvaluator string
 // ManualRangeThreshold defines model for ManualRangeThreshold.
 type ManualRangeThreshold struct {
 	// Lower The lower bound of the range. Its operator must be `GREATER_THAN` or `GREATER_THAN_OR_EQUAL`.
-	Lower ManualThresholdBound     `json:"lower"`
-	Type  ManualRangeThresholdType `json:"type"`
+	Lower ManualThresholdBound `json:"lower"`
+
+	// Type Identifies this threshold as a manually-set lower/upper bound range.
+	Type ManualRangeThresholdType `json:"type"`
 
 	// Upper The upper bound of the range. Its `operator` must be `LESS_THAN` or `LESS_THAN_OR_EQUAL`.
 	Upper ManualThresholdBound `json:"upper"`
 }
 
-// ManualRangeThresholdType defines model for ManualRangeThreshold.Type.
+// ManualRangeThresholdType Identifies this threshold as a manually-set lower/upper bound range.
 type ManualRangeThresholdType string
 
 // ManualSingleThreshold defines model for ManualSingleThreshold.
 type ManualSingleThreshold struct {
 	// Operator Numeric comparison operators used when evaluating a computed metric value against a threshold.
-	Operator ThresholdOperator         `json:"operator"`
-	Type     ManualSingleThresholdType `json:"type"`
+	Operator ThresholdOperator `json:"operator"`
+
+	// Type Identifies this threshold as a single, manually-set value.
+	Type ManualSingleThresholdType `json:"type"`
 
 	// Value The threshold value the computed metric is compared against.
 	Value float32 `json:"value"`
 }
 
-// ManualSingleThresholdType defines model for ManualSingleThreshold.Type.
+// ManualSingleThresholdType Identifies this threshold as a single, manually-set value.
 type ManualSingleThresholdType string
 
 // ManualThresholdBound defines model for ManualThresholdBound.
@@ -6351,11 +7704,13 @@ type MessageRole string
 // ModelBaselineConfig Uses the model's primary baseline as the comparison dataset.
 type ModelBaselineConfig struct {
 	// Filters Filters applied to the comparison dataset. An empty array means no comparison dataset filters are configured.
-	Filters []MonitorFilter         `json:"filters"`
-	Type    ModelBaselineConfigType `json:"type"`
+	Filters []MonitorFilter `json:"filters"`
+
+	// Type Identifies this comparison dataset as the model's primary baseline.
+	Type ModelBaselineConfigType `json:"type"`
 }
 
-// ModelBaselineConfigType defines model for ModelBaselineConfig.Type.
+// ModelBaselineConfigType Identifies this comparison dataset as the model's primary baseline.
 type ModelBaselineConfigType string
 
 // Monitor A monitor. The `type` field discriminates which variant (and therefore which type-specific fields) applies.
@@ -6456,11 +7811,13 @@ type MovingCustomBaselineWindow struct {
 	MovingWindowDelaySeconds int `json:"moving_window_delay_seconds"`
 
 	// MovingWindowSeconds The length of the moving comparison window, in seconds.
-	MovingWindowSeconds int                            `json:"moving_window_seconds"`
-	Type                MovingCustomBaselineWindowType `json:"type"`
+	MovingWindowSeconds int `json:"moving_window_seconds"`
+
+	// Type Identifies this comparison window as a moving window relative to now.
+	Type MovingCustomBaselineWindowType `json:"type"`
 }
 
-// MovingCustomBaselineWindowType defines model for MovingCustomBaselineWindow.Type.
+// MovingCustomBaselineWindowType Identifies this comparison window as a moving window relative to now.
 type MovingCustomBaselineWindowType string
 
 // NotificationConfig defines model for NotificationConfig.
@@ -6700,8 +8057,10 @@ type PerformanceMonitor struct {
 	Status MonitorStatus `json:"status"`
 
 	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
-	Threshold ThresholdConfig        `json:"threshold"`
-	Type      PerformanceMonitorType `json:"type"`
+	Threshold ThresholdConfig `json:"threshold"`
+
+	// Type Identifies this monitor as a performance monitor.
+	Type PerformanceMonitorType `json:"type"`
 
 	// UpdatedAt When the monitor was last updated.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
@@ -6710,7 +8069,7 @@ type PerformanceMonitor struct {
 	Uri *string `json:"uri,omitempty"`
 }
 
-// PerformanceMonitorType defines model for PerformanceMonitor.Type.
+// PerformanceMonitorType Identifies this monitor as a performance monitor.
 type PerformanceMonitorType string
 
 // Permission A permission identifier following the pattern {RESOURCE}_{ACTION}.
@@ -6791,9 +8150,19 @@ type Project struct {
 	// Name The project name
 	Name string `json:"name"`
 
+	// ProjectType The project type for generative LLM projects. Null for projects
+	// that have not been assigned a type.
+	ProjectType *ProjectType `json:"project_type,omitempty"`
+
 	// SpaceId The space ID the project belongs to
 	SpaceId string `json:"space_id"`
 }
+
+// ProjectType The kind of LLM project.
+// - `APPLICATION` — A user-facing LLM application project.
+// - `HARNESS` — An agent harness session project.
+// - `EXPERIMENT` — An experiment trace project.
+type ProjectType string
 
 // Prompt A prompt is a reusable template for LLM interactions. Prompts can be versioned
 // and labeled to track changes over time. Use prompts to standardize how you
@@ -6971,6 +8340,7 @@ type ProviderParamsRequest struct {
 // RecordGranularity Granularity of an annotation queue record.
 // - SPAN: The record represents a span.
 // - TRACE: The record represents a trace.
+// - SESSION: The record represents a session.
 type RecordGranularity string
 
 // RefreshApiKeyRequest defines model for RefreshApiKeyRequest.
@@ -7035,6 +8405,56 @@ type RefreshApiKeyResponse struct {
 	Status ApiKeyStatus `json:"status"`
 }
 
+// RemoteConfig Remote configuration for a `REMOTE` evaluator version. The backing
+// `EVALUATOR` integration is referenced by this version and may also be
+// referenced by other versions. Updating it affects every version that
+// references it.
+//
+// `integration_id` is included only when the caller has permission to read
+// the backing integration. Callers without that permission still receive the
+// remote version metadata, but the integration reference is omitted.
+type RemoteConfig struct {
+	// IntegrationId `EVALUATOR` integration identifier (base64), as returned by the
+	// integrations API (`POST /v2/integrations` with `type: EVALUATOR`).
+	// Must reference an integration of type `EVALUATOR`; other integration
+	// types are rejected.
+	IntegrationId *string `json:"integration_id,omitempty"`
+}
+
+// RemoteConfigInput Remote configuration for a `REMOTE` evaluator version in write requests.
+// The referenced integration may also be used by other versions; editing it
+// affects every version that references it.
+type RemoteConfigInput struct {
+	// IntegrationId `EVALUATOR` integration identifier (base64), as returned by the
+	// integrations API (`POST /v2/integrations` with `type: EVALUATOR`).
+	// Must reference an integration of type `EVALUATOR`; other integration
+	// types are rejected.
+	IntegrationId string `json:"integration_id"`
+}
+
+// RemoveTagsRequest defines model for RemoveTagsRequest.
+type RemoveTagsRequest struct {
+	// TagIds IDs of the tags to detach. Up to 100 per request. An ID that is not
+	// currently attached is reported in `not_deleted` rather than causing
+	// the whole request to fail, so the same request can be retried
+	// safely.
+	TagIds []Id `json:"tag_ids"`
+}
+
+// RemoveTagsResponse defines model for RemoveTagsResponse.
+type RemoveTagsResponse struct {
+	// Completed True when every requested tag ID was attached and has been detached.
+	// False when one or more requested IDs appear in `not_deleted`.
+	Completed bool `json:"completed"`
+
+	// Deleted IDs of the tags that were attached and have been detached.
+	Deleted []Id `json:"deleted"`
+
+	// NotDeleted IDs from the request that were not attached to the resource. Not an
+	// error — detaching an already-detached tag is a no-op.
+	NotDeleted []Id `json:"not_deleted"`
+}
+
 // ResourceRestriction defines model for ResourceRestriction.
 type ResourceRestriction struct {
 	// CreatedAt When the restriction was created
@@ -7045,11 +8465,13 @@ type ResourceRestriction struct {
 
 	// ResourceType Type of the restricted resource.
 	// - PROJECT - A project within a space.
+	// - DASHBOARD - A dashboard within a space.
 	ResourceType ResourceRestrictionType `json:"resource_type"`
 }
 
 // ResourceRestrictionType Type of the restricted resource.
 // - PROJECT - A project within a space.
+// - DASHBOARD - A dashboard within a space.
 type ResourceRestrictionType string
 
 // ResponseFormat Response format configuration
@@ -7093,6 +8515,7 @@ type Role struct {
 
 	// Permissions List of permissions granted by this role. Each value corresponds to a
 	// permission identifier (e.g. `PROJECT_READ`, `DATASET_CREATE`).
+	// Returned only to callers with `ROLE_READ`.
 	Permissions []Permission `json:"permissions"`
 
 	// UpdatedAt Timestamp when the role was last updated.
@@ -7120,7 +8543,12 @@ type RoleBinding struct {
 	// UpdatedAt Timestamp when the binding was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 
-	// UserId A universally unique identifier (base64-encoded opaque string).
+	// UserId ID of the user this binding assigns the role to.
+	//
+	// For a **service key**, this is the ID of the key's bot user — not the ID of
+	// the person who created the key. Read it from `bot_user.id` on the
+	// `POST /v2/api-keys` response, or from `bot_user.id` on the matching service
+	// key entry returned by `GET /v2/api-keys`.
 	UserId Id `json:"user_id"`
 }
 
@@ -7132,6 +8560,12 @@ type RoleBindingResourceType string
 // variant must be supplied, identified by `experiment_type`. All fields sit at
 // the top level alongside `experiment_type` (flat — no wrapper sub-object).
 type RunConfiguration struct {
+	union json.RawMessage
+}
+
+// RunConfigurationRequest Strict request form of an experiment execution configuration. Exactly one
+// variant must be supplied, identified by `experiment_type`.
+type RunConfigurationRequest struct {
 	union json.RawMessage
 }
 
@@ -7147,49 +8581,49 @@ type ScheduledRuntimeConfig struct {
 	Enabled bool `json:"enabled"`
 }
 
-// ServiceApiKeyCreated defines model for ServiceApiKeyCreated.
-type ServiceApiKeyCreated struct {
-	BotUser ServiceKeyBotUser `json:"bot_user"`
+// SearchDatasetExamplesRequest Optional criteria for searching a dataset's examples. Omit all fields to
+// return the first page of examples in ascending order of `created_at`, with
+// `id` as a tiebreaker. Keep the filter unchanged when using a returned
+// cursor to fetch the next page.
+//
+// Filters use the same SQL-like language as span search. Supported column
+// families include unprefixed example columns, `id`, and
+// `annotation.<name>.*` when present in the example schema. A present empty
+// or whitespace-only filter is invalid.
+type SearchDatasetExamplesRequest struct {
+	// Cursor Opaque cursor from `pagination.next_cursor`. Omit to start at the first page; keep the filter unchanged while paging.
+	Cursor *string `json:"cursor,omitempty"`
 
-	// CreatedAt Timestamp when the key was created.
-	CreatedAt time.Time `json:"created_at"`
+	// DatasetVersionId Unique identifier of the dataset version to search. If omitted, the latest version is selected.
+	DatasetVersionId *string `json:"dataset_version_id,omitempty"`
 
-	// CreatedByUserId ID of the user who created the key.
-	CreatedByUserId string `json:"created_by_user_id"`
+	// Filter SQL-like filter expression. Omit to search all examples; an empty or whitespace-only value is invalid.
+	Filter *string `json:"filter,omitempty"`
 
-	// Description Optional user-defined description for the API key.
-	Description *string `json:"description,omitempty"`
-
-	// ExpiresAt Optional timestamp when the key will expire.
-	ExpiresAt *time.Time `json:"expires_at,omitempty"`
-
-	// Id Unique identifier for the API key.
-	Id string `json:"id"`
-
-	// Key The full API key value. **Only returned once** at creation or refresh time.
-	// Store it securely — it cannot be retrieved again.
-	Key string `json:"key"`
-
-	// KeyType Discriminator value for service keys.
-	KeyType ServiceApiKeyCreatedKeyType `json:"key_type"`
-
-	// LastUsedAt Approximate timestamp when the key was last used for authentication. This value is periodically updated and may not reflect the most recent usage.
-	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
-
-	// Name User-defined name for the API key.
-	Name string `json:"name"`
-
-	// RedactedKey Redacted version of the key suitable for display (e.g., "ak-abc...xyz").
-	RedactedKey string `json:"redacted_key"`
-
-	// Status Current status of the API key.
-	// - ACTIVE - The key is valid for use.
-	// - REVOKED - The key has been revoked and is no longer valid.
-	Status ApiKeyStatus `json:"status"`
+	// Limit Maximum number of examples to return. Defaults to 50 and must be between 1 and 500.
+	Limit *int32 `json:"limit,omitempty"`
 }
 
-// ServiceApiKeyCreatedKeyType Discriminator value for service keys.
-type ServiceApiKeyCreatedKeyType string
+// SearchExperimentRunsRequest Optional criteria for searching an experiment's runs. Omit all fields to
+// return the first page of runs in stable `id` ascending order. Keep the
+// filter unchanged when using a returned cursor to fetch the next page.
+//
+// Filters use the same SQL-like language as span search. Supported column
+// families include unprefixed `id`, `output`, and `example_id`; custom run
+// columns; `eval.<name>.score`, `eval.<name>.label`,
+// `eval.<name>.explanation`, and `eval.<name>.metadata.*`; and
+// `annotation.<name>.*` when present in the run schema. A present empty or
+// whitespace-only filter is invalid.
+type SearchExperimentRunsRequest struct {
+	// Cursor Opaque cursor from `pagination.next_cursor`. Omit to start at the first page; keep the filter unchanged while paging.
+	Cursor *string `json:"cursor,omitempty"`
+
+	// Filter SQL-like filter expression. Omit to search all runs; an empty or whitespace-only value is invalid.
+	Filter *string `json:"filter,omitempty"`
+
+	// Limit Maximum number of runs to return. Defaults to 50 and must be between 1 and 500.
+	Limit *int32 `json:"limit,omitempty"`
+}
 
 // ServiceKeyBotUser defines model for ServiceKeyBotUser.
 type ServiceKeyBotUser struct {
@@ -7380,6 +8814,24 @@ type SpanContext struct {
 	TraceId string `json:"trace_id"`
 }
 
+// SpanEvaluatorInput Span-granularity evaluator input. Uses `query_filter` and `column_mappings`.
+type SpanEvaluatorInput struct {
+	// ColumnMappings Maps evaluator template variable names to data source column names (span shape).
+	ColumnMappings *map[string]string `json:"column_mappings,omitempty"`
+
+	// EvaluatorId Evaluator identifier (base64). Duplicates are not allowed.
+	EvaluatorId string `json:"evaluator_id"`
+
+	// EvaluatorVersionId Pin this evaluator to a specific version (base64). Defaults to null, which
+	// always runs the evaluator's latest version; omitting the field and sending
+	// null are equivalent. Must be a version of the evaluator named by
+	// `evaluator_id`, otherwise the request returns 422.
+	EvaluatorVersionId *string `json:"evaluator_version_id,omitempty"`
+
+	// QueryFilter Per-evaluator query filter (span shape). Combined with the task-level filter (AND).
+	QueryFilter *string `json:"query_filter,omitempty"`
+}
+
 // SpanEvent defines model for SpanEvent.
 type SpanEvent struct {
 	// Attributes Key-value pairs of event attributes
@@ -7463,10 +8915,60 @@ type StaticParamRequest_DefaultValue struct {
 // - REGEX - A regular expression string.
 type StaticParamType string
 
+// Tag A tag is a reusable label defined once per space and attached to many
+// resources across the platform, so the same vocabulary can be applied to
+// projects, datasets, prompts, and more.
+//
+// Tags are shared. Renaming a tag changes it everywhere it appears, and
+// deleting a tag detaches it from every resource it was attached to.
+type Tag struct {
+	// Color Display color for the tag. `null` when no color has been assigned, which
+	// clients render with a neutral treatment.
+	Color *TagColor `json:"color,omitempty"`
+
+	// CreatedAt When the tag was created
+	CreatedAt time.Time `json:"created_at"`
+
+	// Description Free-form description of what the tag is for. `null` when no description
+	// has been set.
+	Description *string `json:"description,omitempty"`
+
+	// Id The unique identifier of the tag
+	Id Id `json:"id"`
+
+	// Name The tag name. Unique within the space, compared case-insensitively.
+	Name string `json:"name"`
+
+	// SpaceId The unique identifier of the space the tag belongs to
+	SpaceId Id `json:"space_id"`
+
+	// UpdatedAt When the tag was last modified. Equal to `created_at` until the tag is
+	// updated.
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// TagColor Display color applied to the tag wherever it is shown. One of the platform's
+// 19 display colors.
+type TagColor string
+
 // Task A task is a typed, configurable unit of work that ties one or more evaluators
 // to a data source (project or dataset). `RUN_EXPERIMENT` tasks additionally
 // carry a `run_configuration` that defines the LLM, evaluator, or agent
 // settings for each triggered run.
+//
+// Evaluation tasks (`TEMPLATE_EVALUATION` and `CODE_EVALUATION`) use one of
+// two mutually exclusive query-filter shapes depending on the granularity of
+// the data each evaluator processes:
+//
+//   - **Span shape** — `query_filter` (task-level) plus per-evaluator
+//     `column_mappings`/`query_filter`. For tasks where each evaluated unit is
+//     a single span. `query_filters` is null.
+//   - **Trace/session shape** — `query_filters` (named `filters` plus optional
+//     `expression`) at the task level, and per-evaluator `query_mappings`. For
+//     tasks where each evaluated unit is a complete trace or session.
+//     `query_filter` is null.
+//
+// All evaluators on a task must use the same shape; mixing shapes returns 400.
 type Task struct {
 	// CreatedAt When the task was created.
 	CreatedAt time.Time `json:"created_at"`
@@ -7498,8 +9000,15 @@ type Task struct {
 	// ProjectId The project identifier (base64). Present for project-based tasks.
 	ProjectId *string `json:"project_id,omitempty"`
 
-	// QueryFilter Task-level query filter applied to all data.
+	// QueryFilter Task-level query filter applied to all data. Span-granularity shape only.
+	// Null when the task uses the trace/session shape (`query_filters`).
+	// Mutually exclusive with `query_filters`.
 	QueryFilter *string `json:"query_filter"`
+
+	// QueryFilters Named query filters plus optional boolean expression for
+	// trace/session-granularity evaluators. Null for span-granularity tasks
+	// (which use `query_filter`). Mutually exclusive with `query_filter`.
+	QueryFilters *TaskQueryFilters `json:"query_filters,omitempty"`
 
 	// RunConfiguration The run configuration for a `RUN_EXPERIMENT` task. Present only when
 	// `type` is `RUN_EXPERIMENT`. Null for all other task types.
@@ -7521,6 +9030,8 @@ type Task struct {
 // TaskEvaluator defines model for TaskEvaluator.
 type TaskEvaluator struct {
 	// ColumnMappings Maps evaluator template variable names to data source column names.
+	// Span-granularity shape only; null for trace/session evaluators (which use
+	// `query_mappings`).
 	ColumnMappings *map[string]string `json:"column_mappings"`
 
 	// EvaluatorId Evaluator identifier (base64).
@@ -7535,26 +9046,106 @@ type TaskEvaluator struct {
 	EvaluatorVersionId *string `json:"evaluator_version_id"`
 
 	// QueryFilter Per-evaluator query filter, combined with the task-level filter (AND).
+	// Span-granularity shape only; null for trace/session evaluators.
 	QueryFilter *string `json:"query_filter"`
+
+	// QueryMappings Maps each evaluator variable to one or more declared query ids plus an
+	// attribute path, for trace/session evaluators. Present only on
+	// trace/session tasks; null on span tasks (which use `column_mappings`).
+	QueryMappings *[]TaskQueryMapping `json:"query_mappings,omitempty"`
 }
 
 // TaskEvaluatorInput An evaluator attachment supplied when creating or updating a task. At least
-// one entry is required on evaluation-task requests.
+// one entry is required on evaluation-task requests. Evaluators carry one of
+// two mutually exclusive shapes: span evaluators use `query_filter` +
+// `column_mappings`; trace/session evaluators use `query_mappings`.
 type TaskEvaluatorInput struct {
-	// ColumnMappings Maps evaluator template variable names to data source column names.
-	ColumnMappings *map[string]string `json:"column_mappings,omitempty"`
+	union json.RawMessage
+}
 
-	// EvaluatorId Evaluator identifier (base64). Duplicates are not allowed.
-	EvaluatorId string `json:"evaluator_id"`
+// TaskQueryFilter A single named task-level query filter (trace/session shape). The `id` is a
+// logical label used in `query_filters.expression` and per-evaluator
+// `query_mappings`.
+type TaskQueryFilter struct {
+	// Filter The query filter expression for this named query.
+	Filter string `json:"filter"`
 
-	// EvaluatorVersionId Pin this evaluator to a specific version (base64). Defaults to null, which
-	// always runs the evaluator's latest version; omitting the field and sending
-	// null are equivalent. Must be a version of the evaluator named by
-	// `evaluator_id`, otherwise the request returns 422.
-	EvaluatorVersionId *string `json:"evaluator_version_id,omitempty"`
+	// Id Single-letter query id, one of `A`-`E`. Unique within the task. Referenced
+	// by `query_filters.expression` and by each evaluator's `query_mappings`.
+	Id string `json:"id"`
+}
 
-	// QueryFilter Per-evaluator query filter. Combined with the task-level filter (AND).
-	QueryFilter *string `json:"query_filter,omitempty"`
+// TaskQueryFilterInput A single named task-level query filter for create/update requests (trace/session
+// shape). The `id` is a logical label used in `query_filters.expression` and
+// per-evaluator `query_mappings`.
+type TaskQueryFilterInput struct {
+	// Filter The query filter expression for this named query.
+	Filter string `json:"filter"`
+
+	// Id Single-letter query id, one of `A`-`E`. Unique within the task. Referenced
+	// by `query_filters.expression` and by each evaluator's `query_mappings`.
+	Id string `json:"id"`
+}
+
+// TaskQueryFilters Combined named-query filters and boolean expression for the trace/session
+// shape. Supply this object OR `query_filter` (span shape) — not both.
+type TaskQueryFilters struct {
+	// Expression Boolean expression combining the `filters` ids (e.g. `A AND B`).
+	// Optional when exactly one filter is declared; required when two or more
+	// are declared. When a client omits `expression` on a single-filter create,
+	// GET echoes a synthesized expression equal to the lone query id (e.g. `A`).
+	Expression *string `json:"expression,omitempty"`
+
+	// Filters Named query filters (1-5 entries) with unique `A`-`E` ids. Each entry
+	// pairs a single-letter id with a filter expression.
+	Filters []TaskQueryFilter `json:"filters"`
+}
+
+// TaskQueryFiltersInput Combined named-query filters and boolean expression for create/update requests
+// (trace/session shape). Supply this object OR `query_filter` (span shape) — not both.
+type TaskQueryFiltersInput struct {
+	// Expression Boolean expression combining the `filters` ids (e.g. `A AND B`).
+	// Optional when exactly one filter is declared; required when two or more
+	// are declared.
+	Expression *string `json:"expression,omitempty"`
+
+	// Filters Named query filters (1-5 entries) with unique `A`-`E` ids. Each entry
+	// pairs a single-letter id with a filter expression.
+	Filters []TaskQueryFilterInput `json:"filters"`
+}
+
+// TaskQueryMapping Maps one evaluator variable to one or more query ids and an attribute path
+// (trace/session shape).
+type TaskQueryMapping struct {
+	// AttributePath Span attribute path (e.g. `attributes.input.value`) resolved within each
+	// admitted unit to populate `variable_name`.
+	AttributePath string `json:"attribute_path"`
+
+	// QueryIds Declared query ids (`A`-`E`) whose matching units feed this variable. An
+	// empty list means "any declared query" (valid for session-level variables
+	// that match all spans in the conversation). Every id must be declared in
+	// the task's `query_filters.filters`.
+	QueryIds []string `json:"query_ids"`
+
+	// VariableName The evaluator template variable this mapping populates.
+	VariableName string `json:"variable_name"`
+}
+
+// TaskQueryMappingInput Maps one evaluator variable to one or more query ids and an attribute path for
+// create/update requests (trace/session shape).
+type TaskQueryMappingInput struct {
+	// AttributePath Span attribute path (e.g. `attributes.input.value`) resolved within each
+	// admitted unit to populate `variable_name`.
+	AttributePath string `json:"attribute_path"`
+
+	// QueryIds Declared query ids (`A`-`E`) whose matching units feed this variable. An
+	// empty list means "any declared query" (valid for session-level variables
+	// that match all spans in the conversation). Every id must be declared in
+	// the task's `query_filters.filters`.
+	QueryIds []string `json:"query_ids"`
+
+	// VariableName The evaluator template variable this mapping populates.
+	VariableName string `json:"variable_name"`
 }
 
 // TaskRun A task run is an async job that executes the work defined on a task. Runs are
@@ -7653,8 +9244,8 @@ type TemplateConfig struct {
 	// Template The prompt template with variable placeholders
 	Template string `json:"template"`
 
-	// UseFunctionCallingIfAvailable Whether to use function calling if the model supports it
-	UseFunctionCallingIfAvailable bool `json:"use_function_calling_if_available"`
+	// UseFunctionCalling Whether to use function calling if the model supports it.
+	UseFunctionCalling *bool `json:"use_function_calling,omitempty"`
 
 	// UseStructuredOutput Whether to use structured output if the model supports it
 	UseStructuredOutput *bool `json:"use_structured_output,omitempty"`
@@ -7683,8 +9274,8 @@ type TemplateConfigInput struct {
 	// Template The prompt template with variable placeholders
 	Template string `json:"template"`
 
-	// UseFunctionCallingIfAvailable Whether to use function calling if the model supports it
-	UseFunctionCallingIfAvailable bool `json:"use_function_calling_if_available"`
+	// UseFunctionCalling Whether to use function calling if the model supports it.
+	UseFunctionCalling bool `json:"use_function_calling"`
 
 	// UseStructuredOutput Whether to use structured output if the model supports it. When omitted the server defaults to true.
 	UseStructuredOutput *bool `json:"use_structured_output,omitempty"`
@@ -7721,11 +9312,58 @@ type TemplateEvaluationRunConfig struct {
 
 	// Template The evaluation prompt template. Use `{{variable}}` placeholders that map to dataset
 	// column paths via `column_mapping`.
-	Template string `json:"template"`
+	Template             string                 `json:"template"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // TemplateEvaluationRunConfigExperimentType Discriminator. Must be `"TEMPLATE_EVALUATION"`.
 type TemplateEvaluationRunConfigExperimentType string
+
+// TemplateEvaluationRunConfigRequest Strict request configuration for running a template-based LLM evaluator.
+type TemplateEvaluationRunConfigRequest struct {
+	// AiIntegrationId AI integration identifier (base64). The LLM that judges each example.
+	AiIntegrationId string `json:"ai_integration_id"`
+
+	// ClassificationChoices Map of choice label to numeric score (e.g. `{"relevant": 1, "irrelevant": 0}`).
+	ClassificationChoices *map[string]float32 `json:"classification_choices,omitempty"`
+
+	// ColumnMapping Maps template variable names to dataset column paths.
+	ColumnMapping *map[string]string `json:"column_mapping,omitempty"`
+
+	// EvaluatorVersionId EvaluatorVersion identifier (base64). Links this run to an Eval Hub evaluator version.
+	EvaluatorVersionId *string `json:"evaluator_version_id,omitempty"`
+
+	// ExperimentType Discriminator. Must be `"TEMPLATE_EVALUATION"`.
+	ExperimentType TemplateEvaluationRunConfigRequestExperimentType `json:"experiment_type"`
+
+	// InvocationParameters Parameters for the LLM invocation in a write request (strict form of InvocationParams; leaf schemas use *Request variants)
+	InvocationParameters *InvocationParamsRequest `json:"invocation_parameters,omitempty"`
+
+	// ModelName Model name (e.g. `gpt-4o`). Falls back to the integration's default if omitted.
+	ModelName *string `json:"model_name,omitempty"`
+
+	// ProvideExplanation Whether to ask the LLM to include a written explanation alongside the score/label.
+	ProvideExplanation bool `json:"provide_explanation"`
+
+	// ProviderParameters Provider-specific parameters. Defaults to `{}` (no overrides) if omitted.
+	ProviderParameters *map[string]interface{} `json:"provider_parameters,omitempty"`
+
+	// Template The evaluation prompt template. Use `{{variable}}` placeholders that map to dataset
+	// column paths via `column_mapping`.
+	Template string `json:"template"`
+}
+
+// TemplateEvaluationRunConfigRequestExperimentType Discriminator. Must be `"TEMPLATE_EVALUATION"`.
+type TemplateEvaluationRunConfigRequestExperimentType string
+
+// TestWebhookResponse The outcome of a test delivery to the webhook's endpoint.
+type TestWebhookResponse struct {
+	// ErrorMessage Why the test delivery failed. `null` for successful deliveries.
+	ErrorMessage *string `json:"error_message"`
+
+	// StatusCode HTTP status code returned by the webhook's endpoint. `502` when no response was received, for example because the endpoint was unreachable or timed out.
+	StatusCode int `json:"status_code"`
+}
 
 // ThresholdCalculation The statistical calculation used to derive a dynamic threshold.
 // - `STDEV` - standard deviation of the metric over the baseline.
@@ -7739,6 +9377,28 @@ type ThresholdConfig struct {
 
 // ThresholdOperator Numeric comparison operators used when evaluating a computed metric value against a threshold.
 type ThresholdOperator string
+
+// TogetherAiConfig Config for a Together AI integration. Together AI is a single hosted service, so there is no endpoint field and no custom request headers. The API key is write-only and surfaces as `has_api_key`. `model_names` lists only the model names configured on this integration; models resolved live from the Together AI account are served through the Arize UI and are not returned here.
+type TogetherAiConfig struct {
+	// HasApiKey Whether an API key is configured (the key itself is never returned).
+	HasApiKey bool `json:"has_api_key"`
+
+	// IsDefaultModelsEnabled Whether Arize's default model catalog is enabled.
+	IsDefaultModelsEnabled bool `json:"is_default_models_enabled"`
+
+	// IsFunctionCallingEnabled Whether function/tool calling is enabled.
+	IsFunctionCallingEnabled bool `json:"is_function_calling_enabled"`
+
+	// ModelNames Custom model names configured on this integration. Empty when none.
+	ModelNames []string `json:"model_names"`
+
+	// Provider Discriminator identifying the Together AI provider.
+	Provider             TogetherAiConfigProvider `json:"provider"`
+	AdditionalProperties map[string]interface{}   `json:"-"`
+}
+
+// TogetherAiConfigProvider Discriminator identifying the Together AI provider.
+type TogetherAiConfigProvider string
 
 // ToolCall A tool call generated by the model
 type ToolCall struct {
@@ -7795,6 +9455,15 @@ type ToolConfig struct {
 	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
+// ToolConfigRequest Tool configuration in a write request (strict form of ToolConfig)
+type ToolConfigRequest struct {
+	// ToolChoice Tool choice configuration
+	ToolChoice interface{} `json:"tool_choice,omitempty"`
+
+	// Tools List of tool definitions available to the model
+	Tools *[]ToolDefinition `json:"tools,omitempty"`
+}
+
 // ToolDefinition A tool definition available to the model
 type ToolDefinition map[string]interface{}
 
@@ -7833,6 +9502,21 @@ type Trace struct {
 
 	// TraceId Unique identifier for the trace.
 	TraceId string `json:"trace_id"`
+}
+
+// TraceOrSessionEvaluatorInput Trace/session-granularity evaluator input. Uses `query_mappings`.
+type TraceOrSessionEvaluatorInput struct {
+	// EvaluatorId Evaluator identifier (base64). Duplicates are not allowed.
+	EvaluatorId string `json:"evaluator_id"`
+
+	// EvaluatorVersionId Pin this evaluator to a specific version (base64). Defaults to null, which
+	// always runs the evaluator's latest version; omitting the field and sending
+	// null are equivalent. Must be a version of the evaluator named by
+	// `evaluator_id`, otherwise the request returns 422.
+	EvaluatorVersionId *string `json:"evaluator_version_id,omitempty"`
+
+	// QueryMappings Per-evaluator variable-to-query mappings (trace/session shape).
+	QueryMappings []TaskQueryMappingInput `json:"query_mappings"`
 }
 
 // TracingDataQualityMetric The data quality metrics computed by a tracing monitor.
@@ -7897,8 +9581,10 @@ type TracingMonitor struct {
 	Status MonitorStatus `json:"status"`
 
 	// Threshold The monitor's threshold. The `type` field discriminates whether the threshold is manual or dynamic, and single or a bounded range.
-	Threshold ThresholdConfig    `json:"threshold"`
-	Type      TracingMonitorType `json:"type"`
+	Threshold ThresholdConfig `json:"threshold"`
+
+	// Type Identifies this monitor as a tracing monitor.
+	Type TracingMonitorType `json:"type"`
 
 	// UpdatedAt When the monitor was last updated.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
@@ -7907,7 +9593,7 @@ type TracingMonitor struct {
 	Uri *string `json:"uri,omitempty"`
 }
 
-// TracingMonitorType defines model for TracingMonitor.Type.
+// TracingMonitorType Identifies this monitor as a tracing monitor.
 type TracingMonitorType string
 
 // TriggerEvaluationTaskRunRequest Trigger request for `TEMPLATE_EVALUATION` or `CODE_EVALUATION` tasks.
@@ -7936,7 +9622,9 @@ type TriggerEvaluationTaskRunRequest struct {
 }
 
 // TriggerRunExperimentTaskRunRequest Trigger request for `RUN_EXPERIMENT` tasks. `example_ids` and `max_examples`
-// are mutually exclusive; at most one may be provided.
+// are mutually exclusive; at most one may be provided. `query_filter` may be
+// combined with `example_ids` (the run set is their intersection) or with
+// `max_examples`.
 type TriggerRunExperimentTaskRunRequest struct {
 	// DatasetVersionId Dataset version identifier (base64). Defaults to the latest version
 	// when omitted.
@@ -7952,12 +9640,21 @@ type TriggerRunExperimentTaskRunRequest struct {
 	ExampleIds *[]string `json:"example_ids,omitempty"`
 
 	// ExperimentName Display name for the experiment to be created. Must be unique within
-	// the dataset.
+	// the dataset, 1–255 characters, and must not contain double quotes (`"`)
+	// or backslashes (`\`).
 	ExperimentName string `json:"experiment_name"`
 
 	// MaxExamples Maximum number of examples to run (dataset order). Mutually exclusive
 	// with `example_ids`. When both are omitted, all examples are used.
 	MaxExamples *int `json:"max_examples,omitempty"`
+
+	// QueryFilter Optional filter expression. When provided, the experiment (and any
+	// chained evaluation tasks) runs only on the dataset examples matching
+	// the filter, instead of the whole dataset. May be combined with
+	// `example_ids` — the run set is then the intersection (the given
+	// examples that also match the filter) — or with `max_examples` to cap
+	// the filtered set.
+	QueryFilter *string `json:"query_filter,omitempty"`
 
 	// TracingMetadata Arbitrary key-value metadata. Providing this enables tracing for
 	// the run.
@@ -7984,6 +9681,7 @@ type TriggerTaskRunRequest struct {
 // UpdateAgentConfig Partial agent config for PATCH. All collection fields are
 // replace-on-provide.
 type UpdateAgentConfig struct {
+	// Endpoint New HTTPS endpoint URL. Validated server-side and must resolve to a public address.
 	Endpoint *string `json:"endpoint,omitempty"`
 
 	// Headers Replace-on-provide. Pass `null` (or `{}`) to clear all headers.
@@ -8004,9 +9702,13 @@ type UpdateAgentConfig struct {
 type UpdateAgentIntegrationRequest struct {
 	// Config Partial agent config for PATCH. All collection fields are
 	// replace-on-provide.
-	Config      *UpdateAgentConfig `json:"config,omitempty"`
-	Description *string            `json:"description,omitempty"`
-	Name        *string            `json:"name,omitempty"`
+	Config *UpdateAgentConfig `json:"config,omitempty"`
+
+	// Description New human-readable description of the integration. Pass null to clear it.
+	Description *string `json:"description,omitempty"`
+
+	// Name New integration name. Must be unique among active AGENT and EVALUATOR integrations in the account.
+	Name *string `json:"name,omitempty"`
 
 	// Scopings Replace-on-provide. Empty array reverts to account-wide.
 	Scopings *[]IntegrationScopingRequest `json:"scopings,omitempty"`
@@ -8039,7 +9741,7 @@ type UpdateAiIntegrationRequest struct {
 	// ApiKey New API key. Pass null to remove the existing key. Omit to keep unchanged.
 	ApiKey *string `json:"api_key,omitempty"`
 
-	// AuthType The authentication method for this integration
+	// AuthType The authentication method for this integration. `OAUTH2_CLIENT_CREDENTIALS` is returned for integrations configured with OAuth 2.0 client credentials in the Arize UI. Setting it through this API is not yet supported.
 	AuthType *AiIntegrationAuthType `json:"auth_type,omitempty"`
 
 	// BaseUrl Custom base URL. Pass null to remove.
@@ -8092,6 +9794,11 @@ type UpdateAnnotationQueueRequest struct {
 	// All users must have an active account and access to the queue's space.
 	AnnotatorEmails *[]Email `json:"annotator_emails,omitempty"`
 
+	// ColumnAllowlist The full list of record column names annotators assigned to this queue are allowed
+	// to see. This replaces the existing allowlist. Set to `null` to remove the
+	// restriction so annotators see every column. Omit to leave it unchanged.
+	ColumnAllowlist *[]string `json:"column_allowlist,omitempty"`
+
 	// Instructions The instructions for annotators working on this queue.
 	// Set to `null` to clear the instructions.
 	Instructions *string `json:"instructions,omitempty"`
@@ -8112,7 +9819,7 @@ type UpdateCategoricalAnnotationConfigRequest struct {
 	// OptimizationDirection New optimization direction.
 	OptimizationDirection *OptimizationDirection `json:"optimization_direction,omitempty"`
 
-	// Values The full replacement set of categorical annotation values (2–100 items).
+	// Values The full replacement set of categorical annotation values (2–500 items).
 	Values *[]CategoricalAnnotationValueRequest `json:"values,omitempty"`
 }
 
@@ -8172,8 +9879,15 @@ type UpdateDatasetRequest struct {
 // UpdateEvaluationTaskRequest PATCH body for `TEMPLATE_EVALUATION` and `CODE_EVALUATION` tasks. The two
 // types share the same updatable shape; the server derives the task type
 // from the URL's task record. At least one field must be provided.
+//
+// Evaluators carry one of two mutually exclusive shapes depending on their data
+// granularity. Span evaluators use task-level `query_filter` plus per-evaluator
+// `column_mappings`/`query_filter`. Trace/session evaluators use task-level
+// `query_filters` plus per-evaluator `query_mappings`. Mixing the two shapes
+// returns 400.
 type UpdateEvaluationTaskRequest struct {
-	// Evaluators Replaces the entire evaluator list. At least one evaluator is required when provided.
+	// Evaluators Replaces the entire evaluator list. At least one evaluator is required
+	// when provided. Omit the field to leave evaluators unchanged.
 	Evaluators *[]TaskEvaluatorInput `json:"evaluators,omitempty"`
 
 	// IsContinuous Whether the task runs continuously. Only applicable for project-based tasks.
@@ -8182,12 +9896,55 @@ type UpdateEvaluationTaskRequest struct {
 	// Name New task name.
 	Name *string `json:"name,omitempty"`
 
-	// QueryFilter Task-level query filter. Pass `null` to clear.
+	// QueryFilter Task-level query filter (span shape). Pass `null` to clear. Mutually
+	// exclusive with `query_filters`.
 	QueryFilter *string `json:"query_filter,omitempty"`
+
+	// QueryFilters Named query filters plus optional expression (trace/session shape).
+	// Pass `null` to clear the entire multi-query shape (filters and
+	// expression together). Mutually exclusive with `query_filter`.
+	QueryFilters *TaskQueryFiltersInput `json:"query_filters,omitempty"`
 
 	// SamplingRate Sampling rate between 0 and 1. Only applicable for project-based tasks.
 	SamplingRate *float32 `json:"sampling_rate,omitempty"`
 }
+
+// UpdateEvaluatorIntegrationConfigInput Partial evaluator config for PATCH. Omitted fields are left unchanged.
+type UpdateEvaluatorIntegrationConfigInput struct {
+	// Endpoint New HTTPS endpoint URL.
+	Endpoint *string `json:"endpoint,omitempty"`
+
+	// Headers Replace-on-provide. Pass `null` (or `{}`) to clear all headers.
+	// Encrypted at rest; never returned in responses.
+	Headers *map[string]string `json:"headers,omitempty"`
+
+	// InputSchema New JSON Schema for the request payload shape. The root schema must
+	// have `type: object`, must not define the reserved top-level
+	// `arize_metadata` field, and must not exceed 64 KiB.
+	InputSchema *map[string]interface{} `json:"input_schema,omitempty"`
+}
+
+// UpdateEvaluatorIntegrationRequest Partial update body for `type=EVALUATOR`. `type` is immutable; if present
+// it must equal `EVALUATOR` (422 otherwise).
+type UpdateEvaluatorIntegrationRequest struct {
+	// Config Partial evaluator config for PATCH. Omitted fields are left unchanged.
+	Config *UpdateEvaluatorIntegrationConfigInput `json:"config,omitempty"`
+
+	// Description New human-readable description of the integration. Pass null to clear it.
+	Description *string `json:"description,omitempty"`
+
+	// Name New integration name. Must be unique among active AGENT and EVALUATOR integrations in the account.
+	Name *string `json:"name,omitempty"`
+
+	// Scopings Replace-on-provide. Empty array reverts to account-wide.
+	Scopings *[]IntegrationScopingRequest `json:"scopings,omitempty"`
+
+	// Type Discriminator. Immutable; must match the integration's type.
+	Type UpdateEvaluatorIntegrationRequestType `json:"type"`
+}
+
+// UpdateEvaluatorIntegrationRequestType Discriminator. Immutable; must match the integration's type.
+type UpdateEvaluatorIntegrationRequestType string
 
 // UpdateEvaluatorRequest Body containing evaluator update parameters
 type UpdateEvaluatorRequest struct {
@@ -8217,21 +9974,36 @@ type UpdateIntegrationRequest struct {
 	union json.RawMessage
 }
 
-// UpdateLlmConfig Partial LLM config for PATCH. `provider` is immutable; if present it must match the stored value. Field applicability is provider-specific and enforced by the handler with 422: `api_key` and `is_function_calling_enabled` do not apply to `AWS_BEDROCK` or `VERTEX_AI`; `auth` applies to `AWS_BEDROCK` only; `base_url` and `headers` apply to `CUSTOM` and `NVIDIA_NIM` only; `is_default_models_enabled` and `model_names` apply to `AWS_BEDROCK`, `CUSTOM`, and `NVIDIA_NIM` only; `project_id`, `location`, and `project_access_label` apply to `VERTEX_AI` only.
+// UpdateLlmAuth Replacement auth settings for the providers that model credentials as an auth block: `AWS_BEDROCK` and `CUSTOM`. The block must match the stored provider; a Bedrock block on a `CUSTOM` integration (or the reverse) is rejected with 422. There is no discriminator here because `auth_type: DEFAULT` means different things for the two providers — role assumption for Bedrock, API-key auth for a custom endpoint — so the correct variant is determined by the stored provider rather than by `auth_type` alone.
+type UpdateLlmAuth struct {
+	union json.RawMessage
+}
+
+// UpdateLlmConfig Partial LLM config for PATCH. `provider` is immutable; if present it must
+// match the stored value. Invalid provider/field combinations return 422.
+//
+// Provider-specific fields:
+// - `api_key`, `is_function_calling_enabled`: all except `AWS_BEDROCK`, `VERTEX_AI`
+// - `auth`: `AWS_BEDROCK`, `CUSTOM`
+// - `base_url`: `ANTHROPIC`, `CUSTOM`, `LITELLM`, `NVIDIA_NIM`
+// - `headers`: `CUSTOM`, `LITELLM`, `NVIDIA_NIM`
+// - `is_default_models_enabled`: `AWS_BEDROCK`, `CUSTOM`, `FIREWORKS`, `NVIDIA_NIM`, `TOGETHER_AI`
+// - `model_names`: `AWS_BEDROCK`, `CUSTOM`, `FIREWORKS`, `LITELLM`, `NVIDIA_NIM`, `TOGETHER_AI`
+// - `project_id`, `location`, `project_access_label`: `VERTEX_AI` only
 type UpdateLlmConfig struct {
-	// ApiKey Rotate the API key. Pass null to clear it. Omit to keep unchanged. Not valid for `AWS_BEDROCK` (bearer tokens are rotated via `auth`) or `VERTEX_AI`.
+	// ApiKey Rotate the API key. Pass null to clear it. Omit to keep unchanged. Not valid for `AWS_BEDROCK` (bearer tokens are rotated via `auth`) or `VERTEX_AI`. For `CUSTOM` it cannot be combined with `auth` in the same request; use one or the other.
 	ApiKey *string `json:"api_key,omitempty"`
 
-	// Auth AWS Bedrock auth settings for create and update, discriminated by `auth_type`. On PATCH this object replaces the stored auth settings wholesale (auth_type may change); omitted fields of the previous auth mode are cleared.
-	Auth *CreateAwsBedrockAuth `json:"auth,omitempty"`
+	// Auth Replacement auth settings for the providers that model credentials as an auth block: `AWS_BEDROCK` and `CUSTOM`. The block must match the stored provider; a Bedrock block on a `CUSTOM` integration (or the reverse) is rejected with 422. There is no discriminator here because `auth_type: DEFAULT` means different things for the two providers — role assumption for Bedrock, API-key auth for a custom endpoint — so the correct variant is determined by the stored provider rather than by `auth_type` alone.
+	Auth *UpdateLlmAuth `json:"auth,omitempty"`
 
-	// BaseUrl (`CUSTOM` and `NVIDIA_NIM` only) New endpoint URL. For `NVIDIA_NIM` the field is optional on the resource, so null clears it (falling back to the provider default endpoint). For `CUSTOM` it is required on the resource — null is rejected with 422. Omit to keep unchanged.
+	// BaseUrl (`CUSTOM`, `NVIDIA_NIM`, `LITELLM`, and `ANTHROPIC` only) New endpoint URL. For `NVIDIA_NIM` and `ANTHROPIC` the field is optional on the resource, so null clears it (falling back to the provider default endpoint). For `CUSTOM` and `LITELLM` it is required on the resource — null is rejected with 422. Omit to keep unchanged.
 	BaseUrl *string `json:"base_url,omitempty"`
 
-	// Headers (`CUSTOM` and `NVIDIA_NIM` only) Replaces the configured custom request headers: the provided map becomes the full header set. Pass null to clear all headers. Omit to keep unchanged. Write-only; names are exposed as `header_names` on read. The serialized header map must not exceed 8,175 bytes.
+	// Headers (`CUSTOM`, `NVIDIA_NIM`, and `LITELLM` only) Replaces the configured custom request headers: the provided map becomes the full header set. Pass null to clear all headers. Omit to keep unchanged. Write-only; names are exposed as `header_names` on read. The serialized header map must not exceed 8,175 bytes.
 	Headers *map[string]string `json:"headers,omitempty"`
 
-	// IsDefaultModelsEnabled (`AWS_BEDROCK`, `CUSTOM`, and `NVIDIA_NIM` only) Enable or disable Arize's default model catalog. The effective config must keep at least one model source or the request is rejected with 422. Omit to keep unchanged.
+	// IsDefaultModelsEnabled (`AWS_BEDROCK`, `CUSTOM`, `FIREWORKS`, `NVIDIA_NIM`, and `TOGETHER_AI` only) Enable or disable Arize's default model catalog. For `AWS_BEDROCK`, `CUSTOM`, and `NVIDIA_NIM` the effective config must keep at least one model source or the request is rejected with 422. Omit to keep unchanged.
 	IsDefaultModelsEnabled *bool `json:"is_default_models_enabled,omitempty"`
 
 	// IsFunctionCallingEnabled Enable or disable function/tool calling. Omit to keep unchanged. Not valid for `AWS_BEDROCK` or `VERTEX_AI`.
@@ -8240,7 +10012,7 @@ type UpdateLlmConfig struct {
 	// Location (`VERTEX_AI` only) New GCP region. Required on the resource, so it may be changed but never cleared; omitted fields keep their stored values (per-scalar deep-merge).
 	Location *string `json:"location,omitempty"`
 
-	// ModelNames (`AWS_BEDROCK`, `CUSTOM`, and `NVIDIA_NIM` only) Replaces the custom model list. The effective config must keep at least one model source or the request is rejected with 422. Omit to keep unchanged.
+	// ModelNames (`AWS_BEDROCK`, `CUSTOM`, `FIREWORKS`, `NVIDIA_NIM`, `LITELLM`, and `TOGETHER_AI` only) Replaces the custom model list. For `AWS_BEDROCK`, `CUSTOM`, and `NVIDIA_NIM` the effective config must keep at least one model source or the request is rejected with 422; `FIREWORKS`, `LITELLM`, and `TOGETHER_AI` resolve models from the provider, so the list may be emptied. Omit to keep unchanged.
 	ModelNames *[]string `json:"model_names,omitempty"`
 
 	// ProjectAccessLabel (`VERTEX_AI` only) New project-access label. Required on the resource, so it may be changed but never cleared; omitted fields keep their stored values (per-scalar deep-merge).
@@ -8249,13 +10021,23 @@ type UpdateLlmConfig struct {
 	// ProjectId (`VERTEX_AI` only) New GCP project ID. Required on the resource, so it may be changed but never cleared; omitted fields keep their stored values (per-scalar deep-merge).
 	ProjectId *string `json:"project_id,omitempty"`
 
-	// Provider The LLM vendor for an `LLM` integration. Selects the per-provider `config` member. `OPEN_AI`, `ANTHROPIC`, `GEMINI`, `AWS_BEDROCK`, `CUSTOM`, `VERTEX_AI`, and `NVIDIA_NIM` are implemented; additional providers are added non-breakingly.
+	// Provider The LLM vendor for an `LLM` integration. Selects the per-provider `config` member. `OPEN_AI`, `ANTHROPIC`, `GEMINI`, `AWS_BEDROCK`, `CUSTOM`, `VERTEX_AI`, `NVIDIA_NIM`, `LITELLM`, `FIREWORKS`, and `TOGETHER_AI` are implemented; additional providers are added non-breakingly.
 	Provider *LlmIntegrationProvider `json:"provider,omitempty"`
 }
 
 // UpdateLlmIntegrationRequest PATCH body for an `LLM` integration. `type` is required (it selects the union member) and immutable. Provide at least one updatable field (`name`, `scopings`, or `config`) in addition to `type`. `scopings` replaces on provide.
 type UpdateLlmIntegrationRequest struct {
-	// Config Partial LLM config for PATCH. `provider` is immutable; if present it must match the stored value. Field applicability is provider-specific and enforced by the handler with 422: `api_key` and `is_function_calling_enabled` do not apply to `AWS_BEDROCK` or `VERTEX_AI`; `auth` applies to `AWS_BEDROCK` only; `base_url` and `headers` apply to `CUSTOM` and `NVIDIA_NIM` only; `is_default_models_enabled` and `model_names` apply to `AWS_BEDROCK`, `CUSTOM`, and `NVIDIA_NIM` only; `project_id`, `location`, and `project_access_label` apply to `VERTEX_AI` only.
+	// Config Partial LLM config for PATCH. `provider` is immutable; if present it must
+	// match the stored value. Invalid provider/field combinations return 422.
+	//
+	// Provider-specific fields:
+	// - `api_key`, `is_function_calling_enabled`: all except `AWS_BEDROCK`, `VERTEX_AI`
+	// - `auth`: `AWS_BEDROCK`, `CUSTOM`
+	// - `base_url`: `ANTHROPIC`, `CUSTOM`, `LITELLM`, `NVIDIA_NIM`
+	// - `headers`: `CUSTOM`, `LITELLM`, `NVIDIA_NIM`
+	// - `is_default_models_enabled`: `AWS_BEDROCK`, `CUSTOM`, `FIREWORKS`, `NVIDIA_NIM`, `TOGETHER_AI`
+	// - `model_names`: `AWS_BEDROCK`, `CUSTOM`, `FIREWORKS`, `LITELLM`, `NVIDIA_NIM`, `TOGETHER_AI`
+	// - `project_id`, `location`, `project_access_label`: `VERTEX_AI` only
 	Config *UpdateLlmConfig `json:"config,omitempty"`
 
 	// Name New integration name.
@@ -8320,15 +10102,14 @@ type UpdateRunExperimentTaskRequest struct {
 	// Name New task name.
 	Name *string `json:"name,omitempty"`
 
-	// RunConfiguration Experiment execution configuration for a `RUN_EXPERIMENT` task. Exactly one
-	// variant must be supplied, identified by `experiment_type`. All fields sit at
-	// the top level alongside `experiment_type` (flat — no wrapper sub-object).
-	RunConfiguration *RunConfiguration `json:"run_configuration,omitempty"`
+	// RunConfiguration Strict request form of an experiment execution configuration. Exactly one
+	// variant must be supplied, identified by `experiment_type`.
+	RunConfiguration *RunConfigurationRequest `json:"run_configuration,omitempty"`
 }
 
 // UpdateSpaceRequest defines model for UpdateSpaceRequest.
 type UpdateSpaceRequest struct {
-	// Description Updated description of the space. Set to `null` to clear it.
+	// Description Updated description of the space. Set to `null` to clear it. An empty string is rejected.
 	Description *string `json:"description,omitempty"`
 
 	// IsPrivate Updated visibility for the space. Set to `true` to make the space
@@ -8337,6 +10118,20 @@ type UpdateSpaceRequest struct {
 	IsPrivate *bool `json:"is_private,omitempty"`
 
 	// Name Updated name of the space
+	Name *string `json:"name,omitempty"`
+}
+
+// UpdateTagRequest Fields to update on a tag. Omitted fields are left unchanged, so at least
+// one field must be provided.
+type UpdateTagRequest struct {
+	// Color New display color. Pass `null` to clear it. Left unchanged when omitted.
+	Color *TagColor `json:"color,omitempty"`
+
+	// Description New description. Pass `null` to clear it. Left unchanged when omitted.
+	Description *string `json:"description,omitempty"`
+
+	// Name New tag name. Must be unique within the space, compared
+	// case-insensitively. Maximum 100 characters. Left unchanged when omitted.
 	Name *string `json:"name,omitempty"`
 }
 
@@ -8364,6 +10159,33 @@ type UpdateUserRequest struct {
 
 	// Name Updated display name for the user
 	Name *string `json:"name,omitempty"`
+}
+
+// UpdateWebhookRequest defines model for UpdateWebhookRequest.
+type UpdateWebhookRequest struct {
+	// AuthToken Replacement `Authorization` header value sent with each delivery
+	// request, e.g. `Bearer my-token`. Sent verbatim — include the
+	// `Bearer ` prefix if your endpoint expects one. Only valid when the
+	// webhook's `auth_type` is `BEARER`. Write-only: never returned in any
+	// response.
+	AuthToken *string `json:"auth_token,omitempty"`
+
+	// Description Updated description of the webhook. Set to `null` to clear it.
+	Description *string `json:"description,omitempty"`
+
+	// Headers Replacement custom HTTP headers, as a map of at most 20 header names
+	// to values. Replaces the whole header map; headers not included are
+	// removed. Write-only: never returned in any response.
+	Headers *map[string]string `json:"headers,omitempty"`
+
+	// Name Updated name of the webhook (must be unique within the organization)
+	Name *string `json:"name,omitempty"`
+
+	// TimeoutMs Updated delivery timeout in milliseconds
+	TimeoutMs *int `json:"timeout_ms,omitempty"`
+
+	// Url Updated HTTPS endpoint events are delivered to
+	Url *string `json:"url,omitempty"`
 }
 
 // User An account user represents a member of the account. Users can be listed,
@@ -8397,48 +10219,6 @@ type User struct {
 	// - `EXPIRED`: User was invited but their verification token has expired or is missing. A new invite is required.
 	Status UserStatus `json:"status"`
 }
-
-// UserApiKeyCreated defines model for UserApiKeyCreated.
-type UserApiKeyCreated struct {
-	// CreatedAt Timestamp when the key was created.
-	CreatedAt time.Time `json:"created_at"`
-
-	// CreatedByUserId ID of the user who created the key.
-	CreatedByUserId string `json:"created_by_user_id"`
-
-	// Description Optional user-defined description for the API key.
-	Description *string `json:"description,omitempty"`
-
-	// ExpiresAt Optional timestamp when the key will expire.
-	ExpiresAt *time.Time `json:"expires_at,omitempty"`
-
-	// Id Unique identifier for the API key.
-	Id string `json:"id"`
-
-	// Key The full API key value. **Only returned once** at creation or refresh time.
-	// Store it securely — it cannot be retrieved again.
-	Key string `json:"key"`
-
-	// KeyType Discriminator value for user keys.
-	KeyType UserApiKeyCreatedKeyType `json:"key_type"`
-
-	// LastUsedAt Approximate timestamp when the key was last used for authentication. This value is periodically updated and may not reflect the most recent usage.
-	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
-
-	// Name User-defined name for the API key.
-	Name string `json:"name"`
-
-	// RedactedKey Redacted version of the key suitable for display (e.g., "ak-abc...xyz").
-	RedactedKey string `json:"redacted_key"`
-
-	// Status Current status of the API key.
-	// - ACTIVE - The key is valid for use.
-	// - REVOKED - The key has been revoked and is no longer valid.
-	Status ApiKeyStatus `json:"status"`
-}
-
-// UserApiKeyCreatedKeyType Discriminator value for user keys.
-type UserApiKeyCreatedKeyType string
 
 // UserRole Account-level role of the user. These are pre-defined roles in Arize.
 type UserRole string
@@ -8494,18 +10274,139 @@ type VertexAiConfig struct {
 // VertexAiConfigProvider Discriminator identifying the Vertex AI provider.
 type VertexAiConfigProvider string
 
+// Webhook A webhook is an organization-owned destination that receives event
+// deliveries over HTTPS. Create webhook subscriptions to choose which
+// prompt and evaluator events it receives.
+//
+// Credentials are write-only: the bearer token and custom header values are
+// never returned, and the HMAC signing secret is returned exactly once, in
+// the create response — only its redacted hint is readable afterwards.
+type Webhook struct {
+	// AuthType How deliveries from this webhook are authenticated. Fixed at creation.
+	AuthType WebhookAuthType `json:"auth_type"`
+
+	// CreatedAt Timestamp for when the webhook was created
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId The unique identifier of the user who created the webhook. Absent when that user has since been removed from the account.
+	CreatedByUserId *Id `json:"created_by_user_id,omitempty"`
+
+	// Description A brief description of the webhook's purpose. Defaults to an empty string.
+	Description string `json:"description"`
+
+	// Id Unique identifier for the webhook
+	Id Id `json:"id"`
+
+	// Name Name of the webhook (unique within the organization)
+	Name string `json:"name"`
+
+	// OrganizationId The unique identifier of the organization that owns the webhook
+	OrganizationId Id `json:"organization_id"`
+
+	// SigningSecretHint Redacted hint of the signing secret (e.g. `whsec_…abcd`), useful for
+	// identifying which secret the webhook uses. Present only for
+	// `HMAC_SHA256` webhooks. The full secret is returned exactly once, in
+	// the create response, and cannot be retrieved afterwards.
+	SigningSecretHint *string `json:"signing_secret_hint,omitempty"`
+
+	// TimeoutMs How long a delivery request may run before it is abandoned, in milliseconds. Defaults to 30000.
+	TimeoutMs int `json:"timeout_ms"`
+
+	// UpdatedAt Timestamp for when the webhook was last updated
+	UpdatedAt time.Time `json:"updated_at"`
+
+	// Url The HTTPS endpoint events are delivered to
+	Url string `json:"url"`
+}
+
+// WebhookAuthType How deliveries from this webhook are authenticated.
+//   - `BEARER`: the stored `auth_token` is sent verbatim as the
+//     `Authorization` header of each delivery request.
+//   - `HMAC_SHA256`: each delivery is signed with the webhook's signing
+//     secret. The `X-Arize-Webhook-Signature` header carries
+//     `v1=<hex-encoded HMAC-SHA256>` computed over
+//     `<timestamp>.<raw request body>`, where `<timestamp>` is the
+//     Unix-seconds value from the `X-Arize-Webhook-Timestamp` header and the
+//     raw body is the exact bytes received. Deliveries also carry
+//     `X-Arize-Webhook-Id` (event identifier) and `X-Arize-Webhook-Event`
+//     (event type). To verify, recompute the HMAC over the received
+//     timestamp and raw body with your stored secret and compare it to the
+//     signature.
+type WebhookAuthType string
+
+// WebhookDeliveryAttempt A single attempt to deliver an event to a webhook's endpoint.
+type WebhookDeliveryAttempt struct {
+	// AttemptNumber Which attempt this was for the event, starting at 1. Failed deliveries are retried.
+	AttemptNumber int `json:"attempt_number"`
+
+	// CreatedAt Timestamp for when the delivery was attempted
+	CreatedAt time.Time `json:"created_at"`
+
+	// ErrorMessage Why the delivery failed. `null` for successful deliveries.
+	ErrorMessage *string `json:"error_message,omitempty"`
+
+	// EventId Unique identifier of the event that triggered this delivery
+	EventId string `json:"event_id"`
+
+	// Payload The JSON payload sent to the webhook's endpoint
+	Payload map[string]interface{} `json:"payload"`
+
+	// StatusCode HTTP status code returned by the endpoint. `null` when no response was received.
+	StatusCode *int `json:"status_code,omitempty"`
+}
+
+// WebhookEventType An event that a webhook can subscribe to.
+// - `PROMPT_VERSION_CREATED` — a new version of the prompt was created.
+// - `PROMPT_VERSION_LABELED` — a label was added to a version of the prompt.
+// - `PROMPT_VERSION_UNLABELED` — a label was removed from a version of the prompt.
+// - `EVALUATOR_VERSION_CREATED` — a new version of the evaluator was created.
+//
+// Prompt events are valid only for `PROMPT` sources, and evaluator events
+// only for `EVALUATOR` sources.
+type WebhookEventType string
+
 // WebhookNotificationConfig defines model for WebhookNotificationConfig.
 type WebhookNotificationConfig struct {
 	// Id The webhook to notify (base64 global ID).
-	Id   string                        `json:"id"`
+	Id string `json:"id"`
+
+	// Type Identifies this notification channel as a webhook.
 	Type WebhookNotificationConfigType `json:"type"`
 
 	// Url The webhook endpoint URL.
 	Url *string `json:"url,omitempty"`
 }
 
-// WebhookNotificationConfigType defines model for WebhookNotificationConfig.Type.
+// WebhookNotificationConfigType Identifies this notification channel as a webhook.
 type WebhookNotificationConfigType string
+
+// WebhookSourceType The kind of resource a webhook subscription is attached to.
+// - `PROMPT` — `source_id` is a prompt id. Prompt events apply.
+// - `EVALUATOR` — `source_id` is an evaluator id. Evaluator events apply.
+type WebhookSourceType string
+
+// WebhookSubscription A subscription delivers one event from one prompt or evaluator to one
+// webhook. A webhook that should receive several events from the same
+// resource has one subscription per event.
+type WebhookSubscription struct {
+	// CreatedAt Timestamp for when the subscription was created
+	CreatedAt time.Time `json:"created_at"`
+
+	// Event The event delivered to the webhook
+	Event WebhookEventType `json:"event"`
+
+	// Id Unique identifier for the subscription
+	Id Id `json:"id"`
+
+	// SourceId The unique identifier of the prompt or evaluator the subscription is attached to
+	SourceId Id `json:"source_id"`
+
+	// SourceType The kind of resource the subscription is attached to
+	SourceType WebhookSourceType `json:"source_type"`
+
+	// WebhookId The unique identifier of the webhook that receives the event
+	WebhookId Id `json:"webhook_id"`
+}
 
 // AiIntegrationIdPathParam A universally unique identifier (base64-encoded opaque string).
 type AiIntegrationIdPathParam = Id
@@ -8568,8 +10469,12 @@ type IntegrationIdPathParam = Id
 // IntegrationTypeQueryParam The integration category. Selects the shape of `config`. Additive — new
 // types (alerting, webhook, ...) are added non-breakingly.
 //
-// - `LLM`   — a model-provider integration (e.g. OpenAI).
-// - `AGENT` — connects your own agent, exposed at an HTTP endpoint.
+//   - `LLM`       — a model-provider integration (e.g. OpenAI).
+//   - `AGENT`     — connects your own agent, exposed at an HTTP endpoint.
+//   - `EVALUATOR` — connects a remote evaluator endpoint. Only returned when
+//     `?type=EVALUATOR` is passed explicitly; excluded from the
+//     default (`LLM` + `AGENT`) list to keep the cursor contract
+//     stable. Requires the remote evaluators feature to be enabled.
 type IntegrationTypeQueryParam = IntegrationType
 
 // LabelNamePathParam defines model for LabelNamePathParam.
@@ -8578,17 +10483,56 @@ type LabelNamePathParam = string
 // LabelQueryParam defines model for LabelQueryParam.
 type LabelQueryParam = string
 
-// LimitQueryParamMax100 defines model for LimitQueryParamMax100.
-type LimitQueryParamMax100 = int
+// LimitQueryParam defines model for LimitQueryParam.
+type LimitQueryParam = int
 
-// LimitQueryParamMax50 defines model for LimitQueryParamMax50.
-type LimitQueryParamMax50 = int
+// LimitQueryParamLarge defines model for LimitQueryParamLarge.
+type LimitQueryParamLarge = int
 
-// LimitQueryParamMax500 defines model for LimitQueryParamMax500.
-type LimitQueryParamMax500 = int
+// LimitQueryParamSmall defines model for LimitQueryParamSmall.
+type LimitQueryParamSmall = int
+
+// MonitorCustomMetricIdQueryParam A universally unique identifier (base64-encoded opaque string).
+type MonitorCustomMetricIdQueryParam = Id
+
+// MonitorDataQualityMetricQueryParam The data quality metric computed over the selected dimension.
+type MonitorDataQualityMetricQueryParam = DataQualityMetric
+
+// MonitorDimensionCategoryQueryParam The category of dimension the metric is evaluated over.
+type MonitorDimensionCategoryQueryParam = DimensionCategory
+
+// MonitorDimensionNameQueryParam defines model for MonitorDimensionNameQueryParam.
+type MonitorDimensionNameQueryParam = string
+
+// MonitorDriftMetricQueryParam The statistical drift metric. `PSI`/`KL`/`JS`/`KS` apply to structured data;
+// `EUCLIDEAN_DISTANCE`/`COSINE_SIMILARITY` apply to unstructured (embedding) data.
+type MonitorDriftMetricQueryParam = DriftMetric
 
 // MonitorIdPathParam A universally unique identifier (base64-encoded opaque string).
 type MonitorIdPathParam = Id
+
+// MonitorNotificationsEnabledQueryParam defines model for MonitorNotificationsEnabledQueryParam.
+type MonitorNotificationsEnabledQueryParam = bool
+
+// MonitorPerformanceMetricQueryParam The model performance metric.
+type MonitorPerformanceMetricQueryParam = PerformanceMetric
+
+// MonitorProjectNameQueryParam defines model for MonitorProjectNameQueryParam.
+type MonitorProjectNameQueryParam = string
+
+// MonitorStatusQueryParam The monitor's current state from its most recent evaluation.
+// - `TRIGGERED` - The metric breached the threshold.
+// - `CLEARED` - The metric is within healthy bounds.
+// - `NO_DATA` - No data was available to evaluate.
+type MonitorStatusQueryParam = MonitorStatus
+
+// MonitorTypeQueryParam The kind of monitor. Determines which type-specific fields apply.
+// - `DATA_QUALITY` - Monitors a data quality metric (e.g. percent empty, CARDINALITY).
+// - `PERFORMANCE` - Monitors a model performance metric (e.g. ACCURACY, RMSE).
+// - `DRIFT` - Monitors distributional drift of a feature/output.
+// - `CUSTOM_METRIC` - Monitors a user-defined custom metric.
+// - `TRACING` - Monitors a span/trace-derived metric (e.g. span attributes, evals).
+type MonitorTypeQueryParam = MonitorType
 
 // NameSearchQueryParam defines model for NameSearchQueryParam.
 type NameSearchQueryParam = string
@@ -8608,6 +10552,12 @@ type ProjectIdPathParam = Id
 // ProjectIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type ProjectIdQueryParam = Id
 
+// ProjectTypeQueryParam The kind of LLM project.
+// - `APPLICATION` — A user-facing LLM application project.
+// - `HARNESS` — An agent harness session project.
+// - `EXPERIMENT` — An experiment trace project.
+type ProjectTypeQueryParam = ProjectType
+
 // PromptIdPathParam A universally unique identifier (base64-encoded opaque string).
 type PromptIdPathParam = Id
 
@@ -8619,6 +10569,7 @@ type ResourceIdPathParam = Id
 
 // ResourceRestrictionTypeQueryParam Type of the restricted resource.
 // - PROJECT - A project within a space.
+// - DASHBOARD - A dashboard within a space.
 type ResourceRestrictionTypeQueryParam = ResourceRestrictionType
 
 // RoleBindingIdPathParam A universally unique identifier (base64-encoded opaque string).
@@ -8648,6 +10599,9 @@ type SpaceNameQueryParam = string
 
 // StartTimeQueryParam defines model for StartTimeQueryParam.
 type StartTimeQueryParam = time.Time
+
+// TagIdPathParam A universally unique identifier (base64-encoded opaque string).
+type TagIdPathParam = Id
 
 // TaskIdPathParam A universally unique identifier (base64-encoded opaque string).
 type TaskIdPathParam = Id
@@ -8681,6 +10635,20 @@ type UserStatusQueryParam = []UserStatus
 // VersionIdQueryParam A universally unique identifier (base64-encoded opaque string).
 type VersionIdQueryParam = Id
 
+// WebhookIdPathParam A universally unique identifier (base64-encoded opaque string).
+type WebhookIdPathParam = Id
+
+// WebhookSourceIdQueryParam A universally unique identifier (base64-encoded opaque string).
+type WebhookSourceIdQueryParam = Id
+
+// WebhookSourceTypeQueryParam The kind of resource a webhook subscription is attached to.
+// - `PROMPT` — `source_id` is a prompt id. Prompt events apply.
+// - `EVALUATOR` — `source_id` is an evaluator id. Evaluator events apply.
+type WebhookSourceTypeQueryParam = WebhookSourceType
+
+// WebhookSubscriptionIdPathParam A universally unique identifier (base64-encoded opaque string).
+type WebhookSubscriptionIdPathParam = Id
+
 // AddOrganizationUserResponse defines model for AddOrganizationUserResponse.
 type AddOrganizationUserResponse = OrganizationMembership
 
@@ -8692,6 +10660,11 @@ type BadRequest = Problem
 
 // Conflict RFC 9457 Problem Details
 type Conflict = Problem
+
+// CreateWebhookSubscriptionResponse A subscription delivers one event from one prompt or evaluator to one
+// webhook. A webhook that should receive several events from the same
+// resource has one subscription per event.
+type CreateWebhookSubscriptionResponse = WebhookSubscription
 
 // DeleteDatasetExamplesError RFC 9457 Problem Details extended with dataset example delete context.
 // Returned as `503` when the request fails after partially completing, so the
@@ -8719,6 +10692,9 @@ type NotFound = Problem
 // RateLimitExceeded RFC 9457 Problem Details
 type RateLimitExceeded = Problem
 
+// ServiceUnavailable RFC 9457 Problem Details
+type ServiceUnavailable = Problem
+
 // Unauthorized RFC 9457 Problem Details
 type Unauthorized = Problem
 
@@ -8738,6 +10714,9 @@ type AddOrganizationUserRequestBody = AddOrganizationUserRequest
 
 // AddSpaceUserRequestBody defines model for AddSpaceUserRequestBody.
 type AddSpaceUserRequestBody = AddSpaceUserRequest
+
+// AddTagsRequestBody defines model for AddTagsRequestBody.
+type AddTagsRequestBody = AddTagsRequest
 
 // AnnotateAnnotationQueueRecordRequestBody Annotations to submit for an annotation queue record. Annotations are upserted by annotation config name; omitted configs are left unchanged.
 type AnnotateAnnotationQueueRecordRequestBody = AnnotateAnnotationQueueRecordRequest
@@ -8775,12 +10754,11 @@ type CreateApiKeyRequestBody = CreateApiKeyRequest
 type CreateDatasetRequestBody = CreateDatasetRequest
 
 // CreateEvaluatorRequestBody Body containing evaluator creation parameters with an initial version.
-//
-// Only `type: TEMPLATE` and `type: CODE` are currently accepted on creation.
 type CreateEvaluatorRequestBody = CreateEvaluatorRequest
 
-// CreateEvaluatorVersionRequestBody Payload for an evaluator version: exactly one of `template_config` or `code_config`.
-// Used both when creating an evaluator (initial `version`) and when appending a version.
+// CreateEvaluatorVersionRequestBody Payload for an evaluator version: exactly one of `template_config`, `code_config`,
+// or `remote_config`. Used both when creating an evaluator (initial `version`) and when
+// appending a version.
 type CreateEvaluatorVersionRequestBody = CreateEvaluatorVersionRequest
 
 // CreateExperimentRequestBody Experiment creation parameters with an initial set of runs.
@@ -8823,6 +10801,9 @@ type CreateRoleRequestBody = CreateRoleRequest
 // CreateSpaceRequestBody defines model for CreateSpaceRequestBody.
 type CreateSpaceRequestBody = CreateSpaceRequest
 
+// CreateTagRequestBody defines model for CreateTagRequestBody.
+type CreateTagRequestBody = CreateTagRequest
+
 // CreateTaskRequestBody Request body for creating a task. The `type` field is the discriminator.
 //
 // | `type` | Schema |
@@ -8835,14 +10816,24 @@ type CreateSpaceRequestBody = CreateSpaceRequest
 // explicitly via `POST /v2/tasks/{task_id}/trigger` each time.
 type CreateTaskRequestBody = CreateTaskRequest
 
-// CreateUserRequestBody defines model for CreateUserRequestBody.
+// CreateUserRequestBody User-level developer permissions are determined by the assigned account role.
 type CreateUserRequestBody = CreateUserRequest
+
+// CreateWebhookRequestBody defines model for CreateWebhookRequestBody.
+type CreateWebhookRequestBody = CreateWebhookRequest
+
+// CreateWebhookSubscriptionRequestBody defines model for CreateWebhookSubscriptionRequestBody.
+type CreateWebhookSubscriptionRequestBody = CreateWebhookSubscriptionRequest
 
 // DeleteAnnotationQueueRecordsRequestBody defines model for DeleteAnnotationQueueRecordsRequestBody.
 type DeleteAnnotationQueueRecordsRequestBody = DeleteAnnotationQueueRecordsRequest
 
 // DeleteDatasetExamplesRequestBody Body containing the IDs of dataset examples to delete
 type DeleteDatasetExamplesRequestBody = DeleteDatasetExamplesRequest
+
+// DeleteEvaluatorVersionsRequestBody Body identifying the versions to delete from the evaluator named by the
+// `evaluator_id` path parameter.
+type DeleteEvaluatorVersionsRequestBody = DeleteEvaluatorVersionsRequest
 
 // DeleteSpansRequestBody defines model for DeleteSpansRequestBody.
 type DeleteSpansRequestBody = DeleteSpansRequest
@@ -8861,6 +10852,32 @@ type ListTracesRequestBody = ListTracesRequest
 
 // RefreshApiKeyRequestBody defines model for RefreshApiKeyRequestBody.
 type RefreshApiKeyRequestBody = RefreshApiKeyRequest
+
+// RemoveTagsRequestBody defines model for RemoveTagsRequestBody.
+type RemoveTagsRequestBody = RemoveTagsRequest
+
+// SearchDatasetExamplesRequestBody Optional criteria for searching a dataset's examples. Omit all fields to
+// return the first page of examples in ascending order of `created_at`, with
+// `id` as a tiebreaker. Keep the filter unchanged when using a returned
+// cursor to fetch the next page.
+//
+// Filters use the same SQL-like language as span search. Supported column
+// families include unprefixed example columns, `id`, and
+// `annotation.<name>.*` when present in the example schema. A present empty
+// or whitespace-only filter is invalid.
+type SearchDatasetExamplesRequestBody = SearchDatasetExamplesRequest
+
+// SearchExperimentRunsRequestBody Optional criteria for searching an experiment's runs. Omit all fields to
+// return the first page of runs in stable `id` ascending order. Keep the
+// filter unchanged when using a returned cursor to fetch the next page.
+//
+// Filters use the same SQL-like language as span search. Supported column
+// families include unprefixed `id`, `output`, and `example_id`; custom run
+// columns; `eval.<name>.score`, `eval.<name>.label`,
+// `eval.<name>.explanation`, and `eval.<name>.metadata.*`; and
+// `annotation.<name>.*` when present in the run schema. A present empty or
+// whitespace-only filter is invalid.
+type SearchExperimentRunsRequestBody = SearchExperimentRunsRequest
 
 // SetPromptVersionLabelsRequestBody Labels to set on a prompt version.
 type SetPromptVersionLabelsRequestBody = SetPromptVersionLabelsRequest
@@ -8919,6 +10936,10 @@ type UpdateRoleRequestBody = UpdateRoleRequest
 // UpdateSpaceRequestBody defines model for UpdateSpaceRequestBody.
 type UpdateSpaceRequestBody = UpdateSpaceRequest
 
+// UpdateTagRequestBody Fields to update on a tag. Omitted fields are left unchanged, so at least
+// one field must be provided.
+type UpdateTagRequestBody = UpdateTagRequest
+
 // UpdateTaskRequestBody PATCH body for `PATCH /v2/tasks/{task_id}`. The server derives the task type
 // from the URL's task record and selects the appropriate schema; the body
 // itself does not carry a `type` field.
@@ -8936,6 +10957,9 @@ type UpdateTaskRequestBody = UpdateTaskRequest
 
 // UpdateUserRequestBody defines model for UpdateUserRequestBody.
 type UpdateUserRequestBody = UpdateUserRequest
+
+// UpdateWebhookRequestBody defines model for UpdateWebhookRequestBody.
+type UpdateWebhookRequestBody = UpdateWebhookRequest
 
 // bearerAuthContextKey is the context key for bearerAuth security scheme
 type bearerAuthContextKey string
@@ -8956,8 +10980,8 @@ type ListAiIntegrationsParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -8981,8 +11005,8 @@ type ListAnnotationConfigsParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9006,8 +11030,8 @@ type ListAnnotationQueuesParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9022,8 +11046,8 @@ type ListAnnotationQueueRecordsParams struct {
 	// attempt to parse or construct it.
 	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax500 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 500.
+	Limit *LimitQueryParamLarge `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
 // ListApiKeysParams defines parameters for ListApiKeys.
@@ -9048,8 +11072,8 @@ type ListApiKeysParams struct {
 	// some endpoints restrict this filter to account admins.
 	UserId *UserIdQueryParam `form:"user_id,omitempty" json:"user_id,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9075,8 +11099,8 @@ type ListAuditLogsParams struct {
 	// OperationType Filter results to a specific operation type.
 	OperationType *OperationTypeQueryParam `form:"operation_type,omitempty" json:"operation_type,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9100,8 +11124,8 @@ type ListDatasetsParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9114,8 +11138,8 @@ type ListDatasetExamplesParams struct {
 	// DatasetVersionId The unique identifier of the dataset version
 	DatasetVersionId *DatasetVersionIdQueryParam `form:"dataset_version_id,omitempty" json:"dataset_version_id,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax500 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 500.
+	Limit *LimitQueryParamLarge `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9151,8 +11175,8 @@ type ListEvaluatorsParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9168,8 +11192,8 @@ type GetEvaluatorParams struct {
 
 // ListEvaluatorVersionsParams defines parameters for ListEvaluatorVersions.
 type ListEvaluatorVersionsParams struct {
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9191,8 +11215,8 @@ type ListExperimentsParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9202,8 +11226,8 @@ type ListExperimentsParams struct {
 
 // ListExperimentRunsParams defines parameters for ListExperimentRuns.
 type ListExperimentRunsParams struct {
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax500 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 500.
+	Limit *LimitQueryParamLarge `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9213,7 +11237,7 @@ type ListExperimentRunsParams struct {
 
 // ListIntegrationsParams defines parameters for ListIntegrations.
 type ListIntegrationsParams struct {
-	// Type Filter the list to a single integration type. When omitted, integrations of every type are returned; each item carries its `type` for client-side discrimination.
+	// Type Filter the list to a single integration type. When omitted, `LLM` and `AGENT` integrations are returned; `EVALUATOR` integrations must be requested explicitly with `type=EVALUATOR`. Each item carries its `type` for client-side discrimination.
 	Type *IntegrationTypeQueryParam `form:"type,omitempty" json:"type,omitempty"`
 
 	// SpaceId Filter search results to a particular space ID
@@ -9230,8 +11254,91 @@ type ListIntegrationsParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
+}
+
+// ListMonitorsParams defines parameters for ListMonitors.
+type ListMonitorsParams struct {
+	// SpaceId Filter search results to a particular space ID
+	SpaceId *SpaceIdQueryParam `form:"space_id,omitempty" json:"space_id,omitempty"`
+
+	// SpaceName Case-insensitive substring filter on the space name. Narrows results
+	// to resources in spaces whose name contains the given string. If omitted,
+	// no space name filtering is applied and all resources are returned.
+	SpaceName *SpaceNameQueryParam `form:"space_name,omitempty" json:"space_name,omitempty"`
+
+	// Name Case-insensitive substring filter on the resource name. Returns only
+	// resources whose name contains the given string. For example,
+	// `name=prod` matches "production", "my-prod-dataset", etc. If omitted,
+	// no name filtering is applied and all resources are returned.
+	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
+
+	// ProjectId Filter results to resources associated with a specific project (base64 identifier). If omitted, results are not filtered by project.
+	ProjectId *ProjectIdQueryParam `form:"project_id,omitempty" json:"project_id,omitempty"`
+
+	// ProjectName Exact-match filter on the name of the project the monitor's primary
+	// metric is computed over. Unlike `name` and `space_name`, this is an
+	// exact (case-sensitive) match, not a substring search. If omitted, no
+	// project name filtering is applied.
+	ProjectName *MonitorProjectNameQueryParam `form:"project_name,omitempty" json:"project_name,omitempty"`
+
+	// Type Filter by monitor type. Types are exact: `DATA_QUALITY` does not
+	// include `TRACING` monitors, and `PERFORMANCE` does not include
+	// `CUSTOM_METRIC` monitors. If omitted, monitors of all types are
+	// returned.
+	Type *MonitorTypeQueryParam `form:"type,omitempty" json:"type,omitempty"`
+
+	// Status Filter by the monitor's current evaluation state (`TRIGGERED`,
+	// `CLEARED`, or `NO_DATA`). If omitted, monitors in every state are
+	// returned.
+	Status *MonitorStatusQueryParam `form:"status,omitempty" json:"status,omitempty"`
+
+	// NotificationsEnabled Filter by whether notifications fire on a triggered transition.
+	// `true` returns only monitors with notifications enabled; `false`
+	// returns only monitors with notifications disabled. If omitted,
+	// monitors are returned regardless of notification state.
+	NotificationsEnabled *MonitorNotificationsEnabledQueryParam `form:"notifications_enabled,omitempty" json:"notifications_enabled,omitempty"`
+
+	// DimensionCategory Filter to monitors whose metric is computed over a dimension of this
+	// category. Values copied from a returned monitor's `dimension.category`
+	// work as filters. If omitted, no dimension category filtering is
+	// applied.
+	DimensionCategory *MonitorDimensionCategoryQueryParam `form:"dimension_category,omitempty" json:"dimension_category,omitempty"`
+
+	// DimensionName Exact-match filter on the name of the dimension the monitor's metric
+	// is computed over. Values copied from a returned monitor's
+	// `dimension.name` work as filters. If omitted, no dimension name
+	// filtering is applied.
+	DimensionName *MonitorDimensionNameQueryParam `form:"dimension_name,omitempty" json:"dimension_name,omitempty"`
+
+	// DataQualityMetric Filter to monitors computing this data quality metric. Matches both
+	// `DATA_QUALITY` and `TRACING` monitors; combine with `type` to narrow
+	// to one of them. If omitted, no data quality metric filtering is
+	// applied.
+	DataQualityMetric *MonitorDataQualityMetricQueryParam `form:"data_quality_metric,omitempty" json:"data_quality_metric,omitempty"`
+
+	// PerformanceMetric Filter to `PERFORMANCE` monitors computing this performance metric.
+	// Does not match `CUSTOM_METRIC` monitors. If omitted, no performance
+	// metric filtering is applied.
+	PerformanceMetric *MonitorPerformanceMetricQueryParam `form:"performance_metric,omitempty" json:"performance_metric,omitempty"`
+
+	// DriftMetric Filter to `DRIFT` monitors computing this drift metric. If omitted,
+	// no drift metric filtering is applied.
+	DriftMetric *MonitorDriftMetricQueryParam `form:"drift_metric,omitempty" json:"drift_metric,omitempty"`
+
+	// CustomMetricId Filter to `CUSTOM_METRIC` monitors evaluating this custom metric
+	// (base64 identifier). If omitted, no custom metric filtering is
+	// applied.
+	CustomMetricId *MonitorCustomMetricIdQueryParam `form:"custom_metric_id,omitempty" json:"custom_metric_id,omitempty"`
+
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9247,8 +11354,8 @@ type ListOrganizationsParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9272,13 +11379,17 @@ type ListProjectsParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
 	// attempt to parse or construct it.
 	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// ProjectType Filter projects by type. When omitted, harness projects are excluded from
+	// list results. Set to `HARNESS` to include harness session projects.
+	ProjectType *ProjectTypeQueryParam `form:"project_type,omitempty" json:"project_type,omitempty"`
 }
 
 // ListPromptsParams defines parameters for ListPrompts.
@@ -9297,8 +11408,8 @@ type ListPromptsParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9317,8 +11428,8 @@ type GetPromptParams struct {
 
 // ListPromptVersionsParams defines parameters for ListPromptVersions.
 type ListPromptVersionsParams struct {
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9328,15 +11439,14 @@ type ListPromptVersionsParams struct {
 
 // ListResourceRestrictionsParams defines parameters for ListResourceRestrictions.
 type ListResourceRestrictionsParams struct {
-	// ResourceType Filter restrictions to a single resource type.
+	// ResourceType Filter the results to a specific resource type.
+	// When omitted, restrictions of all supported types are returned.
 	// - `PROJECT` — Return only restricted projects.
-	//
-	// When not specified, restrictions of all supported resource types are
-	// returned (currently only `PROJECT`).
+	// - `DASHBOARD` — Return only restricted dashboards.
 	ResourceType *ResourceRestrictionTypeQueryParam `form:"resource_type,omitempty" json:"resource_type,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9346,8 +11456,8 @@ type ListResourceRestrictionsParams struct {
 
 // ListRoleBindingsParams defines parameters for ListRoleBindings.
 type ListRoleBindingsParams struct {
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9356,6 +11466,9 @@ type ListRoleBindingsParams struct {
 
 	// UserId Filter role bindings by user. When provided, only bindings assigned to this
 	// user are returned. Must be a valid global user ID.
+	//
+	// For a service key, pass its bot user's ID (`bot_user.id` from
+	// `POST /v2/api-keys` or `GET /v2/api-keys`) to list that key's bindings.
 	UserId *RoleBindingsUserIdQueryParam `form:"user_id,omitempty" json:"user_id,omitempty"`
 
 	// ResourceType Filter role bindings by resource type.
@@ -9366,8 +11479,8 @@ type ListRoleBindingsParams struct {
 
 // ListRolesParams defines parameters for ListRoles.
 type ListRolesParams struct {
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9384,7 +11497,7 @@ type ListRolesParams struct {
 
 // ListSpacesParams defines parameters for ListSpaces.
 type ListSpacesParams struct {
-	// OrgId The unique organization identifier (base64). When provided, only spaces belonging to this organization are returned.
+	// OrgId The unique organization identifier (base64). When provided, only resources belonging to this organization are returned.
 	OrgId *OrganizationIdQueryParam `form:"org_id,omitempty" json:"org_id,omitempty"`
 
 	// Name Case-insensitive substring filter on the resource name. Returns only
@@ -9393,8 +11506,8 @@ type ListSpacesParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9404,8 +11517,8 @@ type ListSpacesParams struct {
 
 // ListSpansParams defines parameters for ListSpans.
 type ListSpansParams struct {
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax500 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 500.
+	Limit *LimitQueryParamLarge `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9429,7 +11542,7 @@ type ListTasksParams struct {
 	// no name filtering is applied and all resources are returned.
 	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
 
-	// ProjectId Filter to tasks for a specific project (base64 identifier (base64))
+	// ProjectId Filter results to resources associated with a specific project (base64 identifier). If omitted, results are not filtered by project.
 	ProjectId *ProjectIdQueryParam `form:"project_id,omitempty" json:"project_id,omitempty"`
 
 	// DatasetId Filter to a specific dataset (base64 identifier (base64))
@@ -9438,8 +11551,8 @@ type ListTasksParams struct {
 	// Type Filter by task type: TEMPLATE_EVALUATION, CODE_EVALUATION, or RUN_EXPERIMENT
 	Type *TaskTypeQueryParam `form:"type,omitempty" json:"type,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9452,8 +11565,8 @@ type ListTaskRunsParams struct {
 	// Status Filter by run status: PENDING, RUNNING, COMPLETED, FAILED, CANCELLED
 	Status *TaskRunStatusQueryParam `form:"status,omitempty" json:"status,omitempty"`
 
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9463,8 +11576,8 @@ type ListTaskRunsParams struct {
 
 // ListTracesParams defines parameters for ListTraces.
 type ListTracesParams struct {
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax50 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 25 if omitted; maximum is 50.
+	Limit *LimitQueryParamSmall `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9474,8 +11587,8 @@ type ListTracesParams struct {
 
 // ListUsersParams defines parameters for ListUsers.
 type ListUsersParams struct {
-	// Limit Maximum items to return
-	Limit *LimitQueryParamMax100 `form:"limit,omitempty" json:"limit,omitempty"`
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
 
 	// Cursor Opaque pagination cursor returned from a previous response
 	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
@@ -9491,6 +11604,58 @@ type ListUsersParams struct {
 	Status *UserStatusQueryParam `form:"status,omitempty" json:"status,omitempty"`
 }
 
+// ListWebhookSubscriptionsParams defines parameters for ListWebhookSubscriptions.
+type ListWebhookSubscriptionsParams struct {
+	// SourceType Filter subscriptions to one kind of source. Must be paired with
+	// `source_id`. When both filters are omitted, subscriptions from every
+	// supported source type are returned.
+	SourceType *WebhookSourceTypeQueryParam `form:"source_type,omitempty" json:"source_type,omitempty"`
+
+	// SourceId Filter subscriptions to one prompt or evaluator. Must be paired with
+	// `source_type`. When both filters are omitted, subscriptions from every
+	// readable supported source are returned.
+	SourceId *WebhookSourceIdQueryParam `form:"source_id,omitempty" json:"source_id,omitempty"`
+
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
+}
+
+// ListWebhooksParams defines parameters for ListWebhooks.
+type ListWebhooksParams struct {
+	// OrgId The unique organization identifier (base64). When provided, only resources belonging to this organization are returned.
+	OrgId *OrganizationIdQueryParam `form:"org_id,omitempty" json:"org_id,omitempty"`
+
+	// Name Case-insensitive substring filter on the resource name. Returns only
+	// resources whose name contains the given string. For example,
+	// `name=prod` matches "production", "my-prod-dataset", etc. If omitted,
+	// no name filtering is applied and all resources are returned.
+	Name *NameSearchQueryParam `form:"name,omitempty" json:"name,omitempty"`
+
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
+	Limit *LimitQueryParam `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
+}
+
+// ListWebhookDeliveryAttemptsParams defines parameters for ListWebhookDeliveryAttempts.
+type ListWebhookDeliveryAttemptsParams struct {
+	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 500.
+	Limit *LimitQueryParamLarge `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor returned from a previous response
+	// (`pagination.next_cursor`). Treat it as an unreadable token; do not
+	// attempt to parse or construct it.
+	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
+}
+
 // CreateAiIntegrationJSONRequestBody defines body for CreateAiIntegration for application/json ContentType.
 type CreateAiIntegrationJSONRequestBody = CreateAiIntegrationRequest
 
@@ -9502,6 +11667,9 @@ type CreateAnnotationConfigJSONRequestBody = CreateAnnotationConfigRequest
 
 // UpdateAnnotationConfigJSONRequestBody defines body for UpdateAnnotationConfig for application/json ContentType.
 type UpdateAnnotationConfigJSONRequestBody = UpdateAnnotationConfigRequest
+
+// AddAnnotationConfigTagsJSONRequestBody defines body for AddAnnotationConfigTags for application/json ContentType.
+type AddAnnotationConfigTagsJSONRequestBody = AddTagsRequest
 
 // CreateAnnotationQueueJSONRequestBody defines body for CreateAnnotationQueue for application/json ContentType.
 type CreateAnnotationQueueJSONRequestBody = CreateAnnotationQueueRequest
@@ -9520,6 +11688,9 @@ type AnnotateAnnotationQueueRecordJSONRequestBody = AnnotateAnnotationQueueRecor
 
 // AssignAnnotationQueueRecordJSONRequestBody defines body for AssignAnnotationQueueRecord for application/json ContentType.
 type AssignAnnotationQueueRecordJSONRequestBody = AssignAnnotationQueueRecordRequest
+
+// AddAnnotationQueueTagsJSONRequestBody defines body for AddAnnotationQueueTags for application/json ContentType.
+type AddAnnotationQueueTagsJSONRequestBody = AddTagsRequest
 
 // CreateApiKeyJSONRequestBody defines body for CreateApiKey for application/json ContentType.
 type CreateApiKeyJSONRequestBody = CreateApiKeyRequest
@@ -9545,11 +11716,29 @@ type InsertDatasetExamplesJSONRequestBody = InsertDatasetExamplesRequest
 // AnnotateDatasetExamplesJSONRequestBody defines body for AnnotateDatasetExamples for application/json ContentType.
 type AnnotateDatasetExamplesJSONRequestBody = AnnotateDatasetExamplesRequest
 
+// SearchDatasetExamplesJSONRequestBody defines body for SearchDatasetExamples for application/json ContentType.
+type SearchDatasetExamplesJSONRequestBody = SearchDatasetExamplesRequest
+
+// RemoveDatasetTagsJSONRequestBody defines body for RemoveDatasetTags for application/json ContentType.
+type RemoveDatasetTagsJSONRequestBody = RemoveTagsRequest
+
+// AddDatasetTagsJSONRequestBody defines body for AddDatasetTags for application/json ContentType.
+type AddDatasetTagsJSONRequestBody = AddTagsRequest
+
 // CreateEvaluatorJSONRequestBody defines body for CreateEvaluator for application/json ContentType.
 type CreateEvaluatorJSONRequestBody = CreateEvaluatorRequest
 
 // UpdateEvaluatorJSONRequestBody defines body for UpdateEvaluator for application/json ContentType.
 type UpdateEvaluatorJSONRequestBody = UpdateEvaluatorRequest
+
+// RemoveEvaluatorTagsJSONRequestBody defines body for RemoveEvaluatorTags for application/json ContentType.
+type RemoveEvaluatorTagsJSONRequestBody = RemoveTagsRequest
+
+// AddEvaluatorTagsJSONRequestBody defines body for AddEvaluatorTags for application/json ContentType.
+type AddEvaluatorTagsJSONRequestBody = AddTagsRequest
+
+// DeleteEvaluatorVersionsJSONRequestBody defines body for DeleteEvaluatorVersions for application/json ContentType.
+type DeleteEvaluatorVersionsJSONRequestBody = DeleteEvaluatorVersionsRequest
 
 // CreateEvaluatorVersionJSONRequestBody defines body for CreateEvaluatorVersion for application/json ContentType.
 type CreateEvaluatorVersionJSONRequestBody = CreateEvaluatorVersionRequest
@@ -9563,11 +11752,23 @@ type InsertExperimentRunsJSONRequestBody = InsertExperimentRunsRequest
 // AnnotateExperimentRunsJSONRequestBody defines body for AnnotateExperimentRuns for application/json ContentType.
 type AnnotateExperimentRunsJSONRequestBody = AnnotateExperimentRunsRequest
 
+// SearchExperimentRunsJSONRequestBody defines body for SearchExperimentRuns for application/json ContentType.
+type SearchExperimentRunsJSONRequestBody = SearchExperimentRunsRequest
+
+// AddExperimentTagsJSONRequestBody defines body for AddExperimentTags for application/json ContentType.
+type AddExperimentTagsJSONRequestBody = AddTagsRequest
+
 // CreateIntegrationJSONRequestBody defines body for CreateIntegration for application/json ContentType.
 type CreateIntegrationJSONRequestBody = CreateIntegrationRequest
 
 // UpdateIntegrationJSONRequestBody defines body for UpdateIntegration for application/json ContentType.
 type UpdateIntegrationJSONRequestBody = UpdateIntegrationRequest
+
+// RemoveMonitorTagsJSONRequestBody defines body for RemoveMonitorTags for application/json ContentType.
+type RemoveMonitorTagsJSONRequestBody = RemoveTagsRequest
+
+// AddMonitorTagsJSONRequestBody defines body for AddMonitorTags for application/json ContentType.
+type AddMonitorTagsJSONRequestBody = AddTagsRequest
 
 // CreateOrganizationJSONRequestBody defines body for CreateOrganization for application/json ContentType.
 type CreateOrganizationJSONRequestBody = CreateOrganizationRequest
@@ -9584,6 +11785,12 @@ type CreateProjectJSONRequestBody = CreateProjectRequest
 // UpdateProjectJSONRequestBody defines body for UpdateProject for application/json ContentType.
 type UpdateProjectJSONRequestBody = UpdateProjectRequest
 
+// RemoveProjectTagsJSONRequestBody defines body for RemoveProjectTags for application/json ContentType.
+type RemoveProjectTagsJSONRequestBody = RemoveTagsRequest
+
+// AddProjectTagsJSONRequestBody defines body for AddProjectTags for application/json ContentType.
+type AddProjectTagsJSONRequestBody = AddTagsRequest
+
 // SetPromptVersionLabelJSONRequestBody defines body for SetPromptVersionLabel for application/json ContentType.
 type SetPromptVersionLabelJSONRequestBody = SetPromptVersionLabelsRequest
 
@@ -9592,6 +11799,12 @@ type CreatePromptJSONRequestBody = CreatePromptRequest
 
 // UpdatePromptJSONRequestBody defines body for UpdatePrompt for application/json ContentType.
 type UpdatePromptJSONRequestBody = UpdatePromptRequest
+
+// RemovePromptTagsJSONRequestBody defines body for RemovePromptTags for application/json ContentType.
+type RemovePromptTagsJSONRequestBody = RemoveTagsRequest
+
+// AddPromptTagsJSONRequestBody defines body for AddPromptTags for application/json ContentType.
+type AddPromptTagsJSONRequestBody = AddTagsRequest
 
 // CreatePromptVersionJSONRequestBody defines body for CreatePromptVersion for application/json ContentType.
 type CreatePromptVersionJSONRequestBody = CreatePromptVersionRequest
@@ -9629,6 +11842,12 @@ type ListSpansJSONRequestBody = ListSpansRequest
 // AnnotateSpansJSONRequestBody defines body for AnnotateSpans for application/json ContentType.
 type AnnotateSpansJSONRequestBody = AnnotateSpansRequest
 
+// CreateTagJSONRequestBody defines body for CreateTag for application/json ContentType.
+type CreateTagJSONRequestBody = CreateTagRequest
+
+// UpdateTagJSONRequestBody defines body for UpdateTag for application/json ContentType.
+type UpdateTagJSONRequestBody = UpdateTagRequest
+
 // CreateTaskJSONRequestBody defines body for CreateTask for application/json ContentType.
 type CreateTaskJSONRequestBody = CreateTaskRequest
 
@@ -9646,6 +11865,109 @@ type CreateUserJSONRequestBody = CreateUserRequest
 
 // UpdateUserJSONRequestBody defines body for UpdateUser for application/json ContentType.
 type UpdateUserJSONRequestBody = UpdateUserRequest
+
+// CreateWebhookSubscriptionJSONRequestBody defines body for CreateWebhookSubscription for application/json ContentType.
+type CreateWebhookSubscriptionJSONRequestBody = CreateWebhookSubscriptionRequest
+
+// CreateWebhookJSONRequestBody defines body for CreateWebhook for application/json ContentType.
+type CreateWebhookJSONRequestBody = CreateWebhookRequest
+
+// UpdateWebhookJSONRequestBody defines body for UpdateWebhook for application/json ContentType.
+type UpdateWebhookJSONRequestBody = UpdateWebhookRequest
+
+// Getter for additional properties for AgentCallRunConfig. Returns the specified
+// element and whether it was found
+func (a AgentCallRunConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for AgentCallRunConfig
+func (a *AgentCallRunConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for AgentCallRunConfig to handle AdditionalProperties
+func (a *AgentCallRunConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["experiment_type"]; found {
+		err = json.Unmarshal(raw, &a.ExperimentType)
+		if err != nil {
+			return fmt.Errorf("error reading 'experiment_type': %w", err)
+		}
+		delete(object, "experiment_type")
+	}
+
+	if raw, found := object["input_template"]; found {
+		err = json.Unmarshal(raw, &a.InputTemplate)
+		if err != nil {
+			return fmt.Errorf("error reading 'input_template': %w", err)
+		}
+		delete(object, "input_template")
+	}
+
+	if raw, found := object["integration_id"]; found {
+		err = json.Unmarshal(raw, &a.IntegrationId)
+		if err != nil {
+			return fmt.Errorf("error reading 'integration_id': %w", err)
+		}
+		delete(object, "integration_id")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for AgentCallRunConfig to handle AdditionalProperties
+func (a AgentCallRunConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["experiment_type"], err = json.Marshal(a.ExperimentType)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'experiment_type': %w", err)
+	}
+
+	if a.InputTemplate != nil {
+		object["input_template"], err = json.Marshal(a.InputTemplate)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'input_template': %w", err)
+		}
+	}
+
+	object["integration_id"], err = json.Marshal(a.IntegrationId)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'integration_id': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
 
 // Getter for additional properties for AgentConfig. Returns the specified
 // element and whether it was found
@@ -9939,6 +12261,14 @@ func (a *AnthropicConfig) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
+	if raw, found := object["base_url"]; found {
+		err = json.Unmarshal(raw, &a.BaseUrl)
+		if err != nil {
+			return fmt.Errorf("error reading 'base_url': %w", err)
+		}
+		delete(object, "base_url")
+	}
+
 	if raw, found := object["has_api_key"]; found {
 		err = json.Unmarshal(raw, &a.HasApiKey)
 		if err != nil {
@@ -9981,6 +12311,11 @@ func (a *AnthropicConfig) UnmarshalJSON(b []byte) error {
 func (a AnthropicConfig) MarshalJSON() ([]byte, error) {
 	var err error
 	object := make(map[string]json.RawMessage)
+
+	object["base_url"], err = json.Marshal(a.BaseUrl)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'base_url': %w", err)
+	}
 
 	object["has_api_key"], err = json.Marshal(a.HasApiKey)
 	if err != nil {
@@ -10113,6 +12448,23 @@ func (a AwsBedrockConfig) MarshalJSON() ([]byte, error) {
 	return json.Marshal(object)
 }
 
+// Getter for additional properties for CreateLlmConfig. Returns the specified
+// element and whether it was found
+func (a CreateLlmConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for CreateLlmConfig
+func (a *CreateLlmConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
 // Getter for additional properties for CustomConfig. Returns the specified
 // element and whether it was found
 func (a CustomConfig) Get(fieldName string) (value interface{}, found bool) {
@@ -10136,6 +12488,14 @@ func (a *CustomConfig) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &object)
 	if err != nil {
 		return err
+	}
+
+	if raw, found := object["auth"]; found {
+		err = json.Unmarshal(raw, &a.Auth)
+		if err != nil {
+			return fmt.Errorf("error reading 'auth': %w", err)
+		}
+		delete(object, "auth")
 	}
 
 	if raw, found := object["base_url"]; found {
@@ -10212,6 +12572,11 @@ func (a *CustomConfig) UnmarshalJSON(b []byte) error {
 func (a CustomConfig) MarshalJSON() ([]byte, error) {
 	var err error
 	object := make(map[string]json.RawMessage)
+
+	object["auth"], err = json.Marshal(a.Auth)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'auth': %w", err)
+	}
 
 	object["base_url"], err = json.Marshal(a.BaseUrl)
 	if err != nil {
@@ -10575,6 +12940,126 @@ func (a ExperimentRunInput) MarshalJSON() ([]byte, error) {
 	return json.Marshal(object)
 }
 
+// Getter for additional properties for FireworksConfig. Returns the specified
+// element and whether it was found
+func (a FireworksConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for FireworksConfig
+func (a *FireworksConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for FireworksConfig to handle AdditionalProperties
+func (a *FireworksConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["has_api_key"]; found {
+		err = json.Unmarshal(raw, &a.HasApiKey)
+		if err != nil {
+			return fmt.Errorf("error reading 'has_api_key': %w", err)
+		}
+		delete(object, "has_api_key")
+	}
+
+	if raw, found := object["is_default_models_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsDefaultModelsEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_default_models_enabled': %w", err)
+		}
+		delete(object, "is_default_models_enabled")
+	}
+
+	if raw, found := object["is_function_calling_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsFunctionCallingEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_function_calling_enabled': %w", err)
+		}
+		delete(object, "is_function_calling_enabled")
+	}
+
+	if raw, found := object["model_names"]; found {
+		err = json.Unmarshal(raw, &a.ModelNames)
+		if err != nil {
+			return fmt.Errorf("error reading 'model_names': %w", err)
+		}
+		delete(object, "model_names")
+	}
+
+	if raw, found := object["provider"]; found {
+		err = json.Unmarshal(raw, &a.Provider)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider': %w", err)
+		}
+		delete(object, "provider")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for FireworksConfig to handle AdditionalProperties
+func (a FireworksConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["has_api_key"], err = json.Marshal(a.HasApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'has_api_key': %w", err)
+	}
+
+	object["is_default_models_enabled"], err = json.Marshal(a.IsDefaultModelsEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_default_models_enabled': %w", err)
+	}
+
+	object["is_function_calling_enabled"], err = json.Marshal(a.IsFunctionCallingEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_function_calling_enabled': %w", err)
+	}
+
+	if a.ModelNames != nil {
+		object["model_names"], err = json.Marshal(a.ModelNames)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'model_names': %w", err)
+		}
+	}
+
+	object["provider"], err = json.Marshal(a.Provider)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provider': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
 // Getter for additional properties for GeminiConfig. Returns the specified
 // element and whether it was found
 func (a GeminiConfig) Get(fieldName string) (value interface{}, found bool) {
@@ -10667,6 +13152,23 @@ func (a GeminiConfig) MarshalJSON() ([]byte, error) {
 	return json.Marshal(object)
 }
 
+// Getter for additional properties for Integration. Returns the specified
+// element and whether it was found
+func (a Integration) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for Integration
+func (a *Integration) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
 // Getter for additional properties for InvocationParams. Returns the specified
 // element and whether it was found
 func (a InvocationParams) Get(fieldName string) (value interface{}, found bool) {
@@ -10738,6 +13240,14 @@ func (a *InvocationParams) UnmarshalJSON(b []byte) error {
 			return fmt.Errorf("error reading 'response_format': %w", err)
 		}
 		delete(object, "response_format")
+	}
+
+	if raw, found := object["service_tier"]; found {
+		err = json.Unmarshal(raw, &a.ServiceTier)
+		if err != nil {
+			return fmt.Errorf("error reading 'service_tier': %w", err)
+		}
+		delete(object, "service_tier")
 	}
 
 	if raw, found := object["stop"]; found {
@@ -10865,6 +13375,13 @@ func (a InvocationParams) MarshalJSON() ([]byte, error) {
 		}
 	}
 
+	if a.ServiceTier != nil {
+		object["service_tier"], err = json.Marshal(a.ServiceTier)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'service_tier': %w", err)
+		}
+	}
+
 	if a.Stop != nil {
 		object["stop"], err = json.Marshal(a.Stop)
 		if err != nil {
@@ -10918,6 +13435,451 @@ func (a InvocationParams) MarshalJSON() ([]byte, error) {
 		object["verbosity"], err = json.Marshal(a.Verbosity)
 		if err != nil {
 			return nil, fmt.Errorf("error marshaling 'verbosity': %w", err)
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for LLMMessage. Returns the specified
+// element and whether it was found
+func (a LLMMessage) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for LLMMessage
+func (a *LLMMessage) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for LLMMessage to handle AdditionalProperties
+func (a *LLMMessage) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["content"]; found {
+		err = json.Unmarshal(raw, &a.Content)
+		if err != nil {
+			return fmt.Errorf("error reading 'content': %w", err)
+		}
+		delete(object, "content")
+	}
+
+	if raw, found := object["role"]; found {
+		err = json.Unmarshal(raw, &a.Role)
+		if err != nil {
+			return fmt.Errorf("error reading 'role': %w", err)
+		}
+		delete(object, "role")
+	}
+
+	if raw, found := object["tool_call_id"]; found {
+		err = json.Unmarshal(raw, &a.ToolCallId)
+		if err != nil {
+			return fmt.Errorf("error reading 'tool_call_id': %w", err)
+		}
+		delete(object, "tool_call_id")
+	}
+
+	if raw, found := object["tool_calls"]; found {
+		err = json.Unmarshal(raw, &a.ToolCalls)
+		if err != nil {
+			return fmt.Errorf("error reading 'tool_calls': %w", err)
+		}
+		delete(object, "tool_calls")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for LLMMessage to handle AdditionalProperties
+func (a LLMMessage) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	if a.Content != nil {
+		object["content"], err = json.Marshal(a.Content)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'content': %w", err)
+		}
+	}
+
+	object["role"], err = json.Marshal(a.Role)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'role': %w", err)
+	}
+
+	if a.ToolCallId != nil {
+		object["tool_call_id"], err = json.Marshal(a.ToolCallId)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'tool_call_id': %w", err)
+		}
+	}
+
+	if a.ToolCalls != nil {
+		object["tool_calls"], err = json.Marshal(a.ToolCalls)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'tool_calls': %w", err)
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for LiteLlmConfig. Returns the specified
+// element and whether it was found
+func (a LiteLlmConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for LiteLlmConfig
+func (a *LiteLlmConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for LiteLlmConfig to handle AdditionalProperties
+func (a *LiteLlmConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["base_url"]; found {
+		err = json.Unmarshal(raw, &a.BaseUrl)
+		if err != nil {
+			return fmt.Errorf("error reading 'base_url': %w", err)
+		}
+		delete(object, "base_url")
+	}
+
+	if raw, found := object["has_api_key"]; found {
+		err = json.Unmarshal(raw, &a.HasApiKey)
+		if err != nil {
+			return fmt.Errorf("error reading 'has_api_key': %w", err)
+		}
+		delete(object, "has_api_key")
+	}
+
+	if raw, found := object["header_names"]; found {
+		err = json.Unmarshal(raw, &a.HeaderNames)
+		if err != nil {
+			return fmt.Errorf("error reading 'header_names': %w", err)
+		}
+		delete(object, "header_names")
+	}
+
+	if raw, found := object["is_function_calling_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsFunctionCallingEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_function_calling_enabled': %w", err)
+		}
+		delete(object, "is_function_calling_enabled")
+	}
+
+	if raw, found := object["model_names"]; found {
+		err = json.Unmarshal(raw, &a.ModelNames)
+		if err != nil {
+			return fmt.Errorf("error reading 'model_names': %w", err)
+		}
+		delete(object, "model_names")
+	}
+
+	if raw, found := object["provider"]; found {
+		err = json.Unmarshal(raw, &a.Provider)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider': %w", err)
+		}
+		delete(object, "provider")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for LiteLlmConfig to handle AdditionalProperties
+func (a LiteLlmConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["base_url"], err = json.Marshal(a.BaseUrl)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'base_url': %w", err)
+	}
+
+	object["has_api_key"], err = json.Marshal(a.HasApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'has_api_key': %w", err)
+	}
+
+	if a.HeaderNames != nil {
+		object["header_names"], err = json.Marshal(a.HeaderNames)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'header_names': %w", err)
+		}
+	}
+
+	object["is_function_calling_enabled"], err = json.Marshal(a.IsFunctionCallingEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_function_calling_enabled': %w", err)
+	}
+
+	if a.ModelNames != nil {
+		object["model_names"], err = json.Marshal(a.ModelNames)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'model_names': %w", err)
+		}
+	}
+
+	object["provider"], err = json.Marshal(a.Provider)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provider': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for LlmConfig. Returns the specified
+// element and whether it was found
+func (a LlmConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for LlmConfig
+func (a *LlmConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Getter for additional properties for LlmGenerationRunConfig. Returns the specified
+// element and whether it was found
+func (a LlmGenerationRunConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for LlmGenerationRunConfig
+func (a *LlmGenerationRunConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for LlmGenerationRunConfig to handle AdditionalProperties
+func (a *LlmGenerationRunConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["ai_integration_id"]; found {
+		err = json.Unmarshal(raw, &a.AiIntegrationId)
+		if err != nil {
+			return fmt.Errorf("error reading 'ai_integration_id': %w", err)
+		}
+		delete(object, "ai_integration_id")
+	}
+
+	if raw, found := object["experiment_type"]; found {
+		err = json.Unmarshal(raw, &a.ExperimentType)
+		if err != nil {
+			return fmt.Errorf("error reading 'experiment_type': %w", err)
+		}
+		delete(object, "experiment_type")
+	}
+
+	if raw, found := object["input_variable_format"]; found {
+		err = json.Unmarshal(raw, &a.InputVariableFormat)
+		if err != nil {
+			return fmt.Errorf("error reading 'input_variable_format': %w", err)
+		}
+		delete(object, "input_variable_format")
+	}
+
+	if raw, found := object["invocation_parameters"]; found {
+		err = json.Unmarshal(raw, &a.InvocationParameters)
+		if err != nil {
+			return fmt.Errorf("error reading 'invocation_parameters': %w", err)
+		}
+		delete(object, "invocation_parameters")
+	}
+
+	if raw, found := object["messages"]; found {
+		err = json.Unmarshal(raw, &a.Messages)
+		if err != nil {
+			return fmt.Errorf("error reading 'messages': %w", err)
+		}
+		delete(object, "messages")
+	}
+
+	if raw, found := object["model_name"]; found {
+		err = json.Unmarshal(raw, &a.ModelName)
+		if err != nil {
+			return fmt.Errorf("error reading 'model_name': %w", err)
+		}
+		delete(object, "model_name")
+	}
+
+	if raw, found := object["prompt_version_id"]; found {
+		err = json.Unmarshal(raw, &a.PromptVersionId)
+		if err != nil {
+			return fmt.Errorf("error reading 'prompt_version_id': %w", err)
+		}
+		delete(object, "prompt_version_id")
+	}
+
+	if raw, found := object["provider_parameters"]; found {
+		err = json.Unmarshal(raw, &a.ProviderParameters)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider_parameters': %w", err)
+		}
+		delete(object, "provider_parameters")
+	}
+
+	if raw, found := object["tool_config"]; found {
+		err = json.Unmarshal(raw, &a.ToolConfig)
+		if err != nil {
+			return fmt.Errorf("error reading 'tool_config': %w", err)
+		}
+		delete(object, "tool_config")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for LlmGenerationRunConfig to handle AdditionalProperties
+func (a LlmGenerationRunConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["ai_integration_id"], err = json.Marshal(a.AiIntegrationId)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'ai_integration_id': %w", err)
+	}
+
+	object["experiment_type"], err = json.Marshal(a.ExperimentType)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'experiment_type': %w", err)
+	}
+
+	object["input_variable_format"], err = json.Marshal(a.InputVariableFormat)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'input_variable_format': %w", err)
+	}
+
+	if a.InvocationParameters != nil {
+		object["invocation_parameters"], err = json.Marshal(a.InvocationParameters)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'invocation_parameters': %w", err)
+		}
+	}
+
+	if a.Messages != nil {
+		object["messages"], err = json.Marshal(a.Messages)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'messages': %w", err)
+		}
+	}
+
+	if a.ModelName != nil {
+		object["model_name"], err = json.Marshal(a.ModelName)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'model_name': %w", err)
+		}
+	}
+
+	if a.PromptVersionId != nil {
+		object["prompt_version_id"], err = json.Marshal(a.PromptVersionId)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'prompt_version_id': %w", err)
+		}
+	}
+
+	if a.ProviderParameters != nil {
+		object["provider_parameters"], err = json.Marshal(a.ProviderParameters)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'provider_parameters': %w", err)
+		}
+	}
+
+	if a.ToolConfig != nil {
+		object["tool_config"], err = json.Marshal(a.ToolConfig)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'tool_config': %w", err)
 		}
 	}
 
@@ -11537,6 +14499,321 @@ func (a TaskRun) MarshalJSON() ([]byte, error) {
 	return json.Marshal(object)
 }
 
+// Getter for additional properties for TemplateEvaluationRunConfig. Returns the specified
+// element and whether it was found
+func (a TemplateEvaluationRunConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for TemplateEvaluationRunConfig
+func (a *TemplateEvaluationRunConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for TemplateEvaluationRunConfig to handle AdditionalProperties
+func (a *TemplateEvaluationRunConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["ai_integration_id"]; found {
+		err = json.Unmarshal(raw, &a.AiIntegrationId)
+		if err != nil {
+			return fmt.Errorf("error reading 'ai_integration_id': %w", err)
+		}
+		delete(object, "ai_integration_id")
+	}
+
+	if raw, found := object["classification_choices"]; found {
+		err = json.Unmarshal(raw, &a.ClassificationChoices)
+		if err != nil {
+			return fmt.Errorf("error reading 'classification_choices': %w", err)
+		}
+		delete(object, "classification_choices")
+	}
+
+	if raw, found := object["column_mapping"]; found {
+		err = json.Unmarshal(raw, &a.ColumnMapping)
+		if err != nil {
+			return fmt.Errorf("error reading 'column_mapping': %w", err)
+		}
+		delete(object, "column_mapping")
+	}
+
+	if raw, found := object["evaluator_version_id"]; found {
+		err = json.Unmarshal(raw, &a.EvaluatorVersionId)
+		if err != nil {
+			return fmt.Errorf("error reading 'evaluator_version_id': %w", err)
+		}
+		delete(object, "evaluator_version_id")
+	}
+
+	if raw, found := object["experiment_type"]; found {
+		err = json.Unmarshal(raw, &a.ExperimentType)
+		if err != nil {
+			return fmt.Errorf("error reading 'experiment_type': %w", err)
+		}
+		delete(object, "experiment_type")
+	}
+
+	if raw, found := object["invocation_parameters"]; found {
+		err = json.Unmarshal(raw, &a.InvocationParameters)
+		if err != nil {
+			return fmt.Errorf("error reading 'invocation_parameters': %w", err)
+		}
+		delete(object, "invocation_parameters")
+	}
+
+	if raw, found := object["model_name"]; found {
+		err = json.Unmarshal(raw, &a.ModelName)
+		if err != nil {
+			return fmt.Errorf("error reading 'model_name': %w", err)
+		}
+		delete(object, "model_name")
+	}
+
+	if raw, found := object["provide_explanation"]; found {
+		err = json.Unmarshal(raw, &a.ProvideExplanation)
+		if err != nil {
+			return fmt.Errorf("error reading 'provide_explanation': %w", err)
+		}
+		delete(object, "provide_explanation")
+	}
+
+	if raw, found := object["provider_parameters"]; found {
+		err = json.Unmarshal(raw, &a.ProviderParameters)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider_parameters': %w", err)
+		}
+		delete(object, "provider_parameters")
+	}
+
+	if raw, found := object["template"]; found {
+		err = json.Unmarshal(raw, &a.Template)
+		if err != nil {
+			return fmt.Errorf("error reading 'template': %w", err)
+		}
+		delete(object, "template")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for TemplateEvaluationRunConfig to handle AdditionalProperties
+func (a TemplateEvaluationRunConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["ai_integration_id"], err = json.Marshal(a.AiIntegrationId)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'ai_integration_id': %w", err)
+	}
+
+	if a.ClassificationChoices != nil {
+		object["classification_choices"], err = json.Marshal(a.ClassificationChoices)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'classification_choices': %w", err)
+		}
+	}
+
+	if a.ColumnMapping != nil {
+		object["column_mapping"], err = json.Marshal(a.ColumnMapping)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'column_mapping': %w", err)
+		}
+	}
+
+	if a.EvaluatorVersionId != nil {
+		object["evaluator_version_id"], err = json.Marshal(a.EvaluatorVersionId)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'evaluator_version_id': %w", err)
+		}
+	}
+
+	object["experiment_type"], err = json.Marshal(a.ExperimentType)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'experiment_type': %w", err)
+	}
+
+	if a.InvocationParameters != nil {
+		object["invocation_parameters"], err = json.Marshal(a.InvocationParameters)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'invocation_parameters': %w", err)
+		}
+	}
+
+	if a.ModelName != nil {
+		object["model_name"], err = json.Marshal(a.ModelName)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'model_name': %w", err)
+		}
+	}
+
+	object["provide_explanation"], err = json.Marshal(a.ProvideExplanation)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provide_explanation': %w", err)
+	}
+
+	if a.ProviderParameters != nil {
+		object["provider_parameters"], err = json.Marshal(a.ProviderParameters)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'provider_parameters': %w", err)
+		}
+	}
+
+	object["template"], err = json.Marshal(a.Template)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'template': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Getter for additional properties for TogetherAiConfig. Returns the specified
+// element and whether it was found
+func (a TogetherAiConfig) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for TogetherAiConfig
+func (a *TogetherAiConfig) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for TogetherAiConfig to handle AdditionalProperties
+func (a *TogetherAiConfig) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["has_api_key"]; found {
+		err = json.Unmarshal(raw, &a.HasApiKey)
+		if err != nil {
+			return fmt.Errorf("error reading 'has_api_key': %w", err)
+		}
+		delete(object, "has_api_key")
+	}
+
+	if raw, found := object["is_default_models_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsDefaultModelsEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_default_models_enabled': %w", err)
+		}
+		delete(object, "is_default_models_enabled")
+	}
+
+	if raw, found := object["is_function_calling_enabled"]; found {
+		err = json.Unmarshal(raw, &a.IsFunctionCallingEnabled)
+		if err != nil {
+			return fmt.Errorf("error reading 'is_function_calling_enabled': %w", err)
+		}
+		delete(object, "is_function_calling_enabled")
+	}
+
+	if raw, found := object["model_names"]; found {
+		err = json.Unmarshal(raw, &a.ModelNames)
+		if err != nil {
+			return fmt.Errorf("error reading 'model_names': %w", err)
+		}
+		delete(object, "model_names")
+	}
+
+	if raw, found := object["provider"]; found {
+		err = json.Unmarshal(raw, &a.Provider)
+		if err != nil {
+			return fmt.Errorf("error reading 'provider': %w", err)
+		}
+		delete(object, "provider")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for TogetherAiConfig to handle AdditionalProperties
+func (a TogetherAiConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	object["has_api_key"], err = json.Marshal(a.HasApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'has_api_key': %w", err)
+	}
+
+	object["is_default_models_enabled"], err = json.Marshal(a.IsDefaultModelsEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_default_models_enabled': %w", err)
+	}
+
+	object["is_function_calling_enabled"], err = json.Marshal(a.IsFunctionCallingEnabled)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'is_function_calling_enabled': %w", err)
+	}
+
+	if a.ModelNames != nil {
+		object["model_names"], err = json.Marshal(a.ModelNames)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'model_names': %w", err)
+		}
+	}
+
+	object["provider"], err = json.Marshal(a.Provider)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling 'provider': %w", err)
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
 // Getter for additional properties for ToolConfig. Returns the specified
 // element and whether it was found
 func (a ToolConfig) Get(fieldName string) (value interface{}, found bool) {
@@ -11982,6 +15259,34 @@ func (t *AnnotationQueueRecordInput) MergeAnnotationQueueTraceRecordInput(v Anno
 	return err
 }
 
+// AsAnnotationQueueSessionRecordInput returns the union data inside the AnnotationQueueRecordInput as a AnnotationQueueSessionRecordInput
+func (t AnnotationQueueRecordInput) AsAnnotationQueueSessionRecordInput() (AnnotationQueueSessionRecordInput, error) {
+	var body AnnotationQueueSessionRecordInput
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAnnotationQueueSessionRecordInput overwrites any union data inside the AnnotationQueueRecordInput as the provided AnnotationQueueSessionRecordInput
+func (t *AnnotationQueueRecordInput) FromAnnotationQueueSessionRecordInput(v AnnotationQueueSessionRecordInput) error {
+	v.RecordType = "SESSION"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAnnotationQueueSessionRecordInput performs a merge with any union data inside the AnnotationQueueRecordInput, using the provided AnnotationQueueSessionRecordInput
+func (t *AnnotationQueueRecordInput) MergeAnnotationQueueSessionRecordInput(v AnnotationQueueSessionRecordInput) error {
+	v.RecordType = "SESSION"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t AnnotationQueueRecordInput) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"record_type"`
@@ -11998,6 +15303,8 @@ func (t AnnotationQueueRecordInput) ValueByDiscriminator() (interface{}, error) 
 	switch discriminator {
 	case "EXAMPLE":
 		return t.AsAnnotationQueueExampleRecordInput()
+	case "SESSION":
+		return t.AsAnnotationQueueSessionRecordInput()
 	case "SPAN":
 		return t.AsAnnotationQueueSpanRecordInput()
 	case "TRACE":
@@ -12687,23 +15994,23 @@ func (t *CreateApiKeyRequest) UnmarshalJSON(b []byte) error {
 	return err
 }
 
-// AsUserApiKeyCreated returns the union data inside the CreateApiKeyResponse as a UserApiKeyCreated
-func (t CreateApiKeyResponse) AsUserApiKeyCreated() (UserApiKeyCreated, error) {
-	var body UserApiKeyCreated
+// AsCreatedUserApiKey returns the union data inside the CreateApiKeyResponse as a CreatedUserApiKey
+func (t CreateApiKeyResponse) AsCreatedUserApiKey() (CreatedUserApiKey, error) {
+	var body CreatedUserApiKey
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromUserApiKeyCreated overwrites any union data inside the CreateApiKeyResponse as the provided UserApiKeyCreated
-func (t *CreateApiKeyResponse) FromUserApiKeyCreated(v UserApiKeyCreated) error {
+// FromCreatedUserApiKey overwrites any union data inside the CreateApiKeyResponse as the provided CreatedUserApiKey
+func (t *CreateApiKeyResponse) FromCreatedUserApiKey(v CreatedUserApiKey) error {
 	v.KeyType = "USER"
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeUserApiKeyCreated performs a merge with any union data inside the CreateApiKeyResponse, using the provided UserApiKeyCreated
-func (t *CreateApiKeyResponse) MergeUserApiKeyCreated(v UserApiKeyCreated) error {
+// MergeCreatedUserApiKey performs a merge with any union data inside the CreateApiKeyResponse, using the provided CreatedUserApiKey
+func (t *CreateApiKeyResponse) MergeCreatedUserApiKey(v CreatedUserApiKey) error {
 	v.KeyType = "USER"
 	b, err := json.Marshal(v)
 	if err != nil {
@@ -12715,23 +16022,23 @@ func (t *CreateApiKeyResponse) MergeUserApiKeyCreated(v UserApiKeyCreated) error
 	return err
 }
 
-// AsServiceApiKeyCreated returns the union data inside the CreateApiKeyResponse as a ServiceApiKeyCreated
-func (t CreateApiKeyResponse) AsServiceApiKeyCreated() (ServiceApiKeyCreated, error) {
-	var body ServiceApiKeyCreated
+// AsCreatedServiceApiKey returns the union data inside the CreateApiKeyResponse as a CreatedServiceApiKey
+func (t CreateApiKeyResponse) AsCreatedServiceApiKey() (CreatedServiceApiKey, error) {
+	var body CreatedServiceApiKey
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromServiceApiKeyCreated overwrites any union data inside the CreateApiKeyResponse as the provided ServiceApiKeyCreated
-func (t *CreateApiKeyResponse) FromServiceApiKeyCreated(v ServiceApiKeyCreated) error {
+// FromCreatedServiceApiKey overwrites any union data inside the CreateApiKeyResponse as the provided CreatedServiceApiKey
+func (t *CreateApiKeyResponse) FromCreatedServiceApiKey(v CreatedServiceApiKey) error {
 	v.KeyType = "SERVICE"
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeServiceApiKeyCreated performs a merge with any union data inside the CreateApiKeyResponse, using the provided ServiceApiKeyCreated
-func (t *CreateApiKeyResponse) MergeServiceApiKeyCreated(v ServiceApiKeyCreated) error {
+// MergeCreatedServiceApiKey performs a merge with any union data inside the CreateApiKeyResponse, using the provided CreatedServiceApiKey
+func (t *CreateApiKeyResponse) MergeCreatedServiceApiKey(v CreatedServiceApiKey) error {
 	v.KeyType = "SERVICE"
 	b, err := json.Marshal(v)
 	if err != nil {
@@ -12758,9 +16065,9 @@ func (t CreateApiKeyResponse) ValueByDiscriminator() (interface{}, error) {
 	}
 	switch discriminator {
 	case "SERVICE":
-		return t.AsServiceApiKeyCreated()
+		return t.AsCreatedServiceApiKey()
 	case "USER":
-		return t.AsUserApiKeyCreated()
+		return t.AsCreatedUserApiKey()
 	default:
 		return nil, errors.New("unknown discriminator value: " + discriminator)
 	}
@@ -12895,6 +16202,95 @@ func (t *CreateAwsBedrockAuth) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsCreateCustomDefaultAuth returns the union data inside the CreateCustomAuth as a CreateCustomDefaultAuth
+func (t CreateCustomAuth) AsCreateCustomDefaultAuth() (CreateCustomDefaultAuth, error) {
+	var body CreateCustomDefaultAuth
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateCustomDefaultAuth overwrites any union data inside the CreateCustomAuth as the provided CreateCustomDefaultAuth
+func (t *CreateCustomAuth) FromCreateCustomDefaultAuth(v CreateCustomDefaultAuth) error {
+	v.AuthType = "DEFAULT"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateCustomDefaultAuth performs a merge with any union data inside the CreateCustomAuth, using the provided CreateCustomDefaultAuth
+func (t *CreateCustomAuth) MergeCreateCustomDefaultAuth(v CreateCustomDefaultAuth) error {
+	v.AuthType = "DEFAULT"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreateCustomOauth2ClientCredentialsAuth returns the union data inside the CreateCustomAuth as a CreateCustomOauth2ClientCredentialsAuth
+func (t CreateCustomAuth) AsCreateCustomOauth2ClientCredentialsAuth() (CreateCustomOauth2ClientCredentialsAuth, error) {
+	var body CreateCustomOauth2ClientCredentialsAuth
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateCustomOauth2ClientCredentialsAuth overwrites any union data inside the CreateCustomAuth as the provided CreateCustomOauth2ClientCredentialsAuth
+func (t *CreateCustomAuth) FromCreateCustomOauth2ClientCredentialsAuth(v CreateCustomOauth2ClientCredentialsAuth) error {
+	v.AuthType = "OAUTH2_CLIENT_CREDENTIALS"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateCustomOauth2ClientCredentialsAuth performs a merge with any union data inside the CreateCustomAuth, using the provided CreateCustomOauth2ClientCredentialsAuth
+func (t *CreateCustomAuth) MergeCreateCustomOauth2ClientCredentialsAuth(v CreateCustomOauth2ClientCredentialsAuth) error {
+	v.AuthType = "OAUTH2_CLIENT_CREDENTIALS"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t CreateCustomAuth) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"auth_type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t CreateCustomAuth) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "DEFAULT":
+		return t.AsCreateCustomDefaultAuth()
+	case "OAUTH2_CLIENT_CREDENTIALS":
+		return t.AsCreateCustomOauth2ClientCredentialsAuth()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t CreateCustomAuth) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *CreateCustomAuth) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsCreateTemplateEvaluatorVersionRequest returns the union data inside the CreateEvaluatorVersionRequest as a CreateTemplateEvaluatorVersionRequest
 func (t CreateEvaluatorVersionRequest) AsCreateTemplateEvaluatorVersionRequest() (CreateTemplateEvaluatorVersionRequest, error) {
 	var body CreateTemplateEvaluatorVersionRequest
@@ -12937,6 +16333,32 @@ func (t *CreateEvaluatorVersionRequest) FromCreateCodeEvaluatorVersionRequest(v 
 
 // MergeCreateCodeEvaluatorVersionRequest performs a merge with any union data inside the CreateEvaluatorVersionRequest, using the provided CreateCodeEvaluatorVersionRequest
 func (t *CreateEvaluatorVersionRequest) MergeCreateCodeEvaluatorVersionRequest(v CreateCodeEvaluatorVersionRequest) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreateRemoteEvaluatorVersionRequest returns the union data inside the CreateEvaluatorVersionRequest as a CreateRemoteEvaluatorVersionRequest
+func (t CreateEvaluatorVersionRequest) AsCreateRemoteEvaluatorVersionRequest() (CreateRemoteEvaluatorVersionRequest, error) {
+	var body CreateRemoteEvaluatorVersionRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateRemoteEvaluatorVersionRequest overwrites any union data inside the CreateEvaluatorVersionRequest as the provided CreateRemoteEvaluatorVersionRequest
+func (t *CreateEvaluatorVersionRequest) FromCreateRemoteEvaluatorVersionRequest(v CreateRemoteEvaluatorVersionRequest) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateRemoteEvaluatorVersionRequest performs a merge with any union data inside the CreateEvaluatorVersionRequest, using the provided CreateRemoteEvaluatorVersionRequest
+func (t *CreateEvaluatorVersionRequest) MergeCreateRemoteEvaluatorVersionRequest(v CreateRemoteEvaluatorVersionRequest) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -13013,6 +16435,34 @@ func (t *CreateIntegrationRequest) MergeCreateAgentIntegrationRequest(v CreateAg
 	return err
 }
 
+// AsCreateEvaluatorIntegrationRequest returns the union data inside the CreateIntegrationRequest as a CreateEvaluatorIntegrationRequest
+func (t CreateIntegrationRequest) AsCreateEvaluatorIntegrationRequest() (CreateEvaluatorIntegrationRequest, error) {
+	var body CreateEvaluatorIntegrationRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateEvaluatorIntegrationRequest overwrites any union data inside the CreateIntegrationRequest as the provided CreateEvaluatorIntegrationRequest
+func (t *CreateIntegrationRequest) FromCreateEvaluatorIntegrationRequest(v CreateEvaluatorIntegrationRequest) error {
+	v.Type = "EVALUATOR"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateEvaluatorIntegrationRequest performs a merge with any union data inside the CreateIntegrationRequest, using the provided CreateEvaluatorIntegrationRequest
+func (t *CreateIntegrationRequest) MergeCreateEvaluatorIntegrationRequest(v CreateEvaluatorIntegrationRequest) error {
+	v.Type = "EVALUATOR"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t CreateIntegrationRequest) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"type"`
@@ -13029,6 +16479,8 @@ func (t CreateIntegrationRequest) ValueByDiscriminator() (interface{}, error) {
 	switch discriminator {
 	case "AGENT":
 		return t.AsCreateAgentIntegrationRequest()
+	case "EVALUATOR":
+		return t.AsCreateEvaluatorIntegrationRequest()
 	case "LLM":
 		return t.AsCreateLlmIntegrationRequest()
 	default:
@@ -13242,6 +16694,90 @@ func (t *CreateLlmConfig) MergeCreateNvidiaNimConfig(v CreateNvidiaNimConfig) er
 	return err
 }
 
+// AsCreateLiteLlmConfig returns the union data inside the CreateLlmConfig as a CreateLiteLlmConfig
+func (t CreateLlmConfig) AsCreateLiteLlmConfig() (CreateLiteLlmConfig, error) {
+	var body CreateLiteLlmConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateLiteLlmConfig overwrites any union data inside the CreateLlmConfig as the provided CreateLiteLlmConfig
+func (t *CreateLlmConfig) FromCreateLiteLlmConfig(v CreateLiteLlmConfig) error {
+	v.Provider = "LITELLM"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateLiteLlmConfig performs a merge with any union data inside the CreateLlmConfig, using the provided CreateLiteLlmConfig
+func (t *CreateLlmConfig) MergeCreateLiteLlmConfig(v CreateLiteLlmConfig) error {
+	v.Provider = "LITELLM"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreateFireworksConfig returns the union data inside the CreateLlmConfig as a CreateFireworksConfig
+func (t CreateLlmConfig) AsCreateFireworksConfig() (CreateFireworksConfig, error) {
+	var body CreateFireworksConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateFireworksConfig overwrites any union data inside the CreateLlmConfig as the provided CreateFireworksConfig
+func (t *CreateLlmConfig) FromCreateFireworksConfig(v CreateFireworksConfig) error {
+	v.Provider = "FIREWORKS"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateFireworksConfig performs a merge with any union data inside the CreateLlmConfig, using the provided CreateFireworksConfig
+func (t *CreateLlmConfig) MergeCreateFireworksConfig(v CreateFireworksConfig) error {
+	v.Provider = "FIREWORKS"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreateTogetherAiConfig returns the union data inside the CreateLlmConfig as a CreateTogetherAiConfig
+func (t CreateLlmConfig) AsCreateTogetherAiConfig() (CreateTogetherAiConfig, error) {
+	var body CreateTogetherAiConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateTogetherAiConfig overwrites any union data inside the CreateLlmConfig as the provided CreateTogetherAiConfig
+func (t *CreateLlmConfig) FromCreateTogetherAiConfig(v CreateTogetherAiConfig) error {
+	v.Provider = "TOGETHER_AI"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateTogetherAiConfig performs a merge with any union data inside the CreateLlmConfig, using the provided CreateTogetherAiConfig
+func (t *CreateLlmConfig) MergeCreateTogetherAiConfig(v CreateTogetherAiConfig) error {
+	v.Provider = "TOGETHER_AI"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t CreateLlmConfig) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"provider"`
@@ -13262,27 +16798,23 @@ func (t CreateLlmConfig) ValueByDiscriminator() (interface{}, error) {
 		return t.AsCreateAwsBedrockConfig()
 	case "CUSTOM":
 		return t.AsCreateCustomConfig()
+	case "FIREWORKS":
+		return t.AsCreateFireworksConfig()
 	case "GEMINI":
 		return t.AsCreateGeminiConfig()
+	case "LITELLM":
+		return t.AsCreateLiteLlmConfig()
 	case "NVIDIA_NIM":
 		return t.AsCreateNvidiaNimConfig()
 	case "OPEN_AI":
 		return t.AsCreateOpenAiConfig()
+	case "TOGETHER_AI":
+		return t.AsCreateTogetherAiConfig()
 	case "VERTEX_AI":
 		return t.AsCreateVertexAiConfig()
 	default:
 		return nil, errors.New("unknown discriminator value: " + discriminator)
 	}
-}
-
-func (t CreateLlmConfig) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *CreateLlmConfig) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
 }
 
 // AsCreateTemplateEvaluationTaskRequest returns the union data inside the CreateTaskRequest as a CreateTemplateEvaluationTaskRequest
@@ -13400,6 +16932,95 @@ func (t CreateTaskRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (t *CreateTaskRequest) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsCustomDefaultAuth returns the union data inside the CustomAuth as a CustomDefaultAuth
+func (t CustomAuth) AsCustomDefaultAuth() (CustomDefaultAuth, error) {
+	var body CustomDefaultAuth
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCustomDefaultAuth overwrites any union data inside the CustomAuth as the provided CustomDefaultAuth
+func (t *CustomAuth) FromCustomDefaultAuth(v CustomDefaultAuth) error {
+	v.AuthType = "DEFAULT"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCustomDefaultAuth performs a merge with any union data inside the CustomAuth, using the provided CustomDefaultAuth
+func (t *CustomAuth) MergeCustomDefaultAuth(v CustomDefaultAuth) error {
+	v.AuthType = "DEFAULT"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCustomOauth2ClientCredentialsAuth returns the union data inside the CustomAuth as a CustomOauth2ClientCredentialsAuth
+func (t CustomAuth) AsCustomOauth2ClientCredentialsAuth() (CustomOauth2ClientCredentialsAuth, error) {
+	var body CustomOauth2ClientCredentialsAuth
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCustomOauth2ClientCredentialsAuth overwrites any union data inside the CustomAuth as the provided CustomOauth2ClientCredentialsAuth
+func (t *CustomAuth) FromCustomOauth2ClientCredentialsAuth(v CustomOauth2ClientCredentialsAuth) error {
+	v.AuthType = "OAUTH2_CLIENT_CREDENTIALS"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCustomOauth2ClientCredentialsAuth performs a merge with any union data inside the CustomAuth, using the provided CustomOauth2ClientCredentialsAuth
+func (t *CustomAuth) MergeCustomOauth2ClientCredentialsAuth(v CustomOauth2ClientCredentialsAuth) error {
+	v.AuthType = "OAUTH2_CLIENT_CREDENTIALS"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t CustomAuth) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"auth_type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t CustomAuth) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "DEFAULT":
+		return t.AsCustomDefaultAuth()
+	case "OAUTH2_CLIENT_CREDENTIALS":
+		return t.AsCustomOauth2ClientCredentialsAuth()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t CustomAuth) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *CustomAuth) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -13698,6 +17319,34 @@ func (t *Integration) MergeAgentIntegration(v AgentIntegration) error {
 	return err
 }
 
+// AsEvaluatorIntegration returns the union data inside the Integration as a EvaluatorIntegration
+func (t Integration) AsEvaluatorIntegration() (EvaluatorIntegration, error) {
+	var body EvaluatorIntegration
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEvaluatorIntegration overwrites any union data inside the Integration as the provided EvaluatorIntegration
+func (t *Integration) FromEvaluatorIntegration(v EvaluatorIntegration) error {
+	v.Type = "EVALUATOR"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEvaluatorIntegration performs a merge with any union data inside the Integration, using the provided EvaluatorIntegration
+func (t *Integration) MergeEvaluatorIntegration(v EvaluatorIntegration) error {
+	v.Type = "EVALUATOR"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t Integration) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"type"`
@@ -13714,21 +17363,13 @@ func (t Integration) ValueByDiscriminator() (interface{}, error) {
 	switch discriminator {
 	case "AGENT":
 		return t.AsAgentIntegration()
+	case "EVALUATOR":
+		return t.AsEvaluatorIntegration()
 	case "LLM":
 		return t.AsLlmIntegration()
 	default:
 		return nil, errors.New("unknown discriminator value: " + discriminator)
 	}
-}
-
-func (t Integration) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *Integration) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
 }
 
 // AsOpenAiConfig returns the union data inside the LlmConfig as a OpenAiConfig
@@ -13927,6 +17568,90 @@ func (t *LlmConfig) MergeNvidiaNimConfig(v NvidiaNimConfig) error {
 	return err
 }
 
+// AsLiteLlmConfig returns the union data inside the LlmConfig as a LiteLlmConfig
+func (t LlmConfig) AsLiteLlmConfig() (LiteLlmConfig, error) {
+	var body LiteLlmConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromLiteLlmConfig overwrites any union data inside the LlmConfig as the provided LiteLlmConfig
+func (t *LlmConfig) FromLiteLlmConfig(v LiteLlmConfig) error {
+	v.Provider = "LITELLM"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeLiteLlmConfig performs a merge with any union data inside the LlmConfig, using the provided LiteLlmConfig
+func (t *LlmConfig) MergeLiteLlmConfig(v LiteLlmConfig) error {
+	v.Provider = "LITELLM"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsFireworksConfig returns the union data inside the LlmConfig as a FireworksConfig
+func (t LlmConfig) AsFireworksConfig() (FireworksConfig, error) {
+	var body FireworksConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromFireworksConfig overwrites any union data inside the LlmConfig as the provided FireworksConfig
+func (t *LlmConfig) FromFireworksConfig(v FireworksConfig) error {
+	v.Provider = "FIREWORKS"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeFireworksConfig performs a merge with any union data inside the LlmConfig, using the provided FireworksConfig
+func (t *LlmConfig) MergeFireworksConfig(v FireworksConfig) error {
+	v.Provider = "FIREWORKS"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsTogetherAiConfig returns the union data inside the LlmConfig as a TogetherAiConfig
+func (t LlmConfig) AsTogetherAiConfig() (TogetherAiConfig, error) {
+	var body TogetherAiConfig
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromTogetherAiConfig overwrites any union data inside the LlmConfig as the provided TogetherAiConfig
+func (t *LlmConfig) FromTogetherAiConfig(v TogetherAiConfig) error {
+	v.Provider = "TOGETHER_AI"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeTogetherAiConfig performs a merge with any union data inside the LlmConfig, using the provided TogetherAiConfig
+func (t *LlmConfig) MergeTogetherAiConfig(v TogetherAiConfig) error {
+	v.Provider = "TOGETHER_AI"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t LlmConfig) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"provider"`
@@ -13947,27 +17672,23 @@ func (t LlmConfig) ValueByDiscriminator() (interface{}, error) {
 		return t.AsAwsBedrockConfig()
 	case "CUSTOM":
 		return t.AsCustomConfig()
+	case "FIREWORKS":
+		return t.AsFireworksConfig()
 	case "GEMINI":
 		return t.AsGeminiConfig()
+	case "LITELLM":
+		return t.AsLiteLlmConfig()
 	case "NVIDIA_NIM":
 		return t.AsNvidiaNimConfig()
 	case "OPEN_AI":
 		return t.AsOpenAiConfig()
+	case "TOGETHER_AI":
+		return t.AsTogetherAiConfig()
 	case "VERTEX_AI":
 		return t.AsVertexAiConfig()
 	default:
 		return nil, errors.New("unknown discriminator value: " + discriminator)
 	}
-}
-
-func (t LlmConfig) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *LlmConfig) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
 }
 
 // AsDataQualityMonitor returns the union data inside the Monitor as a DataQualityMonitor
@@ -14743,6 +18464,125 @@ func (t *RunConfiguration) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsLlmGenerationRunConfigRequest returns the union data inside the RunConfigurationRequest as a LlmGenerationRunConfigRequest
+func (t RunConfigurationRequest) AsLlmGenerationRunConfigRequest() (LlmGenerationRunConfigRequest, error) {
+	var body LlmGenerationRunConfigRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromLlmGenerationRunConfigRequest overwrites any union data inside the RunConfigurationRequest as the provided LlmGenerationRunConfigRequest
+func (t *RunConfigurationRequest) FromLlmGenerationRunConfigRequest(v LlmGenerationRunConfigRequest) error {
+	v.ExperimentType = "LLM_GENERATION"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeLlmGenerationRunConfigRequest performs a merge with any union data inside the RunConfigurationRequest, using the provided LlmGenerationRunConfigRequest
+func (t *RunConfigurationRequest) MergeLlmGenerationRunConfigRequest(v LlmGenerationRunConfigRequest) error {
+	v.ExperimentType = "LLM_GENERATION"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsTemplateEvaluationRunConfigRequest returns the union data inside the RunConfigurationRequest as a TemplateEvaluationRunConfigRequest
+func (t RunConfigurationRequest) AsTemplateEvaluationRunConfigRequest() (TemplateEvaluationRunConfigRequest, error) {
+	var body TemplateEvaluationRunConfigRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromTemplateEvaluationRunConfigRequest overwrites any union data inside the RunConfigurationRequest as the provided TemplateEvaluationRunConfigRequest
+func (t *RunConfigurationRequest) FromTemplateEvaluationRunConfigRequest(v TemplateEvaluationRunConfigRequest) error {
+	v.ExperimentType = "TEMPLATE_EVALUATION"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeTemplateEvaluationRunConfigRequest performs a merge with any union data inside the RunConfigurationRequest, using the provided TemplateEvaluationRunConfigRequest
+func (t *RunConfigurationRequest) MergeTemplateEvaluationRunConfigRequest(v TemplateEvaluationRunConfigRequest) error {
+	v.ExperimentType = "TEMPLATE_EVALUATION"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsAgentCallRunConfigRequest returns the union data inside the RunConfigurationRequest as a AgentCallRunConfigRequest
+func (t RunConfigurationRequest) AsAgentCallRunConfigRequest() (AgentCallRunConfigRequest, error) {
+	var body AgentCallRunConfigRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAgentCallRunConfigRequest overwrites any union data inside the RunConfigurationRequest as the provided AgentCallRunConfigRequest
+func (t *RunConfigurationRequest) FromAgentCallRunConfigRequest(v AgentCallRunConfigRequest) error {
+	v.ExperimentType = "AGENT_CALL"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAgentCallRunConfigRequest performs a merge with any union data inside the RunConfigurationRequest, using the provided AgentCallRunConfigRequest
+func (t *RunConfigurationRequest) MergeAgentCallRunConfigRequest(v AgentCallRunConfigRequest) error {
+	v.ExperimentType = "AGENT_CALL"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t RunConfigurationRequest) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"experiment_type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t RunConfigurationRequest) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "AGENT_CALL":
+		return t.AsAgentCallRunConfigRequest()
+	case "LLM_GENERATION":
+		return t.AsLlmGenerationRunConfigRequest()
+	case "TEMPLATE_EVALUATION":
+		return t.AsTemplateEvaluationRunConfigRequest()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t RunConfigurationRequest) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *RunConfigurationRequest) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsPredefinedRoleAssignment returns the union data inside the SpaceRoleAssignment as a PredefinedRoleAssignment
 func (t SpaceRoleAssignment) AsPredefinedRoleAssignment() (PredefinedRoleAssignment, error) {
 	var body PredefinedRoleAssignment
@@ -15041,6 +18881,68 @@ func (t StaticParamRequest_DefaultValue) MarshalJSON() ([]byte, error) {
 }
 
 func (t *StaticParamRequest_DefaultValue) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsSpanEvaluatorInput returns the union data inside the TaskEvaluatorInput as a SpanEvaluatorInput
+func (t TaskEvaluatorInput) AsSpanEvaluatorInput() (SpanEvaluatorInput, error) {
+	var body SpanEvaluatorInput
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSpanEvaluatorInput overwrites any union data inside the TaskEvaluatorInput as the provided SpanEvaluatorInput
+func (t *TaskEvaluatorInput) FromSpanEvaluatorInput(v SpanEvaluatorInput) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSpanEvaluatorInput performs a merge with any union data inside the TaskEvaluatorInput, using the provided SpanEvaluatorInput
+func (t *TaskEvaluatorInput) MergeSpanEvaluatorInput(v SpanEvaluatorInput) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsTraceOrSessionEvaluatorInput returns the union data inside the TaskEvaluatorInput as a TraceOrSessionEvaluatorInput
+func (t TaskEvaluatorInput) AsTraceOrSessionEvaluatorInput() (TraceOrSessionEvaluatorInput, error) {
+	var body TraceOrSessionEvaluatorInput
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromTraceOrSessionEvaluatorInput overwrites any union data inside the TaskEvaluatorInput as the provided TraceOrSessionEvaluatorInput
+func (t *TaskEvaluatorInput) FromTraceOrSessionEvaluatorInput(v TraceOrSessionEvaluatorInput) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeTraceOrSessionEvaluatorInput performs a merge with any union data inside the TaskEvaluatorInput, using the provided TraceOrSessionEvaluatorInput
+func (t *TaskEvaluatorInput) MergeTraceOrSessionEvaluatorInput(v TraceOrSessionEvaluatorInput) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t TaskEvaluatorInput) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *TaskEvaluatorInput) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -15470,6 +19372,34 @@ func (t *UpdateIntegrationRequest) MergeUpdateAgentIntegrationRequest(v UpdateAg
 	return err
 }
 
+// AsUpdateEvaluatorIntegrationRequest returns the union data inside the UpdateIntegrationRequest as a UpdateEvaluatorIntegrationRequest
+func (t UpdateIntegrationRequest) AsUpdateEvaluatorIntegrationRequest() (UpdateEvaluatorIntegrationRequest, error) {
+	var body UpdateEvaluatorIntegrationRequest
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromUpdateEvaluatorIntegrationRequest overwrites any union data inside the UpdateIntegrationRequest as the provided UpdateEvaluatorIntegrationRequest
+func (t *UpdateIntegrationRequest) FromUpdateEvaluatorIntegrationRequest(v UpdateEvaluatorIntegrationRequest) error {
+	v.Type = "EVALUATOR"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeUpdateEvaluatorIntegrationRequest performs a merge with any union data inside the UpdateIntegrationRequest, using the provided UpdateEvaluatorIntegrationRequest
+func (t *UpdateIntegrationRequest) MergeUpdateEvaluatorIntegrationRequest(v UpdateEvaluatorIntegrationRequest) error {
+	v.Type = "EVALUATOR"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t UpdateIntegrationRequest) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"type"`
@@ -15486,6 +19416,8 @@ func (t UpdateIntegrationRequest) ValueByDiscriminator() (interface{}, error) {
 	switch discriminator {
 	case "AGENT":
 		return t.AsUpdateAgentIntegrationRequest()
+	case "EVALUATOR":
+		return t.AsUpdateEvaluatorIntegrationRequest()
 	case "LLM":
 		return t.AsUpdateLlmIntegrationRequest()
 	default:
@@ -15499,6 +19431,68 @@ func (t UpdateIntegrationRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (t *UpdateIntegrationRequest) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsCreateAwsBedrockAuth returns the union data inside the UpdateLlmAuth as a CreateAwsBedrockAuth
+func (t UpdateLlmAuth) AsCreateAwsBedrockAuth() (CreateAwsBedrockAuth, error) {
+	var body CreateAwsBedrockAuth
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateAwsBedrockAuth overwrites any union data inside the UpdateLlmAuth as the provided CreateAwsBedrockAuth
+func (t *UpdateLlmAuth) FromCreateAwsBedrockAuth(v CreateAwsBedrockAuth) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateAwsBedrockAuth performs a merge with any union data inside the UpdateLlmAuth, using the provided CreateAwsBedrockAuth
+func (t *UpdateLlmAuth) MergeCreateAwsBedrockAuth(v CreateAwsBedrockAuth) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsCreateCustomAuth returns the union data inside the UpdateLlmAuth as a CreateCustomAuth
+func (t UpdateLlmAuth) AsCreateCustomAuth() (CreateCustomAuth, error) {
+	var body CreateCustomAuth
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateCustomAuth overwrites any union data inside the UpdateLlmAuth as the provided CreateCustomAuth
+func (t *UpdateLlmAuth) FromCreateCustomAuth(v CreateCustomAuth) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateCustomAuth performs a merge with any union data inside the UpdateLlmAuth, using the provided CreateCustomAuth
+func (t *UpdateLlmAuth) MergeCreateCustomAuth(v CreateCustomAuth) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t UpdateLlmAuth) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *UpdateLlmAuth) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -15793,6 +19787,156 @@ func (a AnnotationConfig) MarshalJSON() ([]byte, error) {
 	return json.Marshal(object)
 }
 
+// Override default JSON handling for CreateLlmConfig to handle AdditionalProperties and union
+func (a *CreateLlmConfig) UnmarshalJSON(b []byte) error {
+	err := a.union.UnmarshalJSON(b)
+	if err != nil {
+		return err
+	}
+	object := make(map[string]json.RawMessage)
+	err = json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for CreateLlmConfig to handle AdditionalProperties and union
+func (a CreateLlmConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	b, err := a.union.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	object := make(map[string]json.RawMessage)
+	if a.union != nil {
+		err = json.Unmarshal(b, &object)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Override default JSON handling for Integration to handle AdditionalProperties and union
+func (a *Integration) UnmarshalJSON(b []byte) error {
+	err := a.union.UnmarshalJSON(b)
+	if err != nil {
+		return err
+	}
+	object := make(map[string]json.RawMessage)
+	err = json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for Integration to handle AdditionalProperties and union
+func (a Integration) MarshalJSON() ([]byte, error) {
+	var err error
+	b, err := a.union.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	object := make(map[string]json.RawMessage)
+	if a.union != nil {
+		err = json.Unmarshal(b, &object)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
+// Override default JSON handling for LlmConfig to handle AdditionalProperties and union
+func (a *LlmConfig) UnmarshalJSON(b []byte) error {
+	err := a.union.UnmarshalJSON(b)
+	if err != nil {
+		return err
+	}
+	object := make(map[string]json.RawMessage)
+	err = json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for LlmConfig to handle AdditionalProperties and union
+func (a LlmConfig) MarshalJSON() ([]byte, error) {
+	var err error
+	b, err := a.union.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	object := make(map[string]json.RawMessage)
+	if a.union != nil {
+		err = json.Unmarshal(b, &object)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
+
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
@@ -15904,6 +20048,14 @@ type ClientInterface interface {
 
 	UpdateAnnotationConfig(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body UpdateAnnotationConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListAnnotationConfigTags request
+	ListAnnotationConfigTags(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AddAnnotationConfigTagsWithBody request with any body
+	AddAnnotationConfigTagsWithBody(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AddAnnotationConfigTags(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body AddAnnotationConfigTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListAnnotationQueues request
 	ListAnnotationQueues(ctx context.Context, params *ListAnnotationQueuesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -15945,6 +20097,14 @@ type ClientInterface interface {
 	AssignAnnotationQueueRecordWithBody(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, annotationQueueRecordId AnnotationQueueRecordIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AssignAnnotationQueueRecord(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, annotationQueueRecordId AnnotationQueueRecordIdPathParam, body AssignAnnotationQueueRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAnnotationQueueTags request
+	ListAnnotationQueueTags(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AddAnnotationQueueTagsWithBody request with any body
+	AddAnnotationQueueTagsWithBody(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AddAnnotationQueueTags(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, body AddAnnotationQueueTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListApiKeys request
 	ListApiKeys(ctx context.Context, params *ListApiKeysParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -16007,6 +20167,27 @@ type ClientInterface interface {
 
 	AnnotateDatasetExamples(ctx context.Context, datasetId DatasetIdPathParam, body AnnotateDatasetExamplesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// SearchDatasetExamplesWithBody request with any body
+	SearchDatasetExamplesWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SearchDatasetExamples(ctx context.Context, datasetId DatasetIdPathParam, body SearchDatasetExamplesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RemoveDatasetTagsWithBody request with any body
+	RemoveDatasetTagsWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	RemoveDatasetTags(ctx context.Context, datasetId DatasetIdPathParam, body RemoveDatasetTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListDatasetTags request
+	ListDatasetTags(ctx context.Context, datasetId DatasetIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AddDatasetTagsWithBody request with any body
+	AddDatasetTagsWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AddDatasetTags(ctx context.Context, datasetId DatasetIdPathParam, body AddDatasetTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListEvaluatorTemplates request
+	ListEvaluatorTemplates(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetEvaluatorVersion request
 	GetEvaluatorVersion(ctx context.Context, versionId EvaluatorVersionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -16028,6 +20209,24 @@ type ClientInterface interface {
 	UpdateEvaluatorWithBody(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateEvaluator(ctx context.Context, evaluatorId EvaluatorIdPathParam, body UpdateEvaluatorJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RemoveEvaluatorTagsWithBody request with any body
+	RemoveEvaluatorTagsWithBody(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	RemoveEvaluatorTags(ctx context.Context, evaluatorId EvaluatorIdPathParam, body RemoveEvaluatorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListEvaluatorTags request
+	ListEvaluatorTags(ctx context.Context, evaluatorId EvaluatorIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AddEvaluatorTagsWithBody request with any body
+	AddEvaluatorTagsWithBody(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AddEvaluatorTags(ctx context.Context, evaluatorId EvaluatorIdPathParam, body AddEvaluatorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteEvaluatorVersionsWithBody request with any body
+	DeleteEvaluatorVersionsWithBody(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteEvaluatorVersions(ctx context.Context, evaluatorId EvaluatorIdPathParam, body DeleteEvaluatorVersionsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListEvaluatorVersions request
 	ListEvaluatorVersions(ctx context.Context, evaluatorId EvaluatorIdPathParam, params *ListEvaluatorVersionsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -16064,6 +20263,19 @@ type ClientInterface interface {
 
 	AnnotateExperimentRuns(ctx context.Context, experimentId ExperimentIdPathParam, body AnnotateExperimentRunsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// SearchExperimentRunsWithBody request with any body
+	SearchExperimentRunsWithBody(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SearchExperimentRuns(ctx context.Context, experimentId ExperimentIdPathParam, body SearchExperimentRunsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListExperimentTags request
+	ListExperimentTags(ctx context.Context, experimentId ExperimentIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AddExperimentTagsWithBody request with any body
+	AddExperimentTagsWithBody(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AddExperimentTags(ctx context.Context, experimentId ExperimentIdPathParam, body AddExperimentTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListIntegrations request
 	ListIntegrations(ctx context.Context, params *ListIntegrationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -16083,8 +20295,24 @@ type ClientInterface interface {
 
 	UpdateIntegration(ctx context.Context, integrationId IntegrationIdPathParam, body UpdateIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetMonitors request
-	GetMonitors(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// ListMonitors request
+	ListMonitors(ctx context.Context, params *ListMonitorsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetMonitor request
+	GetMonitor(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RemoveMonitorTagsWithBody request with any body
+	RemoveMonitorTagsWithBody(ctx context.Context, monitorId MonitorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	RemoveMonitorTags(ctx context.Context, monitorId MonitorIdPathParam, body RemoveMonitorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListMonitorTags request
+	ListMonitorTags(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AddMonitorTagsWithBody request with any body
+	AddMonitorTagsWithBody(ctx context.Context, monitorId MonitorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AddMonitorTags(ctx context.Context, monitorId MonitorIdPathParam, body AddMonitorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListOrganizations request
 	ListOrganizations(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -16132,6 +20360,19 @@ type ClientInterface interface {
 
 	UpdateProject(ctx context.Context, projectId ProjectIdPathParam, body UpdateProjectJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// RemoveProjectTagsWithBody request with any body
+	RemoveProjectTagsWithBody(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	RemoveProjectTags(ctx context.Context, projectId ProjectIdPathParam, body RemoveProjectTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListProjectTags request
+	ListProjectTags(ctx context.Context, projectId ProjectIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AddProjectTagsWithBody request with any body
+	AddProjectTagsWithBody(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AddProjectTags(ctx context.Context, projectId ProjectIdPathParam, body AddProjectTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetPromptVersion request
 	GetPromptVersion(ctx context.Context, versionId PromptVersionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -16164,6 +20405,19 @@ type ClientInterface interface {
 
 	// GetPromptLabel request
 	GetPromptLabel(ctx context.Context, promptId PromptIdPathParam, labelName LabelNamePathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RemovePromptTagsWithBody request with any body
+	RemovePromptTagsWithBody(ctx context.Context, promptId PromptIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	RemovePromptTags(ctx context.Context, promptId PromptIdPathParam, body RemovePromptTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListPromptTags request
+	ListPromptTags(ctx context.Context, promptId PromptIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AddPromptTagsWithBody request with any body
+	AddPromptTagsWithBody(ctx context.Context, promptId PromptIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AddPromptTags(ctx context.Context, promptId PromptIdPathParam, body AddPromptTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListPromptVersions request
 	ListPromptVersions(ctx context.Context, promptId PromptIdPathParam, params *ListPromptVersionsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -16264,6 +20518,19 @@ type ClientInterface interface {
 
 	AnnotateSpans(ctx context.Context, body AnnotateSpansJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CreateTagWithBody request with any body
+	CreateTagWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateTag(ctx context.Context, body CreateTagJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteTag request
+	DeleteTag(ctx context.Context, tagId TagIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateTagWithBody request with any body
+	UpdateTagWithBody(ctx context.Context, tagId TagIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateTag(ctx context.Context, tagId TagIdPathParam, body UpdateTagJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetTaskRun request
 	GetTaskRun(ctx context.Context, runId TaskRunIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -16326,6 +20593,45 @@ type ClientInterface interface {
 
 	// ResetUserPassword request
 	ResetUserPassword(ctx context.Context, userId UserIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListWebhookSubscriptions request
+	ListWebhookSubscriptions(ctx context.Context, params *ListWebhookSubscriptionsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateWebhookSubscriptionWithBody request with any body
+	CreateWebhookSubscriptionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateWebhookSubscription(ctx context.Context, body CreateWebhookSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteWebhookSubscription request
+	DeleteWebhookSubscription(ctx context.Context, subscriptionId WebhookSubscriptionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetWebhookSubscription request
+	GetWebhookSubscription(ctx context.Context, subscriptionId WebhookSubscriptionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListWebhooks request
+	ListWebhooks(ctx context.Context, params *ListWebhooksParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateWebhookWithBody request with any body
+	CreateWebhookWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateWebhook(ctx context.Context, body CreateWebhookJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteWebhook request
+	DeleteWebhook(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetWebhook request
+	GetWebhook(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateWebhookWithBody request with any body
+	UpdateWebhookWithBody(ctx context.Context, webhookId WebhookIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateWebhook(ctx context.Context, webhookId WebhookIdPathParam, body UpdateWebhookJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListWebhookDeliveryAttempts request
+	ListWebhookDeliveryAttempts(ctx context.Context, webhookId WebhookIdPathParam, params *ListWebhookDeliveryAttemptsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TestWebhook request
+	TestWebhook(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) ListAiIntegrations(ctx context.Context, params *ListAiIntegrationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -16486,6 +20792,42 @@ func (c *Client) UpdateAnnotationConfigWithBody(ctx context.Context, annotationC
 
 func (c *Client) UpdateAnnotationConfig(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body UpdateAnnotationConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateAnnotationConfigRequest(c.Server, annotationConfigId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAnnotationConfigTags(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAnnotationConfigTagsRequest(c.Server, annotationConfigId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddAnnotationConfigTagsWithBody(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddAnnotationConfigTagsRequestWithBody(c.Server, annotationConfigId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddAnnotationConfigTags(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body AddAnnotationConfigTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddAnnotationConfigTagsRequest(c.Server, annotationConfigId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -16678,6 +21020,42 @@ func (c *Client) AssignAnnotationQueueRecordWithBody(ctx context.Context, annota
 
 func (c *Client) AssignAnnotationQueueRecord(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, annotationQueueRecordId AnnotationQueueRecordIdPathParam, body AssignAnnotationQueueRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAssignAnnotationQueueRecordRequest(c.Server, annotationQueueId, annotationQueueRecordId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAnnotationQueueTags(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAnnotationQueueTagsRequest(c.Server, annotationQueueId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddAnnotationQueueTagsWithBody(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddAnnotationQueueTagsRequestWithBody(c.Server, annotationQueueId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddAnnotationQueueTags(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, body AddAnnotationQueueTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddAnnotationQueueTagsRequest(c.Server, annotationQueueId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -16964,6 +21342,102 @@ func (c *Client) AnnotateDatasetExamples(ctx context.Context, datasetId DatasetI
 	return c.Client.Do(req)
 }
 
+func (c *Client) SearchDatasetExamplesWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSearchDatasetExamplesRequestWithBody(c.Server, datasetId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SearchDatasetExamples(ctx context.Context, datasetId DatasetIdPathParam, body SearchDatasetExamplesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSearchDatasetExamplesRequest(c.Server, datasetId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemoveDatasetTagsWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveDatasetTagsRequestWithBody(c.Server, datasetId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemoveDatasetTags(ctx context.Context, datasetId DatasetIdPathParam, body RemoveDatasetTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveDatasetTagsRequest(c.Server, datasetId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListDatasetTags(ctx context.Context, datasetId DatasetIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListDatasetTagsRequest(c.Server, datasetId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddDatasetTagsWithBody(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddDatasetTagsRequestWithBody(c.Server, datasetId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddDatasetTags(ctx context.Context, datasetId DatasetIdPathParam, body AddDatasetTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddDatasetTagsRequest(c.Server, datasetId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListEvaluatorTemplates(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListEvaluatorTemplatesRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetEvaluatorVersion(ctx context.Context, versionId EvaluatorVersionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetEvaluatorVersionRequest(c.Server, versionId)
 	if err != nil {
@@ -17050,6 +21524,90 @@ func (c *Client) UpdateEvaluatorWithBody(ctx context.Context, evaluatorId Evalua
 
 func (c *Client) UpdateEvaluator(ctx context.Context, evaluatorId EvaluatorIdPathParam, body UpdateEvaluatorJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateEvaluatorRequest(c.Server, evaluatorId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemoveEvaluatorTagsWithBody(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveEvaluatorTagsRequestWithBody(c.Server, evaluatorId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemoveEvaluatorTags(ctx context.Context, evaluatorId EvaluatorIdPathParam, body RemoveEvaluatorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveEvaluatorTagsRequest(c.Server, evaluatorId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListEvaluatorTags(ctx context.Context, evaluatorId EvaluatorIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListEvaluatorTagsRequest(c.Server, evaluatorId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddEvaluatorTagsWithBody(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddEvaluatorTagsRequestWithBody(c.Server, evaluatorId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddEvaluatorTags(ctx context.Context, evaluatorId EvaluatorIdPathParam, body AddEvaluatorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddEvaluatorTagsRequest(c.Server, evaluatorId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteEvaluatorVersionsWithBody(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteEvaluatorVersionsRequestWithBody(c.Server, evaluatorId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteEvaluatorVersions(ctx context.Context, evaluatorId EvaluatorIdPathParam, body DeleteEvaluatorVersionsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteEvaluatorVersionsRequest(c.Server, evaluatorId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -17216,6 +21774,66 @@ func (c *Client) AnnotateExperimentRuns(ctx context.Context, experimentId Experi
 	return c.Client.Do(req)
 }
 
+func (c *Client) SearchExperimentRunsWithBody(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSearchExperimentRunsRequestWithBody(c.Server, experimentId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SearchExperimentRuns(ctx context.Context, experimentId ExperimentIdPathParam, body SearchExperimentRunsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSearchExperimentRunsRequest(c.Server, experimentId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListExperimentTags(ctx context.Context, experimentId ExperimentIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListExperimentTagsRequest(c.Server, experimentId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddExperimentTagsWithBody(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddExperimentTagsRequestWithBody(c.Server, experimentId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddExperimentTags(ctx context.Context, experimentId ExperimentIdPathParam, body AddExperimentTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddExperimentTagsRequest(c.Server, experimentId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListIntegrations(ctx context.Context, params *ListIntegrationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListIntegrationsRequest(c.Server, params)
 	if err != nil {
@@ -17300,8 +21918,80 @@ func (c *Client) UpdateIntegration(ctx context.Context, integrationId Integratio
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetMonitors(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetMonitorsRequest(c.Server, monitorId)
+func (c *Client) ListMonitors(ctx context.Context, params *ListMonitorsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListMonitorsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetMonitor(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetMonitorRequest(c.Server, monitorId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemoveMonitorTagsWithBody(ctx context.Context, monitorId MonitorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveMonitorTagsRequestWithBody(c.Server, monitorId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemoveMonitorTags(ctx context.Context, monitorId MonitorIdPathParam, body RemoveMonitorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveMonitorTagsRequest(c.Server, monitorId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListMonitorTags(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListMonitorTagsRequest(c.Server, monitorId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddMonitorTagsWithBody(ctx context.Context, monitorId MonitorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddMonitorTagsRequestWithBody(c.Server, monitorId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddMonitorTags(ctx context.Context, monitorId MonitorIdPathParam, body AddMonitorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddMonitorTagsRequest(c.Server, monitorId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -17516,6 +22206,66 @@ func (c *Client) UpdateProject(ctx context.Context, projectId ProjectIdPathParam
 	return c.Client.Do(req)
 }
 
+func (c *Client) RemoveProjectTagsWithBody(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveProjectTagsRequestWithBody(c.Server, projectId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemoveProjectTags(ctx context.Context, projectId ProjectIdPathParam, body RemoveProjectTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveProjectTagsRequest(c.Server, projectId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListProjectTags(ctx context.Context, projectId ProjectIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListProjectTagsRequest(c.Server, projectId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddProjectTagsWithBody(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddProjectTagsRequestWithBody(c.Server, projectId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddProjectTags(ctx context.Context, projectId ProjectIdPathParam, body AddProjectTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddProjectTagsRequest(c.Server, projectId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetPromptVersion(ctx context.Context, versionId PromptVersionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetPromptVersionRequest(c.Server, versionId)
 	if err != nil {
@@ -17650,6 +22400,66 @@ func (c *Client) UpdatePrompt(ctx context.Context, promptId PromptIdPathParam, b
 
 func (c *Client) GetPromptLabel(ctx context.Context, promptId PromptIdPathParam, labelName LabelNamePathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetPromptLabelRequest(c.Server, promptId, labelName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemovePromptTagsWithBody(ctx context.Context, promptId PromptIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemovePromptTagsRequestWithBody(c.Server, promptId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemovePromptTags(ctx context.Context, promptId PromptIdPathParam, body RemovePromptTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemovePromptTagsRequest(c.Server, promptId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListPromptTags(ctx context.Context, promptId PromptIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListPromptTagsRequest(c.Server, promptId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddPromptTagsWithBody(ctx context.Context, promptId PromptIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddPromptTagsRequestWithBody(c.Server, promptId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AddPromptTags(ctx context.Context, promptId PromptIdPathParam, body AddPromptTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAddPromptTagsRequest(c.Server, promptId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -18104,6 +22914,66 @@ func (c *Client) AnnotateSpans(ctx context.Context, body AnnotateSpansJSONReques
 	return c.Client.Do(req)
 }
 
+func (c *Client) CreateTagWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateTagRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateTag(ctx context.Context, body CreateTagJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateTagRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteTag(ctx context.Context, tagId TagIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteTagRequest(c.Server, tagId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateTagWithBody(ctx context.Context, tagId TagIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTagRequestWithBody(c.Server, tagId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateTag(ctx context.Context, tagId TagIdPathParam, body UpdateTagJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateTagRequest(c.Server, tagId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetTaskRun(ctx context.Context, runId TaskRunIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetTaskRunRequest(c.Server, runId)
 	if err != nil {
@@ -18370,6 +23240,174 @@ func (c *Client) ResendUserInvitation(ctx context.Context, userId UserIdPathPara
 
 func (c *Client) ResetUserPassword(ctx context.Context, userId UserIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewResetUserPasswordRequest(c.Server, userId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListWebhookSubscriptions(ctx context.Context, params *ListWebhookSubscriptionsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListWebhookSubscriptionsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateWebhookSubscriptionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateWebhookSubscriptionRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateWebhookSubscription(ctx context.Context, body CreateWebhookSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateWebhookSubscriptionRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteWebhookSubscription(ctx context.Context, subscriptionId WebhookSubscriptionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteWebhookSubscriptionRequest(c.Server, subscriptionId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetWebhookSubscription(ctx context.Context, subscriptionId WebhookSubscriptionIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetWebhookSubscriptionRequest(c.Server, subscriptionId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListWebhooks(ctx context.Context, params *ListWebhooksParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListWebhooksRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateWebhookWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateWebhookRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateWebhook(ctx context.Context, body CreateWebhookJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateWebhookRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteWebhook(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteWebhookRequest(c.Server, webhookId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetWebhook(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetWebhookRequest(c.Server, webhookId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateWebhookWithBody(ctx context.Context, webhookId WebhookIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateWebhookRequestWithBody(c.Server, webhookId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateWebhook(ctx context.Context, webhookId WebhookIdPathParam, body UpdateWebhookJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateWebhookRequest(c.Server, webhookId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListWebhookDeliveryAttempts(ctx context.Context, webhookId WebhookIdPathParam, params *ListWebhookDeliveryAttemptsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListWebhookDeliveryAttemptsRequest(c.Server, webhookId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TestWebhook(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTestWebhookRequest(c.Server, webhookId)
 	if err != nil {
 		return nil, err
 	}
@@ -18894,6 +23932,87 @@ func NewUpdateAnnotationConfigRequestWithBody(server string, annotationConfigId 
 	return req, nil
 }
 
+// NewListAnnotationConfigTagsRequest generates requests for ListAnnotationConfigTags
+func NewListAnnotationConfigTagsRequest(server string, annotationConfigId AnnotationConfigIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "annotation_config_id", annotationConfigId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/annotation-configs/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAddAnnotationConfigTagsRequest calls the generic AddAnnotationConfigTags builder with application/json body
+func NewAddAnnotationConfigTagsRequest(server string, annotationConfigId AnnotationConfigIdPathParam, body AddAnnotationConfigTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAddAnnotationConfigTagsRequestWithBody(server, annotationConfigId, "application/json", bodyReader)
+}
+
+// NewAddAnnotationConfigTagsRequestWithBody generates requests for AddAnnotationConfigTags with any type of body
+func NewAddAnnotationConfigTagsRequestWithBody(server string, annotationConfigId AnnotationConfigIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "annotation_config_id", annotationConfigId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/annotation-configs/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListAnnotationQueuesRequest generates requests for ListAnnotationQueues
 func NewListAnnotationQueuesRequest(server string, params *ListAnnotationQueuesParams) (*http.Request, error) {
 	var err error
@@ -19407,6 +24526,87 @@ func NewAssignAnnotationQueueRecordRequestWithBody(server string, annotationQueu
 	}
 
 	operationPath := fmt.Sprintf("/v2/annotation-queues/%s/records/%s/assign", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListAnnotationQueueTagsRequest generates requests for ListAnnotationQueueTags
+func NewListAnnotationQueueTagsRequest(server string, annotationQueueId AnnotationQueueIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "annotation_queue_id", annotationQueueId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/annotation-queues/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAddAnnotationQueueTagsRequest calls the generic AddAnnotationQueueTags builder with application/json body
+func NewAddAnnotationQueueTagsRequest(server string, annotationQueueId AnnotationQueueIdPathParam, body AddAnnotationQueueTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAddAnnotationQueueTagsRequestWithBody(server, annotationQueueId, "application/json", bodyReader)
+}
+
+// NewAddAnnotationQueueTagsRequestWithBody generates requests for AddAnnotationQueueTags with any type of body
+func NewAddAnnotationQueueTagsRequestWithBody(server string, annotationQueueId AnnotationQueueIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "annotation_queue_id", annotationQueueId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/annotation-queues/%s/tags", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20359,6 +25559,208 @@ func NewAnnotateDatasetExamplesRequestWithBody(server string, datasetId DatasetI
 	return req, nil
 }
 
+// NewSearchDatasetExamplesRequest calls the generic SearchDatasetExamples builder with application/json body
+func NewSearchDatasetExamplesRequest(server string, datasetId DatasetIdPathParam, body SearchDatasetExamplesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSearchDatasetExamplesRequestWithBody(server, datasetId, "application/json", bodyReader)
+}
+
+// NewSearchDatasetExamplesRequestWithBody generates requests for SearchDatasetExamples with any type of body
+func NewSearchDatasetExamplesRequestWithBody(server string, datasetId DatasetIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "dataset_id", datasetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/datasets/%s/examples/search", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRemoveDatasetTagsRequest calls the generic RemoveDatasetTags builder with application/json body
+func NewRemoveDatasetTagsRequest(server string, datasetId DatasetIdPathParam, body RemoveDatasetTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRemoveDatasetTagsRequestWithBody(server, datasetId, "application/json", bodyReader)
+}
+
+// NewRemoveDatasetTagsRequestWithBody generates requests for RemoveDatasetTags with any type of body
+func NewRemoveDatasetTagsRequestWithBody(server string, datasetId DatasetIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "dataset_id", datasetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/datasets/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListDatasetTagsRequest generates requests for ListDatasetTags
+func NewListDatasetTagsRequest(server string, datasetId DatasetIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "dataset_id", datasetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/datasets/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAddDatasetTagsRequest calls the generic AddDatasetTags builder with application/json body
+func NewAddDatasetTagsRequest(server string, datasetId DatasetIdPathParam, body AddDatasetTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAddDatasetTagsRequestWithBody(server, datasetId, "application/json", bodyReader)
+}
+
+// NewAddDatasetTagsRequestWithBody generates requests for AddDatasetTags with any type of body
+func NewAddDatasetTagsRequestWithBody(server string, datasetId DatasetIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "dataset_id", datasetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/datasets/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListEvaluatorTemplatesRequest generates requests for ListEvaluatorTemplates
+func NewListEvaluatorTemplatesRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/evaluator-templates")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetEvaluatorVersionRequest generates requests for GetEvaluatorVersion
 func NewGetEvaluatorVersionRequest(server string, versionId EvaluatorVersionIdPathParam) (*http.Request, error) {
 	var err error
@@ -20668,6 +26070,181 @@ func NewUpdateEvaluatorRequestWithBody(server string, evaluatorId EvaluatorIdPat
 	}
 
 	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRemoveEvaluatorTagsRequest calls the generic RemoveEvaluatorTags builder with application/json body
+func NewRemoveEvaluatorTagsRequest(server string, evaluatorId EvaluatorIdPathParam, body RemoveEvaluatorTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRemoveEvaluatorTagsRequestWithBody(server, evaluatorId, "application/json", bodyReader)
+}
+
+// NewRemoveEvaluatorTagsRequestWithBody generates requests for RemoveEvaluatorTags with any type of body
+func NewRemoveEvaluatorTagsRequestWithBody(server string, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "evaluator_id", evaluatorId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/evaluators/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListEvaluatorTagsRequest generates requests for ListEvaluatorTags
+func NewListEvaluatorTagsRequest(server string, evaluatorId EvaluatorIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "evaluator_id", evaluatorId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/evaluators/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAddEvaluatorTagsRequest calls the generic AddEvaluatorTags builder with application/json body
+func NewAddEvaluatorTagsRequest(server string, evaluatorId EvaluatorIdPathParam, body AddEvaluatorTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAddEvaluatorTagsRequestWithBody(server, evaluatorId, "application/json", bodyReader)
+}
+
+// NewAddEvaluatorTagsRequestWithBody generates requests for AddEvaluatorTags with any type of body
+func NewAddEvaluatorTagsRequestWithBody(server string, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "evaluator_id", evaluatorId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/evaluators/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteEvaluatorVersionsRequest calls the generic DeleteEvaluatorVersions builder with application/json body
+func NewDeleteEvaluatorVersionsRequest(server string, evaluatorId EvaluatorIdPathParam, body DeleteEvaluatorVersionsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteEvaluatorVersionsRequestWithBody(server, evaluatorId, "application/json", bodyReader)
+}
+
+// NewDeleteEvaluatorVersionsRequestWithBody generates requests for DeleteEvaluatorVersions with any type of body
+func NewDeleteEvaluatorVersionsRequestWithBody(server string, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "evaluator_id", evaluatorId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/evaluators/%s/versions", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -21174,6 +26751,134 @@ func NewAnnotateExperimentRunsRequestWithBody(server string, experimentId Experi
 	return req, nil
 }
 
+// NewSearchExperimentRunsRequest calls the generic SearchExperimentRuns builder with application/json body
+func NewSearchExperimentRunsRequest(server string, experimentId ExperimentIdPathParam, body SearchExperimentRunsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSearchExperimentRunsRequestWithBody(server, experimentId, "application/json", bodyReader)
+}
+
+// NewSearchExperimentRunsRequestWithBody generates requests for SearchExperimentRuns with any type of body
+func NewSearchExperimentRunsRequestWithBody(server string, experimentId ExperimentIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "experiment_id", experimentId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/experiments/%s/runs/search", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListExperimentTagsRequest generates requests for ListExperimentTags
+func NewListExperimentTagsRequest(server string, experimentId ExperimentIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "experiment_id", experimentId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/experiments/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAddExperimentTagsRequest calls the generic AddExperimentTags builder with application/json body
+func NewAddExperimentTagsRequest(server string, experimentId ExperimentIdPathParam, body AddExperimentTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAddExperimentTagsRequestWithBody(server, experimentId, "application/json", bodyReader)
+}
+
+// NewAddExperimentTagsRequestWithBody generates requests for AddExperimentTags with any type of body
+func NewAddExperimentTagsRequestWithBody(server string, experimentId ExperimentIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "experiment_id", experimentId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/experiments/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListIntegrationsRequest generates requests for ListIntegrations
 func NewListIntegrationsRequest(server string, params *ListIntegrationsParams) (*http.Request, error) {
 	var err error
@@ -21443,8 +27148,242 @@ func NewUpdateIntegrationRequestWithBody(server string, integrationId Integratio
 	return req, nil
 }
 
-// NewGetMonitorsRequest generates requests for GetMonitors
-func NewGetMonitorsRequest(server string, monitorId MonitorIdPathParam) (*http.Request, error) {
+// NewListMonitorsRequest generates requests for ListMonitors
+func NewListMonitorsRequest(server string, params *ListMonitorsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/monitors")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.SpaceId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "space_id", *params.SpaceId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SpaceName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "space_name", *params.SpaceName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Name != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "name", *params.Name, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ProjectId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_id", *params.ProjectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ProjectName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_name", *params.ProjectName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Type != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "type", *params.Type, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "status", *params.Status, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.NotificationsEnabled != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "notifications_enabled", *params.NotificationsEnabled, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.DimensionCategory != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "dimension_category", *params.DimensionCategory, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.DimensionName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "dimension_name", *params.DimensionName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.DataQualityMetric != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "data_quality_metric", *params.DataQualityMetric, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.PerformanceMetric != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "performance_metric", *params.PerformanceMetric, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.DriftMetric != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "drift_metric", *params.DriftMetric, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.CustomMetricId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "custom_metric_id", *params.CustomMetricId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetMonitorRequest generates requests for GetMonitor
+func NewGetMonitorRequest(server string, monitorId MonitorIdPathParam) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -21473,6 +27412,134 @@ func NewGetMonitorsRequest(server string, monitorId MonitorIdPathParam) (*http.R
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewRemoveMonitorTagsRequest calls the generic RemoveMonitorTags builder with application/json body
+func NewRemoveMonitorTagsRequest(server string, monitorId MonitorIdPathParam, body RemoveMonitorTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRemoveMonitorTagsRequestWithBody(server, monitorId, "application/json", bodyReader)
+}
+
+// NewRemoveMonitorTagsRequestWithBody generates requests for RemoveMonitorTags with any type of body
+func NewRemoveMonitorTagsRequestWithBody(server string, monitorId MonitorIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "monitor_id", monitorId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/monitors/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListMonitorTagsRequest generates requests for ListMonitorTags
+func NewListMonitorTagsRequest(server string, monitorId MonitorIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "monitor_id", monitorId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/monitors/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAddMonitorTagsRequest calls the generic AddMonitorTags builder with application/json body
+func NewAddMonitorTagsRequest(server string, monitorId MonitorIdPathParam, body AddMonitorTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAddMonitorTagsRequestWithBody(server, monitorId, "application/json", bodyReader)
+}
+
+// NewAddMonitorTagsRequestWithBody generates requests for AddMonitorTags with any type of body
+func NewAddMonitorTagsRequestWithBody(server string, monitorId MonitorIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "monitor_id", monitorId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/monitors/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -21886,6 +27953,18 @@ func NewListProjectsRequest(server string, params *ListProjectsParams) (*http.Re
 
 		}
 
+		if params.ProjectType != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "project_type", *params.ProjectType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if encoded := queryValues.Encode(); encoded != "" {
 			rawQueryFragments = append(rawQueryFragments, encoded)
 		}
@@ -22046,6 +28125,134 @@ func NewUpdateProjectRequestWithBody(server string, projectId ProjectIdPathParam
 	}
 
 	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRemoveProjectTagsRequest calls the generic RemoveProjectTags builder with application/json body
+func NewRemoveProjectTagsRequest(server string, projectId ProjectIdPathParam, body RemoveProjectTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRemoveProjectTagsRequestWithBody(server, projectId, "application/json", bodyReader)
+}
+
+// NewRemoveProjectTagsRequestWithBody generates requests for RemoveProjectTags with any type of body
+func NewRemoveProjectTagsRequestWithBody(server string, projectId ProjectIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "project_id", projectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/projects/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListProjectTagsRequest generates requests for ListProjectTags
+func NewListProjectTagsRequest(server string, projectId ProjectIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "project_id", projectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/projects/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAddProjectTagsRequest calls the generic AddProjectTags builder with application/json body
+func NewAddProjectTagsRequest(server string, projectId ProjectIdPathParam, body AddProjectTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAddProjectTagsRequestWithBody(server, projectId, "application/json", bodyReader)
+}
+
+// NewAddProjectTagsRequestWithBody generates requests for AddProjectTags with any type of body
+func NewAddProjectTagsRequestWithBody(server string, projectId ProjectIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "project_id", projectId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/projects/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -22510,6 +28717,134 @@ func NewGetPromptLabelRequest(server string, promptId PromptIdPathParam, labelNa
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewRemovePromptTagsRequest calls the generic RemovePromptTags builder with application/json body
+func NewRemovePromptTagsRequest(server string, promptId PromptIdPathParam, body RemovePromptTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRemovePromptTagsRequestWithBody(server, promptId, "application/json", bodyReader)
+}
+
+// NewRemovePromptTagsRequestWithBody generates requests for RemovePromptTags with any type of body
+func NewRemovePromptTagsRequestWithBody(server string, promptId PromptIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "prompt_id", promptId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/prompts/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListPromptTagsRequest generates requests for ListPromptTags
+func NewListPromptTagsRequest(server string, promptId PromptIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "prompt_id", promptId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/prompts/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAddPromptTagsRequest calls the generic AddPromptTags builder with application/json body
+func NewAddPromptTagsRequest(server string, promptId PromptIdPathParam, body AddPromptTagsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAddPromptTagsRequestWithBody(server, promptId, "application/json", bodyReader)
+}
+
+// NewAddPromptTagsRequestWithBody generates requests for AddPromptTags with any type of body
+func NewAddPromptTagsRequestWithBody(server string, promptId PromptIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "prompt_id", promptId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/prompts/%s/tags", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -23752,6 +30087,127 @@ func NewAnnotateSpansRequestWithBody(server string, contentType string, body io.
 	return req, nil
 }
 
+// NewCreateTagRequest calls the generic CreateTag builder with application/json body
+func NewCreateTagRequest(server string, body CreateTagJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateTagRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateTagRequestWithBody generates requests for CreateTag with any type of body
+func NewCreateTagRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/tags")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteTagRequest generates requests for DeleteTag
+func NewDeleteTagRequest(server string, tagId TagIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "tag_id", tagId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/tags/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateTagRequest calls the generic UpdateTag builder with application/json body
+func NewUpdateTagRequest(server string, tagId TagIdPathParam, body UpdateTagJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateTagRequestWithBody(server, tagId, "application/json", bodyReader)
+}
+
+// NewUpdateTagRequestWithBody generates requests for UpdateTag with any type of body
+func NewUpdateTagRequestWithBody(server string, tagId TagIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "tag_id", tagId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/tags/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetTaskRunRequest generates requests for GetTaskRun
 func NewGetTaskRunRequest(server string, runId TaskRunIdPathParam) (*http.Request, error) {
 	var err error
@@ -24637,6 +31093,556 @@ func NewResetUserPasswordRequest(server string, userId UserIdPathParam) (*http.R
 	return req, nil
 }
 
+// NewListWebhookSubscriptionsRequest generates requests for ListWebhookSubscriptions
+func NewListWebhookSubscriptionsRequest(server string, params *ListWebhookSubscriptionsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhook-subscriptions")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.SourceType != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "source_type", *params.SourceType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SourceId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "source_id", *params.SourceId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateWebhookSubscriptionRequest calls the generic CreateWebhookSubscription builder with application/json body
+func NewCreateWebhookSubscriptionRequest(server string, body CreateWebhookSubscriptionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateWebhookSubscriptionRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateWebhookSubscriptionRequestWithBody generates requests for CreateWebhookSubscription with any type of body
+func NewCreateWebhookSubscriptionRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhook-subscriptions")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteWebhookSubscriptionRequest generates requests for DeleteWebhookSubscription
+func NewDeleteWebhookSubscriptionRequest(server string, subscriptionId WebhookSubscriptionIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "subscription_id", subscriptionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhook-subscriptions/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetWebhookSubscriptionRequest generates requests for GetWebhookSubscription
+func NewGetWebhookSubscriptionRequest(server string, subscriptionId WebhookSubscriptionIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "subscription_id", subscriptionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhook-subscriptions/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListWebhooksRequest generates requests for ListWebhooks
+func NewListWebhooksRequest(server string, params *ListWebhooksParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhooks")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.OrgId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "org_id", *params.OrgId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Name != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "name", *params.Name, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateWebhookRequest calls the generic CreateWebhook builder with application/json body
+func NewCreateWebhookRequest(server string, body CreateWebhookJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateWebhookRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateWebhookRequestWithBody generates requests for CreateWebhook with any type of body
+func NewCreateWebhookRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhooks")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteWebhookRequest generates requests for DeleteWebhook
+func NewDeleteWebhookRequest(server string, webhookId WebhookIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "webhook_id", webhookId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhooks/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetWebhookRequest generates requests for GetWebhook
+func NewGetWebhookRequest(server string, webhookId WebhookIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "webhook_id", webhookId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhooks/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateWebhookRequest calls the generic UpdateWebhook builder with application/json body
+func NewUpdateWebhookRequest(server string, webhookId WebhookIdPathParam, body UpdateWebhookJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateWebhookRequestWithBody(server, webhookId, "application/json", bodyReader)
+}
+
+// NewUpdateWebhookRequestWithBody generates requests for UpdateWebhook with any type of body
+func NewUpdateWebhookRequestWithBody(server string, webhookId WebhookIdPathParam, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "webhook_id", webhookId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhooks/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListWebhookDeliveryAttemptsRequest generates requests for ListWebhookDeliveryAttempts
+func NewListWebhookDeliveryAttemptsRequest(server string, webhookId WebhookIdPathParam, params *ListWebhookDeliveryAttemptsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "webhook_id", webhookId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhooks/%s/delivery-attempts", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTestWebhookRequest generates requests for TestWebhook
+func NewTestWebhookRequest(server string, webhookId WebhookIdPathParam) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "webhook_id", webhookId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/webhooks/%s/test", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -24718,6 +31724,14 @@ type ClientWithResponsesInterface interface {
 
 	UpdateAnnotationConfigWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body UpdateAnnotationConfigJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAnnotationConfigResp, error)
 
+	// ListAnnotationConfigTagsWithResponse request
+	ListAnnotationConfigTagsWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, reqEditors ...RequestEditorFn) (*ListAnnotationConfigTagsResp, error)
+
+	// AddAnnotationConfigTagsWithBodyWithResponse request with any body
+	AddAnnotationConfigTagsWithBodyWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddAnnotationConfigTagsResp, error)
+
+	AddAnnotationConfigTagsWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body AddAnnotationConfigTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddAnnotationConfigTagsResp, error)
+
 	// ListAnnotationQueuesWithResponse request
 	ListAnnotationQueuesWithResponse(ctx context.Context, params *ListAnnotationQueuesParams, reqEditors ...RequestEditorFn) (*ListAnnotationQueuesResp, error)
 
@@ -24759,6 +31773,14 @@ type ClientWithResponsesInterface interface {
 	AssignAnnotationQueueRecordWithBodyWithResponse(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, annotationQueueRecordId AnnotationQueueRecordIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AssignAnnotationQueueRecordResp, error)
 
 	AssignAnnotationQueueRecordWithResponse(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, annotationQueueRecordId AnnotationQueueRecordIdPathParam, body AssignAnnotationQueueRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*AssignAnnotationQueueRecordResp, error)
+
+	// ListAnnotationQueueTagsWithResponse request
+	ListAnnotationQueueTagsWithResponse(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, reqEditors ...RequestEditorFn) (*ListAnnotationQueueTagsResp, error)
+
+	// AddAnnotationQueueTagsWithBodyWithResponse request with any body
+	AddAnnotationQueueTagsWithBodyWithResponse(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddAnnotationQueueTagsResp, error)
+
+	AddAnnotationQueueTagsWithResponse(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, body AddAnnotationQueueTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddAnnotationQueueTagsResp, error)
 
 	// ListApiKeysWithResponse request
 	ListApiKeysWithResponse(ctx context.Context, params *ListApiKeysParams, reqEditors ...RequestEditorFn) (*ListApiKeysResp, error)
@@ -24821,6 +31843,27 @@ type ClientWithResponsesInterface interface {
 
 	AnnotateDatasetExamplesWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body AnnotateDatasetExamplesJSONRequestBody, reqEditors ...RequestEditorFn) (*AnnotateDatasetExamplesResp, error)
 
+	// SearchDatasetExamplesWithBodyWithResponse request with any body
+	SearchDatasetExamplesWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SearchDatasetExamplesResp, error)
+
+	SearchDatasetExamplesWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body SearchDatasetExamplesJSONRequestBody, reqEditors ...RequestEditorFn) (*SearchDatasetExamplesResp, error)
+
+	// RemoveDatasetTagsWithBodyWithResponse request with any body
+	RemoveDatasetTagsWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemoveDatasetTagsResp, error)
+
+	RemoveDatasetTagsWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body RemoveDatasetTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*RemoveDatasetTagsResp, error)
+
+	// ListDatasetTagsWithResponse request
+	ListDatasetTagsWithResponse(ctx context.Context, datasetId DatasetIdPathParam, reqEditors ...RequestEditorFn) (*ListDatasetTagsResp, error)
+
+	// AddDatasetTagsWithBodyWithResponse request with any body
+	AddDatasetTagsWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddDatasetTagsResp, error)
+
+	AddDatasetTagsWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body AddDatasetTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddDatasetTagsResp, error)
+
+	// ListEvaluatorTemplatesWithResponse request
+	ListEvaluatorTemplatesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListEvaluatorTemplatesResp, error)
+
 	// GetEvaluatorVersionWithResponse request
 	GetEvaluatorVersionWithResponse(ctx context.Context, versionId EvaluatorVersionIdPathParam, reqEditors ...RequestEditorFn) (*GetEvaluatorVersionResp, error)
 
@@ -24842,6 +31885,24 @@ type ClientWithResponsesInterface interface {
 	UpdateEvaluatorWithBodyWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateEvaluatorResp, error)
 
 	UpdateEvaluatorWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, body UpdateEvaluatorJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateEvaluatorResp, error)
+
+	// RemoveEvaluatorTagsWithBodyWithResponse request with any body
+	RemoveEvaluatorTagsWithBodyWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemoveEvaluatorTagsResp, error)
+
+	RemoveEvaluatorTagsWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, body RemoveEvaluatorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*RemoveEvaluatorTagsResp, error)
+
+	// ListEvaluatorTagsWithResponse request
+	ListEvaluatorTagsWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, reqEditors ...RequestEditorFn) (*ListEvaluatorTagsResp, error)
+
+	// AddEvaluatorTagsWithBodyWithResponse request with any body
+	AddEvaluatorTagsWithBodyWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddEvaluatorTagsResp, error)
+
+	AddEvaluatorTagsWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, body AddEvaluatorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddEvaluatorTagsResp, error)
+
+	// DeleteEvaluatorVersionsWithBodyWithResponse request with any body
+	DeleteEvaluatorVersionsWithBodyWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteEvaluatorVersionsResp, error)
+
+	DeleteEvaluatorVersionsWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, body DeleteEvaluatorVersionsJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteEvaluatorVersionsResp, error)
 
 	// ListEvaluatorVersionsWithResponse request
 	ListEvaluatorVersionsWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, params *ListEvaluatorVersionsParams, reqEditors ...RequestEditorFn) (*ListEvaluatorVersionsResp, error)
@@ -24878,6 +31939,19 @@ type ClientWithResponsesInterface interface {
 
 	AnnotateExperimentRunsWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, body AnnotateExperimentRunsJSONRequestBody, reqEditors ...RequestEditorFn) (*AnnotateExperimentRunsResp, error)
 
+	// SearchExperimentRunsWithBodyWithResponse request with any body
+	SearchExperimentRunsWithBodyWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SearchExperimentRunsResp, error)
+
+	SearchExperimentRunsWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, body SearchExperimentRunsJSONRequestBody, reqEditors ...RequestEditorFn) (*SearchExperimentRunsResp, error)
+
+	// ListExperimentTagsWithResponse request
+	ListExperimentTagsWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, reqEditors ...RequestEditorFn) (*ListExperimentTagsResp, error)
+
+	// AddExperimentTagsWithBodyWithResponse request with any body
+	AddExperimentTagsWithBodyWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddExperimentTagsResp, error)
+
+	AddExperimentTagsWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, body AddExperimentTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddExperimentTagsResp, error)
+
 	// ListIntegrationsWithResponse request
 	ListIntegrationsWithResponse(ctx context.Context, params *ListIntegrationsParams, reqEditors ...RequestEditorFn) (*ListIntegrationsResp, error)
 
@@ -24897,8 +31971,24 @@ type ClientWithResponsesInterface interface {
 
 	UpdateIntegrationWithResponse(ctx context.Context, integrationId IntegrationIdPathParam, body UpdateIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateIntegrationResp, error)
 
-	// GetMonitorsWithResponse request
-	GetMonitorsWithResponse(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*GetMonitorsResp, error)
+	// ListMonitorsWithResponse request
+	ListMonitorsWithResponse(ctx context.Context, params *ListMonitorsParams, reqEditors ...RequestEditorFn) (*ListMonitorsResp, error)
+
+	// GetMonitorWithResponse request
+	GetMonitorWithResponse(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*GetMonitorResp, error)
+
+	// RemoveMonitorTagsWithBodyWithResponse request with any body
+	RemoveMonitorTagsWithBodyWithResponse(ctx context.Context, monitorId MonitorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemoveMonitorTagsResp, error)
+
+	RemoveMonitorTagsWithResponse(ctx context.Context, monitorId MonitorIdPathParam, body RemoveMonitorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*RemoveMonitorTagsResp, error)
+
+	// ListMonitorTagsWithResponse request
+	ListMonitorTagsWithResponse(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*ListMonitorTagsResp, error)
+
+	// AddMonitorTagsWithBodyWithResponse request with any body
+	AddMonitorTagsWithBodyWithResponse(ctx context.Context, monitorId MonitorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddMonitorTagsResp, error)
+
+	AddMonitorTagsWithResponse(ctx context.Context, monitorId MonitorIdPathParam, body AddMonitorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddMonitorTagsResp, error)
 
 	// ListOrganizationsWithResponse request
 	ListOrganizationsWithResponse(ctx context.Context, params *ListOrganizationsParams, reqEditors ...RequestEditorFn) (*ListOrganizationsResp, error)
@@ -24946,6 +32036,19 @@ type ClientWithResponsesInterface interface {
 
 	UpdateProjectWithResponse(ctx context.Context, projectId ProjectIdPathParam, body UpdateProjectJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateProjectResp, error)
 
+	// RemoveProjectTagsWithBodyWithResponse request with any body
+	RemoveProjectTagsWithBodyWithResponse(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemoveProjectTagsResp, error)
+
+	RemoveProjectTagsWithResponse(ctx context.Context, projectId ProjectIdPathParam, body RemoveProjectTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*RemoveProjectTagsResp, error)
+
+	// ListProjectTagsWithResponse request
+	ListProjectTagsWithResponse(ctx context.Context, projectId ProjectIdPathParam, reqEditors ...RequestEditorFn) (*ListProjectTagsResp, error)
+
+	// AddProjectTagsWithBodyWithResponse request with any body
+	AddProjectTagsWithBodyWithResponse(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddProjectTagsResp, error)
+
+	AddProjectTagsWithResponse(ctx context.Context, projectId ProjectIdPathParam, body AddProjectTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddProjectTagsResp, error)
+
 	// GetPromptVersionWithResponse request
 	GetPromptVersionWithResponse(ctx context.Context, versionId PromptVersionIdPathParam, reqEditors ...RequestEditorFn) (*GetPromptVersionResp, error)
 
@@ -24978,6 +32081,19 @@ type ClientWithResponsesInterface interface {
 
 	// GetPromptLabelWithResponse request
 	GetPromptLabelWithResponse(ctx context.Context, promptId PromptIdPathParam, labelName LabelNamePathParam, reqEditors ...RequestEditorFn) (*GetPromptLabelResp, error)
+
+	// RemovePromptTagsWithBodyWithResponse request with any body
+	RemovePromptTagsWithBodyWithResponse(ctx context.Context, promptId PromptIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemovePromptTagsResp, error)
+
+	RemovePromptTagsWithResponse(ctx context.Context, promptId PromptIdPathParam, body RemovePromptTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*RemovePromptTagsResp, error)
+
+	// ListPromptTagsWithResponse request
+	ListPromptTagsWithResponse(ctx context.Context, promptId PromptIdPathParam, reqEditors ...RequestEditorFn) (*ListPromptTagsResp, error)
+
+	// AddPromptTagsWithBodyWithResponse request with any body
+	AddPromptTagsWithBodyWithResponse(ctx context.Context, promptId PromptIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddPromptTagsResp, error)
+
+	AddPromptTagsWithResponse(ctx context.Context, promptId PromptIdPathParam, body AddPromptTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddPromptTagsResp, error)
 
 	// ListPromptVersionsWithResponse request
 	ListPromptVersionsWithResponse(ctx context.Context, promptId PromptIdPathParam, params *ListPromptVersionsParams, reqEditors ...RequestEditorFn) (*ListPromptVersionsResp, error)
@@ -25078,6 +32194,19 @@ type ClientWithResponsesInterface interface {
 
 	AnnotateSpansWithResponse(ctx context.Context, body AnnotateSpansJSONRequestBody, reqEditors ...RequestEditorFn) (*AnnotateSpansResp, error)
 
+	// CreateTagWithBodyWithResponse request with any body
+	CreateTagWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateTagResp, error)
+
+	CreateTagWithResponse(ctx context.Context, body CreateTagJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTagResp, error)
+
+	// DeleteTagWithResponse request
+	DeleteTagWithResponse(ctx context.Context, tagId TagIdPathParam, reqEditors ...RequestEditorFn) (*DeleteTagResp, error)
+
+	// UpdateTagWithBodyWithResponse request with any body
+	UpdateTagWithBodyWithResponse(ctx context.Context, tagId TagIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTagResp, error)
+
+	UpdateTagWithResponse(ctx context.Context, tagId TagIdPathParam, body UpdateTagJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTagResp, error)
+
 	// GetTaskRunWithResponse request
 	GetTaskRunWithResponse(ctx context.Context, runId TaskRunIdPathParam, reqEditors ...RequestEditorFn) (*GetTaskRunResp, error)
 
@@ -25140,6 +32269,45 @@ type ClientWithResponsesInterface interface {
 
 	// ResetUserPasswordWithResponse request
 	ResetUserPasswordWithResponse(ctx context.Context, userId UserIdPathParam, reqEditors ...RequestEditorFn) (*ResetUserPasswordResp, error)
+
+	// ListWebhookSubscriptionsWithResponse request
+	ListWebhookSubscriptionsWithResponse(ctx context.Context, params *ListWebhookSubscriptionsParams, reqEditors ...RequestEditorFn) (*ListWebhookSubscriptionsResp, error)
+
+	// CreateWebhookSubscriptionWithBodyWithResponse request with any body
+	CreateWebhookSubscriptionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateWebhookSubscriptionResp, error)
+
+	CreateWebhookSubscriptionWithResponse(ctx context.Context, body CreateWebhookSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateWebhookSubscriptionResp, error)
+
+	// DeleteWebhookSubscriptionWithResponse request
+	DeleteWebhookSubscriptionWithResponse(ctx context.Context, subscriptionId WebhookSubscriptionIdPathParam, reqEditors ...RequestEditorFn) (*DeleteWebhookSubscriptionResp, error)
+
+	// GetWebhookSubscriptionWithResponse request
+	GetWebhookSubscriptionWithResponse(ctx context.Context, subscriptionId WebhookSubscriptionIdPathParam, reqEditors ...RequestEditorFn) (*GetWebhookSubscriptionResp, error)
+
+	// ListWebhooksWithResponse request
+	ListWebhooksWithResponse(ctx context.Context, params *ListWebhooksParams, reqEditors ...RequestEditorFn) (*ListWebhooksResp, error)
+
+	// CreateWebhookWithBodyWithResponse request with any body
+	CreateWebhookWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateWebhookResp, error)
+
+	CreateWebhookWithResponse(ctx context.Context, body CreateWebhookJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateWebhookResp, error)
+
+	// DeleteWebhookWithResponse request
+	DeleteWebhookWithResponse(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*DeleteWebhookResp, error)
+
+	// GetWebhookWithResponse request
+	GetWebhookWithResponse(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*GetWebhookResp, error)
+
+	// UpdateWebhookWithBodyWithResponse request with any body
+	UpdateWebhookWithBodyWithResponse(ctx context.Context, webhookId WebhookIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateWebhookResp, error)
+
+	UpdateWebhookWithResponse(ctx context.Context, webhookId WebhookIdPathParam, body UpdateWebhookJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateWebhookResp, error)
+
+	// ListWebhookDeliveryAttemptsWithResponse request
+	ListWebhookDeliveryAttemptsWithResponse(ctx context.Context, webhookId WebhookIdPathParam, params *ListWebhookDeliveryAttemptsParams, reqEditors ...RequestEditorFn) (*ListWebhookDeliveryAttemptsResp, error)
+
+	// TestWebhookWithResponse request
+	TestWebhookWithResponse(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*TestWebhookResp, error)
 }
 
 type ListAiIntegrationsResp struct {
@@ -25491,6 +32659,76 @@ func (r UpdateAnnotationConfigResp) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r UpdateAnnotationConfigResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListAnnotationConfigTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAnnotationConfigTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAnnotationConfigTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListAnnotationConfigTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type AddAnnotationConfigTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r AddAnnotationConfigTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AddAnnotationConfigTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r AddAnnotationConfigTagsResp) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -25853,6 +33091,76 @@ func (r AssignAnnotationQueueRecordResp) ContentType() string {
 	return ""
 }
 
+type ListAnnotationQueueTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAnnotationQueueTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAnnotationQueueTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListAnnotationQueueTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type AddAnnotationQueueTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r AddAnnotationQueueTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AddAnnotationQueueTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r AddAnnotationQueueTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListApiKeysResp struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -26073,6 +33381,7 @@ type CreateDatasetResp struct {
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
 	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
 // Status returns HTTPResponse.Status
@@ -26384,6 +33693,181 @@ func (r AnnotateDatasetExamplesResp) ContentType() string {
 	return ""
 }
 
+type SearchDatasetExamplesResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListDatasetExamplesResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r SearchDatasetExamplesResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SearchDatasetExamplesResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r SearchDatasetExamplesResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RemoveDatasetTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *RemoveTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r RemoveDatasetTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RemoveDatasetTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RemoveDatasetTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListDatasetTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListDatasetTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListDatasetTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListDatasetTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type AddDatasetTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r AddDatasetTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AddDatasetTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r AddDatasetTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListEvaluatorTemplatesResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListEvaluatorTemplatesResponse
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListEvaluatorTemplatesResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListEvaluatorTemplatesResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListEvaluatorTemplatesResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetEvaluatorVersionResp struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -26589,6 +34073,147 @@ func (r UpdateEvaluatorResp) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r UpdateEvaluatorResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RemoveEvaluatorTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *RemoveTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r RemoveEvaluatorTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RemoveEvaluatorTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RemoveEvaluatorTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListEvaluatorTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListEvaluatorTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListEvaluatorTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListEvaluatorTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type AddEvaluatorTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r AddEvaluatorTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AddEvaluatorTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r AddEvaluatorTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteEvaluatorVersionsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *DeleteEvaluatorVersionsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteEvaluatorVersionsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteEvaluatorVersionsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteEvaluatorVersionsResp) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -26912,6 +34537,112 @@ func (r AnnotateExperimentRunsResp) ContentType() string {
 	return ""
 }
 
+type SearchExperimentRunsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListExperimentRunsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r SearchExperimentRunsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SearchExperimentRunsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r SearchExperimentRunsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListExperimentTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListExperimentTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListExperimentTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListExperimentTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type AddExperimentTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r AddExperimentTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AddExperimentTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r AddExperimentTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListIntegrationsResp struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -26991,6 +34722,7 @@ type DeleteIntegrationResp struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -27089,7 +34821,42 @@ func (r UpdateIntegrationResp) ContentType() string {
 	return ""
 }
 
-type GetMonitorsResp struct {
+type ListMonitorsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListMonitorsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListMonitorsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListMonitorsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListMonitorsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetMonitorResp struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
 	JSON200                   *Monitor
@@ -27100,7 +34867,7 @@ type GetMonitorsResp struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r GetMonitorsResp) Status() string {
+func (r GetMonitorResp) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -27108,7 +34875,7 @@ func (r GetMonitorsResp) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetMonitorsResp) StatusCode() int {
+func (r GetMonitorResp) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -27116,7 +34883,113 @@ func (r GetMonitorsResp) StatusCode() int {
 }
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
-func (r GetMonitorsResp) ContentType() string {
+func (r GetMonitorResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RemoveMonitorTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *RemoveTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r RemoveMonitorTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RemoveMonitorTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RemoveMonitorTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListMonitorTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListMonitorTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListMonitorTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListMonitorTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type AddMonitorTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r AddMonitorTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AddMonitorTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r AddMonitorTagsResp) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -27479,7 +35352,6 @@ type GetProjectResp struct {
 	JSON200                   *Project
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -27538,6 +35410,112 @@ func (r UpdateProjectResp) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r UpdateProjectResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RemoveProjectTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *RemoveTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r RemoveProjectTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RemoveProjectTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RemoveProjectTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListProjectTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListProjectTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListProjectTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListProjectTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type AddProjectTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r AddProjectTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AddProjectTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r AddProjectTagsResp) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -27851,6 +35829,112 @@ func (r GetPromptLabelResp) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r GetPromptLabelResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RemovePromptTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *RemoveTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r RemovePromptTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RemovePromptTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RemovePromptTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListPromptTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListPromptTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListPromptTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListPromptTagsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type AddPromptTagsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListTagsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r AddPromptTagsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AddPromptTagsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r AddPromptTagsResp) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -28246,6 +36330,7 @@ type CreateRoleResp struct {
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON409 *Conflict
 	ApplicationproblemJSON422 *UnprocessableEntity
 	ApplicationproblemJSON429 *RateLimitExceeded
@@ -28282,6 +36367,7 @@ type DeleteRoleResp struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -28315,6 +36401,7 @@ type GetRoleResp struct {
 	JSON200                   *Role
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -28386,7 +36473,7 @@ type ListSpacesResp struct {
 	JSON200                   *ListSpacesResponse
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -28491,7 +36578,6 @@ type GetSpaceResp struct {
 	JSON200                   *Space
 	ApplicationproblemJSON400 *BadRequest
 	ApplicationproblemJSON401 *Unauthorized
-	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
@@ -28729,6 +36815,114 @@ func (r AnnotateSpansResp) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r AnnotateSpansResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateTagResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON201                   *Tag
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateTagResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateTagResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateTagResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteTagResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteTagResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteTagResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteTagResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateTagResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Tag
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateTagResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateTagResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateTagResp) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -29331,6 +37525,394 @@ func (r ResetUserPasswordResp) ContentType() string {
 	return ""
 }
 
+type ListWebhookSubscriptionsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListWebhookSubscriptionsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListWebhookSubscriptionsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListWebhookSubscriptionsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListWebhookSubscriptionsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateWebhookSubscriptionResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON201                   *CreateWebhookSubscriptionResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateWebhookSubscriptionResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateWebhookSubscriptionResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateWebhookSubscriptionResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteWebhookSubscriptionResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteWebhookSubscriptionResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteWebhookSubscriptionResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteWebhookSubscriptionResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetWebhookSubscriptionResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *WebhookSubscription
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r GetWebhookSubscriptionResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetWebhookSubscriptionResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetWebhookSubscriptionResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListWebhooksResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListWebhooksResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListWebhooksResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListWebhooksResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListWebhooksResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateWebhookResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON201                   *CreateWebhookResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateWebhookResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateWebhookResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateWebhookResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteWebhookResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteWebhookResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteWebhookResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteWebhookResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetWebhookResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Webhook
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r GetWebhookResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetWebhookResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetWebhookResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateWebhookResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *Webhook
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
+	ApplicationproblemJSON422 *UnprocessableEntity
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateWebhookResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateWebhookResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateWebhookResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListWebhookDeliveryAttemptsResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *ListWebhookDeliveryAttemptsResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+}
+
+// Status returns HTTPResponse.Status
+func (r ListWebhookDeliveryAttemptsResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListWebhookDeliveryAttemptsResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListWebhookDeliveryAttemptsResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type TestWebhookResp struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	JSON200                   *TestWebhookResponse
+	ApplicationproblemJSON400 *BadRequest
+	ApplicationproblemJSON401 *Unauthorized
+	ApplicationproblemJSON403 *Forbidden
+	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON429 *RateLimitExceeded
+	ApplicationproblemJSON503 *ServiceUnavailable
+}
+
+// Status returns HTTPResponse.Status
+func (r TestWebhookResp) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TestWebhookResp) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r TestWebhookResp) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 // ListAiIntegrationsWithResponse request returning *ListAiIntegrationsResp
 func (c *ClientWithResponses) ListAiIntegrationsWithResponse(ctx context.Context, params *ListAiIntegrationsParams, reqEditors ...RequestEditorFn) (*ListAiIntegrationsResp, error) {
 	rsp, err := c.ListAiIntegrations(ctx, params, reqEditors...)
@@ -29451,6 +38033,32 @@ func (c *ClientWithResponses) UpdateAnnotationConfigWithResponse(ctx context.Con
 		return nil, err
 	}
 	return ParseUpdateAnnotationConfigResp(rsp)
+}
+
+// ListAnnotationConfigTagsWithResponse request returning *ListAnnotationConfigTagsResp
+func (c *ClientWithResponses) ListAnnotationConfigTagsWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, reqEditors ...RequestEditorFn) (*ListAnnotationConfigTagsResp, error) {
+	rsp, err := c.ListAnnotationConfigTags(ctx, annotationConfigId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAnnotationConfigTagsResp(rsp)
+}
+
+// AddAnnotationConfigTagsWithBodyWithResponse request with arbitrary body returning *AddAnnotationConfigTagsResp
+func (c *ClientWithResponses) AddAnnotationConfigTagsWithBodyWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddAnnotationConfigTagsResp, error) {
+	rsp, err := c.AddAnnotationConfigTagsWithBody(ctx, annotationConfigId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddAnnotationConfigTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) AddAnnotationConfigTagsWithResponse(ctx context.Context, annotationConfigId AnnotationConfigIdPathParam, body AddAnnotationConfigTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddAnnotationConfigTagsResp, error) {
+	rsp, err := c.AddAnnotationConfigTags(ctx, annotationConfigId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddAnnotationConfigTagsResp(rsp)
 }
 
 // ListAnnotationQueuesWithResponse request returning *ListAnnotationQueuesResp
@@ -29589,6 +38197,32 @@ func (c *ClientWithResponses) AssignAnnotationQueueRecordWithResponse(ctx contex
 		return nil, err
 	}
 	return ParseAssignAnnotationQueueRecordResp(rsp)
+}
+
+// ListAnnotationQueueTagsWithResponse request returning *ListAnnotationQueueTagsResp
+func (c *ClientWithResponses) ListAnnotationQueueTagsWithResponse(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, reqEditors ...RequestEditorFn) (*ListAnnotationQueueTagsResp, error) {
+	rsp, err := c.ListAnnotationQueueTags(ctx, annotationQueueId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAnnotationQueueTagsResp(rsp)
+}
+
+// AddAnnotationQueueTagsWithBodyWithResponse request with arbitrary body returning *AddAnnotationQueueTagsResp
+func (c *ClientWithResponses) AddAnnotationQueueTagsWithBodyWithResponse(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddAnnotationQueueTagsResp, error) {
+	rsp, err := c.AddAnnotationQueueTagsWithBody(ctx, annotationQueueId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddAnnotationQueueTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) AddAnnotationQueueTagsWithResponse(ctx context.Context, annotationQueueId AnnotationQueueIdPathParam, body AddAnnotationQueueTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddAnnotationQueueTagsResp, error) {
+	rsp, err := c.AddAnnotationQueueTags(ctx, annotationQueueId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddAnnotationQueueTagsResp(rsp)
 }
 
 // ListApiKeysWithResponse request returning *ListApiKeysResp
@@ -29790,6 +38424,75 @@ func (c *ClientWithResponses) AnnotateDatasetExamplesWithResponse(ctx context.Co
 	return ParseAnnotateDatasetExamplesResp(rsp)
 }
 
+// SearchDatasetExamplesWithBodyWithResponse request with arbitrary body returning *SearchDatasetExamplesResp
+func (c *ClientWithResponses) SearchDatasetExamplesWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SearchDatasetExamplesResp, error) {
+	rsp, err := c.SearchDatasetExamplesWithBody(ctx, datasetId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSearchDatasetExamplesResp(rsp)
+}
+
+func (c *ClientWithResponses) SearchDatasetExamplesWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body SearchDatasetExamplesJSONRequestBody, reqEditors ...RequestEditorFn) (*SearchDatasetExamplesResp, error) {
+	rsp, err := c.SearchDatasetExamples(ctx, datasetId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSearchDatasetExamplesResp(rsp)
+}
+
+// RemoveDatasetTagsWithBodyWithResponse request with arbitrary body returning *RemoveDatasetTagsResp
+func (c *ClientWithResponses) RemoveDatasetTagsWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemoveDatasetTagsResp, error) {
+	rsp, err := c.RemoveDatasetTagsWithBody(ctx, datasetId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveDatasetTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) RemoveDatasetTagsWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body RemoveDatasetTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*RemoveDatasetTagsResp, error) {
+	rsp, err := c.RemoveDatasetTags(ctx, datasetId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveDatasetTagsResp(rsp)
+}
+
+// ListDatasetTagsWithResponse request returning *ListDatasetTagsResp
+func (c *ClientWithResponses) ListDatasetTagsWithResponse(ctx context.Context, datasetId DatasetIdPathParam, reqEditors ...RequestEditorFn) (*ListDatasetTagsResp, error) {
+	rsp, err := c.ListDatasetTags(ctx, datasetId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListDatasetTagsResp(rsp)
+}
+
+// AddDatasetTagsWithBodyWithResponse request with arbitrary body returning *AddDatasetTagsResp
+func (c *ClientWithResponses) AddDatasetTagsWithBodyWithResponse(ctx context.Context, datasetId DatasetIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddDatasetTagsResp, error) {
+	rsp, err := c.AddDatasetTagsWithBody(ctx, datasetId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddDatasetTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) AddDatasetTagsWithResponse(ctx context.Context, datasetId DatasetIdPathParam, body AddDatasetTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddDatasetTagsResp, error) {
+	rsp, err := c.AddDatasetTags(ctx, datasetId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddDatasetTagsResp(rsp)
+}
+
+// ListEvaluatorTemplatesWithResponse request returning *ListEvaluatorTemplatesResp
+func (c *ClientWithResponses) ListEvaluatorTemplatesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListEvaluatorTemplatesResp, error) {
+	rsp, err := c.ListEvaluatorTemplates(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListEvaluatorTemplatesResp(rsp)
+}
+
 // GetEvaluatorVersionWithResponse request returning *GetEvaluatorVersionResp
 func (c *ClientWithResponses) GetEvaluatorVersionWithResponse(ctx context.Context, versionId EvaluatorVersionIdPathParam, reqEditors ...RequestEditorFn) (*GetEvaluatorVersionResp, error) {
 	rsp, err := c.GetEvaluatorVersion(ctx, versionId, reqEditors...)
@@ -29858,6 +38561,66 @@ func (c *ClientWithResponses) UpdateEvaluatorWithResponse(ctx context.Context, e
 		return nil, err
 	}
 	return ParseUpdateEvaluatorResp(rsp)
+}
+
+// RemoveEvaluatorTagsWithBodyWithResponse request with arbitrary body returning *RemoveEvaluatorTagsResp
+func (c *ClientWithResponses) RemoveEvaluatorTagsWithBodyWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemoveEvaluatorTagsResp, error) {
+	rsp, err := c.RemoveEvaluatorTagsWithBody(ctx, evaluatorId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveEvaluatorTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) RemoveEvaluatorTagsWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, body RemoveEvaluatorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*RemoveEvaluatorTagsResp, error) {
+	rsp, err := c.RemoveEvaluatorTags(ctx, evaluatorId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveEvaluatorTagsResp(rsp)
+}
+
+// ListEvaluatorTagsWithResponse request returning *ListEvaluatorTagsResp
+func (c *ClientWithResponses) ListEvaluatorTagsWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, reqEditors ...RequestEditorFn) (*ListEvaluatorTagsResp, error) {
+	rsp, err := c.ListEvaluatorTags(ctx, evaluatorId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListEvaluatorTagsResp(rsp)
+}
+
+// AddEvaluatorTagsWithBodyWithResponse request with arbitrary body returning *AddEvaluatorTagsResp
+func (c *ClientWithResponses) AddEvaluatorTagsWithBodyWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddEvaluatorTagsResp, error) {
+	rsp, err := c.AddEvaluatorTagsWithBody(ctx, evaluatorId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddEvaluatorTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) AddEvaluatorTagsWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, body AddEvaluatorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddEvaluatorTagsResp, error) {
+	rsp, err := c.AddEvaluatorTags(ctx, evaluatorId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddEvaluatorTagsResp(rsp)
+}
+
+// DeleteEvaluatorVersionsWithBodyWithResponse request with arbitrary body returning *DeleteEvaluatorVersionsResp
+func (c *ClientWithResponses) DeleteEvaluatorVersionsWithBodyWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteEvaluatorVersionsResp, error) {
+	rsp, err := c.DeleteEvaluatorVersionsWithBody(ctx, evaluatorId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteEvaluatorVersionsResp(rsp)
+}
+
+func (c *ClientWithResponses) DeleteEvaluatorVersionsWithResponse(ctx context.Context, evaluatorId EvaluatorIdPathParam, body DeleteEvaluatorVersionsJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteEvaluatorVersionsResp, error) {
+	rsp, err := c.DeleteEvaluatorVersions(ctx, evaluatorId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteEvaluatorVersionsResp(rsp)
 }
 
 // ListEvaluatorVersionsWithResponse request returning *ListEvaluatorVersionsResp
@@ -29973,6 +38736,49 @@ func (c *ClientWithResponses) AnnotateExperimentRunsWithResponse(ctx context.Con
 	return ParseAnnotateExperimentRunsResp(rsp)
 }
 
+// SearchExperimentRunsWithBodyWithResponse request with arbitrary body returning *SearchExperimentRunsResp
+func (c *ClientWithResponses) SearchExperimentRunsWithBodyWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SearchExperimentRunsResp, error) {
+	rsp, err := c.SearchExperimentRunsWithBody(ctx, experimentId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSearchExperimentRunsResp(rsp)
+}
+
+func (c *ClientWithResponses) SearchExperimentRunsWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, body SearchExperimentRunsJSONRequestBody, reqEditors ...RequestEditorFn) (*SearchExperimentRunsResp, error) {
+	rsp, err := c.SearchExperimentRuns(ctx, experimentId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSearchExperimentRunsResp(rsp)
+}
+
+// ListExperimentTagsWithResponse request returning *ListExperimentTagsResp
+func (c *ClientWithResponses) ListExperimentTagsWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, reqEditors ...RequestEditorFn) (*ListExperimentTagsResp, error) {
+	rsp, err := c.ListExperimentTags(ctx, experimentId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListExperimentTagsResp(rsp)
+}
+
+// AddExperimentTagsWithBodyWithResponse request with arbitrary body returning *AddExperimentTagsResp
+func (c *ClientWithResponses) AddExperimentTagsWithBodyWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddExperimentTagsResp, error) {
+	rsp, err := c.AddExperimentTagsWithBody(ctx, experimentId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddExperimentTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) AddExperimentTagsWithResponse(ctx context.Context, experimentId ExperimentIdPathParam, body AddExperimentTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddExperimentTagsResp, error) {
+	rsp, err := c.AddExperimentTags(ctx, experimentId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddExperimentTagsResp(rsp)
+}
+
 // ListIntegrationsWithResponse request returning *ListIntegrationsResp
 func (c *ClientWithResponses) ListIntegrationsWithResponse(ctx context.Context, params *ListIntegrationsParams, reqEditors ...RequestEditorFn) (*ListIntegrationsResp, error) {
 	rsp, err := c.ListIntegrations(ctx, params, reqEditors...)
@@ -30034,13 +38840,65 @@ func (c *ClientWithResponses) UpdateIntegrationWithResponse(ctx context.Context,
 	return ParseUpdateIntegrationResp(rsp)
 }
 
-// GetMonitorsWithResponse request returning *GetMonitorsResp
-func (c *ClientWithResponses) GetMonitorsWithResponse(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*GetMonitorsResp, error) {
-	rsp, err := c.GetMonitors(ctx, monitorId, reqEditors...)
+// ListMonitorsWithResponse request returning *ListMonitorsResp
+func (c *ClientWithResponses) ListMonitorsWithResponse(ctx context.Context, params *ListMonitorsParams, reqEditors ...RequestEditorFn) (*ListMonitorsResp, error) {
+	rsp, err := c.ListMonitors(ctx, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetMonitorsResp(rsp)
+	return ParseListMonitorsResp(rsp)
+}
+
+// GetMonitorWithResponse request returning *GetMonitorResp
+func (c *ClientWithResponses) GetMonitorWithResponse(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*GetMonitorResp, error) {
+	rsp, err := c.GetMonitor(ctx, monitorId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetMonitorResp(rsp)
+}
+
+// RemoveMonitorTagsWithBodyWithResponse request with arbitrary body returning *RemoveMonitorTagsResp
+func (c *ClientWithResponses) RemoveMonitorTagsWithBodyWithResponse(ctx context.Context, monitorId MonitorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemoveMonitorTagsResp, error) {
+	rsp, err := c.RemoveMonitorTagsWithBody(ctx, monitorId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveMonitorTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) RemoveMonitorTagsWithResponse(ctx context.Context, monitorId MonitorIdPathParam, body RemoveMonitorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*RemoveMonitorTagsResp, error) {
+	rsp, err := c.RemoveMonitorTags(ctx, monitorId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveMonitorTagsResp(rsp)
+}
+
+// ListMonitorTagsWithResponse request returning *ListMonitorTagsResp
+func (c *ClientWithResponses) ListMonitorTagsWithResponse(ctx context.Context, monitorId MonitorIdPathParam, reqEditors ...RequestEditorFn) (*ListMonitorTagsResp, error) {
+	rsp, err := c.ListMonitorTags(ctx, monitorId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListMonitorTagsResp(rsp)
+}
+
+// AddMonitorTagsWithBodyWithResponse request with arbitrary body returning *AddMonitorTagsResp
+func (c *ClientWithResponses) AddMonitorTagsWithBodyWithResponse(ctx context.Context, monitorId MonitorIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddMonitorTagsResp, error) {
+	rsp, err := c.AddMonitorTagsWithBody(ctx, monitorId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddMonitorTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) AddMonitorTagsWithResponse(ctx context.Context, monitorId MonitorIdPathParam, body AddMonitorTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddMonitorTagsResp, error) {
+	rsp, err := c.AddMonitorTags(ctx, monitorId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddMonitorTagsResp(rsp)
 }
 
 // ListOrganizationsWithResponse request returning *ListOrganizationsResp
@@ -30191,6 +39049,49 @@ func (c *ClientWithResponses) UpdateProjectWithResponse(ctx context.Context, pro
 	return ParseUpdateProjectResp(rsp)
 }
 
+// RemoveProjectTagsWithBodyWithResponse request with arbitrary body returning *RemoveProjectTagsResp
+func (c *ClientWithResponses) RemoveProjectTagsWithBodyWithResponse(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemoveProjectTagsResp, error) {
+	rsp, err := c.RemoveProjectTagsWithBody(ctx, projectId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveProjectTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) RemoveProjectTagsWithResponse(ctx context.Context, projectId ProjectIdPathParam, body RemoveProjectTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*RemoveProjectTagsResp, error) {
+	rsp, err := c.RemoveProjectTags(ctx, projectId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveProjectTagsResp(rsp)
+}
+
+// ListProjectTagsWithResponse request returning *ListProjectTagsResp
+func (c *ClientWithResponses) ListProjectTagsWithResponse(ctx context.Context, projectId ProjectIdPathParam, reqEditors ...RequestEditorFn) (*ListProjectTagsResp, error) {
+	rsp, err := c.ListProjectTags(ctx, projectId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListProjectTagsResp(rsp)
+}
+
+// AddProjectTagsWithBodyWithResponse request with arbitrary body returning *AddProjectTagsResp
+func (c *ClientWithResponses) AddProjectTagsWithBodyWithResponse(ctx context.Context, projectId ProjectIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddProjectTagsResp, error) {
+	rsp, err := c.AddProjectTagsWithBody(ctx, projectId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddProjectTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) AddProjectTagsWithResponse(ctx context.Context, projectId ProjectIdPathParam, body AddProjectTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddProjectTagsResp, error) {
+	rsp, err := c.AddProjectTags(ctx, projectId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddProjectTagsResp(rsp)
+}
+
 // GetPromptVersionWithResponse request returning *GetPromptVersionResp
 func (c *ClientWithResponses) GetPromptVersionWithResponse(ctx context.Context, versionId PromptVersionIdPathParam, reqEditors ...RequestEditorFn) (*GetPromptVersionResp, error) {
 	rsp, err := c.GetPromptVersion(ctx, versionId, reqEditors...)
@@ -30294,6 +39195,49 @@ func (c *ClientWithResponses) GetPromptLabelWithResponse(ctx context.Context, pr
 		return nil, err
 	}
 	return ParseGetPromptLabelResp(rsp)
+}
+
+// RemovePromptTagsWithBodyWithResponse request with arbitrary body returning *RemovePromptTagsResp
+func (c *ClientWithResponses) RemovePromptTagsWithBodyWithResponse(ctx context.Context, promptId PromptIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RemovePromptTagsResp, error) {
+	rsp, err := c.RemovePromptTagsWithBody(ctx, promptId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemovePromptTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) RemovePromptTagsWithResponse(ctx context.Context, promptId PromptIdPathParam, body RemovePromptTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*RemovePromptTagsResp, error) {
+	rsp, err := c.RemovePromptTags(ctx, promptId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemovePromptTagsResp(rsp)
+}
+
+// ListPromptTagsWithResponse request returning *ListPromptTagsResp
+func (c *ClientWithResponses) ListPromptTagsWithResponse(ctx context.Context, promptId PromptIdPathParam, reqEditors ...RequestEditorFn) (*ListPromptTagsResp, error) {
+	rsp, err := c.ListPromptTags(ctx, promptId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListPromptTagsResp(rsp)
+}
+
+// AddPromptTagsWithBodyWithResponse request with arbitrary body returning *AddPromptTagsResp
+func (c *ClientWithResponses) AddPromptTagsWithBodyWithResponse(ctx context.Context, promptId PromptIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AddPromptTagsResp, error) {
+	rsp, err := c.AddPromptTagsWithBody(ctx, promptId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddPromptTagsResp(rsp)
+}
+
+func (c *ClientWithResponses) AddPromptTagsWithResponse(ctx context.Context, promptId PromptIdPathParam, body AddPromptTagsJSONRequestBody, reqEditors ...RequestEditorFn) (*AddPromptTagsResp, error) {
+	rsp, err := c.AddPromptTags(ctx, promptId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAddPromptTagsResp(rsp)
 }
 
 // ListPromptVersionsWithResponse request returning *ListPromptVersionsResp
@@ -30617,6 +39561,49 @@ func (c *ClientWithResponses) AnnotateSpansWithResponse(ctx context.Context, bod
 	return ParseAnnotateSpansResp(rsp)
 }
 
+// CreateTagWithBodyWithResponse request with arbitrary body returning *CreateTagResp
+func (c *ClientWithResponses) CreateTagWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateTagResp, error) {
+	rsp, err := c.CreateTagWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateTagResp(rsp)
+}
+
+func (c *ClientWithResponses) CreateTagWithResponse(ctx context.Context, body CreateTagJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTagResp, error) {
+	rsp, err := c.CreateTag(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateTagResp(rsp)
+}
+
+// DeleteTagWithResponse request returning *DeleteTagResp
+func (c *ClientWithResponses) DeleteTagWithResponse(ctx context.Context, tagId TagIdPathParam, reqEditors ...RequestEditorFn) (*DeleteTagResp, error) {
+	rsp, err := c.DeleteTag(ctx, tagId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteTagResp(rsp)
+}
+
+// UpdateTagWithBodyWithResponse request with arbitrary body returning *UpdateTagResp
+func (c *ClientWithResponses) UpdateTagWithBodyWithResponse(ctx context.Context, tagId TagIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateTagResp, error) {
+	rsp, err := c.UpdateTagWithBody(ctx, tagId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateTagResp(rsp)
+}
+
+func (c *ClientWithResponses) UpdateTagWithResponse(ctx context.Context, tagId TagIdPathParam, body UpdateTagJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTagResp, error) {
+	rsp, err := c.UpdateTag(ctx, tagId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateTagResp(rsp)
+}
+
 // GetTaskRunWithResponse request returning *GetTaskRunResp
 func (c *ClientWithResponses) GetTaskRunWithResponse(ctx context.Context, runId TaskRunIdPathParam, reqEditors ...RequestEditorFn) (*GetTaskRunResp, error) {
 	rsp, err := c.GetTaskRun(ctx, runId, reqEditors...)
@@ -30816,6 +39803,129 @@ func (c *ClientWithResponses) ResetUserPasswordWithResponse(ctx context.Context,
 		return nil, err
 	}
 	return ParseResetUserPasswordResp(rsp)
+}
+
+// ListWebhookSubscriptionsWithResponse request returning *ListWebhookSubscriptionsResp
+func (c *ClientWithResponses) ListWebhookSubscriptionsWithResponse(ctx context.Context, params *ListWebhookSubscriptionsParams, reqEditors ...RequestEditorFn) (*ListWebhookSubscriptionsResp, error) {
+	rsp, err := c.ListWebhookSubscriptions(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListWebhookSubscriptionsResp(rsp)
+}
+
+// CreateWebhookSubscriptionWithBodyWithResponse request with arbitrary body returning *CreateWebhookSubscriptionResp
+func (c *ClientWithResponses) CreateWebhookSubscriptionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateWebhookSubscriptionResp, error) {
+	rsp, err := c.CreateWebhookSubscriptionWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateWebhookSubscriptionResp(rsp)
+}
+
+func (c *ClientWithResponses) CreateWebhookSubscriptionWithResponse(ctx context.Context, body CreateWebhookSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateWebhookSubscriptionResp, error) {
+	rsp, err := c.CreateWebhookSubscription(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateWebhookSubscriptionResp(rsp)
+}
+
+// DeleteWebhookSubscriptionWithResponse request returning *DeleteWebhookSubscriptionResp
+func (c *ClientWithResponses) DeleteWebhookSubscriptionWithResponse(ctx context.Context, subscriptionId WebhookSubscriptionIdPathParam, reqEditors ...RequestEditorFn) (*DeleteWebhookSubscriptionResp, error) {
+	rsp, err := c.DeleteWebhookSubscription(ctx, subscriptionId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteWebhookSubscriptionResp(rsp)
+}
+
+// GetWebhookSubscriptionWithResponse request returning *GetWebhookSubscriptionResp
+func (c *ClientWithResponses) GetWebhookSubscriptionWithResponse(ctx context.Context, subscriptionId WebhookSubscriptionIdPathParam, reqEditors ...RequestEditorFn) (*GetWebhookSubscriptionResp, error) {
+	rsp, err := c.GetWebhookSubscription(ctx, subscriptionId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetWebhookSubscriptionResp(rsp)
+}
+
+// ListWebhooksWithResponse request returning *ListWebhooksResp
+func (c *ClientWithResponses) ListWebhooksWithResponse(ctx context.Context, params *ListWebhooksParams, reqEditors ...RequestEditorFn) (*ListWebhooksResp, error) {
+	rsp, err := c.ListWebhooks(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListWebhooksResp(rsp)
+}
+
+// CreateWebhookWithBodyWithResponse request with arbitrary body returning *CreateWebhookResp
+func (c *ClientWithResponses) CreateWebhookWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateWebhookResp, error) {
+	rsp, err := c.CreateWebhookWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateWebhookResp(rsp)
+}
+
+func (c *ClientWithResponses) CreateWebhookWithResponse(ctx context.Context, body CreateWebhookJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateWebhookResp, error) {
+	rsp, err := c.CreateWebhook(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateWebhookResp(rsp)
+}
+
+// DeleteWebhookWithResponse request returning *DeleteWebhookResp
+func (c *ClientWithResponses) DeleteWebhookWithResponse(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*DeleteWebhookResp, error) {
+	rsp, err := c.DeleteWebhook(ctx, webhookId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteWebhookResp(rsp)
+}
+
+// GetWebhookWithResponse request returning *GetWebhookResp
+func (c *ClientWithResponses) GetWebhookWithResponse(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*GetWebhookResp, error) {
+	rsp, err := c.GetWebhook(ctx, webhookId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetWebhookResp(rsp)
+}
+
+// UpdateWebhookWithBodyWithResponse request with arbitrary body returning *UpdateWebhookResp
+func (c *ClientWithResponses) UpdateWebhookWithBodyWithResponse(ctx context.Context, webhookId WebhookIdPathParam, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateWebhookResp, error) {
+	rsp, err := c.UpdateWebhookWithBody(ctx, webhookId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateWebhookResp(rsp)
+}
+
+func (c *ClientWithResponses) UpdateWebhookWithResponse(ctx context.Context, webhookId WebhookIdPathParam, body UpdateWebhookJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateWebhookResp, error) {
+	rsp, err := c.UpdateWebhook(ctx, webhookId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateWebhookResp(rsp)
+}
+
+// ListWebhookDeliveryAttemptsWithResponse request returning *ListWebhookDeliveryAttemptsResp
+func (c *ClientWithResponses) ListWebhookDeliveryAttemptsWithResponse(ctx context.Context, webhookId WebhookIdPathParam, params *ListWebhookDeliveryAttemptsParams, reqEditors ...RequestEditorFn) (*ListWebhookDeliveryAttemptsResp, error) {
+	rsp, err := c.ListWebhookDeliveryAttempts(ctx, webhookId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListWebhookDeliveryAttemptsResp(rsp)
+}
+
+// TestWebhookWithResponse request returning *TestWebhookResp
+func (c *ClientWithResponses) TestWebhookWithResponse(ctx context.Context, webhookId WebhookIdPathParam, reqEditors ...RequestEditorFn) (*TestWebhookResp, error) {
+	rsp, err := c.TestWebhook(ctx, webhookId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTestWebhookResp(rsp)
 }
 
 // ParseListAiIntegrationsResp parses an HTTP response from a ListAiIntegrationsWithResponse call
@@ -31443,6 +40553,128 @@ func ParseUpdateAnnotationConfigResp(rsp *http.Response) (*UpdateAnnotationConfi
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAnnotationConfigTagsResp parses an HTTP response from a ListAnnotationConfigTagsWithResponse call
+func ParseListAnnotationConfigTagsResp(rsp *http.Response) (*ListAnnotationConfigTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAnnotationConfigTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAddAnnotationConfigTagsResp parses an HTTP response from a AddAnnotationConfigTagsWithResponse call
+func ParseAddAnnotationConfigTagsResp(rsp *http.Response) (*AddAnnotationConfigTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AddAnnotationConfigTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest UnprocessableEntity
@@ -32115,6 +41347,128 @@ func ParseAssignAnnotationQueueRecordResp(rsp *http.Response) (*AssignAnnotation
 	return response, nil
 }
 
+// ParseListAnnotationQueueTagsResp parses an HTTP response from a ListAnnotationQueueTagsWithResponse call
+func ParseListAnnotationQueueTagsResp(rsp *http.Response) (*ListAnnotationQueueTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAnnotationQueueTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAddAnnotationQueueTagsResp parses an HTTP response from a AddAnnotationQueueTagsWithResponse call
+func ParseAddAnnotationQueueTagsResp(rsp *http.Response) (*AddAnnotationQueueTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AddAnnotationQueueTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListApiKeysResp parses an HTTP response from a ListApiKeysWithResponse call
 func ParseListApiKeysResp(rsp *http.Response) (*ListApiKeysResp, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -32543,6 +41897,13 @@ func ParseCreateDatasetResp(rsp *http.Response) (*CreateDatasetResp, error) {
 			return nil, err
 		}
 		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
 
 	}
 
@@ -33072,6 +42433,311 @@ func ParseAnnotateDatasetExamplesResp(rsp *http.Response) (*AnnotateDatasetExamp
 	return response, nil
 }
 
+// ParseSearchDatasetExamplesResp parses an HTTP response from a SearchDatasetExamplesWithResponse call
+func ParseSearchDatasetExamplesResp(rsp *http.Response) (*SearchDatasetExamplesResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SearchDatasetExamplesResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListDatasetExamplesResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRemoveDatasetTagsResp parses an HTTP response from a RemoveDatasetTagsWithResponse call
+func ParseRemoveDatasetTagsResp(rsp *http.Response) (*RemoveDatasetTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RemoveDatasetTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RemoveTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListDatasetTagsResp parses an HTTP response from a ListDatasetTagsWithResponse call
+func ParseListDatasetTagsResp(rsp *http.Response) (*ListDatasetTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListDatasetTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAddDatasetTagsResp parses an HTTP response from a AddDatasetTagsWithResponse call
+func ParseAddDatasetTagsResp(rsp *http.Response) (*AddDatasetTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AddDatasetTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListEvaluatorTemplatesResp parses an HTTP response from a ListEvaluatorTemplatesWithResponse call
+func ParseListEvaluatorTemplatesResp(rsp *http.Response) (*ListEvaluatorTemplatesResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListEvaluatorTemplatesResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListEvaluatorTemplatesResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetEvaluatorVersionResp parses an HTTP response from a GetEvaluatorVersionWithResponse call
 func ParseGetEvaluatorVersionResp(rsp *http.Response) (*GetEvaluatorVersionResp, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -33432,6 +43098,257 @@ func ParseUpdateEvaluatorResp(rsp *http.Response) (*UpdateEvaluatorResp, error) 
 			return nil, err
 		}
 		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRemoveEvaluatorTagsResp parses an HTTP response from a RemoveEvaluatorTagsWithResponse call
+func ParseRemoveEvaluatorTagsResp(rsp *http.Response) (*RemoveEvaluatorTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RemoveEvaluatorTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RemoveTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListEvaluatorTagsResp parses an HTTP response from a ListEvaluatorTagsWithResponse call
+func ParseListEvaluatorTagsResp(rsp *http.Response) (*ListEvaluatorTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListEvaluatorTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAddEvaluatorTagsResp parses an HTTP response from a AddEvaluatorTagsWithResponse call
+func ParseAddEvaluatorTagsResp(rsp *http.Response) (*AddEvaluatorTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AddEvaluatorTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteEvaluatorVersionsResp parses an HTTP response from a DeleteEvaluatorVersionsWithResponse call
+func ParseDeleteEvaluatorVersionsResp(rsp *http.Response) (*DeleteEvaluatorVersionsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteEvaluatorVersionsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DeleteEvaluatorVersionsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -34008,6 +43925,196 @@ func ParseAnnotateExperimentRunsResp(rsp *http.Response) (*AnnotateExperimentRun
 	return response, nil
 }
 
+// ParseSearchExperimentRunsResp parses an HTTP response from a SearchExperimentRunsWithResponse call
+func ParseSearchExperimentRunsResp(rsp *http.Response) (*SearchExperimentRunsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SearchExperimentRunsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListExperimentRunsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListExperimentTagsResp parses an HTTP response from a ListExperimentTagsWithResponse call
+func ParseListExperimentTagsResp(rsp *http.Response) (*ListExperimentTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListExperimentTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAddExperimentTagsResp parses an HTTP response from a AddExperimentTagsWithResponse call
+func ParseAddExperimentTagsResp(rsp *http.Response) (*AddExperimentTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AddExperimentTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListIntegrationsResp parses an HTTP response from a ListIntegrationsWithResponse call
 func ParseListIntegrationsResp(rsp *http.Response) (*ListIntegrationsResp, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -34186,6 +44293,13 @@ func ParseDeleteIntegrationResp(rsp *http.Response) (*DeleteIntegrationResp, err
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -34327,15 +44441,76 @@ func ParseUpdateIntegrationResp(rsp *http.Response) (*UpdateIntegrationResp, err
 	return response, nil
 }
 
-// ParseGetMonitorsResp parses an HTTP response from a GetMonitorsWithResponse call
-func ParseGetMonitorsResp(rsp *http.Response) (*GetMonitorsResp, error) {
+// ParseListMonitorsResp parses an HTTP response from a ListMonitorsWithResponse call
+func ParseListMonitorsResp(rsp *http.Response) (*ListMonitorsResp, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetMonitorsResp{
+	response := &ListMonitorsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListMonitorsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetMonitorResp parses an HTTP response from a GetMonitorWithResponse call
+func ParseGetMonitorResp(rsp *http.Response) (*GetMonitorResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetMonitorResp{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -34368,6 +44543,196 @@ func ParseGetMonitorsResp(rsp *http.Response) (*GetMonitorsResp, error) {
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRemoveMonitorTagsResp parses an HTTP response from a RemoveMonitorTagsWithResponse call
+func ParseRemoveMonitorTagsResp(rsp *http.Response) (*RemoveMonitorTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RemoveMonitorTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RemoveTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListMonitorTagsResp parses an HTTP response from a ListMonitorTagsWithResponse call
+func ParseListMonitorTagsResp(rsp *http.Response) (*ListMonitorTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListMonitorTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAddMonitorTagsResp parses an HTTP response from a AddMonitorTagsWithResponse call
+func ParseAddMonitorTagsResp(rsp *http.Response) (*AddMonitorTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AddMonitorTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -35026,13 +45391,6 @@ func ParseGetProjectResp(rsp *http.Response) (*GetProjectResp, error) {
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -35068,6 +45426,196 @@ func ParseUpdateProjectResp(rsp *http.Response) (*UpdateProjectResp, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Project
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRemoveProjectTagsResp parses an HTTP response from a RemoveProjectTagsWithResponse call
+func ParseRemoveProjectTagsResp(rsp *http.Response) (*RemoveProjectTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RemoveProjectTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RemoveTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListProjectTagsResp parses an HTTP response from a ListProjectTagsWithResponse call
+func ParseListProjectTagsResp(rsp *http.Response) (*ListProjectTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListProjectTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAddProjectTagsResp parses an HTTP response from a AddProjectTagsWithResponse call
+func ParseAddProjectTagsResp(rsp *http.Response) (*AddProjectTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AddProjectTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -35642,6 +46190,196 @@ func ParseGetPromptLabelResp(rsp *http.Response) (*GetPromptLabelResp, error) {
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRemovePromptTagsResp parses an HTTP response from a RemovePromptTagsWithResponse call
+func ParseRemovePromptTagsResp(rsp *http.Response) (*RemovePromptTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RemovePromptTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RemoveTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListPromptTagsResp parses an HTTP response from a ListPromptTagsWithResponse call
+func ParseListPromptTagsResp(rsp *http.Response) (*ListPromptTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListPromptTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAddPromptTagsResp parses an HTTP response from a AddPromptTagsWithResponse call
+func ParseAddPromptTagsResp(rsp *http.Response) (*AddPromptTagsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AddPromptTagsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListTagsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -36347,6 +47085,13 @@ func ParseCreateRoleResp(rsp *http.Response) (*CreateRoleResp, error) {
 		}
 		response.ApplicationproblemJSON403 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
 		var dest Conflict
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -36415,6 +47160,13 @@ func ParseDeleteRoleResp(rsp *http.Response) (*DeleteRoleResp, error) {
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -36461,6 +47213,13 @@ func ParseGetRoleResp(rsp *http.Response) (*GetRoleResp, error) {
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
@@ -36591,12 +47350,12 @@ func ParseListSpacesResp(rsp *http.Response) (*ListSpacesResp, error) {
 		}
 		response.ApplicationproblemJSON401 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.ApplicationproblemJSON403 = &dest
+		response.ApplicationproblemJSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
@@ -36773,13 +47532,6 @@ func ParseGetSpaceResp(rsp *http.Response) (*GetSpaceResp, error) {
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest Forbidden
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.ApplicationproblemJSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NotFound
@@ -37181,6 +47933,210 @@ func ParseAnnotateSpansResp(rsp *http.Response) (*AnnotateSpansResp, error) {
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateTagResp parses an HTTP response from a CreateTagWithResponse call
+func ParseCreateTagResp(rsp *http.Response) (*CreateTagResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateTagResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Tag
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteTagResp parses an HTTP response from a DeleteTagWithResponse call
+func ParseDeleteTagResp(rsp *http.Response) (*DeleteTagResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteTagResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateTagResp parses an HTTP response from a UpdateTagWithResponse call
+func ParseUpdateTagResp(rsp *http.Response) (*UpdateTagResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateTagResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Tag
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest UnprocessableEntity
@@ -38239,6 +49195,698 @@ func ParseResetUserPasswordResp(rsp *http.Response) (*ResetUserPasswordResp, err
 			return nil, err
 		}
 		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListWebhookSubscriptionsResp parses an HTTP response from a ListWebhookSubscriptionsWithResponse call
+func ParseListWebhookSubscriptionsResp(rsp *http.Response) (*ListWebhookSubscriptionsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListWebhookSubscriptionsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListWebhookSubscriptionsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateWebhookSubscriptionResp parses an HTTP response from a CreateWebhookSubscriptionWithResponse call
+func ParseCreateWebhookSubscriptionResp(rsp *http.Response) (*CreateWebhookSubscriptionResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateWebhookSubscriptionResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest CreateWebhookSubscriptionResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteWebhookSubscriptionResp parses an HTTP response from a DeleteWebhookSubscriptionWithResponse call
+func ParseDeleteWebhookSubscriptionResp(rsp *http.Response) (*DeleteWebhookSubscriptionResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteWebhookSubscriptionResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetWebhookSubscriptionResp parses an HTTP response from a GetWebhookSubscriptionWithResponse call
+func ParseGetWebhookSubscriptionResp(rsp *http.Response) (*GetWebhookSubscriptionResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetWebhookSubscriptionResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest WebhookSubscription
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListWebhooksResp parses an HTTP response from a ListWebhooksWithResponse call
+func ParseListWebhooksResp(rsp *http.Response) (*ListWebhooksResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListWebhooksResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListWebhooksResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateWebhookResp parses an HTTP response from a CreateWebhookWithResponse call
+func ParseCreateWebhookResp(rsp *http.Response) (*CreateWebhookResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateWebhookResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest CreateWebhookResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteWebhookResp parses an HTTP response from a DeleteWebhookWithResponse call
+func ParseDeleteWebhookResp(rsp *http.Response) (*DeleteWebhookResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteWebhookResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetWebhookResp parses an HTTP response from a GetWebhookWithResponse call
+func ParseGetWebhookResp(rsp *http.Response) (*GetWebhookResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetWebhookResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Webhook
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateWebhookResp parses an HTTP response from a UpdateWebhookWithResponse call
+func ParseUpdateWebhookResp(rsp *http.Response) (*UpdateWebhookResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateWebhookResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Webhook
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnprocessableEntity
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListWebhookDeliveryAttemptsResp parses an HTTP response from a ListWebhookDeliveryAttemptsWithResponse call
+func ParseListWebhookDeliveryAttemptsResp(rsp *http.Response) (*ListWebhookDeliveryAttemptsResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListWebhookDeliveryAttemptsResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListWebhookDeliveryAttemptsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTestWebhookResp parses an HTTP response from a TestWebhookWithResponse call
+func ParseTestWebhookResp(rsp *http.Response) (*TestWebhookResp, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TestWebhookResp{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TestWebhookResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest BadRequest
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest ServiceUnavailable
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON503 = &dest
 
 	}
 

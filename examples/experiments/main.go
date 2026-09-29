@@ -182,7 +182,10 @@ func appendRuns(ctx context.Context, client *arize.Client, experimentID string) 
 	fmt.Printf("appended %d run(s) to experiment %s\n", len(result.RunIds), result.Id)
 }
 
-// listRuns lists the runs recorded for an experiment.
+// listRuns lists the runs recorded for an experiment, optionally narrowed by
+// a SQL-like filter. The filter can reference the unprefixed run columns id,
+// output, and example_id, custom run columns, and evaluator results such as
+// eval.<name>.score.
 func listRuns(ctx context.Context, client *arize.Client, experiment, dataset, space string) {
 	resp, err := client.Experiments.ListRuns(ctx, experiments.ListRunsRequest{
 		Experiment: experiment,
@@ -197,6 +200,19 @@ func listRuns(ctx context.Context, client *arize.Client, experiment, dataset, sp
 	if resp.Pagination.HasMore {
 		fmt.Println("  (more pages available)")
 	}
+
+	filter := "eval.correctness.score < 0.8"
+	filtered, err := client.Experiments.ListRuns(ctx, experiments.ListRunsRequest{
+		Experiment: experiment,
+		Dataset:    dataset,
+		Space:      space,
+		Filter:     filter,
+		Limit:      50,
+	})
+	if err != nil {
+		log.Fatalf("list runs with filter: %v", err)
+	}
+	fmt.Printf("experiment %q has %d matching run(s) on this page\n", experiment, len(filtered.ExperimentRuns))
 }
 
 func deleteExperiment(ctx context.Context, client *arize.Client, experimentID string) {

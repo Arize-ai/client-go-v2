@@ -118,10 +118,10 @@ type (
 	CreateApiKeyResponse  = generated.CreateApiKeyResponse
 	RefreshApiKeyResponse = generated.RefreshApiKeyResponse
 
-	// UserApiKeyCreated is the response body when a user API key is created.
-	UserApiKeyCreated = generated.UserApiKeyCreated
-	// ServiceApiKeyCreated is the response body when a service API key is created.
-	ServiceApiKeyCreated = generated.ServiceApiKeyCreated
+	// CreatedUserApiKey is the response body when a user API key is created.
+	CreatedUserApiKey = generated.CreatedUserApiKey
+	// CreatedServiceApiKey is the response body when a service API key is created.
+	CreatedServiceApiKey = generated.CreatedServiceApiKey
 
 	// APIKeyType is the type of an API key (user or service). Shared across
 	// responses, create requests, and list filters.

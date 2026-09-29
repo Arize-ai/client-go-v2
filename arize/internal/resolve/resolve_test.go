@@ -110,6 +110,13 @@ func TestFind_NameWithoutSpace_Errors(t *testing.T) {
 			},
 			wantHintContains: "space",
 		},
+		{
+			name: "FindWebhookID requires organization",
+			invoke: func(ctx context.Context, gen *generated.ClientWithResponses) (string, error) {
+				return resolve.FindWebhookID(ctx, gen, "my-hook", "")
+			},
+			wantHintContains: "organization",
+		},
 	}
 
 	for _, tt := range tests {
@@ -444,6 +451,163 @@ func TestFindUserID(t *testing.T) {
 			}
 			if got != tt.wantID {
 				t.Errorf("FindUserID = %q, want %q", got, tt.wantID)
+			}
+		})
+	}
+}
+
+func TestFindWebhookID(t *testing.T) {
+	tests := []struct {
+		name         string
+		setup        func(t *testing.T) *generated.ClientWithResponses
+		input        string
+		organization string
+		wantID       string
+		wantErr      func(t *testing.T, err error)
+	}{
+		{
+			name:  "passes through resource ID",
+			input: b64("wh-1"),
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					t.Errorf("server should not have been hit when input is an ID: %s %s", r.Method, r.URL.Path)
+					w.WriteHeader(500)
+				})
+			},
+			wantID: b64("wh-1"),
+		},
+		{
+			name:         "resolves by name with organization ID",
+			input:        "my-hook",
+			organization: b64("org-1"),
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					if r.URL.Path != "/v2/webhooks" {
+						t.Errorf("path: want /v2/webhooks, got %s", r.URL.Path)
+					}
+					if got := r.URL.Query().Get("name"); got != "my-hook" {
+						t.Errorf("name query: want my-hook, got %q", got)
+					}
+					if got := r.URL.Query().Get("org_id"); got != b64("org-1") {
+						t.Errorf("org_id query: want %q, got %q", b64("org-1"), got)
+					}
+					w.Header().Set("Content-Type", "application/json")
+					_, _ = w.Write([]byte(`{"webhooks":[{"id":"` + b64("wh-real") + `","name":"my-hook"},{"id":"` + b64("wh-sub") + `","name":"my-hook-2"}],"pagination":{"has_more":false}}`))
+				})
+			},
+			wantID: b64("wh-real"),
+		},
+		{
+			name:         "resolves organization name before listing",
+			input:        "my-hook",
+			organization: "acme",
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Set("Content-Type", "application/json")
+					switch r.URL.Path {
+					case "/v2/organizations":
+						_, _ = w.Write([]byte(`{"organizations":[{"id":"` + b64("org-acme") + `","name":"acme"}],"pagination":{"has_more":false}}`))
+					case "/v2/webhooks":
+						if got := r.URL.Query().Get("org_id"); got != b64("org-acme") {
+							t.Errorf("org_id query: want %q, got %q", b64("org-acme"), got)
+						}
+						_, _ = w.Write([]byte(`{"webhooks":[{"id":"` + b64("wh-real") + `","name":"my-hook"}],"pagination":{"has_more":false}}`))
+					default:
+						t.Errorf("unexpected path %s", r.URL.Path)
+						w.WriteHeader(500)
+					}
+				})
+			},
+			wantID: b64("wh-real"),
+		},
+		{
+			name:         "follows pagination to a later page",
+			input:        "my-hook",
+			organization: b64("org-1"),
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Set("Content-Type", "application/json")
+					if r.URL.Query().Get("cursor") == "" {
+						_, _ = w.Write([]byte(`{"webhooks":[{"id":"` + b64("wh-a") + `","name":"my-hook-a"}],"pagination":{"has_more":true,"next_cursor":"page2"}}`))
+						return
+					}
+					_, _ = w.Write([]byte(`{"webhooks":[{"id":"` + b64("wh-real") + `","name":"my-hook"}],"pagination":{"has_more":false}}`))
+				})
+			},
+			wantID: b64("wh-real"),
+		},
+		{
+			name:         "not found returns error with available names",
+			input:        "missing",
+			organization: b64("org-1"),
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Set("Content-Type", "application/json")
+					_, _ = w.Write([]byte(`{"webhooks":[{"id":"` + b64("wh-other") + `","name":"missing-prod"}],"pagination":{"has_more":false}}`))
+				})
+			},
+			wantErr: func(t *testing.T, err error) {
+				t.Helper()
+				var rnfe *resolve.ResourceNotFoundError
+				if !errors.As(err, &rnfe) {
+					t.Fatalf("want *ResourceNotFoundError, got %T: %v", err, err)
+				}
+				if rnfe.ResourceType != "webhook" {
+					t.Errorf("ResourceType: want webhook, got %q", rnfe.ResourceType)
+				}
+				if rnfe.Name != "missing" {
+					t.Errorf("Name: want missing, got %q", rnfe.Name)
+				}
+				if len(rnfe.Available) != 1 || rnfe.Available[0] != "missing-prod" {
+					t.Errorf("Available: want [missing-prod], got %v", rnfe.Available)
+				}
+			},
+		},
+		{
+			name:         "unknown organization name surfaces organization not found",
+			input:        "my-hook",
+			organization: "ghost",
+			setup: func(t *testing.T) *generated.ClientWithResponses {
+				t.Helper()
+				return newTestGen(t, func(w http.ResponseWriter, r *http.Request) {
+					if r.URL.Path != "/v2/organizations" {
+						t.Errorf("unexpected path %s", r.URL.Path)
+					}
+					w.Header().Set("Content-Type", "application/json")
+					_, _ = w.Write([]byte(`{"organizations":[],"pagination":{"has_more":false}}`))
+				})
+			},
+			wantErr: func(t *testing.T, err error) {
+				t.Helper()
+				var rnfe *resolve.ResourceNotFoundError
+				if !errors.As(err, &rnfe) {
+					t.Fatalf("want *ResourceNotFoundError, got %T: %v", err, err)
+				}
+				if rnfe.ResourceType != "organization" {
+					t.Errorf("ResourceType: want organization, got %q", rnfe.ResourceType)
+				}
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gen := tt.setup(t)
+			got, err := resolve.FindWebhookID(context.Background(), gen, tt.input, tt.organization)
+			if tt.wantErr != nil {
+				tt.wantErr(t, err)
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got != tt.wantID {
+				t.Errorf("want %q, got %q", tt.wantID, got)
 			}
 		})
 	}

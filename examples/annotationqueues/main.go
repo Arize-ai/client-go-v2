@@ -98,7 +98,7 @@ func getQueue(ctx context.Context, client *arize.Client, queue, space string) {
 }
 
 // addRecords adds spans from a project (over the last 24 hours) to the queue.
-// Build a record source with NewSpanRecordSource or NewExampleRecordSource.
+// Other record types use the corresponding New*RecordSource constructor.
 func addRecords(ctx context.Context, client *arize.Client, queue, space, projectID string) {
 	now := time.Now()
 	src, err := annotationqueues.NewSpanRecordSource(

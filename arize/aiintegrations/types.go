@@ -43,10 +43,19 @@ const (
 	AIIntegrationProviderCustom      AIIntegrationProvider = generated.AiIntegrationProviderCUSTOM
 	AIIntegrationProviderNvidiaNim   AIIntegrationProvider = generated.AiIntegrationProviderNVIDIANIM
 	AIIntegrationProviderGemini      AIIntegrationProvider = generated.AiIntegrationProviderGEMINI
+	AIIntegrationProviderLiteLLM     AIIntegrationProvider = generated.AiIntegrationProviderLITELLM
+	AIIntegrationProviderFireworks   AIIntegrationProvider = generated.AiIntegrationProviderFIREWORKS
+	AIIntegrationProviderTogetherAi  AIIntegrationProvider = generated.AiIntegrationProviderTOGETHERAI
 
 	AIIntegrationAuthTypeDefault          AIIntegrationAuthType = generated.AiIntegrationAuthTypeDEFAULT
 	AIIntegrationAuthTypeProxyWithHeaders AIIntegrationAuthType = generated.AiIntegrationAuthTypePROXYWITHHEADERS
 	AIIntegrationAuthTypeBearerToken      AIIntegrationAuthType = generated.AiIntegrationAuthTypeBEARERTOKEN
+
+	// AIIntegrationAuthTypeOAuth2ClientCredentials is read-only: it is reported
+	// for integrations configured with OAuth 2.0 client credentials in the
+	// Arize UI. Setting it on Create or Update is rejected by the API, which
+	// carries no field for the OAuth credentials.
+	AIIntegrationAuthTypeOAuth2ClientCredentials AIIntegrationAuthType = generated.AiIntegrationAuthTypeOAUTH2CLIENTCREDENTIALS
 )
 
 // ListRequest is the request shape for Client.List.

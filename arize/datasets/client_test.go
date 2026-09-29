@@ -68,6 +68,15 @@ type wireDeleteExamples struct {
 	ExampleIds       []string `json:"example_ids"`
 }
 
+// wireListExamples mirrors the JSON shape of the ListExamples
+// (examples/search) request body.
+type wireListExamples struct {
+	Filter           *string `json:"filter,omitempty"`
+	Limit            *int32  `json:"limit,omitempty"`
+	Cursor           *string `json:"cursor,omitempty"`
+	DatasetVersionId *string `json:"dataset_version_id,omitempty"`
+}
+
 // wireAnnotate mirrors the JSON shape of the AnnotateExamples request body.
 type wireAnnotate struct {
 	Annotations []struct {
@@ -368,17 +377,24 @@ func TestDatasets(t *testing.T) {
 		{
 			name: "ListExamples",
 			handler: func(w http.ResponseWriter, r *http.Request) {
-				if r.Method != http.MethodGet {
-					t.Errorf("expected GET, got %s", r.Method)
+				if r.Method != http.MethodPost {
+					t.Errorf("expected POST, got %s", r.Method)
 				}
-				if r.URL.Path != "/v2/datasets/"+dsID+"/examples" {
+				if r.URL.Path != "/v2/datasets/"+dsID+"/examples/search" {
 					t.Errorf("unexpected path: %s", r.URL.Path)
 				}
-				if got := r.URL.Query().Get("dataset_version_id"); got != "v-1" {
-					t.Errorf("dataset_version_id query: want v-1, got %s", got)
+				var body wireListExamples
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
 				}
-				if got := r.URL.Query().Get("limit"); got != "10" {
-					t.Errorf("limit query: want 10, got %s", got)
+				if body.Filter != nil {
+					t.Errorf("body filter: want nil, got %v", body.Filter)
+				}
+				if body.Limit == nil || *body.Limit != 10 {
+					t.Errorf("body limit: %v", body.Limit)
+				}
+				if body.DatasetVersionId == nil || *body.DatasetVersionId != "v-1" {
+					t.Errorf("body dataset_version_id: %v", body.DatasetVersionId)
 				}
 				exampleID := "ex-1"
 				w.Header().Set("Content-Type", "application/json")
@@ -405,10 +421,65 @@ func TestDatasets(t *testing.T) {
 			},
 		},
 		{
+			name: "ListExamples_Filter",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodPost {
+					t.Errorf("expected POST, got %s", r.Method)
+				}
+				if r.URL.Path != "/v2/datasets/"+dsID+"/examples/search" {
+					t.Errorf("unexpected path: %s", r.URL.Path)
+				}
+				var body wireListExamples
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if body.Filter == nil || *body.Filter != "input = 'What is Arize?'" {
+					t.Errorf("body filter: %v", body.Filter)
+				}
+				if body.Limit == nil || *body.Limit != 10 {
+					t.Errorf("body limit: %v", body.Limit)
+				}
+				if body.Cursor == nil || *body.Cursor != "tok-123" {
+					t.Errorf("body cursor: %v", body.Cursor)
+				}
+				if body.DatasetVersionId == nil || *body.DatasetVersionId != "v-1" {
+					t.Errorf("body dataset_version_id: %v", body.DatasetVersionId)
+				}
+				exampleID := "ex-1"
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(datasets.ListDatasetExamples{
+					Examples:   []datasets.DatasetExample{{Id: &exampleID}},
+					Pagination: arize.PaginationMetadata{HasMore: false},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Datasets.ListExamples(ctx, datasets.ListExamplesRequest{
+					Dataset:          dsID,
+					Filter:           "input = 'What is Arize?'",
+					Limit:            10,
+					Cursor:           "tok-123",
+					DatasetVersionID: "v-1",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				resp := got.(*datasets.ListDatasetExamples)
+				if len(resp.Examples) != 1 {
+					t.Errorf("expected 1 example, got %d", len(resp.Examples))
+				}
+			},
+		},
+		{
 			name: "ListExamples_Cursor",
 			handler: func(w http.ResponseWriter, r *http.Request) {
-				if got := r.URL.Query().Get("cursor"); got != "tok-123" {
-					t.Errorf("cursor query: want tok-123, got %s", got)
+				var body wireListExamples
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if body.Cursor == nil || *body.Cursor != "tok-123" {
+					t.Errorf("body cursor: want tok-123, got %v", body.Cursor)
 				}
 				exampleID := "ex-2"
 				nextCursor := "tok-456"

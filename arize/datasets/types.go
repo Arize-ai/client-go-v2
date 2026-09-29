@@ -101,13 +101,18 @@ type DeleteRequest struct {
 }
 
 // ListExamplesRequest identifies the dataset (resolved by name or ID) and
-// pagination/filter options for listing its examples.
+// the filter/pagination options for listing its examples.
 type ListExamplesRequest struct {
 	// Dataset accepts either a dataset name or ID.
 	Dataset string
 	// Space accepts either a space name or ID. Required when Dataset is a
 	// name; ignored when Dataset is an ID.
 	Space string
+	// Filter is an optional SQL-like filter expression over example fields.
+	// Leading and trailing whitespace is trimmed. When the result is empty,
+	// no filter is applied. An invalid filter returns *arize.BadRequestError.
+	// Keep Filter unchanged when paging with Cursor.
+	Filter string
 	// Limit is the optional maximum number of items to return (max 500). When
 	// zero, the SDK applies a default of 50.
 	Limit int

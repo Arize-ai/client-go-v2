@@ -45,6 +45,8 @@
     - [List Spans](#list-spans)
     - [Delete Spans](#delete-spans)
     - [Annotate Spans](#annotate-spans)
+  - [Operations on Traces](#operations-on-traces)
+    - [List Traces](#list-traces)
   - [Operations on Datasets](#operations-on-datasets)
     - [List Datasets](#list-datasets)
     - [Get a Dataset](#get-a-dataset)
@@ -53,6 +55,7 @@
     - [Delete a Dataset](#delete-a-dataset)
     - [List Examples](#list-examples)
     - [Append Examples](#append-examples)
+    - [Update Examples](#update-examples)
     - [Delete Examples](#delete-examples)
     - [Annotate Examples](#annotate-examples)
   - [Operations on Experiments](#operations-on-experiments)
@@ -77,12 +80,17 @@
   - [Operations on Evaluators](#operations-on-evaluators)
     - [List Evaluators](#list-evaluators)
     - [Get an Evaluator](#get-an-evaluator)
-    - [Create an Evaluator](#create-an-evaluator)
+    - [Create a Template Evaluator](#create-a-template-evaluator)
+    - [Create a Code Evaluator](#create-a-code-evaluator)
+    - [Create a Remote Evaluator](#create-a-remote-evaluator)
     - [Update an Evaluator](#update-an-evaluator)
     - [Delete an Evaluator](#delete-an-evaluator)
     - [List Versions](#list-versions-1)
-    - [Create a Version](#create-a-version-1)
+    - [Create a Template Version](#create-a-template-version)
+    - [Create a Code Version](#create-a-code-version)
+    - [Create a Remote Version](#create-a-remote-version)
     - [Get a Version](#get-a-version-1)
+    - [Delete Versions](#delete-versions)
   - [Operations on Annotation Configs](#operations-on-annotation-configs)
     - [List Annotation Configs](#list-annotation-configs)
     - [Get an Annotation Config](#get-an-annotation-config)
@@ -95,6 +103,13 @@
     - [Create an AI Integration](#create-an-ai-integration)
     - [Update an AI Integration](#update-an-ai-integration)
     - [Delete an AI Integration](#delete-an-ai-integration)
+  - [Operations on Integrations](#operations-on-integrations)
+    - [List Integrations](#list-integrations)
+    - [Get an Integration](#get-an-integration)
+    - [Create an LLM Integration](#create-an-llm-integration)
+    - [Create an Agent Integration](#create-an-agent-integration)
+    - [Update an Integration](#update-an-integration)
+    - [Delete an Integration](#delete-an-integration)
   - [Operations on Organizations](#operations-on-organizations)
     - [List Organizations](#list-organizations)
     - [Get an Organization](#get-an-organization)
@@ -121,6 +136,7 @@
     - [Refresh an API Key](#refresh-an-api-key)
     - [Revoke an API Key](#revoke-an-api-key)
   - [Operations on Resource Restrictions](#operations-on-resource-restrictions)
+    - [List Resource Restrictions](#list-resource-restrictions)
     - [Restrict a Resource](#restrict-a-resource)
     - [Unrestrict a Resource](#unrestrict-a-resource)
   - [Operations on Annotation Queues](#operations-on-annotation-queues)
@@ -185,6 +201,7 @@ The Go SDK v2 currently exposes the following surface area:
   - **Spaces** — list, get, create, update, delete, and manage memberships.
   - **Projects** — list, get, create, update, delete.
   - **Spans** — list, delete, and annotate spans.
+  - **Traces** — list traces (a trace is returned when any of its spans matches the filter).
   - **Datasets** — list, get, create, update, delete, and manage examples.
   - **Experiments** — list, get, create, delete, and list their runs.
   - **Prompts** — list, get, create, update, delete, and manage versions and labels.
@@ -472,7 +489,10 @@ A full runnable example lives in [`examples/spans`](./examples/spans).
 
 ### List Spans
 
-Name-or-ID `Project`, optional time range and filter DSL.
+Name-or-ID `Project`, optional time range, filter DSL, and column projection.
+Set either `IncludedColumns` to return only selected columns, or
+`ExcludedColumns` to omit selected columns. The two fields are mutually
+exclusive. Fixed span fields are always returned.
 
 ```go
 resp, err := client.Spans.List(ctx, spans.ListRequest{
@@ -480,7 +500,21 @@ resp, err := client.Spans.List(ctx, spans.ListRequest{
     Space:   "<space-id-or-name>", // required when Project is a name
     End:     time.Now(),
     Filter:  "status_code = 'ERROR'",
+    IncludedColumns: []string{
+        "attributes.llm.model_name",
+        "eval.hallucination.score",
+    },
     Limit:   50,
+})
+```
+
+To return most columns but skip a large column, use `ExcludedColumns` instead:
+
+```go
+resp, err := client.Spans.List(ctx, spans.ListRequest{
+    Project:         "<project-id-or-name>",
+    Space:           "<space-id-or-name>",
+    ExcludedColumns: []string{"attributes.embedding.vectors"},
 })
 ```
 
@@ -498,13 +532,36 @@ partial, err := client.Spans.Delete(ctx, spans.DeleteRequest{
 
 ### Annotate Spans
 
-Up to 1000 spans per call; re-submitting the same config name overwrites (no duplicates).
+Up to 1000 records per call (100 for `GranularitySESSION`); re-submitting the same config name overwrites (no duplicates).
+
+`Granularity` selects what each `RecordId` identifies: a span (`GranularitySPAN`, the default), a trace's root span (`GranularityTRACE`), or a session (`GranularitySESSION`, written to the root span of the session's earliest trace).
 
 ```go
 err := client.Spans.Annotate(ctx, spans.AnnotateRequest{
     Project:     "<project-id-or-name>",
     Space:       "<space-id-or-name>",
     Annotations: []spans.AnnotateRecordInput{ /* RecordId + AnnotationInput values */ },
+    Granularity: spans.GranularitySESSION, // optional; defaults to GranularitySPAN
+})
+```
+
+## Operations on Traces
+
+Use `client.Traces` to manage traces. `Space` is required when `Project` is a name.
+
+A full runnable example lives in [`examples/traces`](./examples/traces).
+
+### List Traces
+
+Name-or-ID `Project`, optional time range and filter DSL, opaque cursor pagination.
+
+```go
+resp, err := client.Traces.List(ctx, traces.ListRequest{
+    Project: "<project-id-or-name>",
+    Space:   "<space-id-or-name>", // required when Project is a name
+    End:     time.Now(),
+    Filter:  "status_code = 'ERROR'",
+    Limit:   50,
 })
 ```
 
@@ -555,8 +612,16 @@ err := client.Datasets.Delete(ctx, datasets.DeleteRequest{Dataset: "<dataset-id>
 
 ### List Examples
 
+Lists the examples of a dataset. `Filter` is an optional SQL-like expression over example fields for complex queries.
+
 ```go
 ex, err := client.Datasets.ListExamples(ctx, datasets.ListExamplesRequest{Dataset: "<dataset-id-or-name>", Space: "<space-id-or-name>", Limit: 50})
+
+ex, err = client.Datasets.ListExamples(ctx, datasets.ListExamplesRequest{
+    Dataset: "<dataset-id-or-name>", Space: "<space-id-or-name>",
+    Filter: "input = 'What is Arize?'",
+    Limit:  50,
+})
 ```
 
 ### Append Examples
@@ -668,11 +733,22 @@ err := client.Experiments.Delete(ctx, experiments.DeleteRequest{Experiment: "<ex
 
 ### List Runs
 
+Optionally narrow the results with an SQL-like filter over `id`, `output`, `example_id`, custom run columns, and `eval.<name>.*` / `annotation.<name>.*` fields. Limit defaults to 50 (max 500); page through results with `Cursor` from `Pagination.NextCursor`, keeping `Filter` unchanged between pages.
+
 ```go
 runs, err := client.Experiments.ListRuns(ctx, experiments.ListRunsRequest{
     Experiment: "<experiment-id-or-name>",
     Dataset:    "<dataset-id-or-name>", // required when Experiment is a name
     Space:      "<space-id-or-name>",   // required when Dataset is also a name
+    Limit:      50,
+})
+
+filter := "eval.correctness.score < 0.8"
+filtered, err := client.Experiments.ListRuns(ctx, experiments.ListRunsRequest{
+    Experiment: "<experiment-id-or-name>",
+    Dataset:    "<dataset-id-or-name>", // required when Experiment is a name
+    Space:      "<space-id-or-name>",   // required when Dataset is also a name
+    Filter:     filter,
     Limit:      50,
 })
 ```
@@ -792,9 +868,10 @@ err := client.Prompts.DeleteVersionLabel(ctx, prompts.DeleteVersionLabelRequest{
 
 ## Operations on Evaluators
 
-Use `client.Evaluators` to manage evaluators and their versions. An evaluator is either a
-`template` (LLM-based) or `code` (managed built-in or custom Python) evaluator — the
-type is derived from `Version`. `Space` is required when `Evaluator` is a name.
+Use `client.Evaluators` to manage evaluators and their versions. Three evaluator
+types are supported: `TEMPLATE` (LLM-based), `CODE` (managed built-in or custom Python),
+and `REMOTE` (customer-hosted HTTP endpoint via an EVALUATOR integration). `Space` is
+required when `Evaluator` is a name.
 
 A full runnable example lives in [`examples/evaluators`](./examples/evaluators).
 
@@ -811,29 +888,61 @@ The returned version is a oneOf — read the active variant via `ValueByDiscrimi
 ```go
 ev, err := client.Evaluators.Get(ctx, evaluators.GetRequest{Evaluator: "<evaluator-id-or-name>", Space: "<space-id-or-name>"})
 if v, err := ev.Version.ValueByDiscriminator(); err == nil {
-    if tmpl, ok := v.(evaluators.EvaluatorVersionTemplate); ok {
-        _ = tmpl.TemplateConfig.Template
+    switch v := v.(type) {
+    case evaluators.EvaluatorVersionTemplate:
+        _ = v.TemplateConfig.Template
+    case evaluators.EvaluatorVersionCode:
+        _ = v.CodeConfig
+    case evaluators.EvaluatorVersionRemote:
+        _ = v.RemoteConfig.IntegrationId
     }
 }
 ```
 
-### Create an Evaluator
-
-A template evaluator with its initial version.
+### Create a Template Evaluator
 
 ```go
-ev, err := client.Evaluators.Create(ctx, evaluators.CreateRequest{
-    Name:  "relevance",
-    Space: "<space-id-or-name>",
-    Version: evaluators.VersionConfig{
-        CommitMessage: "initial version",
-        Template: &evaluators.TemplateConfigInput{
-            Name:                  "relevance",
-            Template:              "Is the answer relevant?\n{{input}}",
-            ClassificationChoices: map[string]float32{"relevant": 1, "irrelevant": 0},
-            LlmConfig:             evaluators.EvaluatorLlmConfig{AiIntegrationId: "<ai-integration-id>", ModelName: "gpt-4o"},
+ev, err := client.Evaluators.CreateTemplateEvaluator(ctx, evaluators.CreateTemplateEvaluatorRequest{
+    Name:          "relevance",
+    Space:         "<space-id-or-name>",
+    CommitMessage: "initial version",
+    Config: evaluators.TemplateConfigInput{
+        Name:                  "relevance",
+        Template:              "Is the answer relevant?\n{{input}}",
+        ClassificationChoices: &map[string]float32{"relevant": 1, "irrelevant": 0},
+        LlmConfig:             &evaluators.EvaluatorLlmConfigRequest{AiIntegrationId: "<ai-integration-id>", ModelName: "gpt-4o"},
+    },
+})
+```
+
+### Create a Code Evaluator
+
+```go
+ev, err := client.Evaluators.CreateCodeEvaluator(ctx, evaluators.CreateCodeEvaluatorRequest{
+    Name:          "hallucination",
+    Space:         "<space-id-or-name>",
+    CommitMessage: "initial version",
+    Config: evaluators.CodeConfig{
+        Managed: &evaluators.ManagedCodeConfig{
+            Name:             "hallucination",
+            ManagedEvaluator: "hallucination",
+            Variables:        []string{"input", "output", "context"},
         },
     },
+})
+```
+
+### Create a Remote Evaluator
+
+Create a REMOTE evaluator backed by an existing EVALUATOR integration. Requires the
+`enableRemoteEvalTasks` feature flag on the account.
+
+```go
+ev, err := client.Evaluators.CreateRemoteEvaluator(ctx, evaluators.CreateRemoteEvaluatorRequest{
+    Name:          "my-remote-eval",
+    Space:         "<space-id-or-name>",
+    CommitMessage: "initial version",
+    IntegrationID: "<evaluator-integration-id>",
 })
 ```
 
@@ -858,14 +967,42 @@ err := client.Evaluators.Delete(ctx, evaluators.DeleteRequest{Evaluator: "<evalu
 vers, err := client.Evaluators.ListVersions(ctx, evaluators.ListVersionsRequest{Evaluator: "<evaluator-id-or-name>", Space: "<space-id-or-name>", Limit: 25})
 ```
 
-### Create a Version
-
-The new version's kind must match the parent evaluator's type.
+### Create a Template Version
 
 ```go
-ver, err := client.Evaluators.CreateVersion(ctx, evaluators.CreateVersionRequest{
-    Evaluator: "<evaluator-id-or-name>", Space: "<space-id-or-name>",
-    Version: evaluators.VersionConfig{CommitMessage: "tighten rubric", Template: &evaluators.TemplateConfigInput{ /* ... */ }},
+ver, err := client.Evaluators.CreateTemplateVersion(ctx, evaluators.CreateTemplateVersionRequest{
+    Evaluator:     "<evaluator-id-or-name>",
+    Space:         "<space-id-or-name>",
+    CommitMessage: "tighten rubric",
+    Config:        evaluators.TemplateConfigInput{ /* ... */ },
+})
+```
+
+### Create a Code Version
+
+```go
+ver, err := client.Evaluators.CreateCodeVersion(ctx, evaluators.CreateCodeVersionRequest{
+    Evaluator:     "<evaluator-id-or-name>",
+    Space:         "<space-id-or-name>",
+    CommitMessage: "update logic",
+    Config: evaluators.CodeConfig{
+        Custom: &evaluators.CustomCodeConfig{
+            Name:      "my-custom",
+            Code:      "class Eval:\n    def evaluate(self, **kwargs):\n        return 1",
+            Variables: []string{"input"},
+        },
+    },
+})
+```
+
+### Create a Remote Version
+
+```go
+ver, err := client.Evaluators.CreateRemoteVersion(ctx, evaluators.CreateRemoteVersionRequest{
+    Evaluator:     "<evaluator-id-or-name>",
+    Space:         "<space-id-or-name>",
+    CommitMessage: "switch endpoint",
+    IntegrationID: "<evaluator-integration-id>",
 })
 ```
 
@@ -873,6 +1010,23 @@ ver, err := client.Evaluators.CreateVersion(ctx, evaluators.CreateVersionRequest
 
 ```go
 ver, err := client.Evaluators.GetVersion(ctx, evaluators.GetVersionRequest{VersionID: "<version-id>"})
+```
+
+### Delete Versions
+
+Removes versions from an evaluator. Versions that exist and belong to that
+evaluator are deleted; missing or foreign IDs come back in
+`NotDeletedVersionIds`. Re-sending already-deleted IDs is safe. On HTTP 200,
+`Completed` is true because the request finished, not because every ID was
+found. If a deleted version was pinned to a running online task, that pin is
+cleared and the task uses the latest version.
+
+```go
+resp, err := client.Evaluators.DeleteVersions(ctx, evaluators.DeleteVersionsRequest{
+    Evaluator:  "<evaluator-id-or-name>",
+    Space:      "<space-id-or-name>",
+    VersionIDs: []string{"<version-id>"},
+})
 ```
 
 ## Operations on Annotation Configs
@@ -1021,6 +1175,115 @@ ai, err := client.AIIntegrations.Update(ctx, aiintegrations.UpdateRequest{
 err := client.AIIntegrations.Delete(ctx, aiintegrations.DeleteRequest{Integration: "<integration-id>"})
 ```
 
+## Operations on Integrations
+
+Use `client.Integrations` for the polymorphic `/v2/integrations` surface covering
+both LLM (model-provider) and agent (customer-hosted endpoint) integrations.
+Integration names are unique per account and type, so `Type` is required when
+resolving a name; an ID always works on its own.
+
+> **Alpha:** integrations are a pre-release feature. Every method emits a
+> one-time pre-release warning and the API may change in a backward-incompatible way.
+
+A full runnable example lives in [`examples/integrations`](./examples/integrations).
+
+### List Integrations
+
+`Type` is an optional filter. Omit it to list every type in one call; each item
+is a type-tagged union — read the active variant with `Discriminator()` and
+unwrap with `AsLlmIntegration` / `AsAgentIntegration`.
+
+```go
+resp, err := client.Integrations.List(ctx, integrations.ListRequest{Type: integrations.IntegrationTypeLLM, Limit: 25})
+
+all, err := client.Integrations.List(ctx, integrations.ListRequest{})
+```
+
+### Get an Integration
+
+By ID, or by name plus `Type`.
+
+```go
+it, err := client.Integrations.Get(ctx, integrations.GetRequest{
+    Integration: "my-openai", Type: integrations.IntegrationTypeLLM,
+})
+```
+
+### Create an LLM Integration
+
+Set exactly one provider field on `CreateLLMConfig`; the SDK fills in the
+provider discriminator. All ten providers are supported: `OpenAI`,
+`Anthropic`, `Gemini`, `AWSBedrock`, `Custom`, `VertexAI`, `NvidiaNIM`,
+`LiteLLM`, `Fireworks` and `TogetherAi`.
+
+```go
+it, err := client.Integrations.CreateLLM(ctx, integrations.CreateLLMRequest{
+    Name: "my-openai",
+    Config: integrations.CreateLLMConfig{
+        OpenAI: &integrations.CreateOpenAIConfig{APIKey: "<provider-api-key>"},
+    },
+})
+```
+
+A hosted provider that resolves its own model list needs only the key. Arize
+reads the models the key can reach from the Fireworks account, so an
+integration created without `ModelNames` still has a selectable model list.
+
+```go
+it, err := client.Integrations.CreateLLM(ctx, integrations.CreateLLMRequest{
+    Name: "my-fireworks",
+    Config: integrations.CreateLLMConfig{
+        Fireworks: &integrations.CreateFireworksConfig{APIKey: "<provider-api-key>"},
+    },
+})
+```
+
+Together AI resolves its own model list the same way.
+
+```go
+it, err := client.Integrations.CreateLLM(ctx, integrations.CreateLLMRequest{
+    Name: "my-together-ai",
+    Config: integrations.CreateLLMConfig{
+        TogetherAi: &integrations.CreateTogetherAiConfig{APIKey: "<provider-api-key>"},
+    },
+})
+```
+
+### Create an Agent Integration
+
+```go
+it, err := client.Integrations.CreateAgent(ctx, integrations.CreateAgentRequest{
+    Name:     "my-agent",
+    Endpoint: "https://agent.example.com/invoke",
+    InputSchema: map[string]any{
+        "type":       "object",
+        "properties": map[string]any{"input": map[string]any{"type": "string"}},
+    },
+})
+```
+
+### Update an Integration
+
+Updates are split by type: `UpdateLLM` / `UpdateAgent`. Nil patch fields are
+preserved; nullable fields clear with a pointer-to-empty value (emits JSON null).
+
+```go
+newKey := "<new-key>"
+it, err := client.Integrations.UpdateLLM(ctx, integrations.UpdateLLMRequest{
+    Integration: "my-openai", APIKey: &newKey,
+})
+```
+
+### Delete an Integration
+
+By ID, or by name plus `Type`. Irreversible.
+
+```go
+err := client.Integrations.Delete(ctx, integrations.DeleteRequest{
+    Integration: "my-agent", Type: integrations.IntegrationTypeAgent,
+})
+```
+
 ## Operations on Organizations
 
 Use `client.Organizations` to manage organizations and their memberships. `Organization`
@@ -1157,6 +1420,10 @@ rb, err := client.RoleBindings.Create(ctx, rolebindings.CreateRequest{
 })
 ```
 
+`UserID` is the ID of the user to bind the role to. To bind a **service key**, pass its
+bot user's ID instead of your own — it is returned as `BotUser.ID` from
+`APIKeys.CreateServiceKey` (see [Create a Service Key](#create-a-service-key) below).
+
 ### Update a Role Binding
 
 ```go
@@ -1287,10 +1554,8 @@ if err := client.ResourceRestrictions.Unrestrict(ctx, resourcerestrictions.Unres
 ## Operations on Annotation Queues
 
 Use `client.AnnotationQueues` to manage annotation queues — collections of records
-(spans or dataset examples) routed to annotators for human labeling.
-
-> **Beta:** annotation queues are a pre-release feature. Every method emits a
-> one-time pre-release warning and the API may change in a backward-incompatible way.
+(spans, traces, sessions, or dataset examples) routed to annotators for human
+labeling.
 
 A full runnable example lives in [`examples/annotationqueues`](./examples/annotationqueues).
 
@@ -1327,14 +1592,17 @@ queue, err := client.AnnotationQueues.Create(ctx, annotationqueues.CreateRequest
 
 ### Add Records to a Queue
 
-Build a record source with `NewSpanRecordSource` (spans) or `NewExampleRecordSource`
-(dataset examples), then add up to two sources per request.
+Build a record source with `NewSpanRecordSource`, `NewTraceRecordSource`,
+`NewSessionRecordSource`, or `NewExampleRecordSource`, then add up to two sources
+per request. A request may resolve up to 500 records, including at most 100
+sessions.
 
 ```go
-src, err := annotationqueues.NewSpanRecordSource(annotationqueues.AnnotationQueueSpanRecordInput{
-    ProjectId: "<project-id>",
-    StartTime: time.Now().Add(-24 * time.Hour),
-    EndTime:   time.Now(),
+src, err := annotationqueues.NewSessionRecordSource(annotationqueues.AnnotationQueueSessionRecordInput{
+    ProjectId:  "<project-id>",
+    StartTime:  time.Now().Add(-24 * time.Hour),
+    EndTime:    time.Now(),
+    SessionIds: []string{"<session-id>"},
 })
 if err != nil {
     // handle error
@@ -1347,6 +1615,10 @@ resp, err := client.AnnotationQueues.AddRecords(ctx, annotationqueues.AddRecords
 ```
 
 ### Annotate a Record
+
+> **Beta:** annotating and assigning records is a pre-release feature. `Annotate`
+> and `Assign` each emit a one-time pre-release warning and their API may change
+> in a backward-incompatible way.
 
 `RecordID` is a strict ID (no name resolution) — read it from `ListRecords`.
 
@@ -1524,16 +1796,56 @@ Exactly one of `Project` or `Dataset` must be set; dataset-based tasks
 require at least one entry in `ExperimentIDs`, and `SamplingRate` /
 `IsContinuous` apply only to project-based tasks.
 
+Each evaluator is either a [SpanEvaluatorInput] (span-granularity) or a
+[TraceOrSessionEvaluatorInput] (trace/session-granularity) — supply one type
+per entry; they are mutually exclusive.
+
+**Span-granularity task** — uses `QueryFilter` at the task level and
+`SpanEvaluatorInput` per evaluator:
+
 ```go
 task, err := client.Tasks.CreateEvaluationTask(ctx, tasks.CreateEvaluationTaskRequest{
-    Name:    "relevance-eval",
+    Name:         "relevance-eval",
+    Type:         tasks.TaskTypeTemplateEvaluation,
+    Project:      "my-project",
+    Space:        "demo",
+    QueryFilter:  "span_kind = 'LLM'",
+    Evaluators: []tasks.EvaluatorInput{
+        tasks.SpanEvaluatorInput{
+            EvaluatorID:    "<evaluator-id>",
+            ColumnMappings: map[string]string{"input": "attributes.input.value", "output": "attributes.output.value"},
+        },
+    },
+    SamplingRate: 0.5,
+})
+```
+
+**Trace/session-granularity task (multi-span query)** — uses `QueryFilters`
+at the task level and `TraceOrSessionEvaluatorInput` per evaluator:
+
+```go
+expr := "A AND B"
+task, err := client.Tasks.CreateEvaluationTask(ctx, tasks.CreateEvaluationTaskRequest{
+    Name:    "trace-eval",
     Type:    tasks.TaskTypeTemplateEvaluation,
     Project: "my-project",
     Space:   "demo",
-    Evaluators: []tasks.EvaluatorInput{
-        {EvaluatorID: "<evaluator-id>"},
+    QueryFilters: &tasks.TaskQueryFilters{
+        Filters: []tasks.TaskQueryFilter{
+            {Id: "A", Filter: "span_kind = 'LLM'"},
+            {Id: "B", Filter: "span_kind = 'RETRIEVER'"},
+        },
+        Expression: &expr,
     },
-    SamplingRate: 0.5,
+    Evaluators: []tasks.EvaluatorInput{
+        tasks.TraceOrSessionEvaluatorInput{
+            EvaluatorID: "<evaluator-id>",
+            QueryMappings: []tasks.TaskQueryMapping{
+                {VariableName: "input", QueryIds: []string{"A"}, AttributePath: "attributes.input.value"},
+                {VariableName: "output", QueryIds: []string{"B"}, AttributePath: "attributes.output.value"},
+            },
+        },
+    },
 })
 ```
 
@@ -1563,7 +1875,7 @@ task, err := client.Tasks.CreateRunExperimentTask(ctx, tasks.CreateRunExperiment
 Patch fields are pointers: nil preserves the current value, non-nil sets it
 (a pointer to `""` clears `QueryFilter`). The SDK fetches the task first to
 validate the fields against its type — `SamplingRate`, `IsContinuous`,
-`QueryFilter`, and `Evaluators` apply only to evaluation tasks;
+`QueryFilter`/`QueryFilters`, and `Evaluators` apply only to evaluation tasks;
 `RunConfiguration` only to run_experiment tasks. An empty patch returns
 `tasks.ErrNoUpdateFields`.
 
@@ -1573,6 +1885,29 @@ task, err := client.Tasks.Update(ctx, tasks.UpdateRequest{
     Task:         "relevance-eval",
     Space:        "demo",
     SamplingRate: &rate,
+})
+```
+
+To switch a task to the trace/session shape, supply `QueryFilters` and
+`TraceOrSessionEvaluatorInput` entries:
+
+```go
+expr := "A"
+task, err := client.Tasks.Update(ctx, tasks.UpdateRequest{
+    Task:  "trace-eval",
+    Space: "demo",
+    QueryFilters: &tasks.TaskQueryFilters{
+        Filters:    []tasks.TaskQueryFilter{{Id: "A", Filter: "span_kind = 'LLM'"}},
+        Expression: &expr,
+    },
+    Evaluators: []tasks.EvaluatorInput{
+        tasks.TraceOrSessionEvaluatorInput{
+            EvaluatorID: "<evaluator-id>",
+            QueryMappings: []tasks.TaskQueryMapping{
+                {VariableName: "input", QueryIds: []string{"A"}, AttributePath: "attributes.input.value"},
+            },
+        },
+    },
 })
 ```
 

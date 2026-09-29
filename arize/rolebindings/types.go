@@ -25,7 +25,9 @@ type ListRequest struct {
 	// Required — the zero value is rejected by the server.
 	ResourceType RoleBindingResourceType
 	// UserID is an optional filter on the assigned user (global user ID). When
-	// empty, bindings are not filtered by user.
+	// empty, bindings are not filtered by user. For a service key, pass its bot
+	// user's ID (BotUser.ID from apikeys.CreatedServiceApiKey) to list that key's
+	// bindings.
 	UserID string
 	// Limit is the optional maximum number of items to return. When zero, the
 	// SDK applies a default of 100. Server max is 100.
@@ -43,7 +45,11 @@ type GetRequest struct {
 // CreateRequest is the request for creating a role binding.
 // All ID fields are strict IDs — name resolution is not performed.
 type CreateRequest struct {
-	RoleID       string
+	RoleID string
+	// UserID is the ID of the user to bind the role to. For a service key,
+	// this is the ID of the key's bot user — not the ID of the person who
+	// created the key. It is returned as BotUser.ID from
+	// apikeys.CreatedServiceApiKey.
 	UserID       string
 	ResourceType RoleBindingResourceType
 	ResourceID   string

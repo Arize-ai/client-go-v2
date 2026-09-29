@@ -21,14 +21,18 @@ type (
 	// Score, Label, or Text.
 	AnnotationInput = generated.AnnotationInput
 
-	// AnnotationQueueRecordInput is a record source to add to a queue — either a
-	// set of dataset examples or a set of spans. Build one with
-	// NewExampleRecordSource or NewSpanRecordSource.
+	// AnnotationQueueRecordInput is a record source to add to a queue. Build one
+	// with NewExampleRecordSource, NewSpanRecordSource, NewTraceRecordSource, or
+	// NewSessionRecordSource.
 	AnnotationQueueRecordInput = generated.AnnotationQueueRecordInput
 	// AnnotationQueueExampleRecordInput adds dataset examples to a queue.
 	AnnotationQueueExampleRecordInput = generated.AnnotationQueueExampleRecordInput
 	// AnnotationQueueSpanRecordInput adds spans (by project and time range) to a queue.
 	AnnotationQueueSpanRecordInput = generated.AnnotationQueueSpanRecordInput
+	// AnnotationQueueTraceRecordInput adds traces (by project and time range) to a queue.
+	AnnotationQueueTraceRecordInput = generated.AnnotationQueueTraceRecordInput
+	// AnnotationQueueSessionRecordInput adds sessions (by project and time range) to a queue.
+	AnnotationQueueSessionRecordInput = generated.AnnotationQueueSessionRecordInput
 
 	// AssignmentMethod controls how queue records are assigned to annotators.
 	AssignmentMethod = generated.AssignmentMethod
@@ -58,6 +62,28 @@ func NewSpanRecordSource(in AnnotationQueueSpanRecordInput) (AnnotationQueueReco
 	in.RecordType = generated.AnnotationQueueSpanRecordInputRecordTypeSPAN
 	var src AnnotationQueueRecordInput
 	if err := src.FromAnnotationQueueSpanRecordInput(in); err != nil {
+		return AnnotationQueueRecordInput{}, err
+	}
+	return src, nil
+}
+
+// NewTraceRecordSource builds a record source that adds traces to a queue,
+// setting the record-type discriminator for the caller.
+func NewTraceRecordSource(in AnnotationQueueTraceRecordInput) (AnnotationQueueRecordInput, error) {
+	in.RecordType = generated.AnnotationQueueTraceRecordInputRecordTypeTRACE
+	var src AnnotationQueueRecordInput
+	if err := src.FromAnnotationQueueTraceRecordInput(in); err != nil {
+		return AnnotationQueueRecordInput{}, err
+	}
+	return src, nil
+}
+
+// NewSessionRecordSource builds a record source that adds sessions to a queue,
+// setting the record-type discriminator for the caller.
+func NewSessionRecordSource(in AnnotationQueueSessionRecordInput) (AnnotationQueueRecordInput, error) {
+	in.RecordType = generated.AnnotationQueueSessionRecordInputRecordTypeSESSION
+	var src AnnotationQueueRecordInput
+	if err := src.FromAnnotationQueueSessionRecordInput(in); err != nil {
 		return AnnotationQueueRecordInput{}, err
 	}
 	return src, nil
@@ -107,9 +133,10 @@ type CreateRequest struct {
 	// Instructions is optional guidance shown to annotators. When empty, the
 	// queue is created without instructions.
 	Instructions string
-	// RecordSources are optional records to add on creation (max 2 sources).
-	// Build entries with NewExampleRecordSource or NewSpanRecordSource. When
-	// empty, the queue is created with no records.
+	// RecordSources are optional records to add on creation (max 2 sources and
+	// 500 records, including at most 100 sessions). Build entries with the
+	// New*RecordSource constructors. When empty, the queue is created with no
+	// records.
 	RecordSources []AnnotationQueueRecordInput
 }
 
@@ -167,8 +194,9 @@ type AddRecordsRequest struct {
 	// Space accepts either a space name or ID. Required when AnnotationQueue is
 	// a name; ignored when AnnotationQueue is an ID.
 	Space string
-	// RecordSources are the records to add (max 2 sources). Build entries with
-	// NewExampleRecordSource or NewSpanRecordSource.
+	// RecordSources are the records to add (max 2 sources and 500 records,
+	// including at most 100 sessions). Build entries with the New*RecordSource
+	// constructors.
 	RecordSources []AnnotationQueueRecordInput
 }
 

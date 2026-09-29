@@ -42,27 +42,51 @@ func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *a
 	return srv, client
 }
 
+// wireQueryFilter mirrors the JSON shape of a task-level query filter entry.
+type wireQueryFilter struct {
+	Id     string `json:"id"`
+	Filter string `json:"filter"`
+}
+
+// wireQueryFiltersInput mirrors the JSON shape of the TaskQueryFiltersInput
+// compound object: {filters: [...], expression?: string}.
+type wireQueryFiltersInput struct {
+	Filters    []wireQueryFilter `json:"filters"`
+	Expression *string           `json:"expression"`
+}
+
+// wireQueryMapping mirrors the JSON shape of a per-evaluator
+// query-mapping entry (trace/session shape).
+type wireQueryMapping struct {
+	VariableName  string   `json:"variable_name"`
+	QueryIds      []string `json:"query_ids"`
+	AttributePath string   `json:"attribute_path"`
+}
+
 // wireEvaluator mirrors the JSON shape of an evaluator entry in create and
 // update request bodies.
 type wireEvaluator struct {
-	EvaluatorId        string            `json:"evaluator_id"`
-	EvaluatorVersionId *string           `json:"evaluator_version_id"`
-	QueryFilter        *string           `json:"query_filter"`
-	ColumnMappings     map[string]string `json:"column_mappings"`
+	EvaluatorId        string             `json:"evaluator_id"`
+	EvaluatorVersionId *string            `json:"evaluator_version_id"`
+	QueryFilter        *string            `json:"query_filter"`
+	ColumnMappings     map[string]string  `json:"column_mappings"`
+	QueryMappings      []wireQueryMapping `json:"query_mappings"`
 }
 
 // wireCreateEval mirrors the JSON shape of the CreateEvaluationTask request
-// body.
+// body. QueryFilters is the compound {filters, expression} object sent when
+// the task uses the trace/session (MSQ) shape.
 type wireCreateEval struct {
-	Type          string          `json:"type"`
-	Name          string          `json:"name"`
-	ProjectId     *string         `json:"project_id"`
-	DatasetId     *string         `json:"dataset_id"`
-	ExperimentIds []string        `json:"experiment_ids"`
-	Evaluators    []wireEvaluator `json:"evaluators"`
-	SamplingRate  *float64        `json:"sampling_rate"`
-	IsContinuous  *bool           `json:"is_continuous"`
-	QueryFilter   *string         `json:"query_filter"`
+	Type          string                 `json:"type"`
+	Name          string                 `json:"name"`
+	ProjectId     *string                `json:"project_id"`
+	DatasetId     *string                `json:"dataset_id"`
+	ExperimentIds []string               `json:"experiment_ids"`
+	Evaluators    []wireEvaluator        `json:"evaluators"`
+	SamplingRate  *float64               `json:"sampling_rate"`
+	IsContinuous  *bool                  `json:"is_continuous"`
+	QueryFilter   *string                `json:"query_filter"`
+	QueryFilters  *wireQueryFiltersInput `json:"query_filters"`
 }
 
 // wireCreateRunExp mirrors the JSON shape of the CreateRunExperimentTask
@@ -75,12 +99,14 @@ type wireCreateRunExp struct {
 }
 
 // wireUpdateEval mirrors the JSON shape of the evaluation-task Update body.
+// QueryFilters is the compound {filters, expression} object (null clears).
 type wireUpdateEval struct {
-	Name         *string          `json:"name"`
-	SamplingRate *float64         `json:"sampling_rate"`
-	IsContinuous *bool            `json:"is_continuous"`
-	QueryFilter  *string          `json:"query_filter"`
-	Evaluators   *[]wireEvaluator `json:"evaluators"`
+	Name         *string                `json:"name"`
+	SamplingRate *float64               `json:"sampling_rate"`
+	IsContinuous *bool                  `json:"is_continuous"`
+	QueryFilter  *string                `json:"query_filter"`
+	QueryFilters *wireQueryFiltersInput `json:"query_filters"`
+	Evaluators   *[]wireEvaluator       `json:"evaluators"`
 }
 
 // wireUpdateRunExp mirrors the JSON shape of the run_experiment Update body.
@@ -133,6 +159,34 @@ func templateRunConfiguration(t *testing.T) tasks.RunConfiguration {
 		AiIntegrationId:    "ai-1",
 		Template:           "Is {{output}} correct?",
 		ProvideExplanation: true,
+	}); err != nil {
+		t.Fatalf("build run configuration: %v", err)
+	}
+	return rc
+}
+
+func agentCallRunConfiguration(t *testing.T) tasks.RunConfiguration {
+	t.Helper()
+	var rc tasks.RunConfiguration
+	if err := rc.FromAgentCallRunConfig(tasks.AgentCallRunConfig{
+		IntegrationId: "agent-1",
+		InputTemplate: map[string]any{"question": "{{input}}"},
+	}); err != nil {
+		t.Fatalf("build run configuration: %v", err)
+	}
+	return rc
+}
+
+func templateRunConfigurationWithUnknownField(t *testing.T) tasks.RunConfiguration {
+	t.Helper()
+	var rc tasks.RunConfiguration
+	if err := rc.FromTemplateEvaluationRunConfig(tasks.TemplateEvaluationRunConfig{
+		AiIntegrationId:    "ai-1",
+		Template:           "Is {{output}} correct?",
+		ProvideExplanation: true,
+		AdditionalProperties: map[string]interface{}{
+			"unknown_future_field": "not-valid-in-a-request",
+		},
 	}); err != nil {
 		t.Fatalf("build run configuration: %v", err)
 	}
@@ -355,7 +409,7 @@ func TestTasks(t *testing.T) {
 				return c.Tasks.CreateEvaluationTask(ctx, tasks.CreateEvaluationTaskRequest{
 					Name: "eval-task",
 					Type: tasks.TaskTypeTemplateEvaluation,
-					Evaluators: []tasks.EvaluatorInput{{
+					Evaluators: []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{
 						EvaluatorID:    "ev-1",
 						QueryFilter:    "attributes.llm",
 						ColumnMappings: map[string]string{"question": "attributes.input"},
@@ -396,7 +450,7 @@ func TestTasks(t *testing.T) {
 				return c.Tasks.CreateEvaluationTask(ctx, tasks.CreateEvaluationTaskRequest{
 					Name: "pinned-task",
 					Type: tasks.TaskTypeTemplateEvaluation,
-					Evaluators: []tasks.EvaluatorInput{{
+					Evaluators: []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{
 						EvaluatorID:        "ev-1",
 						EvaluatorVersionID: "evv-9",
 					}},
@@ -439,7 +493,7 @@ func TestTasks(t *testing.T) {
 				return c.Tasks.CreateEvaluationTask(ctx, tasks.CreateEvaluationTaskRequest{
 					Name:          "code-task",
 					Type:          tasks.TaskTypeCodeEvaluation,
-					Evaluators:    []tasks.EvaluatorInput{{EvaluatorID: "ev-1"}},
+					Evaluators:    []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{EvaluatorID: "ev-1"}},
 					Dataset:       datasetID("ds-1"),
 					ExperimentIDs: []string{"exp-1"},
 				})
@@ -447,6 +501,91 @@ func TestTasks(t *testing.T) {
 			check: func(t *testing.T, got any, err error) {
 				if err != nil {
 					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			// Exercises the MSQ (trace/session) path: query_filters + expression at
+			// the task level and query_column_mappings per evaluator.
+			name: "CreateEvaluationTask_MSQ",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodPost || r.URL.Path != "/v2/tasks" {
+					t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+				}
+				var body wireCreateEval
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if body.QueryFilter != nil {
+					t.Errorf("body query_filter should be absent for MSQ, got %v", *body.QueryFilter)
+				}
+				if body.QueryFilters == nil {
+					t.Fatalf("body query_filters should be present for MSQ")
+				} else if len(body.QueryFilters.Filters) != 2 {
+					t.Errorf("body query_filters.filters: want 2, got %d", len(body.QueryFilters.Filters))
+				} else {
+					if body.QueryFilters.Filters[0].Id != "A" || body.QueryFilters.Filters[0].Filter != "span_kind = 'LLM'" {
+						t.Errorf("query_filters.filters[0]: got %+v", body.QueryFilters.Filters[0])
+					}
+					if body.QueryFilters.Filters[1].Id != "B" || body.QueryFilters.Filters[1].Filter != "span_kind = 'RETRIEVER'" {
+						t.Errorf("query_filters.filters[1]: got %+v", body.QueryFilters.Filters[1])
+					}
+				}
+				if body.QueryFilters == nil || body.QueryFilters.Expression == nil || *body.QueryFilters.Expression != "A AND B" {
+					t.Errorf("body query_filters.expression: want 'A AND B', got %v", body.QueryFilters)
+				}
+				if len(body.Evaluators) != 1 {
+					t.Fatalf("expected 1 evaluator, got %d", len(body.Evaluators))
+				}
+				ev := body.Evaluators[0]
+				if ev.EvaluatorId != "ev-msq" {
+					t.Errorf("evaluator_id: want ev-msq, got %q", ev.EvaluatorId)
+				}
+				if ev.ColumnMappings != nil {
+					t.Errorf("column_mappings should be absent for MSQ, got %v", ev.ColumnMappings)
+				}
+				if len(ev.QueryMappings) != 1 {
+					t.Errorf("query_mappings: want 1, got %d", len(ev.QueryMappings))
+				} else {
+					qm := ev.QueryMappings[0]
+					if qm.VariableName != "output" || qm.AttributePath != "attributes.output.value" {
+						t.Errorf("query_mappings[0]: got %+v", qm)
+					}
+					if len(qm.QueryIds) != 2 || qm.QueryIds[0] != "A" || qm.QueryIds[1] != "B" {
+						t.Errorf("query_mappings[0].query_ids: got %v", qm.QueryIds)
+					}
+				}
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(201)
+				serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				expr := "A AND B"
+				return c.Tasks.CreateEvaluationTask(ctx, tasks.CreateEvaluationTaskRequest{
+					Name: "msq-task",
+					Type: tasks.TaskTypeTemplateEvaluation,
+					Evaluators: []tasks.EvaluatorInput{tasks.TraceOrSessionEvaluatorInput{
+						EvaluatorID: "ev-msq",
+						QueryMappings: []tasks.TaskQueryMapping{
+							{VariableName: "output", QueryIds: []string{"A", "B"}, AttributePath: "attributes.output.value"},
+						},
+					}},
+					Project: projectID("p-1"),
+					QueryFilters: &tasks.TaskQueryFilters{
+						Filters: []tasks.TaskQueryFilter{
+							{Id: "A", Filter: "span_kind = 'LLM'"},
+							{Id: "B", Filter: "span_kind = 'RETRIEVER'"},
+						},
+						Expression: &expr,
+					},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				if got.(*tasks.Task).Id != tID {
+					t.Errorf("unexpected id: %s", got.(*tasks.Task).Id)
 				}
 			},
 		},
@@ -475,6 +614,9 @@ func TestTasks(t *testing.T) {
 				if got := body.RunConfiguration["template"]; got != "Is {{output}} correct?" {
 					t.Errorf("run_configuration template: got %v", got)
 				}
+				if got := body.RunConfiguration["unknown_future_field"]; got != "not-valid-in-a-request" {
+					t.Errorf("run_configuration unknown_future_field: got %v", got)
+				}
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(201)
 				serveTask(t, w, tID, tasks.TaskTypeRunExperiment)
@@ -483,7 +625,53 @@ func TestTasks(t *testing.T) {
 				return c.Tasks.CreateRunExperimentTask(ctx, tasks.CreateRunExperimentTaskRequest{
 					Name:             "exp-task",
 					Dataset:          datasetID("ds-1"),
-					RunConfiguration: templateRunConfiguration(t),
+					RunConfiguration: templateRunConfigurationWithUnknownField(t),
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				if got.(*tasks.Task).Type != tasks.TaskTypeRunExperiment {
+					t.Errorf("unexpected type: %s", got.(*tasks.Task).Type)
+				}
+			},
+		},
+		{
+			name: "CreateRunExperimentTask_AgentCall",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != http.MethodPost || r.URL.Path != "/v2/tasks" {
+					t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+				}
+				var body wireCreateRunExp
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Fatalf("decode body: %v", err)
+				}
+				if body.Type != "RUN_EXPERIMENT" {
+					t.Errorf("body type: want run_experiment, got %q", body.Type)
+				}
+				if body.DatasetId != datasetID("ds-1") {
+					t.Errorf("body dataset_id: want %q, got %q", datasetID("ds-1"), body.DatasetId)
+				}
+				if got := body.RunConfiguration["experiment_type"]; got != "AGENT_CALL" {
+					t.Errorf("run_configuration experiment_type: want AGENT_CALL, got %v", got)
+				}
+				if got := body.RunConfiguration["integration_id"]; got != "agent-1" {
+					t.Errorf("run_configuration integration_id: want agent-1, got %v", got)
+				}
+				tmpl, ok := body.RunConfiguration["input_template"].(map[string]any)
+				if !ok || tmpl["question"] != "{{input}}" {
+					t.Errorf("run_configuration input_template: got %v", body.RunConfiguration["input_template"])
+				}
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(201)
+				serveTask(t, w, tID, tasks.TaskTypeRunExperiment)
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Tasks.CreateRunExperimentTask(ctx, tasks.CreateRunExperimentTaskRequest{
+					Name:             "agent-task",
+					Dataset:          datasetID("ds-1"),
+					RunConfiguration: agentCallRunConfiguration(t),
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -540,7 +728,216 @@ func TestTasks(t *testing.T) {
 					Name:         &name,
 					SamplingRate: &rate,
 					QueryFilter:  &clearFilter,
-					Evaluators:   []tasks.EvaluatorInput{{EvaluatorID: "ev-2"}},
+					Evaluators:   []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{EvaluatorID: "ev-2"}},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			// Exercises Update with MSQ trace/session fields: query_filters,
+			// expression, and per-evaluator query_column_mappings.
+			name: "Update_EvaluationTask_MSQ",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				switch {
+				case r.Method == http.MethodGet && r.URL.Path == "/v2/tasks/"+tID:
+					serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
+				case r.Method == http.MethodPatch && r.URL.Path == "/v2/tasks/"+tID:
+					var body wireUpdateEval
+					if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+						t.Fatalf("decode body: %v", err)
+					}
+					if body.QueryFilter != nil {
+						t.Errorf("query_filter should be absent for MSQ update, got %v", *body.QueryFilter)
+					}
+					if body.QueryFilters == nil {
+						t.Fatalf("query_filters should be present for MSQ update")
+					} else if len(body.QueryFilters.Filters) != 1 {
+						t.Errorf("query_filters.filters: want 1, got %d", len(body.QueryFilters.Filters))
+					} else if body.QueryFilters.Filters[0].Id != "A" || body.QueryFilters.Filters[0].Filter != "span_kind = 'LLM'" {
+						t.Errorf("query_filters.filters[0]: got %+v", body.QueryFilters.Filters[0])
+					}
+					if body.QueryFilters == nil || body.QueryFilters.Expression == nil || *body.QueryFilters.Expression != "A" {
+						t.Errorf("query_filters.expression: want 'A', got %v", body.QueryFilters)
+					}
+					if body.Evaluators == nil || len(*body.Evaluators) != 1 {
+						t.Fatalf("expected 1 evaluator, got %v", body.Evaluators)
+					}
+					ev := (*body.Evaluators)[0]
+					if ev.EvaluatorId != "ev-msq-2" {
+						t.Errorf("evaluator_id: want ev-msq-2, got %q", ev.EvaluatorId)
+					}
+					if len(ev.QueryMappings) != 1 || ev.QueryMappings[0].VariableName != "input" {
+						t.Errorf("query_mappings: got %+v", ev.QueryMappings)
+					}
+					serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
+				default:
+					t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+					w.WriteHeader(http.StatusInternalServerError)
+				}
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				expr := "A"
+				return c.Tasks.Update(ctx, tasks.UpdateRequest{
+					Task: tID,
+					QueryFilters: &tasks.TaskQueryFilters{
+						Filters:    []tasks.TaskQueryFilter{{Id: "A", Filter: "span_kind = 'LLM'"}},
+						Expression: &expr,
+					},
+					Evaluators: []tasks.EvaluatorInput{tasks.TraceOrSessionEvaluatorInput{
+						EvaluatorID: "ev-msq-2",
+						QueryMappings: []tasks.TaskQueryMapping{
+							{VariableName: "input", QueryIds: []string{"A"}, AttributePath: "attributes.input.value"},
+						},
+					}},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			// Both QueryFilter and QueryFilters carry actual (non-clearing)
+			// values — rejected without issuing the PATCH.
+			name: "Update_QueryFilterAndQueryFiltersBothSet",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method == http.MethodGet && r.URL.Path == "/v2/tasks/"+tID {
+					serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
+					return
+				}
+				t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+				w.WriteHeader(http.StatusInternalServerError)
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				filter := "span_kind = 'LLM'"
+				return c.Tasks.Update(ctx, tasks.UpdateRequest{
+					Task:        tID,
+					QueryFilter: &filter,
+					QueryFilters: &tasks.TaskQueryFilters{
+						Filters: []tasks.TaskQueryFilter{{Id: "A", Filter: "span_kind = 'LLM'"}},
+					},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err == nil || !strings.Contains(err.Error(), "mutually exclusive") {
+					t.Fatalf("expected mutual-exclusivity error, got %v", err)
+				}
+			},
+		},
+		{
+			// QueryFilters carries a real value via Expression alone (empty
+			// Filters) — the "carries a value" check must not look at
+			// Filters only, or this combination would slip past the guard.
+			name: "Update_QueryFilterAndQueryFiltersExpressionOnlyBothSet",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.Method == http.MethodGet && r.URL.Path == "/v2/tasks/"+tID {
+					serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
+					return
+				}
+				t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+				w.WriteHeader(http.StatusInternalServerError)
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				filter := "span_kind = 'LLM'"
+				expr := "A"
+				return c.Tasks.Update(ctx, tasks.UpdateRequest{
+					Task:        tID,
+					QueryFilter: &filter,
+					QueryFilters: &tasks.TaskQueryFilters{
+						Expression: &expr,
+					},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err == nil || !strings.Contains(err.Error(), "mutually exclusive") {
+					t.Fatalf("expected mutual-exclusivity error, got %v", err)
+				}
+			},
+		},
+		{
+			// Server-mandated shape switch: QueryFilter carries a real value
+			// while QueryFilters is explicitly cleared (zero-value, empty
+			// Filters) in the same PATCH. Must NOT be rejected as mutually
+			// exclusive — only both carrying real values is rejected.
+			name: "Update_SwitchToSpanShape",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				switch {
+				case r.Method == http.MethodGet && r.URL.Path == "/v2/tasks/"+tID:
+					serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
+				case r.Method == http.MethodPatch && r.URL.Path == "/v2/tasks/"+tID:
+					var body map[string]json.RawMessage
+					if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+						t.Fatalf("decode body: %v", err)
+					}
+					if got := string(body["query_filter"]); got != `"span_kind = 'LLM'"` {
+						t.Errorf("query_filter: want the new filter, got %q", got)
+					}
+					if got, ok := body["query_filters"]; !ok || string(got) != "null" {
+						t.Errorf("query_filters: want JSON null, got %q", got)
+					}
+					serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
+				default:
+					t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+					w.WriteHeader(http.StatusInternalServerError)
+				}
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				filter := "span_kind = 'LLM'"
+				return c.Tasks.Update(ctx, tasks.UpdateRequest{
+					Task:         tID,
+					QueryFilter:  &filter,
+					QueryFilters: &tasks.TaskQueryFilters{},
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			// Server-mandated shape switch, the other direction: QueryFilters
+			// carries real filters while QueryFilter is explicitly cleared
+			// ("") in the same PATCH.
+			name: "Update_SwitchToTraceSessionShape",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				switch {
+				case r.Method == http.MethodGet && r.URL.Path == "/v2/tasks/"+tID:
+					serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
+				case r.Method == http.MethodPatch && r.URL.Path == "/v2/tasks/"+tID:
+					var body map[string]json.RawMessage
+					if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+						t.Fatalf("decode body: %v", err)
+					}
+					if got, ok := body["query_filter"]; !ok || string(got) != "null" {
+						t.Errorf("query_filter: want JSON null, got %q", got)
+					}
+					var queryFilters wireQueryFiltersInput
+					if err := json.Unmarshal(body["query_filters"], &queryFilters); err != nil {
+						t.Fatalf("decode query_filters: %v", err)
+					}
+					if len(queryFilters.Filters) != 1 || queryFilters.Filters[0].Id != "A" {
+						t.Errorf("query_filters.filters: got %+v", queryFilters.Filters)
+					}
+					serveTask(t, w, tID, tasks.TaskTypeTemplateEvaluation)
+				default:
+					t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+					w.WriteHeader(http.StatusInternalServerError)
+				}
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				clearFilter := ""
+				return c.Tasks.Update(ctx, tasks.UpdateRequest{
+					Task:        tID,
+					QueryFilter: &clearFilter,
+					QueryFilters: &tasks.TaskQueryFilters{
+						Filters: []tasks.TaskQueryFilter{{Id: "A", Filter: "span_kind = 'LLM'"}},
+					},
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -578,6 +975,42 @@ func TestTasks(t *testing.T) {
 				return c.Tasks.Update(ctx, tasks.UpdateRequest{
 					Task:             tID,
 					Name:             &name,
+					RunConfiguration: &rc,
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "Update_RunExperimentTask_AgentCall",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				switch {
+				case r.Method == http.MethodGet && r.URL.Path == "/v2/tasks/"+tID:
+					serveTask(t, w, tID, tasks.TaskTypeRunExperiment)
+				case r.Method == http.MethodPatch && r.URL.Path == "/v2/tasks/"+tID:
+					var body wireUpdateRunExp
+					if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+						t.Fatalf("decode body: %v", err)
+					}
+					if got := body.RunConfiguration["experiment_type"]; got != "AGENT_CALL" {
+						t.Errorf("run_configuration experiment_type: want AGENT_CALL, got %v", got)
+					}
+					if got := body.RunConfiguration["integration_id"]; got != "agent-1" {
+						t.Errorf("run_configuration integration_id: want agent-1, got %v", got)
+					}
+					serveTask(t, w, tID, tasks.TaskTypeRunExperiment)
+				default:
+					t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+					w.WriteHeader(http.StatusInternalServerError)
+				}
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				rc := agentCallRunConfiguration(t)
+				return c.Tasks.Update(ctx, tasks.UpdateRequest{
+					Task:             tID,
 					RunConfiguration: &rc,
 				})
 			},
@@ -979,8 +1412,8 @@ func TestTasks_CreateEvaluationTask_CustomCodeEvaluatorLimit(t *testing.T) {
 		Name: "two-custom-evaluators",
 		Type: tasks.TaskTypeCodeEvaluation,
 		Evaluators: []tasks.EvaluatorInput{
-			{EvaluatorID: "custom-1"},
-			{EvaluatorID: "custom-2"},
+			tasks.SpanEvaluatorInput{EvaluatorID: "custom-1"},
+			tasks.SpanEvaluatorInput{EvaluatorID: "custom-2"},
 		},
 		Project: projectID("p-1"),
 	})
@@ -1005,7 +1438,7 @@ func TestTasks_CreateEvaluationTask_Validation(t *testing.T) {
 			name: "MissingName",
 			req: tasks.CreateEvaluationTaskRequest{
 				Type:       tasks.TaskTypeTemplateEvaluation,
-				Evaluators: []tasks.EvaluatorInput{{EvaluatorID: "ev-1"}},
+				Evaluators: []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{EvaluatorID: "ev-1"}},
 				Project:    projectID("p-1"),
 			},
 			wantErr: "Name is required",
@@ -1015,7 +1448,7 @@ func TestTasks_CreateEvaluationTask_Validation(t *testing.T) {
 			req: tasks.CreateEvaluationTaskRequest{
 				Name:       "t",
 				Type:       tasks.TaskTypeRunExperiment,
-				Evaluators: []tasks.EvaluatorInput{{EvaluatorID: "ev-1"}},
+				Evaluators: []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{EvaluatorID: "ev-1"}},
 				Project:    projectID("p-1"),
 			},
 			wantErr: "CreateRunExperimentTask",
@@ -1034,7 +1467,7 @@ func TestTasks_CreateEvaluationTask_Validation(t *testing.T) {
 			req: tasks.CreateEvaluationTaskRequest{
 				Name:       "t",
 				Type:       tasks.TaskTypeTemplateEvaluation,
-				Evaluators: []tasks.EvaluatorInput{{EvaluatorID: "ev-1"}},
+				Evaluators: []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{EvaluatorID: "ev-1"}},
 				Project:    projectID("p-1"),
 				Dataset:    datasetID("ds-1"),
 			},
@@ -1045,7 +1478,7 @@ func TestTasks_CreateEvaluationTask_Validation(t *testing.T) {
 			req: tasks.CreateEvaluationTaskRequest{
 				Name:       "t",
 				Type:       tasks.TaskTypeTemplateEvaluation,
-				Evaluators: []tasks.EvaluatorInput{{EvaluatorID: "ev-1"}},
+				Evaluators: []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{EvaluatorID: "ev-1"}},
 			},
 			wantErr: "exactly one of Project or Dataset",
 		},
@@ -1054,7 +1487,7 @@ func TestTasks_CreateEvaluationTask_Validation(t *testing.T) {
 			req: tasks.CreateEvaluationTaskRequest{
 				Name:       "t",
 				Type:       tasks.TaskTypeTemplateEvaluation,
-				Evaluators: []tasks.EvaluatorInput{{EvaluatorID: "ev-1"}},
+				Evaluators: []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{EvaluatorID: "ev-1"}},
 				Dataset:    datasetID("ds-1"),
 			},
 			wantErr: "at least one entry in ExperimentIDs",
@@ -1064,7 +1497,7 @@ func TestTasks_CreateEvaluationTask_Validation(t *testing.T) {
 			req: tasks.CreateEvaluationTaskRequest{
 				Name:          "t",
 				Type:          tasks.TaskTypeTemplateEvaluation,
-				Evaluators:    []tasks.EvaluatorInput{{EvaluatorID: "ev-1"}},
+				Evaluators:    []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{EvaluatorID: "ev-1"}},
 				Project:       projectID("p-1"),
 				ExperimentIDs: []string{"exp-1"},
 			},
@@ -1075,7 +1508,7 @@ func TestTasks_CreateEvaluationTask_Validation(t *testing.T) {
 			req: tasks.CreateEvaluationTaskRequest{
 				Name:          "t",
 				Type:          tasks.TaskTypeTemplateEvaluation,
-				Evaluators:    []tasks.EvaluatorInput{{EvaluatorID: "ev-1"}},
+				Evaluators:    []tasks.EvaluatorInput{tasks.SpanEvaluatorInput{EvaluatorID: "ev-1"}},
 				Dataset:       datasetID("ds-1"),
 				ExperimentIDs: []string{"exp-1"},
 				SamplingRate:  0.5,
@@ -1098,8 +1531,8 @@ func TestTasks_CreateEvaluationTask_Validation(t *testing.T) {
 	}
 }
 
-// TestTasks_CreateRunExperimentTask_Validation covers the client-side checks
-// that reject a create before any request is sent.
+// TestTasks_CreateRunExperimentTask_Validation covers required client-side
+// checks that reject a create before any request is sent.
 func TestTasks_CreateRunExperimentTask_Validation(t *testing.T) {
 	tests := []struct {
 		name    string

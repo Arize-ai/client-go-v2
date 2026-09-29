@@ -64,7 +64,7 @@ type UpdateCategoricalRequest struct {
 	// optimization direction; when nil, the existing value is preserved.
 	OptimizationDirection *OptimizationDirection
 	// Values is optional. When non-nil, replaces the full set of allowed
-	// labels (2–100 items); when nil, the existing set is preserved.
+	// labels (2–500 items); when nil, the existing set is preserved.
 	Values *[]CategoricalAnnotationValue
 }
 

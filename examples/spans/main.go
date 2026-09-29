@@ -28,6 +28,7 @@ func main() {
 
 	listSpans(ctx, client, project, space)
 	deleteSpans(ctx, client, project, space, []string{"span-1", "span-2"})
+	annotateSpans(ctx, client, project, space)
 }
 
 // listSpans flattens the body half (project, time range, filter) and the
@@ -40,7 +41,10 @@ func listSpans(ctx context.Context, client *arize.Client, project, space string)
 		Space:   space,
 		End:     time.Now(),
 		Filter:  "status_code = 'ERROR'",
-		Limit:   50,
+		ExcludedColumns: []string{
+			"attributes.embedding.vectors",
+		},
+		Limit: 50,
 	})
 	if err != nil {
 		log.Fatalf("list spans: %v", err)
@@ -73,4 +77,52 @@ func deleteSpans(ctx context.Context, client *arize.Client, project, space strin
 	if !result.Completed {
 		fmt.Println("server could not fully process all data — retry the original full request")
 	}
+}
+
+// annotateSpans writes human annotations to a batch of records. Granularity
+// selects what each RecordId identifies: a span (GranularitySPAN, the
+// default), a trace's root span (GranularityTRACE), or a session
+// (GranularitySESSION, written to the root span of the session's earliest
+// trace). Up to 1000 records may be annotated per request for
+// GranularitySPAN/GranularityTRACE; up to 100 for GranularitySESSION.
+func annotateSpans(ctx context.Context, client *arize.Client, project, space string) {
+	label := "correct"
+	if err := client.Spans.Annotate(ctx, spans.AnnotateRequest{
+		Project: project,
+		Space:   space,
+		Annotations: []spans.AnnotateRecordInput{
+			{
+				RecordId: "span-1",
+				Values: []spans.AnnotationInput{
+					{Name: "Correctness", Label: &label},
+				},
+			},
+		},
+	}); err != nil {
+		log.Fatalf("annotate spans: %v", err)
+	}
+	fmt.Println("annotated span-1")
+
+	// Session-granularity example. Start/End are optional — when omitted,
+	// they default to a 7-day window (vs. 31 days for SPAN/TRACE) ending
+	// now. Pass them explicitly when annotating an older session.
+	sessionLabel := "good"
+	if err := client.Spans.Annotate(ctx, spans.AnnotateRequest{
+		Project:     project,
+		Space:       space,
+		Granularity: spans.GranularitySESSION,
+		Start:       time.Now().Add(-7 * 24 * time.Hour),
+		End:         time.Now(),
+		Annotations: []spans.AnnotateRecordInput{
+			{
+				RecordId: "your-session-id",
+				Values: []spans.AnnotationInput{
+					{Name: "quality", Label: &sessionLabel},
+				},
+			},
+		},
+	}); err != nil {
+		log.Fatalf("annotate session: %v", err)
+	}
+	fmt.Println("annotated session your-session-id")
 }

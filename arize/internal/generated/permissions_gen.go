@@ -7,12 +7,20 @@ package generated
 // reference them without bare string literals. The public roles package
 // mirrors this as roles.Permissions (var Permissions = generated.Permissions).
 var Permissions = struct {
+	AgentRoleCreate                 Permission
+	AgentRoleDelete                 Permission
+	AgentRoleRead                   Permission
+	AgentRoleUpdate                 Permission
 	AIProviderRead                  Permission
 	AlyxRun                         Permission
 	AnnotationConfigCreate          Permission
 	AnnotationConfigDelete          Permission
 	AnnotationConfigRead            Permission
 	AnnotationConfigUpdate          Permission
+	CostConfigCreate                Permission
+	CostConfigDelete                Permission
+	CostConfigRead                  Permission
+	CostConfigUpdate                Permission
 	CustomMetricCreate              Permission
 	CustomMetricDelete              Permission
 	CustomMetricRead                Permission
@@ -20,6 +28,7 @@ var Permissions = struct {
 	DashboardCreate                 Permission
 	DashboardDelete                 Permission
 	DashboardRead                   Permission
+	DashboardRestrict               Permission
 	DashboardUpdate                 Permission
 	DatasetCreate                   Permission
 	DatasetDelete                   Permission
@@ -119,6 +128,10 @@ var Permissions = struct {
 	RoleBindingCreate               Permission
 	RoleBindingDelete               Permission
 	RoleBindingRead                 Permission
+	RoleCreate                      Permission
+	RoleDelete                      Permission
+	RoleRead                        Permission
+	RoleUpdate                      Permission
 	ServiceKeyCreate                Permission
 	ServiceKeyRead                  Permission
 	ServiceKeyRevoke                Permission
@@ -140,12 +153,20 @@ var Permissions = struct {
 	UserRead                        Permission
 	UserUpdate                      Permission
 }{
+	AgentRoleCreate:                 PermissionAGENTROLECREATE,
+	AgentRoleDelete:                 PermissionAGENTROLEDELETE,
+	AgentRoleRead:                   PermissionAGENTROLEREAD,
+	AgentRoleUpdate:                 PermissionAGENTROLEUPDATE,
 	AIProviderRead:                  PermissionAIPROVIDERREAD,
 	AlyxRun:                         PermissionALYXRUN,
 	AnnotationConfigCreate:          PermissionANNOTATIONCONFIGCREATE,
 	AnnotationConfigDelete:          PermissionANNOTATIONCONFIGDELETE,
 	AnnotationConfigRead:            PermissionANNOTATIONCONFIGREAD,
 	AnnotationConfigUpdate:          PermissionANNOTATIONCONFIGUPDATE,
+	CostConfigCreate:                PermissionCOSTCONFIGCREATE,
+	CostConfigDelete:                PermissionCOSTCONFIGDELETE,
+	CostConfigRead:                  PermissionCOSTCONFIGREAD,
+	CostConfigUpdate:                PermissionCOSTCONFIGUPDATE,
 	CustomMetricCreate:              PermissionCUSTOMMETRICCREATE,
 	CustomMetricDelete:              PermissionCUSTOMMETRICDELETE,
 	CustomMetricRead:                PermissionCUSTOMMETRICREAD,
@@ -153,6 +174,7 @@ var Permissions = struct {
 	DashboardCreate:                 PermissionDASHBOARDCREATE,
 	DashboardDelete:                 PermissionDASHBOARDDELETE,
 	DashboardRead:                   PermissionDASHBOARDREAD,
+	DashboardRestrict:               PermissionDASHBOARDRESTRICT,
 	DashboardUpdate:                 PermissionDASHBOARDUPDATE,
 	DatasetCreate:                   PermissionDATASETCREATE,
 	DatasetDelete:                   PermissionDATASETDELETE,
@@ -252,6 +274,10 @@ var Permissions = struct {
 	RoleBindingCreate:               PermissionROLEBINDINGCREATE,
 	RoleBindingDelete:               PermissionROLEBINDINGDELETE,
 	RoleBindingRead:                 PermissionROLEBINDINGREAD,
+	RoleCreate:                      PermissionROLECREATE,
+	RoleDelete:                      PermissionROLEDELETE,
+	RoleRead:                        PermissionROLEREAD,
+	RoleUpdate:                      PermissionROLEUPDATE,
 	ServiceKeyCreate:                PermissionSERVICEKEYCREATE,
 	ServiceKeyRead:                  PermissionSERVICEKEYREAD,
 	ServiceKeyRevoke:                PermissionSERVICEKEYREVOKE,

@@ -214,9 +214,11 @@ func TestExperiments(t *testing.T) {
 				if r.Method != http.MethodGet {
 					t.Errorf("expected GET, got %s", r.Method)
 				}
+				integrationID := base64.StdEncoding.EncodeToString([]byte("Integration:1:agent-1"))
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(experiments.Experiment{
 					Id: expID, Name: "my-experiment", DatasetId: ptr("ds-1"), DatasetVersionId: ptr("dv-1"),
+					IntegrationId: &integrationID,
 				})
 			},
 			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
@@ -229,6 +231,12 @@ func TestExperiments(t *testing.T) {
 				exp := got.(*experiments.Experiment)
 				if exp.Id != expID {
 					t.Errorf("unexpected id: %s", exp.Id)
+				}
+				// integration_id is populated for agent-backed experiments and
+				// round-trips through the SDK alias.
+				wantIntegrationID := base64.StdEncoding.EncodeToString([]byte("Integration:1:agent-1"))
+				if exp.IntegrationId == nil || *exp.IntegrationId != wantIntegrationID {
+					t.Errorf("integration_id: got %v, want %q", exp.IntegrationId, wantIntegrationID)
 				}
 			},
 		},
@@ -553,11 +561,25 @@ func TestExperiments(t *testing.T) {
 		{
 			name: "ListRuns",
 			handler: func(w http.ResponseWriter, r *http.Request) {
-				if r.URL.Path != "/v2/experiments/"+expID+"/runs" {
+				if r.URL.Path != "/v2/experiments/"+expID+"/runs/search" {
 					t.Errorf("unexpected path: %s", r.URL.Path)
 				}
-				if r.Method != http.MethodGet {
-					t.Errorf("expected GET, got %s", r.Method)
+				if r.Method != http.MethodPost {
+					t.Errorf("expected POST, got %s", r.Method)
+				}
+				var wireBody struct {
+					Filter *string `json:"filter"`
+					Limit  *int32  `json:"limit"`
+					Cursor *string `json:"cursor"`
+				}
+				if err := json.NewDecoder(r.Body).Decode(&wireBody); err != nil {
+					t.Errorf("failed to decode request body: %v", err)
+				}
+				if wireBody.Filter != nil {
+					t.Errorf("expected no filter, got %v", wireBody.Filter)
+				}
+				if wireBody.Limit == nil || *wireBody.Limit != 10 {
+					t.Errorf("limit: got %v", wireBody.Limit)
 				}
 				w.Header().Set("Content-Type", "application/json")
 				out := "output-1"
@@ -578,6 +600,114 @@ func TestExperiments(t *testing.T) {
 				runs := got.(*experiments.ListExperimentRuns)
 				if len(runs.ExperimentRuns) != 1 {
 					t.Errorf("expected 1 run, got %d", len(runs.ExperimentRuns))
+				}
+			},
+		},
+		{
+			name: "ListRuns defaults omit filter, limit, and cursor",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.URL.Path != "/v2/experiments/"+expID+"/runs/search" {
+					t.Errorf("unexpected path: %s", r.URL.Path)
+				}
+				if r.Method != http.MethodPost {
+					t.Errorf("expected POST, got %s", r.Method)
+				}
+				var wireBody struct {
+					Filter *string `json:"filter"`
+					Limit  *int32  `json:"limit"`
+					Cursor *string `json:"cursor"`
+				}
+				if err := json.NewDecoder(r.Body).Decode(&wireBody); err != nil {
+					t.Errorf("failed to decode request body: %v", err)
+				}
+				if wireBody.Filter != nil || wireBody.Limit != nil || wireBody.Cursor != nil {
+					t.Errorf("expected all body fields omitted, got %+v", wireBody)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				out := "output-1"
+				json.NewEncoder(w).Encode(experiments.ListExperimentRuns{
+					ExperimentRuns: []experiments.ExperimentRun{
+						{Output: &out},
+					},
+					Pagination: arize.PaginationMetadata{HasMore: false},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Experiments.ListRuns(ctx, experiments.ListRunsRequest{Experiment: expID})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				runs := got.(*experiments.ListExperimentRuns)
+				if len(runs.ExperimentRuns) != 1 {
+					t.Errorf("expected 1 run, got %d", len(runs.ExperimentRuns))
+				}
+			},
+		},
+		{
+			name: "ListRuns with filter, limit, and cursor",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				if r.URL.Path != "/v2/experiments/"+expID+"/runs/search" {
+					t.Errorf("unexpected path: %s", r.URL.Path)
+				}
+				if r.Method != http.MethodPost {
+					t.Errorf("expected POST, got %s", r.Method)
+				}
+				var wireBody struct {
+					Filter *string `json:"filter"`
+					Limit  *int32  `json:"limit"`
+					Cursor *string `json:"cursor"`
+				}
+				if err := json.NewDecoder(r.Body).Decode(&wireBody); err != nil {
+					t.Errorf("failed to decode request body: %v", err)
+				}
+				if wireBody.Filter == nil || *wireBody.Filter != "eval.quality.score < 0.5" {
+					t.Errorf("filter: got %v", wireBody.Filter)
+				}
+				if wireBody.Limit == nil || *wireBody.Limit != 25 {
+					t.Errorf("limit: got %v", wireBody.Limit)
+				}
+				if wireBody.Cursor == nil || *wireBody.Cursor != "next-cursor" {
+					t.Errorf("cursor: got %v", wireBody.Cursor)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(experiments.ListExperimentRuns{
+					ExperimentRuns: []experiments.ExperimentRun{},
+					Pagination:     arize.PaginationMetadata{HasMore: false},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Experiments.ListRuns(ctx, experiments.ListRunsRequest{
+					Experiment: expID,
+					Filter:     "eval.quality.score < 0.5",
+					Limit:      25,
+					Cursor:     "next-cursor",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+			},
+		},
+		{
+			name: "ListRuns unprocessable entity",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				json.NewEncoder(w).Encode(map[string]any{"title": "unprocessable entity", "status": 422})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Experiments.ListRuns(ctx, experiments.ListRunsRequest{
+					Experiment: expID,
+					Filter:     "output ==",
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				var upe *arize.UnprocessableEntityError
+				if !errors.As(err, &upe) {
+					t.Errorf("expected *UnprocessableEntityError, got %T: %v", err, err)
 				}
 			},
 		},

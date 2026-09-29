@@ -7,7 +7,6 @@ import (
 	"github.com/Arize-ai/client-go-v2/arize/internal/apierrors"
 	"github.com/Arize-ai/client-go-v2/arize/internal/generated"
 	"github.com/Arize-ai/client-go-v2/arize/internal/optfields"
-	"github.com/Arize-ai/client-go-v2/arize/internal/prerelease"
 	"github.com/Arize-ai/client-go-v2/arize/internal/resolve"
 )
 
@@ -23,7 +22,6 @@ func New(gen *generated.ClientWithResponses) *Client {
 
 // List returns a paginated list of annotation configs.
 func (c *Client) List(ctx context.Context, req ListRequest) (*ListAnnotationConfigs, error) {
-	prerelease.Warn("annotationconfigs.list", prerelease.Beta)
 	params := &generated.ListAnnotationConfigsParams{
 		Name:   optfields.PtrIfSet(req.Name),
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),
@@ -48,7 +46,6 @@ func (c *Client) List(ctx context.Context, req ListRequest) (*ListAnnotationConf
 
 // Get returns a single annotation config, resolving by name or ID.
 func (c *Client) Get(ctx context.Context, req GetRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.get", prerelease.Beta)
 	id, err := resolve.FindAnnotationConfigID(ctx, c.gen, req.AnnotationConfig, req.Space)
 	if err != nil {
 		return nil, err
@@ -66,7 +63,6 @@ func (c *Client) Get(ctx context.Context, req GetRequest) (*AnnotationConfig, er
 // CreateContinuous creates a new continuous annotation config, resolving the
 // parent space by name or ID.
 func (c *Client) CreateContinuous(ctx context.Context, req CreateContinuousRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.create", prerelease.Beta)
 	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
@@ -97,7 +93,6 @@ func (c *Client) CreateContinuous(ctx context.Context, req CreateContinuousReque
 // CreateCategorical creates a new categorical annotation config, resolving
 // the parent space by name or ID.
 func (c *Client) CreateCategorical(ctx context.Context, req CreateCategoricalRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.create", prerelease.Beta)
 	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
@@ -128,7 +123,6 @@ func (c *Client) CreateCategorical(ctx context.Context, req CreateCategoricalReq
 // CreateFreeform creates a new freeform annotation config, resolving the
 // parent space by name or ID.
 func (c *Client) CreateFreeform(ctx context.Context, req CreateFreeformRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.create", prerelease.Beta)
 	spaceID, err := resolve.FindSpaceID(ctx, c.gen, req.Space)
 	if err != nil {
 		return nil, err
@@ -157,7 +151,6 @@ func (c *Client) CreateFreeform(ctx context.Context, req CreateFreeformRequest) 
 // resolving by name or ID. Fields left nil preserve their current
 // values.
 func (c *Client) UpdateCategorical(ctx context.Context, req UpdateCategoricalRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.update_categorical", prerelease.Beta)
 	id, err := resolve.FindAnnotationConfigID(ctx, c.gen, req.AnnotationConfig, req.Space)
 	if err != nil {
 		return nil, err
@@ -206,7 +199,6 @@ func categoricalValuesRequestOpt(values *[]CategoricalAnnotationValue) *[]genera
 // resolving by name or ID. Fields left nil preserve their current
 // values.
 func (c *Client) UpdateContinuous(ctx context.Context, req UpdateContinuousRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.update_continuous", prerelease.Beta)
 	id, err := resolve.FindAnnotationConfigID(ctx, c.gen, req.AnnotationConfig, req.Space)
 	if err != nil {
 		return nil, err
@@ -236,7 +228,6 @@ func (c *Client) UpdateContinuous(ctx context.Context, req UpdateContinuousReque
 // UpdateFreeform modifies an existing freeform annotation config, resolving
 // by name or ID. Fields left nil preserve their current values.
 func (c *Client) UpdateFreeform(ctx context.Context, req UpdateFreeformRequest) (*AnnotationConfig, error) {
-	prerelease.Warn("annotationconfigs.update_freeform", prerelease.Beta)
 	id, err := resolve.FindAnnotationConfigID(ctx, c.gen, req.AnnotationConfig, req.Space)
 	if err != nil {
 		return nil, err
@@ -262,7 +253,6 @@ func (c *Client) UpdateFreeform(ctx context.Context, req UpdateFreeformRequest) 
 
 // Delete removes an annotation config, resolving by name or ID.
 func (c *Client) Delete(ctx context.Context, req DeleteRequest) error {
-	prerelease.Warn("annotationconfigs.delete", prerelease.Beta)
 	id, err := resolve.FindAnnotationConfigID(ctx, c.gen, req.AnnotationConfig, req.Space)
 	if err != nil {
 		return err
