@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.25.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.24.0...arize-go-sdk-v2/v0.25.0) (2026-10-12)
+
+
+### 🎁 New Features
+
+* adding preview truncation to list spans ([#89694](https://github.com/Arize-ai/arize/issues/89694)) ([71202f9](https://github.com/Arize-ai/arize/commit/71202f9163d0d1466cec70bb6d64bb8f23e47c85))
+* support new Account Member UI Only Role ([#90249](https://github.com/Arize-ai/arize/issues/90249)) ([14f823c](https://github.com/Arize-ai/arize/commit/14f823c2bb258aabf578d48888b67fd7baa0253a))
+
 ## [0.24.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.23.0...arize-go-sdk-v2/v0.24.0) (2026-09-29)
 
 

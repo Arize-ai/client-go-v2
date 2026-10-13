@@ -37,12 +37,13 @@ func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *a
 // bodies. Tests use it so they can decode request bodies without importing
 // internal/generated.
 type wireSpansList struct {
-	ProjectId       string     `json:"project_id"`
-	StartTime       *time.Time `json:"start_time,omitempty"`
-	EndTime         *time.Time `json:"end_time,omitempty"`
-	Filter          *string    `json:"filter,omitempty"`
-	IncludedColumns *[]string  `json:"included_columns,omitempty"`
-	ExcludedColumns *[]string  `json:"excluded_columns,omitempty"`
+	ProjectId            string     `json:"project_id"`
+	StartTime            *time.Time `json:"start_time,omitempty"`
+	EndTime              *time.Time `json:"end_time,omitempty"`
+	Filter               *string    `json:"filter,omitempty"`
+	IncludedColumns      *[]string  `json:"included_columns,omitempty"`
+	ExcludedColumns      *[]string  `json:"excluded_columns,omitempty"`
+	TruncateStringLength *int       `json:"truncate_string_length,omitempty"`
 }
 
 // wireDeleteSpans mirrors the JSON shape the API receives for spans.Delete
@@ -102,6 +103,9 @@ func TestSpans(t *testing.T) {
 				if body.IncludedColumns == nil || len(*body.IncludedColumns) != 1 || (*body.IncludedColumns)[0] != "attributes.llm.model_name" {
 					t.Errorf("body included_columns: %v", body.IncludedColumns)
 				}
+				if body.TruncateStringLength != nil {
+					t.Errorf("body truncate_string_length: want nil, got %v", body.TruncateStringLength)
+				}
 				if r.URL.Query().Get("limit") != "25" {
 					t.Errorf("query limit: %q", r.URL.Query().Get("limit"))
 				}
@@ -117,6 +121,37 @@ func TestSpans(t *testing.T) {
 					Filter:          "status_code = 'ERROR'",
 					IncludedColumns: []string{"attributes.llm.model_name"},
 					Limit:           25,
+				})
+			},
+			check: func(t *testing.T, got any, err error) {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				if got == nil {
+					t.Error("expected non-nil response")
+				}
+			},
+		},
+		{
+			name: "List_TruncateStringLength",
+			handler: func(w http.ResponseWriter, r *http.Request) {
+				var body wireSpansList
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Errorf("decode body: %v", err)
+				}
+				if body.TruncateStringLength == nil || *body.TruncateStringLength != 200 {
+					t.Errorf("body truncate_string_length: want 200, got %v", body.TruncateStringLength)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(spans.ListSpans{
+					Spans:      []spans.Span{},
+					Pagination: arize.PaginationMetadata{HasMore: false},
+				})
+			},
+			invoke: func(ctx context.Context, c *arize.Client) (any, error) {
+				return c.Spans.List(ctx, spans.ListRequest{
+					Project:              projectID("proj-1"),
+					TruncateStringLength: 200,
 				})
 			},
 			check: func(t *testing.T, got any, err error) {
@@ -452,6 +487,9 @@ func TestListExcludedColumns(t *testing.T) {
 		}
 		if body.IncludedColumns != nil {
 			t.Errorf("body included_columns: want nil, got %v", body.IncludedColumns)
+		}
+		if body.TruncateStringLength != nil {
+			t.Errorf("body truncate_string_length: want nil, got %v", body.TruncateStringLength)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(spans.ListSpans{

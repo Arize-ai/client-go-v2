@@ -43,17 +43,20 @@ func TestAPIKeys(t *testing.T) {
 		{
 			name: "List success",
 			handler: func(w http.ResponseWriter, r *http.Request) {
+				var key apikeys.APIKey
+				if err := key.FromUserApiKey(apikeys.UserApiKey{
+					Id:              "key-1",
+					Name:            "my-key",
+					CreatedAt:       time.Now(),
+					CreatedByUserId: "user-1",
+					RedactedKey:     "ak-abc...xyz",
+					Status:          apikeys.APIKeyStatusActive,
+				}); err != nil {
+					t.Fatalf("build test fixture: %v", err)
+				}
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(apikeys.ListApiKeysResponse{
-					ApiKeys: []apikeys.APIKey{{
-						Id:              "key-1",
-						Name:            "my-key",
-						CreatedAt:       time.Now(),
-						CreatedByUserId: "user-1",
-						KeyType:         apikeys.APIKeyTypeUser,
-						RedactedKey:     "ak-abc...xyz",
-						Status:          apikeys.APIKeyStatusActive,
-					}},
+					ApiKeys:    []apikeys.APIKey{key},
 					Pagination: arize.PaginationMetadata{HasMore: false},
 				})
 			},

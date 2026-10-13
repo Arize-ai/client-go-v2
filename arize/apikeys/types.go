@@ -123,6 +123,13 @@ type (
 	// CreatedServiceApiKey is the response body when a service API key is created.
 	CreatedServiceApiKey = generated.CreatedServiceApiKey
 
+	// UserApiKey is the user-key variant of the APIKey union returned by List. Access it via
+	// APIKey.AsUserApiKey(), or check APIKey.Discriminator() first to pick the right variant.
+	UserApiKey = generated.UserApiKey
+	// ServiceApiKey is the service-key variant of the APIKey union returned by List, including
+	// its BotUser. Access it via APIKey.AsServiceApiKey(), or check APIKey.Discriminator() first.
+	ServiceApiKey = generated.ServiceApiKey
+
 	// APIKeyType is the type of an API key (user or service). Shared across
 	// responses, create requests, and list filters.
 	APIKeyType = generated.ApiKeyType

@@ -492,7 +492,11 @@ A full runnable example lives in [`examples/spans`](./examples/spans).
 Name-or-ID `Project`, optional time range, filter DSL, and column projection.
 Set either `IncludedColumns` to return only selected columns, or
 `ExcludedColumns` to omit selected columns. The two fields are mutually
-exclusive. Fixed span fields are always returned.
+exclusive. Fixed span fields are always returned. Set `TruncateStringLength`
+to shorten long string values inside each span's `attributes` object. Strings
+longer than the limit are cut and end with `…`, which counts toward the limit.
+Only `attributes` string values are affected; span IDs, names, status,
+timestamps, annotations, evaluations, and events are not truncated.
 
 ```go
 resp, err := client.Spans.List(ctx, spans.ListRequest{
@@ -512,9 +516,10 @@ To return most columns but skip a large column, use `ExcludedColumns` instead:
 
 ```go
 resp, err := client.Spans.List(ctx, spans.ListRequest{
-    Project:         "<project-id-or-name>",
-    Space:           "<space-id-or-name>",
-    ExcludedColumns: []string{"attributes.embedding.vectors"},
+    Project:              "<project-id-or-name>",
+    Space:                "<space-id-or-name>",
+    ExcludedColumns:      []string{"attributes.embedding.vectors"},
+    TruncateStringLength: 200,
 })
 ```
 
@@ -1446,7 +1451,10 @@ A full runnable example lives in [`examples/apikeys`](./examples/apikeys).
 
 ### List API Keys
 
-Filter by key type and status.
+Filter by key type and status. Each returned `apikeys.APIKey` is a discriminated union — use
+`Discriminator()` (or try `AsServiceApiKey()`/`AsUserApiKey()` directly) to read it. A service
+key's variant includes `BotUser`, the same bot user detail returned by `CreateServiceKey` — use
+`BotUser.Id` as the `UserID` when creating a role binding for that key.
 
 ```go
 resp, err := client.APIKeys.List(ctx, apikeys.ListRequest{
@@ -1454,6 +1462,14 @@ resp, err := client.APIKeys.List(ctx, apikeys.ListRequest{
     Status:  apikeys.APIKeyStatusActive,
     Limit:   25,
 })
+for _, k := range resp.ApiKeys {
+    if svc, err := k.AsServiceApiKey(); err == nil {
+        fmt.Println(svc.Name, svc.BotUser.Id)
+        continue
+    }
+    user, err := k.AsUserApiKey()
+    fmt.Println(user.Name)
+}
 ```
 
 ### Create an API Key

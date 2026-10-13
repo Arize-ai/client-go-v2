@@ -2078,6 +2078,10 @@ const (
 	PermissionDASHBOARDDELETE                 Permission = "DASHBOARD_DELETE"
 	PermissionDASHBOARDREAD                   Permission = "DASHBOARD_READ"
 	PermissionDASHBOARDRESTRICT               Permission = "DASHBOARD_RESTRICT"
+	PermissionDASHBOARDTEMPLATECREATE         Permission = "DASHBOARD_TEMPLATE_CREATE"
+	PermissionDASHBOARDTEMPLATEDELETE         Permission = "DASHBOARD_TEMPLATE_DELETE"
+	PermissionDASHBOARDTEMPLATEREAD           Permission = "DASHBOARD_TEMPLATE_READ"
+	PermissionDASHBOARDTEMPLATEUPDATE         Permission = "DASHBOARD_TEMPLATE_UPDATE"
 	PermissionDASHBOARDUPDATE                 Permission = "DASHBOARD_UPDATE"
 	PermissionDATAFABRICCONNECTORCREATE       Permission = "DATA_FABRIC_CONNECTOR_CREATE"
 	PermissionDATAFABRICCONNECTORDELETE       Permission = "DATA_FABRIC_CONNECTOR_DELETE"
@@ -2160,6 +2164,7 @@ const (
 	PermissionPROMPTOPTIMIZETASKREAD          Permission = "PROMPT_OPTIMIZE_TASK_READ"
 	PermissionPROMPTOPTIMIZETASKUPDATE        Permission = "PROMPT_OPTIMIZE_TASK_UPDATE"
 	PermissionPROMPTREAD                      Permission = "PROMPT_READ"
+	PermissionPROMPTRESTRICT                  Permission = "PROMPT_RESTRICT"
 	PermissionPROMPTUPDATE                    Permission = "PROMPT_UPDATE"
 	PermissionQUEUECREATE                     Permission = "QUEUE_CREATE"
 	PermissionQUEUEDELETE                     Permission = "QUEUE_DELETE"
@@ -2249,6 +2254,14 @@ func (e Permission) Valid() bool {
 	case PermissionDASHBOARDREAD:
 		return true
 	case PermissionDASHBOARDRESTRICT:
+		return true
+	case PermissionDASHBOARDTEMPLATECREATE:
+		return true
+	case PermissionDASHBOARDTEMPLATEDELETE:
+		return true
+	case PermissionDASHBOARDTEMPLATEREAD:
+		return true
+	case PermissionDASHBOARDTEMPLATEUPDATE:
 		return true
 	case PermissionDASHBOARDUPDATE:
 		return true
@@ -2414,6 +2427,8 @@ func (e Permission) Valid() bool {
 		return true
 	case PermissionPROMPTREAD:
 		return true
+	case PermissionPROMPTRESTRICT:
+		return true
 	case PermissionPROMPTUPDATE:
 		return true
 	case PermissionQUEUECREATE:
@@ -2547,6 +2562,7 @@ func (e RecordGranularity) Valid() bool {
 const (
 	ResourceRestrictionTypeDASHBOARD ResourceRestrictionType = "DASHBOARD"
 	ResourceRestrictionTypePROJECT   ResourceRestrictionType = "PROJECT"
+	ResourceRestrictionTypePROMPT    ResourceRestrictionType = "PROMPT"
 )
 
 // Valid indicates whether the value is a known member of the ResourceRestrictionType enum.
@@ -2555,6 +2571,8 @@ func (e ResourceRestrictionType) Valid() bool {
 	case ResourceRestrictionTypeDASHBOARD:
 		return true
 	case ResourceRestrictionTypePROJECT:
+		return true
+	case ResourceRestrictionTypePROMPT:
 		return true
 	default:
 		return false
@@ -2600,6 +2618,21 @@ func (e RoleBindingResourceType) Valid() bool {
 	}
 }
 
+// Defines values for ServiceApiKeyKeyType.
+const (
+	ServiceApiKeyKeyTypeSERVICE ServiceApiKeyKeyType = "SERVICE"
+)
+
+// Valid indicates whether the value is a known member of the ServiceApiKeyKeyType enum.
+func (e ServiceApiKeyKeyType) Valid() bool {
+	switch e {
+	case ServiceApiKeyKeyTypeSERVICE:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for SpaceRoleAssignmentType.
 const (
 	SpaceRoleAssignmentTypeCUSTOM     SpaceRoleAssignmentType = "CUSTOM"
@@ -2622,6 +2655,7 @@ func (e SpaceRoleAssignmentType) Valid() bool {
 const (
 	SpanKindAGENT     SpanKind = "AGENT"
 	SpanKindCHAIN     SpanKind = "CHAIN"
+	SpanKindDECISION  SpanKind = "DECISION"
 	SpanKindEMBEDDING SpanKind = "EMBEDDING"
 	SpanKindEVALUATOR SpanKind = "EVALUATOR"
 	SpanKindGUARDRAIL SpanKind = "GUARDRAIL"
@@ -2639,6 +2673,8 @@ func (e SpanKind) Valid() bool {
 	case SpanKindAGENT:
 		return true
 	case SpanKindCHAIN:
+		return true
+	case SpanKindDECISION:
 		return true
 	case SpanKindEMBEDDING:
 		return true
@@ -3077,11 +3113,27 @@ func (e UpdateLlmIntegrationRequestType) Valid() bool {
 	}
 }
 
+// Defines values for UserApiKeyKeyType.
+const (
+	UserApiKeyKeyTypeUSER UserApiKeyKeyType = "USER"
+)
+
+// Valid indicates whether the value is a known member of the UserApiKeyKeyType enum.
+func (e UserApiKeyKeyType) Valid() bool {
+	switch e {
+	case UserApiKeyKeyTypeUSER:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for UserRole.
 const (
-	UserRoleADMIN     UserRole = "ADMIN"
-	UserRoleANNOTATOR UserRole = "ANNOTATOR"
-	UserRoleMEMBER    UserRole = "MEMBER"
+	UserRoleADMIN        UserRole = "ADMIN"
+	UserRoleANNOTATOR    UserRole = "ANNOTATOR"
+	UserRoleMEMBER       UserRole = "MEMBER"
+	UserRoleMEMBERUIONLY UserRole = "MEMBER_UI_ONLY"
 )
 
 // Valid indicates whether the value is a known member of the UserRole enum.
@@ -3092,6 +3144,8 @@ func (e UserRole) Valid() bool {
 	case UserRoleANNOTATOR:
 		return true
 	case UserRoleMEMBER:
+		return true
+	case UserRoleMEMBERUIONLY:
 		return true
 	default:
 		return false
@@ -3302,6 +3356,18 @@ type AgentCallRunConfig struct {
 	// is optional — `{{column}}` and `{{dataset.column}}` are equivalent, and
 	// responses (create, update, and read) always echo the normalized
 	// `{{column}}` form.
+	// Write every placeholder as a JSON string. A string that is exactly one
+	// placeholder (`"{{profile_id}}"`) is replaced by the row value cast to
+	// the type the input schema declares for that field: numeric strings
+	// become integers or numbers, `"true"`/`"false"` become booleans, JSON
+	// text becomes an object or array, and non-string values become strings.
+	// A placeholder embedded in other text (`"id-{{profile_id}}"`) is
+	// interpolated as text.
+	// A whole-value placeholder whose cell is null or whose column is missing
+	// is sent as `null`. Fields the schema does not type are sent with the
+	// dataset value's own type. If a value cannot be cast, that experiment
+	// run fails with an error naming the column, the value, and the target
+	// type; the other runs continue.
 	InputTemplate map[string]interface{} `json:"input_template"`
 
 	// IntegrationId Agent integration identifier (base64). The agent invoked for each
@@ -3323,6 +3389,18 @@ type AgentCallRunConfigRequest struct {
 	// JSON object whose values conform to the agent integration's input
 	// schema. Mustache placeholders (`{{column}}`) are substituted with each
 	// dataset row's values before the request is sent.
+	// Write every placeholder as a JSON string. A string that is exactly one
+	// placeholder (`"{{profile_id}}"`) is replaced by the row value cast to
+	// the type the input schema declares for that field: numeric strings
+	// become integers or numbers, `"true"`/`"false"` become booleans, JSON
+	// text becomes an object or array, and non-string values become strings.
+	// A placeholder embedded in other text (`"id-{{profile_id}}"`) is
+	// interpolated as text.
+	// A whole-value placeholder whose cell is null or whose column is missing
+	// is sent as `null`. Fields the schema does not type are sent with the
+	// dataset value's own type. If a value cannot be cast, that experiment
+	// run fails with an error naming the column, the value, and the target
+	// type; the other runs continue.
 	InputTemplate map[string]interface{} `json:"input_template"`
 
 	// IntegrationId Agent integration identifier (base64). The agent invoked for each
@@ -3821,41 +3899,12 @@ type AnthropicHeadersRequest struct {
 	AnthropicBeta *[]*string `json:"anthropic_beta,omitempty"`
 }
 
-// ApiKey defines model for ApiKey.
+// ApiKey An API key as returned by `GET /v2/api-keys`. The `key_type` field discriminates the variant:
+//   - `USER` — standard user key; no bot user.
+//   - `SERVICE` — service key tied to a service account; includes a `bot_user` with the
+//     service account's resolved role assignments.
 type ApiKey struct {
-	// CreatedAt Timestamp when the key was created.
-	CreatedAt time.Time `json:"created_at"`
-
-	// CreatedByUserId ID of the user who created the key.
-	CreatedByUserId string `json:"created_by_user_id"`
-
-	// Description Optional user-defined description for the API key.
-	Description *string `json:"description,omitempty"`
-
-	// ExpiresAt Optional timestamp when the key will expire.
-	ExpiresAt *time.Time `json:"expires_at,omitempty"`
-
-	// Id Unique identifier for the API key.
-	Id string `json:"id"`
-
-	// KeyType Type of the API key.
-	// - USER - Personal key that authenticates as the creating user.
-	// - SERVICE - Key that authenticates as a service account with explicitly granted access.
-	KeyType ApiKeyType `json:"key_type"`
-
-	// LastUsedAt Approximate timestamp when the key was last used for authentication. This value is periodically updated and may not reflect the most recent usage.
-	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
-
-	// Name User-defined name for the API key.
-	Name string `json:"name"`
-
-	// RedactedKey Redacted version of the key suitable for display (e.g., "ak-abc...xyz").
-	RedactedKey string `json:"redacted_key"`
-
-	// Status Current status of the API key.
-	// - ACTIVE - The key is valid for use.
-	// - REVOKED - The key has been revoked and is no longer valid.
-	Status ApiKeyStatus `json:"status"`
+	union json.RawMessage
 }
 
 // ApiKeyStatus Current status of the API key.
@@ -4981,7 +5030,7 @@ type CreateServiceApiKeyRequest struct {
 	// Support will be added in a future release.
 	// Defaults to `{ type: PREDEFINED, name: MEMBER }` when omitted.
 	// Must be at or below the caller's own account role.
-	// The `ANNOTATOR` role is not valid for service keys and returns `422`.
+	// The `MEMBER_UI_ONLY` and `ANNOTATOR` roles are not valid for service keys and return `400`.
 	AccountRole *UserRoleAssignmentRequest `json:"account_role,omitempty"`
 
 	// Description Optional user-defined description for the API key.
@@ -5327,7 +5376,7 @@ type CreateWebhookSubscriptionRequest struct {
 
 // CreatedServiceApiKey defines model for CreatedServiceApiKey.
 type CreatedServiceApiKey struct {
-	BotUser ServiceKeyBotUser `json:"bot_user"`
+	BotUser CreatedServiceKeyBotUser `json:"bot_user"`
 
 	// CreatedAt Timestamp when the key was created.
 	CreatedAt time.Time `json:"created_at"`
@@ -5368,6 +5417,23 @@ type CreatedServiceApiKey struct {
 
 // CreatedServiceApiKeyKeyType Discriminator value for service keys.
 type CreatedServiceApiKeyKeyType string
+
+// CreatedServiceKeyBotUser defines model for CreatedServiceKeyBotUser.
+type CreatedServiceKeyBotUser struct {
+	// AccountRole Account-level role assigned to the bot user. Always present — defaults are resolved server-side.
+	AccountRole UserRoleAssignment `json:"account_role"`
+
+	// Id Global ID of the bot user.
+	Id string `json:"id"`
+
+	// Name Display name of the bot user.
+	Name string `json:"name"`
+
+	// Organizations Organization access assignments for the service account, each containing nested
+	// space assignments. Always has at least one entry — creating a service key requires
+	// at least one organization.
+	Organizations []ServiceKeyBotUserOrgAssignment `json:"organizations"`
+}
 
 // CreatedUserApiKey defines model for CreatedUserApiKey.
 type CreatedUserApiKey struct {
@@ -7291,7 +7357,7 @@ type ListSpacesResponse struct {
 
 // ListSpansRequest defines model for ListSpansRequest.
 type ListSpansRequest struct {
-	// EndTime Filter to spans starting before this timestamp (exclusive).
+	// EndTime Filter to spans starting at or before this timestamp (inclusive).
 	// ISO 8601 format (e.g., `2024-01-02T00:00:00Z`). Defaults to the current time.
 	EndTime *time.Time `json:"end_time,omitempty"`
 
@@ -7334,6 +7400,16 @@ type ListSpansRequest struct {
 	// StartTime Filter to spans starting at or after this timestamp (inclusive).
 	// ISO 8601 format (e.g., `2024-01-01T00:00:00Z`). Defaults to 1 week ago.
 	StartTime *time.Time `json:"start_time,omitempty"`
+
+	// TruncateStringLength When set, every string value inside each returned span's `attributes` object,
+	// including strings nested at any depth in objects and arrays, is shortened to
+	// at most this many characters (Unicode code points). Strings longer than the
+	// limit are cut and end with a single ellipsis character `…` which counts toward
+	// the limit; strings at or under the limit are unchanged. Only `attributes` string
+	// values are affected; span IDs, names, kinds, status, timestamps, annotations,
+	// evaluations, events and pagination are never truncated. Omitted means no truncation.
+	// Must be a positive integer; 0 or negative returns 422.
+	TruncateStringLength *int `json:"truncate_string_length,omitempty"`
 }
 
 // ListSpansResponse defines model for ListSpansResponse.
@@ -7342,7 +7418,9 @@ type ListSpansResponse struct {
 	// request's `cursor` query parameter.
 	Pagination PaginationMetadata `json:"pagination"`
 
-	// Spans A list of spans
+	// Spans A list of spans ordered by `start_time` from newest to oldest. Spans
+	// with the same start time use their trace and span identifiers for a
+	// stable order.
 	Spans []Span `json:"spans"`
 }
 
@@ -7380,7 +7458,7 @@ type ListTasksResponse struct {
 
 // ListTracesRequest defines model for ListTracesRequest.
 type ListTracesRequest struct {
-	// EndTime Return traces whose spans start before this timestamp (exclusive).
+	// EndTime Return traces whose spans start at or before this timestamp (inclusive).
 	// ISO 8601 format (e.g., `2024-01-02T00:00:00Z`). Defaults to the current time.
 	EndTime *time.Time `json:"end_time,omitempty"`
 
@@ -7406,7 +7484,9 @@ type ListTracesResponse struct {
 	// request's `cursor` query parameter.
 	Pagination PaginationMetadata `json:"pagination"`
 
-	// Traces A list of traces, ordered newest-first.
+	// Traces A list of root-based trace entries ordered by root span `start_time`
+	// from newest to oldest. The root trace and span identifiers give entries
+	// with the same start time a stable order.
 	Traces []Trace `json:"traces"`
 }
 
@@ -8364,7 +8444,10 @@ type RefreshApiKeyRequest struct {
 	GracePeriodSeconds *int `json:"grace_period_seconds,omitempty"`
 }
 
-// RefreshApiKeyResponse defines model for RefreshApiKeyResponse.
+// RefreshApiKeyResponse The refreshed API key credential and its metadata. Refresh replaces the key secret
+// but preserves the key's identity (ID, name, type, bindings). Unlike key creation,
+// refresh does **not** return `bot_user` details — refresh never creates a new service
+// account and the existing bot user's bindings are unchanged.
 type RefreshApiKeyResponse struct {
 	// CreatedAt Timestamp when the key was created.
 	CreatedAt time.Time `json:"created_at"`
@@ -8466,12 +8549,14 @@ type ResourceRestriction struct {
 	// ResourceType Type of the restricted resource.
 	// - PROJECT - A project within a space.
 	// - DASHBOARD - A dashboard within a space.
+	// - PROMPT - A prompt within a space.
 	ResourceType ResourceRestrictionType `json:"resource_type"`
 }
 
 // ResourceRestrictionType Type of the restricted resource.
 // - PROJECT - A project within a space.
 // - DASHBOARD - A dashboard within a space.
+// - PROMPT - A prompt within a space.
 type ResourceRestrictionType string
 
 // ResponseFormat Response format configuration
@@ -8625,9 +8710,51 @@ type SearchExperimentRunsRequest struct {
 	Limit *int32 `json:"limit,omitempty"`
 }
 
+// ServiceApiKey defines model for ServiceApiKey.
+type ServiceApiKey struct {
+	BotUser ServiceKeyBotUser `json:"bot_user"`
+
+	// CreatedAt Timestamp when the key was created.
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId ID of the user who created the key.
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// Description Optional user-defined description for the API key.
+	Description *string `json:"description,omitempty"`
+
+	// ExpiresAt Optional timestamp when the key will expire.
+	ExpiresAt *time.Time `json:"expires_at,omitempty"`
+
+	// Id Unique identifier for the API key.
+	Id string `json:"id"`
+
+	// KeyType Discriminator value for service keys.
+	KeyType ServiceApiKeyKeyType `json:"key_type"`
+
+	// LastUsedAt Approximate timestamp when the key was last used for authentication. This value is periodically updated and may not reflect the most recent usage.
+	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
+
+	// Name User-defined name for the API key.
+	Name string `json:"name"`
+
+	// RedactedKey Redacted version of the key suitable for display (e.g., "ak-abc...xyz").
+	RedactedKey string `json:"redacted_key"`
+
+	// Status Current status of the API key.
+	// - ACTIVE - The key is valid for use.
+	// - REVOKED - The key has been revoked and is no longer valid.
+	Status ApiKeyStatus `json:"status"`
+}
+
+// ServiceApiKeyKeyType Discriminator value for service keys.
+type ServiceApiKeyKeyType string
+
 // ServiceKeyBotUser defines model for ServiceKeyBotUser.
 type ServiceKeyBotUser struct {
-	// AccountRole Account-level role assigned to the bot user. Always present — defaults are resolved server-side.
+	// AccountRole Account-level role assigned to the bot user. Always present — defaults are resolved
+	// server-side. In a list response (`GET /v2/api-keys`) for a bot user that could not be
+	// resolved, this is a `MEMBER` placeholder and `name` is empty.
 	AccountRole UserRoleAssignment `json:"account_role"`
 
 	// Id Global ID of the bot user.
@@ -8636,7 +8763,12 @@ type ServiceKeyBotUser struct {
 	// Name Display name of the bot user.
 	Name string `json:"name"`
 
-	// Organizations Organization access assignments for the service account, each containing nested space assignments.
+	// Organizations Organization access assignments for the service account, each containing nested
+	// space assignments. Always empty in a list response (`GET /v2/api-keys`) filtered by
+	// `space_id`. Also empty in a list response for a bot user whose bindings could not be
+	// resolved (e.g. a stale or otherwise unrecoverable bot user). `CreatedServiceKeyBotUser` (used in the `POST /v2/api-keys` response)
+	// tightens this to at least one entry, since creating a service key always requires
+	// an organization.
 	Organizations []ServiceKeyBotUserOrgAssignment `json:"organizations"`
 }
 
@@ -9486,15 +9618,12 @@ type Trace struct {
 	// trace tree client-side using each span's `parent_id`.
 	Spans []Span `json:"spans"`
 
-	// SpansTruncated `true` when this trace contained more spans than the per-trace limit and
-	// its returned span list is incomplete. `false` otherwise.
-	//
-	// Note: each page also has an overall cap on the total number of spans
-	// returned across all of its traces. On pages that include unusually large
-	// traces, an individual trace may return fewer spans than it actually has
-	// even when `spans_truncated` is `false`. To retrieve a trace's spans in
-	// full, narrow the time window or fetch them directly with
-	// `POST /v2/spans` filtered to that `trace_id`.
+	// SpansTruncated `true` when more than 1,000 spans were fetched for this trace and its
+	// returned list was capped. Traces share a fetch allowance per page.
+	// If that allowance is exhausted, a trace can be incomplete even when
+	// this flag is `false`. Narrowing the time window can reduce this risk.
+	// To retrieve a trace's spans in full, paginate through `POST /v2/spans`
+	// filtered to that `trace_id` over a time window that covers the full trace.
 	SpansTruncated bool `json:"spans_truncated"`
 
 	// StartTime Earliest span start time across the returned spans.
@@ -10220,6 +10349,44 @@ type User struct {
 	Status UserStatus `json:"status"`
 }
 
+// UserApiKey defines model for UserApiKey.
+type UserApiKey struct {
+	// CreatedAt Timestamp when the key was created.
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUserId ID of the user who created the key.
+	CreatedByUserId string `json:"created_by_user_id"`
+
+	// Description Optional user-defined description for the API key.
+	Description *string `json:"description,omitempty"`
+
+	// ExpiresAt Optional timestamp when the key will expire.
+	ExpiresAt *time.Time `json:"expires_at,omitempty"`
+
+	// Id Unique identifier for the API key.
+	Id string `json:"id"`
+
+	// KeyType Discriminator value for user keys.
+	KeyType UserApiKeyKeyType `json:"key_type"`
+
+	// LastUsedAt Approximate timestamp when the key was last used for authentication. This value is periodically updated and may not reflect the most recent usage.
+	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
+
+	// Name User-defined name for the API key.
+	Name string `json:"name"`
+
+	// RedactedKey Redacted version of the key suitable for display (e.g., "ak-abc...xyz").
+	RedactedKey string `json:"redacted_key"`
+
+	// Status Current status of the API key.
+	// - ACTIVE - The key is valid for use.
+	// - REVOKED - The key has been revoked and is no longer valid.
+	Status ApiKeyStatus `json:"status"`
+}
+
+// UserApiKeyKeyType Discriminator value for user keys.
+type UserApiKeyKeyType string
+
 // UserRole Account-level role of the user. These are pre-defined roles in Arize.
 type UserRole string
 
@@ -10570,6 +10737,7 @@ type ResourceIdPathParam = Id
 // ResourceRestrictionTypeQueryParam Type of the restricted resource.
 // - PROJECT - A project within a space.
 // - DASHBOARD - A dashboard within a space.
+// - PROMPT - A prompt within a space.
 type ResourceRestrictionTypeQueryParam = ResourceRestrictionType
 
 // RoleBindingIdPathParam A universally unique identifier (base64-encoded opaque string).
@@ -11387,8 +11555,8 @@ type ListProjectsParams struct {
 	// attempt to parse or construct it.
 	Cursor *CursorQueryParam `form:"cursor,omitempty" json:"cursor,omitempty"`
 
-	// ProjectType Filter projects by type. When omitted, harness projects are excluded from
-	// list results. Set to `HARNESS` to include harness session projects.
+	// ProjectType Filter projects by type. When omitted, projects of every type are
+	// returned. Set to `HARNESS` to return only harness session projects.
 	ProjectType *ProjectTypeQueryParam `form:"project_type,omitempty" json:"project_type,omitempty"`
 }
 
@@ -11439,10 +11607,12 @@ type ListPromptVersionsParams struct {
 
 // ListResourceRestrictionsParams defines parameters for ListResourceRestrictions.
 type ListResourceRestrictionsParams struct {
-	// ResourceType Filter the results to a specific resource type.
-	// When omitted, restrictions of all supported types are returned.
+	// ResourceType Filter restrictions to a single resource type.
 	// - `PROJECT` — Return only restricted projects.
 	// - `DASHBOARD` — Return only restricted dashboards.
+	// - `PROMPT` — Return only restricted prompts.
+	//
+	// When not specified, restrictions of all supported types are returned in one merged list.
 	ResourceType *ResourceRestrictionTypeQueryParam `form:"resource_type,omitempty" json:"resource_type,omitempty"`
 
 	// Limit Maximum items to return. Defaults to 50 if omitted; maximum is 100.
@@ -15320,6 +15490,95 @@ func (t AnnotationQueueRecordInput) MarshalJSON() ([]byte, error) {
 }
 
 func (t *AnnotationQueueRecordInput) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsUserApiKey returns the union data inside the ApiKey as a UserApiKey
+func (t ApiKey) AsUserApiKey() (UserApiKey, error) {
+	var body UserApiKey
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromUserApiKey overwrites any union data inside the ApiKey as the provided UserApiKey
+func (t *ApiKey) FromUserApiKey(v UserApiKey) error {
+	v.KeyType = "USER"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeUserApiKey performs a merge with any union data inside the ApiKey, using the provided UserApiKey
+func (t *ApiKey) MergeUserApiKey(v UserApiKey) error {
+	v.KeyType = "USER"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsServiceApiKey returns the union data inside the ApiKey as a ServiceApiKey
+func (t ApiKey) AsServiceApiKey() (ServiceApiKey, error) {
+	var body ServiceApiKey
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromServiceApiKey overwrites any union data inside the ApiKey as the provided ServiceApiKey
+func (t *ApiKey) FromServiceApiKey(v ServiceApiKey) error {
+	v.KeyType = "SERVICE"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeServiceApiKey performs a merge with any union data inside the ApiKey, using the provided ServiceApiKey
+func (t *ApiKey) MergeServiceApiKey(v ServiceApiKey) error {
+	v.KeyType = "SERVICE"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t ApiKey) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"key_type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t ApiKey) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "SERVICE":
+		return t.AsServiceApiKey()
+	case "USER":
+		return t.AsUserApiKey()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t ApiKey) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *ApiKey) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -33981,6 +34240,7 @@ type DeleteEvaluatorResp struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -34193,6 +34453,7 @@ type DeleteEvaluatorVersionsResp struct {
 	ApplicationproblemJSON401 *Unauthorized
 	ApplicationproblemJSON403 *Forbidden
 	ApplicationproblemJSON404 *NotFound
+	ApplicationproblemJSON409 *Conflict
 	ApplicationproblemJSON429 *RateLimitExceeded
 }
 
@@ -42970,6 +43231,13 @@ func ParseDeleteEvaluatorResp(rsp *http.Response) (*DeleteEvaluatorResp, error) 
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -43349,6 +43617,13 @@ func ParseDeleteEvaluatorVersionsResp(rsp *http.Response) (*DeleteEvaluatorVersi
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest RateLimitExceeded

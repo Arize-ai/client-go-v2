@@ -29,6 +29,10 @@ var Permissions = struct {
 	DashboardDelete                 Permission
 	DashboardRead                   Permission
 	DashboardRestrict               Permission
+	DashboardTemplateCreate         Permission
+	DashboardTemplateDelete         Permission
+	DashboardTemplateRead           Permission
+	DashboardTemplateUpdate         Permission
 	DashboardUpdate                 Permission
 	DatasetCreate                   Permission
 	DatasetDelete                   Permission
@@ -111,6 +115,7 @@ var Permissions = struct {
 	PromptOptimizeTaskRead          Permission
 	PromptOptimizeTaskUpdate        Permission
 	PromptRead                      Permission
+	PromptRestrict                  Permission
 	PromptUpdate                    Permission
 	QueueCreate                     Permission
 	QueueDelete                     Permission
@@ -175,6 +180,10 @@ var Permissions = struct {
 	DashboardDelete:                 PermissionDASHBOARDDELETE,
 	DashboardRead:                   PermissionDASHBOARDREAD,
 	DashboardRestrict:               PermissionDASHBOARDRESTRICT,
+	DashboardTemplateCreate:         PermissionDASHBOARDTEMPLATECREATE,
+	DashboardTemplateDelete:         PermissionDASHBOARDTEMPLATEDELETE,
+	DashboardTemplateRead:           PermissionDASHBOARDTEMPLATEREAD,
+	DashboardTemplateUpdate:         PermissionDASHBOARDTEMPLATEUPDATE,
 	DashboardUpdate:                 PermissionDASHBOARDUPDATE,
 	DatasetCreate:                   PermissionDATASETCREATE,
 	DatasetDelete:                   PermissionDATASETDELETE,
@@ -257,6 +266,7 @@ var Permissions = struct {
 	PromptOptimizeTaskRead:          PermissionPROMPTOPTIMIZETASKREAD,
 	PromptOptimizeTaskUpdate:        PermissionPROMPTOPTIMIZETASKUPDATE,
 	PromptRead:                      PermissionPROMPTREAD,
+	PromptRestrict:                  PermissionPROMPTRESTRICT,
 	PromptUpdate:                    PermissionPROMPTUPDATE,
 	QueueCreate:                     PermissionQUEUECREATE,
 	QueueDelete:                     PermissionQUEUEDELETE,

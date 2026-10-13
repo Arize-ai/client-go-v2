@@ -44,7 +44,24 @@ func listAPIKeys(ctx context.Context, client *arize.Client) {
 		log.Fatalf("list api keys: %v", err)
 	}
 	for _, k := range resp.ApiKeys {
-		fmt.Printf("  %s\t%s\t%s\n", k.Id, k.Name, k.RedactedKey)
+		discriminator, err := k.Discriminator()
+		if err != nil {
+			log.Fatalf("decode api key: %v", err)
+		}
+		switch discriminator {
+		case string(apikeys.APIKeyTypeService):
+			svc, err := k.AsServiceApiKey()
+			if err != nil {
+				log.Fatalf("decode service key: %v", err)
+			}
+			fmt.Printf("  %s\t%s\t%s\t(bot user %s)\n", svc.Id, svc.Name, svc.RedactedKey, svc.BotUser.Id)
+		default:
+			user, err := k.AsUserApiKey()
+			if err != nil {
+				log.Fatalf("decode user key: %v", err)
+			}
+			fmt.Printf("  %s\t%s\t%s\n", user.Id, user.Name, user.RedactedKey)
+		}
 	}
 }
 

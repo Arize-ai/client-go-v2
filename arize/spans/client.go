@@ -24,8 +24,9 @@ func New(gen *generated.ClientWithResponses) *Client {
 //
 // Unlike other List methods in this SDK, spans.List uses POST because the
 // filter DSL and projection list can be too large for a query string. Both
-// the body fields (project, time range, filter) and the query params (limit,
-// cursor) are flattened into ListRequest.
+// the body fields (project, time range, filter, column projection,
+// truncate_string_length) and the query params (limit, cursor) are flattened
+// into ListRequest.
 //
 // req.Project accepts a name or ID; req.Space is required when req.Project is
 // a name.
@@ -39,12 +40,13 @@ func (c *Client) List(
 		return nil, err
 	}
 	body := generated.ListSpansRequest{
-		ProjectId:       projectID,
-		StartTime:       optfields.PtrIfSet(req.Start),
-		EndTime:         optfields.PtrIfSet(req.End),
-		Filter:          optfields.PtrIfSet(req.Filter),
-		IncludedColumns: optfields.PtrSliceIfSet(req.IncludedColumns),
-		ExcludedColumns: optfields.PtrSliceIfSet(req.ExcludedColumns),
+		ProjectId:            projectID,
+		StartTime:            optfields.PtrIfSet(req.Start),
+		EndTime:              optfields.PtrIfSet(req.End),
+		Filter:               optfields.PtrIfSet(req.Filter),
+		IncludedColumns:      optfields.PtrSliceIfSet(req.IncludedColumns),
+		ExcludedColumns:      optfields.PtrSliceIfSet(req.ExcludedColumns),
+		TruncateStringLength: optfields.PtrIfSet(req.TruncateStringLength),
 	}
 	params := generated.ListSpansParams{
 		Limit:  optfields.PtrWithDefault(req.Limit, optfields.DefaultListLimit),

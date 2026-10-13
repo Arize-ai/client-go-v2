@@ -27,9 +27,10 @@ const (
 
 // Predefined account-level role names.
 const (
-	UserRoleAdmin     = generated.UserRoleADMIN
-	UserRoleMember    = generated.UserRoleMEMBER
-	UserRoleAnnotator = generated.UserRoleANNOTATOR
+	UserRoleAdmin        = generated.UserRoleADMIN
+	UserRoleMember       = generated.UserRoleMEMBER
+	UserRoleMemberUIOnly = generated.UserRoleMEMBERUIONLY
+	UserRoleAnnotator    = generated.UserRoleANNOTATOR
 )
 
 // Invite modes for Client.Create.
@@ -47,7 +48,8 @@ const (
 
 // AssignPredefinedRole builds an account-level role assignment naming one of
 // the predefined UserRole values (UserRoleAdmin, UserRoleMember,
-// UserRoleAnnotator). Pass the result as CreateRequest.Role.
+// UserRoleMemberUIOnly, UserRoleAnnotator). Pass the result as
+// CreateRequest.Role.
 func AssignPredefinedRole(name UserRole) UserRoleAssignment {
 	var role UserRoleAssignment
 	// From* only marshals a fixed two-field struct and sets the discriminator

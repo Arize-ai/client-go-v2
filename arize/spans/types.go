@@ -87,6 +87,15 @@ type ListRequest struct {
 	// from each span. Fixed span fields are always returned. When nil, no
 	// columns are omitted. Cannot be used with IncludedColumns.
 	ExcludedColumns []string
+	// TruncateStringLength is an optional maximum length in Unicode code points
+	// for string values inside each returned span's attributes object, including
+	// strings nested at any depth in objects and arrays. Strings longer than the
+	// limit are cut and end with a single ellipsis character … which counts
+	// toward the limit; strings at or under the limit are unchanged. Only
+	// attributes string values are affected; span IDs, names, kinds, status,
+	// timestamps, annotations, evaluations, events, and pagination are never
+	// truncated. When zero, the field is omitted and no truncation is applied.
+	TruncateStringLength int
 
 	// Limit is the optional maximum number of items to return (max 500). When
 	// zero, the SDK applies a default of 50.

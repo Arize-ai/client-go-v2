@@ -44,7 +44,8 @@ func listSpans(ctx context.Context, client *arize.Client, project, space string)
 		ExcludedColumns: []string{
 			"attributes.embedding.vectors",
 		},
-		Limit: 50,
+		TruncateStringLength: 200,
+		Limit:                50,
 	})
 	if err != nil {
 		log.Fatalf("list spans: %v", err)
