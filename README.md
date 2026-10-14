@@ -359,13 +359,23 @@ program in [`examples/`](./examples).
 Use `client.Spaces` to manage spaces (containers for projects, datasets, …) and their
 memberships. `Organization` accepts a name or ID.
 
+Space responses from list, get, create, and update include `OrganizationId`,
+the ID of the parent organization, when the server supports this field.
+Older server versions may omit it.
+
 A full runnable example lives in [`examples/spaces`](./examples/spaces).
 
 ### List Spaces
 
 ```go
-resp, err := client.Spaces.List(ctx, spaces.ListRequest{Limit: 25})
+resp, err := client.Spaces.List(ctx, spaces.ListRequest{
+    Organization: "<org-id-or-name>",
+    Limit:        25,
+})
 ```
+
+Omit `Organization` to list accessible spaces from all organizations. The SDK
+sends the resolved organization ID as the REST query parameter `org_id`.
 
 ### Get a Space
 

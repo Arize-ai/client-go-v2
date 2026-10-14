@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.1](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.25.0...arize-go-sdk-v2/v0.25.1) (2026-10-14)
+
+
+### 🐛 Bug Fixes
+
+* **spaces:** return space organization IDs without changing filters ([#89713](https://github.com/Arize-ai/arize/issues/89713)) ([a95ed00](https://github.com/Arize-ai/arize/commit/a95ed00f704bb471428ec7b69b401567e9ce8354))
+
 ## [0.25.0](https://github.com/Arize-ai/arize/compare/arize-go-sdk-v2/v0.24.0...arize-go-sdk-v2/v0.25.0) (2026-10-12)
 
 

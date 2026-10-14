@@ -8855,6 +8855,9 @@ type Space struct {
 
 	// Name Name of the space
 	Name string `json:"name"`
+
+	// OrganizationId The unique identifier of the organization that contains the space. Older server versions may omit this field.
+	OrganizationId *Id `json:"organization_id,omitempty"`
 }
 
 // SpaceMembership A space membership record.
